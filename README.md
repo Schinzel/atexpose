@@ -5,7 +5,7 @@ serve static file content such as HTML-files and handle proprietary Ajax request
 
 Put differently: It should be the web server that distracts you the least from solving the actual problem you are working on.
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/42e0a4d842954f1c83bd843779603c8b)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Schinzel/pre-public-atexpose&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/20d9426304f246c18f22402af9cb22bb)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Schinzel/atexpose&amp;utm_campaign=Badge_Grade)
 
 There are other frameworks and project that offers similar functionality to
 @Expose. Many of them are a lot more well used and tested than @Expose. Notable
