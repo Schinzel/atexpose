@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>MyTitle</title>
+    </head>
+
+<body>
+<h1>URI encode decode test page</h1>
+<p>This page is a util page to use with unit test UrlCodingTest to test server side
+uri encoding and decoding. As there oddly enough exists no java method to decode any of the
+three options to encode parameters in JavaScript(escape, encodeURI and encodeURIComponent), there is a
+proprietary implementation. But this requires JavaScript functions encodeURIComponent 
+and decodeURIComponent.
+<br><br>
+So this page has two uses:<br>
+1) To generate string that are uriencoded in browser. Use unit test to decode them
+and test that the result string is the same used as input in the browser. 
+<br><br>
+
+2) Use server side code to uri encode below large string. Paste the resulting string into 
+variable 'encodedServerSide' and there should be a true output in the second text area. 
+
+</p>
+Output 1 <br>
+<textarea id="output1" cols=100 rows=15></textarea>
+<br>
+
+
+Output 2<br>
+<textarea id="output2" cols=100 rows=15></textarea>
+<br>
+
+<script>
+var stringToEncodeClientSide = "/*-+";
+var encoded = encodeURIComponent(stringToEncodeClientSide);
+document.getElementById("output1").innerHTML  = encoded;
+
+
+var stringEncodedServerSide = "1234567890 abcdefghijklmonpqrstuvwxyz åäö ! \" # € % & / ( ) = ŹźŻż ÆæØøÅå АВГДЄЅЗИѲ ДЂЙЩ ,;.:-_'*^¨~ /*-+";
+var encodedServerSide = "1234567890%20abcdefghijklmonpqrstuvwxyz%20%C3%A5%C3%A4%C3%B6%20!%20%22%20%23%20%E2%82%AC%20%25%20%26%20%2F%20(%20)%20%3D%20%C5%B9%C5%BA%C5%BB%C5%BC%20%C3%86%C3%A6%C3%98%C3%B8%C3%85%C3%A5%20%D0%90%D0%92%D0%93%D0%94%D0%84%D0%85%D0%97%D0%98%D1%B2%20%D0%94%D0%82%D0%99%D0%A9%20%2C%3B.%3A-_'*%5E%C2%A8~%20%2F*-%2B";
+var clientSideDecodedString = decodeURIComponent(encodedServerSide);
+var equals = (clientSideDecodedString === stringEncodedServerSide);
+document.getElementById("output2").innerHTML  = clientSideDecodedString + "\n" + equals;
+
+
+
+</script>
+</body>
+
+</html>
