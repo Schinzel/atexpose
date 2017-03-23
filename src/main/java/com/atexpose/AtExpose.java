@@ -16,8 +16,10 @@ import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.mail.GmailEmailSender;
 import com.atexpose.util.mail.IEmailSender;
-
 import com.atexpose.util.mail.MockMailSender;
+import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
@@ -25,9 +27,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.json.JSONObject;
-import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.EmptyObjects;
-import io.schinzel.basicutils.Thrower;
 
 /**
  * @author Schinzel
@@ -347,6 +346,24 @@ public class AtExpose implements IStateNode {
         Logger logger = loggerBuilder.createLogger(dispatcher.getKey());
         dispatcher.addLogger(logger);
         return "Dispatcher " + dispatcher.getKey() + " got a logger";
+    }
+
+
+    @Expose(
+            arguments = {"DispatcherName"},
+            requiredAccessLevel = 3,
+            description = {"Removes all loggers from a dispatcher."},
+            labels = {"@Expose", "AtExpose", "Logs"},
+            requiredArgumentCount = 1
+    )
+    public String removeAllLoggers(String dispatcherName) {
+        if (this.getDispatchers().has(dispatcherName)) {
+            Dispatcher dispatcher = this.getDispatchers().get(dispatcherName);
+            dispatcher.removeLoggers();
+            return "Removed all loggers from dispatcher '" + dispatcherName + "'";
+        } else {
+            return "No such dispatcher '" + dispatcherName + "'";
+        }
     }
 
 
