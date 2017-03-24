@@ -2,7 +2,7 @@ package com.atexpose;
 
 import com.atexpose.errors.RuntimeError;
 import com.atexpose.util.DateTimeStrings;
-import io.schinzel.basicutils.MiscUtil;
+import io.schinzel.basicutils.Sandman;
 
 /**
  * Miscellaneous utility methods.
@@ -53,7 +53,7 @@ public class Misc {
             labels = {"@Expose", "Util"}
     )
     public String snooze(int timeInMilliseconds) {
-        MiscUtil.snooze(timeInMilliseconds);
+        Sandman.snoozeMillis(timeInMilliseconds);
         return "Good morning! Slept for " + timeInMilliseconds + " milliseconds";
     }
 

@@ -3,7 +3,7 @@ package com.atexpose.dispatcher.channels.webchannel;
 import com.atexpose.dispatcher.parser.urlparser.HttpRequest;
 import com.atexpose.util.ByteStorage;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.MiscUtil;
+import io.schinzel.basicutils.Sandman;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +43,7 @@ class SocketRW {
         }
         //Do a short snooze. This as if using a POST request to send data
         //all the bytes might not be avaiable without this snooze
-        MiscUtil.snooze(10);
+        Sandman.snoozeMillis(10);
         //Read again from the socket
         while ((inputStream.available() > 0) && ((bytesRead = inputStream.read(arr)) != -1)) {
             request.add(arr, 0, bytesRead);
@@ -89,7 +89,7 @@ class SocketRW {
                 while ((hr.getBody().getBytes(Charset.forName("UTF-8")).length
                         < iContentLength) && (attempts < LAGGARD_MAX_ATTEMPTS)) {
                     attempts++;
-                    MiscUtil.snooze(LAGGARD_SNOOZE_BETWEEN_READS);
+                    Sandman.snoozeMillis(LAGGARD_SNOOZE_BETWEEN_READS);
                     int bytesRead = 0;
                     byte[] arr = new byte[BUFFER_SIZE];
                     //Read again from the socket
