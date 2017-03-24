@@ -285,7 +285,7 @@ public class AtExpose implements IStateNode {
         this.startDispatcher(dispatcher, false, false);
         String cryptoKey = EmptyObjects.EMPTY_STRING;
         this.addEventLogger(dispatcherName, "JsonFormatter", "SystemOutLogWriter", cryptoKey);
-        this.addErrorLogger(dispatcherName, "JsonFormatter", "MailLogSender", cryptoKey);
+        this.addErrorLogger(dispatcherName, "JsonFormatter", "SystemOutLogWriter", cryptoKey);
         return "Task '" + TaskName + "' set up";
     }
 
