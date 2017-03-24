@@ -245,6 +245,20 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
 
 
     /**
+     * Removes all loggers from this dispatcher.
+     *
+     * @return This for chaining.
+     */
+    Dispatcher removeLoggers() {
+        mLoggers = EmptyObjects.EMPTY_LIST;
+        if (mNextDispatcher != null) {
+            mNextDispatcher.removeLoggers();
+        }
+        return this;
+    }
+
+
+    /**
      * Logs the argument log entry all attached (if any) loggers.
      *
      * @param logEntry The entry to add to logs.

@@ -350,6 +350,19 @@ public class AtExpose implements IStateNode {
     }
 
 
+    @Expose(
+            arguments = {"DispatcherName"},
+            requiredAccessLevel = 3,
+            description = {"Removes all loggers from argument dispatcher."},
+            labels = {"@Expose", "AtExpose", "Logs"},
+            requiredArgumentCount = 1
+    )
+    public String removeAllLoggers(String DispatcherName) {
+        mDispatchers.get(DispatcherName).removeLoggers();
+        return "All loggers removed from '" + DispatcherName + "'";
+    }
+
+
     // ---------------------------------
     // - PUBLIC  -
     // ---------------------------------
