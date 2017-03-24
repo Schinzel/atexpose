@@ -10,10 +10,8 @@ import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.collections.keyvalues.IValueKey;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
@@ -22,8 +20,9 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONObject;
-import io.schinzel.basicutils.EmptyObjects;
-import io.schinzel.basicutils.Thrower;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The dispatcher is the central cog wheel.
@@ -39,7 +38,7 @@ import io.schinzel.basicutils.Thrower;
  * @author Schinzel
  */
 @Accessors(prefix = "m")
-class Dispatcher implements Runnable, IValueKey, IStateNode {
+public class Dispatcher implements Runnable, IValueKey, IStateNode {
     /** The key as part of the IStateNode interface. Is the name of the Dispatchers. */
     @Getter final String mKey;
     /** The API that is exposed. */
