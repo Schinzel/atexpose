@@ -467,6 +467,7 @@ public class AtExpose implements IStateNode {
         return State.getBuilder()
                 .add("TimeNow", DateTimeStrings.getDateTimeUTC())
                 .add("StartTime", mStartTime)
+                .add("EmailSender", mMailSender)
                 .add("Dispatchers", this.getDispatchers())
                 .build();
     }
