@@ -65,6 +65,11 @@ public class AtExpose implements IStateNode {
     //------------------------------------------------------------------------
 
 
+    public String loadScriptFile(String fileName) {
+        return this.loadScriptFile(fileName, EmptyObjects.EMPTY_STRING);
+    }
+
+
     @Expose(
             arguments = {"FileName", "Recipient"},
             requiredAccessLevel = 3,

@@ -23,7 +23,7 @@ public class Logger {
     /** Handles the formatting of log entries. */
     private final ILogFormatter mLogFormatter;
     /** Used to encrypt part of the log data. */
-    private ICrypto mCrypto = new NoCrypto();
+    private final ICrypto mCrypto;
 
 
     @Builder
@@ -31,7 +31,9 @@ public class Logger {
         mLoggerType = loggerType;
         mLogFormatter = logFormat;
         mLogWriter = logWriter;
-        mCrypto = crypto;
+        mCrypto = (crypto == null)
+                ? new NoCrypto()
+                : crypto;
     }
 
 
