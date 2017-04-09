@@ -12,8 +12,10 @@ import com.atexpose.dispatcher.logging.crypto.ICrypto;
 import com.atexpose.dispatcher.logging.crypto.NoCrypto;
 import com.atexpose.dispatcher.logging.format.ILogFormatter;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
+import com.atexpose.dispatcher.logging.format.MultiLineFormatter;
 import com.atexpose.dispatcher.logging.writer.ILogWriter;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
+import com.atexpose.dispatcher.logging.writer.MailLogWriter;
 import com.atexpose.dispatcher.parser.AbstractParser;
 import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
@@ -64,13 +66,13 @@ public class AtExpose implements IStateNode {
 
 
     @Expose(
-            arguments = {"FileName"},
+            arguments = {"FileName", "Recipient"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 1,
             description = {"Reads and executes the argument script file.", "Useful for setting up settings, scheduled tasks and so on."},
             labels = {"@Expose", "AtExpose"}
     )
-    public String loadScriptFile(String fileName) {
+    public String loadScriptFile(String fileName, String recipient) {
         Dispatcher dispatcher = Dispatcher.builder()
                 .name("ScriptFile")
                 .accessLevel(3)
@@ -80,12 +82,16 @@ public class AtExpose implements IStateNode {
                 .noOfThreads(1)
                 .api(mAPI)
                 .build();
-        Logger logger = Logger.factoryBuilder()
-                .logFormatFactory(LogFormatterFactory.MULTI_LINE)
-                .loggerType(LoggerType.ERROR)
-                .logWriterFactory(LogWriterFactory.MAIL)
-                .build();
-        dispatcher.addLogger(logger);
+        //If there was a recipient argument
+        if (!Checker.isEmpty(recipient)) {
+            //Set up an error email logger
+            Logger logger = Logger.builder()
+                    .loggerType(LoggerType.ERROR)
+                    .logFormat(new MultiLineFormatter())
+                    .logWriter(new MailLogWriter(recipient, mMailSender))
+                    .build();
+            dispatcher.addLogger(logger);
+        }
         this.startDispatcher(dispatcher, true, true);
         return "Script file '" + fileName + "' loaded.";
     }

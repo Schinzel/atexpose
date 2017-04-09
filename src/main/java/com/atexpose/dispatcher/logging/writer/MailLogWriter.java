@@ -7,13 +7,13 @@ import com.atexpose.util.mail.IEmailSender;
  *
  * @author jorgen
  */
-public class MailLogSender implements ILogWriter {
+public class MailLogWriter implements ILogWriter {
     private static final String MAIL_SUBJECT = "Expose error report";
     private final String mRecipient;
     private final IEmailSender mMailSender;
 
 
-    MailLogSender(String recipient, IEmailSender emailSender) {
+    public MailLogWriter(String recipient, IEmailSender emailSender) {
         mRecipient = recipient;
         mMailSender = emailSender;
     }

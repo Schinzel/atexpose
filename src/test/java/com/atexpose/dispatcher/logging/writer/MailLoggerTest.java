@@ -16,7 +16,7 @@ public class MailLoggerTest {
     public void testSend() {
         String recipient = "monkey@example.com";
         MockMailSender sender = new MockMailSender();
-        MailLogSender logger = new MailLogSender(recipient, sender);
+        MailLogWriter logger = new MailLogWriter(recipient, sender);
         logger.sendMail(sender, "This is the message");
         assertTrue(sender.getRecipient().contains("monkey@example.com"));
     }

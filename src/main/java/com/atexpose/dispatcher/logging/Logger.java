@@ -3,9 +3,7 @@ package com.atexpose.dispatcher.logging;
 import com.atexpose.dispatcher.logging.crypto.ICrypto;
 import com.atexpose.dispatcher.logging.crypto.NoCrypto;
 import com.atexpose.dispatcher.logging.format.ILogFormatter;
-import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.ILogWriter;
-import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import lombok.Builder;
 
 import java.util.Map;
@@ -33,15 +31,6 @@ public class Logger {
         mLoggerType = loggerType;
         mLogFormatter = logFormat;
         mLogWriter = logWriter;
-        mCrypto = crypto;
-    }
-
-
-    @Builder(builderMethodName = "factoryBuilder")
-    Logger(LoggerType loggerType, LogFormatterFactory logFormatFactory, LogWriterFactory logWriterFactory, ICrypto crypto) {
-        mLoggerType = loggerType;
-        mLogFormatter = logFormatFactory.getInstance();
-        mLogWriter = logWriterFactory.getInstance();
         mCrypto = crypto;
     }
 
