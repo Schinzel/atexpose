@@ -130,7 +130,7 @@ public class AtExpose implements IStateNode {
      * @return Status of the operation message.
      */
     @Expose(
-            arguments = {"Username", "PassWord"},
+            arguments = {"Username", "Password"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 2,
             description = {"Sets the SMTP server to user for outgoing mails."},
