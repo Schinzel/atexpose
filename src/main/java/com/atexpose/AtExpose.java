@@ -6,9 +6,13 @@ import com.atexpose.dispatcher.channels.ScheduledReportChannel;
 import com.atexpose.dispatcher.channels.ScheduledTaskChannel;
 import com.atexpose.dispatcher.channels.ScriptFileChannel;
 import com.atexpose.dispatcher.logging.Logger;
-import com.atexpose.dispatcher.logging.LoggerBuilder;
 import com.atexpose.dispatcher.logging.LoggerType;
+import com.atexpose.dispatcher.logging.crypto.Crypto;
+import com.atexpose.dispatcher.logging.crypto.ICrypto;
+import com.atexpose.dispatcher.logging.crypto.NoCrypto;
+import com.atexpose.dispatcher.logging.format.ILogFormatter;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
+import com.atexpose.dispatcher.logging.writer.ILogWriter;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import com.atexpose.dispatcher.parser.AbstractParser;
 import com.atexpose.dispatcher.parser.TextParser;
@@ -16,8 +20,10 @@ import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.mail.GmailEmailSender;
 import com.atexpose.util.mail.IEmailSender;
-
 import com.atexpose.util.mail.MockMailSender;
+import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
@@ -25,9 +31,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.json.JSONObject;
-import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.EmptyObjects;
-import io.schinzel.basicutils.Thrower;
 
 /**
  * @author Schinzel
@@ -77,6 +80,12 @@ public class AtExpose implements IStateNode {
                 .noOfThreads(1)
                 .api(mAPI)
                 .build();
+        Logger logger = Logger.factoryBuilder()
+                .logFormatFactory(LogFormatterFactory.MULTI_LINE)
+                .loggerType(LoggerType.ERROR)
+                .logWriterFactory(LogWriterFactory.MAIL)
+                .build();
+        dispatcher.addLogger(logger);
         this.startDispatcher(dispatcher, true, true);
         return "Script file '" + fileName + "' loaded.";
     }
@@ -321,15 +330,17 @@ public class AtExpose implements IStateNode {
 
 
     private String addLogger(LoggerType loggerType, String DispatcherName, String LogFormatter, String LogWriter, String cryptoKey) {
-        LogFormatterFactory logFormatter = LogFormatterFactory.get(LogFormatter);
-        LogWriterFactory logWriter = LogWriterFactory.create(LogWriter);
-        LoggerBuilder loggerBuilder = LoggerBuilder.getBuilder()
-                .setLoggerType(loggerType)
-                .setLogFormatter(logFormatter)
-                .setLogWriter(logWriter);
-        if (!Checker.isEmpty(cryptoKey)) {
-            loggerBuilder.setCryptoKey(cryptoKey);
-        }
+        ILogFormatter logFormatter = LogFormatterFactory.get(LogFormatter).getInstance();
+        ILogWriter logWriter = LogWriterFactory.create(LogWriter).getInstance();
+        ICrypto crypto = Checker.isEmpty(cryptoKey)
+                ? new NoCrypto()
+                : Crypto.getInstance(cryptoKey);
+        Logger loggerBuilder = Logger.builder()
+                .loggerType(loggerType)
+                .logFormat(logFormatter)
+                .logWriter(logWriter)
+                .crypto(crypto)
+                .build();
         Dispatcher dispatcher = this.getDispatchers().get(DispatcherName);
         return this.addLogger(dispatcher, loggerBuilder);
     }
@@ -339,12 +350,11 @@ public class AtExpose implements IStateNode {
      * Note that sending in loggerBuilder instead of logger is to make sure
      * that the same logger is not sent to more than one dispatcher.
      *
-     * @param dispatcher    The dispatcher that will get the logger build by argument loggerBuilder
-     * @param loggerBuilder The builder for the logger.
+     * @param dispatcher The dispatcher that will get the logger build by argument loggerBuilder
+     * @param logger     The logger.
      * @return Status of the operation.
      */
-    public String addLogger(Dispatcher dispatcher, LoggerBuilder loggerBuilder) {
-        Logger logger = loggerBuilder.createLogger(dispatcher.getKey());
+    public String addLogger(Dispatcher dispatcher, Logger logger) {
         dispatcher.addLogger(logger);
         return "Dispatcher " + dispatcher.getKey() + " got a logger";
     }
