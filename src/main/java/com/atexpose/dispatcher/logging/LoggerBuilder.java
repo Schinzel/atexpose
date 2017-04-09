@@ -15,8 +15,8 @@ import com.atexpose.dispatcher.logging.crypto.NoCrypto;
  */
 public class LoggerBuilder {
     private LoggerType mLoggerType = LoggerType.EVENT;
-    private LogFormatterFactory mLogFormatFactory = LogFormatterFactory.Json;
-    private LogWriterFactory mLogWriterFactory = LogWriterFactory.SystemOutLogger;
+    private LogFormatterFactory mLogFormatFactory = LogFormatterFactory.JSON;
+    private LogWriterFactory mLogWriterFactory = LogWriterFactory.SYSTEM_OUT;
     private ICrypto mCrypto = new NoCrypto();
 
 
