@@ -64,7 +64,7 @@ public class AtExpose implements IStateNode {
             arguments = {"FileName"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 1,
-            description = {"Reads and executes the argument script file.", "Useful for setting up your instance and executing scheduled tasks."},
+            description = {"Reads and executes the argument script file.", "Useful for setting up settings, scheduled tasks and so on."},
             labels = {"@Expose", "AtExpose"}
     )
     public String loadScriptFile(String fileName) {
