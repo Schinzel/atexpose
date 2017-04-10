@@ -5,6 +5,7 @@ import com.atexpose.dispatcher.parser.urlparser.HttpRequest;
 import com.atexpose.util.ByteStorage;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.State;
+import lombok.Builder;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -24,40 +25,52 @@ public class WebChannel extends AbstractChannel {
     private static final int TIMEOUT_MIN = 50;
     private static final int TIMEOUT_MAX = 30000;
     /** The server socket. Shared by all threads listening to the same port. */
-    private ServerSocket mServerSocket;
-    /** The client socket connection. */
-    private Socket mClientSocket;
+    final private ServerSocket mServerSocket;
     /** The socket timeout. */
-    private int mSocketTimeout;
+    final private int mSocketTimeout;
+    /** If true, http requests are redirected to https requests. */
+    final boolean mForceHttps;
     /** For logging and statistics, hold the time it took to read the message from first to last byte. */
     private long mLogRequestReadTime;
+    /** The client socket connection. */
+    private Socket mClientSocket;
 
 
     //------------------------------------------------------------------------
     // CONSTRUCTORS AND SHUTDOWN
     //------------------------------------------------------------------------
-    public WebChannel(int port, int timeout) {
+    @Builder
+    WebChannel(int port, int timeout, boolean forceHttps) {
+        this(getServerSocket(port), timeout, forceHttps);
         Thrower.throwIfOutsideRange(port, "port", PORT_MIN, PORT_MAX);
         Thrower.throwIfOutsideRange(timeout, "timeout", TIMEOUT_MIN, TIMEOUT_MAX);
-        mSocketTimeout = timeout;
+    }
+
+
+    static ServerSocket getServerSocket(int port) {
         try {
-            mServerSocket = new ServerSocket(port, MAX_PENDING_REQUESTS);
+            return new ServerSocket(port, MAX_PENDING_REQUESTS);
         } catch (IOException ioe) {
-            throw new RuntimeException("Error starting thread on port " + port
-                    + ". Most likely the port is busy. " + ioe.getMessage());
+            throw new RuntimeException("Error starting thread on port " + port + ". Most likely the port is busy. " + ioe.getMessage());
         }
     }
 
 
-    private WebChannel(ServerSocket serverSocket, int iTimeout) {
+    @Builder(builderMethodName = "cloneBuilder")
+    private WebChannel(ServerSocket serverSocket, int timeout, boolean forceHttps) {
         mServerSocket = serverSocket;
-        mSocketTimeout = iTimeout;
+        mSocketTimeout = timeout;
+        mForceHttps = forceHttps;
     }
 
 
     @Override
     public AbstractChannel getClone() {
-        return new WebChannel(mServerSocket, mSocketTimeout);
+        return WebChannel.cloneBuilder()
+                .timeout(mSocketTimeout)
+                .serverSocket(mServerSocket)
+                .forceHttps(mForceHttps)
+                .build();
     }
 
 

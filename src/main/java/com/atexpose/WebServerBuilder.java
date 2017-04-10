@@ -285,7 +285,10 @@ public class WebServerBuilder {
 
 
     private AbstractChannel getChannel() {
-        return new WebChannel(mPort, mTimeout);
+        return WebChannel.builder()
+                .port(mPort)
+                .timeout(mTimeout)
+                .build();
     }
 
 
