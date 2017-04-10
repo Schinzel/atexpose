@@ -19,11 +19,7 @@ import java.net.SocketException;
  * @author Schinzel
  */
 public class WebChannel extends AbstractChannel {
-    private static final int PORT_MIN = 1;
-    private static final int PORT_MAX = 65535;
     private static final int MAX_PENDING_REQUESTS = 50;
-    private static final int TIMEOUT_MIN = 50;
-    private static final int TIMEOUT_MAX = 30000;
     /** The server socket. Shared by all threads listening to the same port. */
     final private ServerSocket mServerSocket;
     /** The socket timeout. */
@@ -42,8 +38,8 @@ public class WebChannel extends AbstractChannel {
     @Builder
     WebChannel(int port, int timeout, boolean forceHttps) {
         this(getServerSocket(port), timeout, forceHttps);
-        Thrower.throwIfOutsideRange(port, "port", PORT_MIN, PORT_MAX);
-        Thrower.throwIfOutsideRange(timeout, "timeout", TIMEOUT_MIN, TIMEOUT_MAX);
+        Thrower.throwIfOutsideRange(port, "port", 1, 65535);
+        Thrower.throwIfOutsideRange(timeout, "timeout", 50, 30000);
     }
 
 
@@ -56,7 +52,7 @@ public class WebChannel extends AbstractChannel {
     }
 
 
-    @Builder(builderMethodName = "cloneBuilder")
+    @Builder(builderMethodName = "cloneBuilder", buildMethodName = "buildClone")
     private WebChannel(ServerSocket serverSocket, int timeout, boolean forceHttps) {
         mServerSocket = serverSocket;
         mSocketTimeout = timeout;
@@ -70,7 +66,7 @@ public class WebChannel extends AbstractChannel {
                 .timeout(mSocketTimeout)
                 .serverSocket(mServerSocket)
                 .forceHttps(mForceHttps)
-                .build();
+                .buildClone();
     }
 
 
