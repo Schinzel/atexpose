@@ -20,7 +20,7 @@ import java.net.SocketException;
 public class WebChannel extends AbstractChannel {
     private static final int PORT_MIN = 1;
     private static final int PORT_MAX = 65535;
-    private static final int MAX_PENDING_REQUESTS_DEFAULT = 50;
+    private static final int MAX_PENDING_REQUESTS = 50;
     private static final int TIMEOUT_MIN = 50;
     private static final int TIMEOUT_MAX = 30000;
 
@@ -37,10 +37,6 @@ public class WebChannel extends AbstractChannel {
      */
     private int mSocketTimeout;
     /**
-     * The maximum number of requests queued.
-     */
-    private int mMaxPendingRequests;
-    /**
      * For logging and statistics, hold the time it took to read the message
      * from first to last byte.
      */
@@ -54,9 +50,8 @@ public class WebChannel extends AbstractChannel {
         Thrower.throwIfOutsideRange(port, "port", PORT_MIN, PORT_MAX);
         Thrower.throwIfOutsideRange(timeout, "timeout", TIMEOUT_MIN, TIMEOUT_MAX);
         mSocketTimeout = timeout;
-        mMaxPendingRequests = MAX_PENDING_REQUESTS_DEFAULT;
         try {
-            mServerSocket = new ServerSocket(port, mMaxPendingRequests);
+            mServerSocket = new ServerSocket(port, MAX_PENDING_REQUESTS);
         } catch (IOException ioe) {
             throw new RuntimeException("Error starting thread on port " + port
                     + ". Most likely the port is busy. " + ioe.getMessage());
@@ -176,7 +171,7 @@ public class WebChannel extends AbstractChannel {
         return State.getBuilder()
                 .add("Port", mServerSocket.getLocalPort())
                 .add("Timeout", mSocketTimeout)
-                .add("Queue", mMaxPendingRequests)
+                .add("Queue", MAX_PENDING_REQUESTS)
                 .build();
     }
 }
