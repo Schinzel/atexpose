@@ -31,7 +31,7 @@ class SocketRW {
      * @param request The incoming reuqest is written to this argument.
      * @param socket  The socket to read from.
      */
-    public static void read(ByteStorage request, Socket socket) throws IOException {
+    public static HttpRequest read(ByteStorage request, Socket socket) throws IOException {
         InputStream inputStream = socket.getInputStream();
         byte firstByte = (byte) inputStream.read();
         request.add(firstByte);
@@ -50,7 +50,7 @@ class SocketRW {
         }
         //About one in a few thousand calls have a pause between header and body that
         //is not caught by above code
-        getLaggardBytes(request, inputStream);
+        return getLaggardBytes(request, inputStream);
     }
 
 
@@ -77,10 +77,11 @@ class SocketRW {
      * @param request     Contains the partial message and it will contain the whole message.
      * @param inputStream The stream that receives the incoming message.
      */
-    private static void getLaggardBytes(ByteStorage request, InputStream inputStream) throws IOException {
+    private static HttpRequest getLaggardBytes(ByteStorage request, InputStream inputStream) throws IOException {
+        HttpRequest hr = null;
         //If there was any bytes
         if (request.getNoOfBytesStored() > 1) {
-            HttpRequest hr = new HttpRequest(request.getAsString());
+            hr = new HttpRequest(request.getAsString());
             String sContentLength = hr.getRequestHeaderValue("Content-Length");
             //If there was a content length
             if (!Checker.isEmpty(sContentLength)) {
@@ -101,6 +102,7 @@ class SocketRW {
                 }
             }
         }
+        return hr;
     }
 
 }

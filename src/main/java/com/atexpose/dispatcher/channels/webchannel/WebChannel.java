@@ -1,15 +1,15 @@
 package com.atexpose.dispatcher.channels.webchannel;
 
 import com.atexpose.dispatcher.channels.AbstractChannel;
+import com.atexpose.dispatcher.parser.urlparser.HttpRequest;
 import com.atexpose.util.ByteStorage;
+import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.state.State;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-
-import io.schinzel.basicutils.state.State;
-import io.schinzel.basicutils.Thrower;
 
 /**
  * The purpose of this class is to listen for and read incoming request on
@@ -108,7 +108,7 @@ public class WebChannel extends AbstractChannel {
             try {
                 mLogRequestReadTime = System.currentTimeMillis();
                 mClientSocket.setSoTimeout(mSocketTimeout);
-                SocketRW.read(request, mClientSocket);
+                HttpRequest httpRequest = SocketRW.read(request, mClientSocket);
             }//Catch read timeout errors
             catch (java.io.InterruptedIOException iioe) {
                 booTimeoutError = true;
