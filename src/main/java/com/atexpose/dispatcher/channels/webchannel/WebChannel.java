@@ -23,23 +23,13 @@ public class WebChannel extends AbstractChannel {
     private static final int MAX_PENDING_REQUESTS = 50;
     private static final int TIMEOUT_MIN = 50;
     private static final int TIMEOUT_MAX = 30000;
-
-    /**
-     * The server socket. Shared by all threads listening to the same port.
-     */
+    /** The server socket. Shared by all threads listening to the same port. */
     private ServerSocket mServerSocket;
-    /**
-     * The client socket connection.
-     */
+    /** The client socket connection. */
     private Socket mClientSocket;
-    /**
-     * The socket timeout.
-     */
+    /** The socket timeout. */
     private int mSocketTimeout;
-    /**
-     * For logging and statistics, hold the time it took to read the message
-     * from first to last byte.
-     */
+    /** For logging and statistics, hold the time it took to read the message from first to last byte. */
     private long mLogRequestReadTime;
 
 
