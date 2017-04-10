@@ -2,12 +2,11 @@ package com.atexpose.dispatcher.parser.urlparser;
 
 import com.atexpose.errors.RuntimeError;
 import com.google.common.base.Splitter;
+import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.EmptyObjects;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.EmptyObjects;
 
 /**
  * The purpose of this class is to handle HttpRequests. Requests methods POST
@@ -93,7 +92,7 @@ public class HttpRequest {
      * @return The url part of a request. Including the query string variables
      * if any.
      */
-    String getURL() {
+    public String getURL() {
         int start = mHttpRequest.indexOf(mRequestMethod.mRequestMethodAsString);
         if (start == -1) {
             //throw error

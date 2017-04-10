@@ -1,13 +1,17 @@
 package com.atexpose.dispatcher.channels.webchannel;
 
 import com.atexpose.dispatcher.channels.AbstractChannel;
+import com.atexpose.dispatcher.channels.webchannel.http.HttpsRedirect;
 import com.atexpose.dispatcher.parser.urlparser.HttpRequest;
+import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import com.atexpose.util.ByteStorage;
+import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -85,9 +89,9 @@ public class WebChannel extends AbstractChannel {
     //------------------------------------------------------------------------
     @Override
     public boolean getRequest(ByteStorage request) {
-        boolean booTimeoutError;
+        boolean keepReadingFromSocket;
         do {
-            booTimeoutError = false;
+            keepReadingFromSocket = false;
             try {
                 mClientSocket = mServerSocket.accept();
             } catch (SocketException se) {
@@ -103,9 +107,25 @@ public class WebChannel extends AbstractChannel {
                 mLogRequestReadTime = System.currentTimeMillis();
                 mClientSocket.setSoTimeout(mSocketTimeout);
                 HttpRequest httpRequest = SocketRW.read(request, mClientSocket);
+                //If is to force https and this is an http-request
+                if (mForceHttps && HttpsRedirect.isHttpReuqest(httpRequest)) {
+                    //Get the full url with https
+                    String urlWithHttps = HttpsRedirect.getUrlWithHttps(
+                            httpRequest.getRequestHeaderValue("host"),
+                            httpRequest.getURL());
+                    //Get redirect header
+                    String redirect = HttpsRedirect.wrapRedirect(urlWithHttps, RedirectHttpStatus.TEMPORARY);
+                    //Covert the redirect header to UTF-8
+                    byte[] redirectAsByteArr = EncodingUtil.convertToByteArray(redirect);
+                    //Send the redirect instruction to client
+                    this.writeResponse(redirectAsByteArr);
+                    //Clear the incoming request. 
+                    request.clear();
+                    keepReadingFromSocket = true;
+                }
             }//Catch read timeout errors
-            catch (java.io.InterruptedIOException iioe) {
-                booTimeoutError = true;
+            catch (InterruptedIOException iioe) {
+                keepReadingFromSocket = true;
                 mLogRequestReadTime = System.currentTimeMillis() - mLogRequestReadTime;
                 String err = "Server got read timeout error when reading from client socket No of bytes: " + request.getNoOfBytesStored() + " ";
                 try {
@@ -119,7 +139,7 @@ public class WebChannel extends AbstractChannel {
                 mLogRequestReadTime = System.currentTimeMillis() - mLogRequestReadTime;
                 throw new RuntimeException("Error while reading from socket. " + e.getMessage());
             }
-        } while (booTimeoutError);
+        } while (keepReadingFromSocket);
         mLogRequestReadTime = System.currentTimeMillis() - mLogRequestReadTime;
         return true;
     }
