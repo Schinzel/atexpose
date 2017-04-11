@@ -111,7 +111,7 @@ public class WebChannel extends AbstractChannel {
                 if (mForceHttps && HttpsRedirect.isHttpReuqest(httpRequest)) {
                     //Get the full url with https
                     String urlWithHttps = HttpsRedirect.getUrlWithHttps(
-                            httpRequest.getRequestHeaderValue("host"),
+                            httpRequest.getRequestHeaderValue("Host"),
                             httpRequest.getURL());
                     //Get redirect header
                     String redirect = HttpsRedirect.wrapRedirect(urlWithHttps, RedirectHttpStatus.TEMPORARY);
@@ -119,7 +119,7 @@ public class WebChannel extends AbstractChannel {
                     byte[] redirectAsByteArr = EncodingUtil.convertToByteArray(redirect);
                     //Send the redirect instruction to client
                     this.writeResponse(redirectAsByteArr);
-                    //Clear the incoming request. 
+                    //Clear the incoming request.
                     request.clear();
                     keepReadingFromSocket = true;
                 }

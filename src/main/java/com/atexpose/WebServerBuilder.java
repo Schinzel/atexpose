@@ -276,7 +276,7 @@ public class WebServerBuilder {
         return (Checker.isEmpty(mAuthDomain)) ?
                 new URLParser(mForceHttps, mRedirects) :
                 UrlParserWithGSuiteAuth.builder()
-                        .forceHttps(mForceHttps)
+                        //.forceHttps(mForceHttps)
                         .redirects(mRedirects)
                         .authCookieName(mAuthCookieName)
                         .domain(mAuthDomain)
@@ -288,6 +288,7 @@ public class WebServerBuilder {
         return WebChannel.builder()
                 .port(mPort)
                 .timeout(mTimeout)
+                .forceHttps(mForceHttps)
                 .build();
     }
 
