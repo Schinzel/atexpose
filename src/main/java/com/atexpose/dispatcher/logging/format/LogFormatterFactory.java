@@ -6,9 +6,12 @@ package com.atexpose.dispatcher.logging.format;
  * @author schinzel
  */
 public enum LogFormatterFactory {
-    Json(JsonFormatter.class),
-    MultiLine(MultiLineFormatter.class),
-    SingleLine(SingleLineFormatter.class);
+    /** Formats the log entry as JSON. **/
+    JSON(JsonFormatter.class),
+    /** Formats the log entry as a easier to read for humans multi-line entry. **/
+    MULTI_LINE(MultiLineFormatter.class),
+    /** Formats the log entry as a concise one line log entry. **/
+    SINGLE_LINE(SingleLineFormatter.class);
 
     private final Class mClass;
 

@@ -245,7 +245,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
 
 
     /**
-     * Remove all loggers from this dispatcher.
+     * Removes all loggers from this dispatcher.
      *
      * @return This for chaining.
      */

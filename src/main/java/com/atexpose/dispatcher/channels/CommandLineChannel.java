@@ -4,16 +4,15 @@ import com.atexpose.MyProperties;
 import com.atexpose.errors.RuntimeError;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
+import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.Sandman;
+import io.schinzel.basicutils.state.State;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-
-import io.schinzel.basicutils.state.State;
-import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.MiscUtil;
 
 /**
  * The purpose of this class is to read command from the command-line interface.
@@ -62,7 +61,7 @@ public class CommandLineChannel extends AbstractChannel {
             do {
                 System.out.print(CLI_START_OF_LINE);
                 while (!reader.ready()) {
-                    MiscUtil.snooze(20);
+                    Sandman.snoozeMillis(20);
                     if (mIsToShutdown) {
                         return false;
                     }

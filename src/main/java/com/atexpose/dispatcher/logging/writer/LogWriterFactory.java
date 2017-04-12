@@ -6,9 +6,8 @@ package com.atexpose.dispatcher.logging.writer;
  * @author schinzel
  */
 public enum LogWriterFactory {
-    LogFile(LogFileWriter.class),
-    MailLogger(MailLogSender.class),
-    SystemOutLogger(SystemOutLogWriter.class);
+    MAIL(MailLogWriter.class),
+    SYSTEM_OUT(SystemOutLogWriter.class);
 
     private final Class mClass;
 

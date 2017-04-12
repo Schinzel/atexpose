@@ -6,10 +6,16 @@ import com.atexpose.dispatcher.channels.ScheduledReportChannel;
 import com.atexpose.dispatcher.channels.ScheduledTaskChannel;
 import com.atexpose.dispatcher.channels.ScriptFileChannel;
 import com.atexpose.dispatcher.logging.Logger;
-import com.atexpose.dispatcher.logging.LoggerBuilder;
 import com.atexpose.dispatcher.logging.LoggerType;
+import com.atexpose.dispatcher.logging.crypto.Crypto;
+import com.atexpose.dispatcher.logging.crypto.ICrypto;
+import com.atexpose.dispatcher.logging.crypto.NoCrypto;
+import com.atexpose.dispatcher.logging.format.ILogFormatter;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
+import com.atexpose.dispatcher.logging.format.MultiLineFormatter;
+import com.atexpose.dispatcher.logging.writer.ILogWriter;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
+import com.atexpose.dispatcher.logging.writer.MailLogWriter;
 import com.atexpose.dispatcher.parser.AbstractParser;
 import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
@@ -59,14 +65,19 @@ public class AtExpose implements IStateNode {
     //------------------------------------------------------------------------
 
 
+    public String loadScriptFile(String fileName) {
+        return this.loadScriptFile(fileName, EmptyObjects.EMPTY_STRING);
+    }
+
+
     @Expose(
-            arguments = {"FileName"},
+            arguments = {"FileName", "Recipient"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 1,
-            description = {"Reads and executes the argument script file.", "Useful for setting up your instance and executing scheduled tasks."},
+            description = {"Reads and executes the argument script file.", "Useful for setting up settings, scheduled tasks and so on."},
             labels = {"@Expose", "AtExpose"}
     )
-    public String loadScriptFile(String fileName) {
+    public String loadScriptFile(String fileName, String recipient) {
         Dispatcher dispatcher = Dispatcher.builder()
                 .name("ScriptFile")
                 .accessLevel(3)
@@ -76,6 +87,16 @@ public class AtExpose implements IStateNode {
                 .noOfThreads(1)
                 .api(mAPI)
                 .build();
+        //If there was a recipient argument
+        if (!Checker.isEmpty(recipient)) {
+            //Set up an error email logger
+            Logger logger = Logger.builder()
+                    .loggerType(LoggerType.ERROR)
+                    .logFormat(new MultiLineFormatter())
+                    .logWriter(new MailLogWriter(recipient, mMailSender))
+                    .build();
+            dispatcher.addLogger(logger);
+        }
         this.startDispatcher(dispatcher, true, true);
         return "Script file '" + fileName + "' loaded.";
     }
@@ -129,7 +150,7 @@ public class AtExpose implements IStateNode {
      * @return Status of the operation message.
      */
     @Expose(
-            arguments = {"Username", "PassWord"},
+            arguments = {"Username", "Password"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 2,
             description = {"Sets the SMTP server to user for outgoing mails."},
@@ -284,7 +305,7 @@ public class AtExpose implements IStateNode {
         this.startDispatcher(dispatcher, false, false);
         String cryptoKey = EmptyObjects.EMPTY_STRING;
         this.addEventLogger(dispatcherName, "JsonFormatter", "SystemOutLogWriter", cryptoKey);
-        this.addErrorLogger(dispatcherName, "JsonFormatter", "MailLogSender", cryptoKey);
+        this.addErrorLogger(dispatcherName, "JsonFormatter", "SystemOutLogWriter", cryptoKey);
         return "Task '" + TaskName + "' set up";
     }
 
@@ -320,15 +341,17 @@ public class AtExpose implements IStateNode {
 
 
     private String addLogger(LoggerType loggerType, String DispatcherName, String LogFormatter, String LogWriter, String cryptoKey) {
-        LogFormatterFactory logFormatter = LogFormatterFactory.get(LogFormatter);
-        LogWriterFactory logWriter = LogWriterFactory.create(LogWriter);
-        LoggerBuilder loggerBuilder = LoggerBuilder.getBuilder()
-                .setLoggerType(loggerType)
-                .setLogFormatter(logFormatter)
-                .setLogWriter(logWriter);
-        if (!Checker.isEmpty(cryptoKey)) {
-            loggerBuilder.setCryptoKey(cryptoKey);
-        }
+        ILogFormatter logFormatter = LogFormatterFactory.get(LogFormatter).getInstance();
+        ILogWriter logWriter = LogWriterFactory.create(LogWriter).getInstance();
+        ICrypto crypto = Checker.isEmpty(cryptoKey)
+                ? new NoCrypto()
+                : Crypto.getInstance(cryptoKey);
+        Logger loggerBuilder = Logger.builder()
+                .loggerType(loggerType)
+                .logFormat(logFormatter)
+                .logWriter(logWriter)
+                .crypto(crypto)
+                .build();
         Dispatcher dispatcher = this.getDispatchers().get(DispatcherName);
         return this.addLogger(dispatcher, loggerBuilder);
     }
@@ -338,12 +361,11 @@ public class AtExpose implements IStateNode {
      * Note that sending in loggerBuilder instead of logger is to make sure
      * that the same logger is not sent to more than one dispatcher.
      *
-     * @param dispatcher    The dispatcher that will get the logger build by argument loggerBuilder
-     * @param loggerBuilder The builder for the logger.
+     * @param dispatcher The dispatcher that will get the logger build by argument loggerBuilder
+     * @param logger     The logger.
      * @return Status of the operation.
      */
-    public String addLogger(Dispatcher dispatcher, LoggerBuilder loggerBuilder) {
-        Logger logger = loggerBuilder.createLogger(dispatcher.getKey());
+    public String addLogger(Dispatcher dispatcher, Logger logger) {
         dispatcher.addLogger(logger);
         return "Dispatcher " + dispatcher.getKey() + " got a logger";
     }
@@ -471,6 +493,7 @@ public class AtExpose implements IStateNode {
         return State.getBuilder()
                 .add("TimeNow", DateTimeStrings.getDateTimeUTC())
                 .add("StartTime", mStartTime)
+                .add("EmailSender", mMailSender)
                 .add("Dispatchers", this.getDispatchers())
                 .build();
     }

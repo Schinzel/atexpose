@@ -1,8 +1,11 @@
 package com.atexpose.dispatcher.logging;
 
+import com.atexpose.dispatcher.logging.crypto.ICrypto;
+import com.atexpose.dispatcher.logging.crypto.NoCrypto;
 import com.atexpose.dispatcher.logging.format.ILogFormatter;
 import com.atexpose.dispatcher.logging.writer.ILogWriter;
-import com.atexpose.dispatcher.logging.crypto.ICrypto;
+import lombok.Builder;
+
 import java.util.Map;
 
 /**
@@ -13,29 +16,24 @@ import java.util.Map;
  * @author schinzel
  */
 public class Logger {
-    /**
-     * The type of the logger. E.g. error or event
-     */
+    /** The type of the logger. E.g. error or event */
     private final LoggerType mLoggerType;
-    /**
-     * Handles the writing of log entries.
-     */
+    /** Handles the writing of log entries. */
     private final ILogWriter mLogWriter;
-    /**
-     * Handles the formatting of log entries.
-     */
+    /** Handles the formatting of log entries. */
     private final ILogFormatter mLogFormatter;
-    /**
-     * Used to encrypt part of the log data.
-     */
+    /** Used to encrypt part of the log data. */
     private final ICrypto mCrypto;
 
 
+    @Builder
     Logger(LoggerType loggerType, ILogFormatter logFormat, ILogWriter logWriter, ICrypto crypto) {
         mLoggerType = loggerType;
         mLogFormatter = logFormat;
         mLogWriter = logWriter;
-        mCrypto = crypto;
+        mCrypto = (crypto == null)
+                ? new NoCrypto()
+                : crypto;
     }
 
 
@@ -62,7 +60,6 @@ public class Logger {
 
 
     /**
-     *
      * @return True if this is an event logger, else false.
      */
     private boolean isEventLogger() {
@@ -71,7 +68,6 @@ public class Logger {
 
 
     /**
-     *
      * @return True if this is an error logger, else false.
      */
     private boolean isErrorLogger() {

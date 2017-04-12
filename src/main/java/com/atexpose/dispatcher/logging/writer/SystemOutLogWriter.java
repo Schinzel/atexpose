@@ -1,9 +1,9 @@
 package com.atexpose.dispatcher.logging.writer;
 
-import java.io.IOException;
-import com.atexpose.util.EncodingUtil;
 import com.atexpose.MyProperties;
-import com.atexpose.dispatcher.logging.LoggerType;
+import com.atexpose.util.EncodingUtil;
+
+import java.io.IOException;
 
 /**
  * The purpose of this class is to write a log entry to system out.
@@ -34,9 +34,5 @@ public class SystemOutLogWriter implements ILogWriter {
         }
     }
 
-
-    @Override
-    public void setUp(String dispatcherName, LoggerType loggerType) {
-    }
-
+    
 }

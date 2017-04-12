@@ -107,7 +107,7 @@ class NativeSetup {
                         .name("LogWriter")
                         .dataType(DataType.ALPHNUMSTRING)
                         .description("Where the log entries will be written")
-                        .defaultValue("LogFile")
+                        .defaultValue("File")
                         .build())
                 .addArgument(Argument.builder()
                         .name("LogFormatter")

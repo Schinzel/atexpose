@@ -1,6 +1,5 @@
 package com.atexpose.dispatcher.logging.writer;
 
-import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.util.mail.IEmailSender;
 
 /**
@@ -8,13 +7,13 @@ import com.atexpose.util.mail.IEmailSender;
  *
  * @author jorgen
  */
-public class MailLogSender implements ILogWriter {
+public class MailLogWriter implements ILogWriter {
     private static final String MAIL_SUBJECT = "Expose error report";
     private final String mRecipient;
     private final IEmailSender mMailSender;
 
 
-    MailLogSender(String recipient, IEmailSender emailSender) {
+    public MailLogWriter(String recipient, IEmailSender emailSender) {
         mRecipient = recipient;
         mMailSender = emailSender;
     }
@@ -29,16 +28,12 @@ public class MailLogSender implements ILogWriter {
     /**
      * Sends a log as a mail.
      *
-     * @param sender Object that does the actual sending
+     * @param sender   Object that does the actual sending
      * @param logEntry The entry to add to log
      */
     void sendMail(IEmailSender sender, String logEntry) {
         sender.send(mRecipient, MAIL_SUBJECT, logEntry, "@Expose Log");
     }
 
-
-    @Override
-    public void setUp(String dispatcherName, LoggerType loggerType) {
-    }
 
 }
