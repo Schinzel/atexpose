@@ -166,7 +166,7 @@ public class WebChannel extends AbstractChannel {
             //Get redirect header
             return HttpsRedirect.wrapRedirect(urlWithHttps, RedirectHttpStatus.TEMPORARY);
         }
-        //There was no direct response, and thus return empty string. 
+        //There was no direct response, and thus return empty string.
         return EmptyObjects.EMPTY_STRING;
     }
 

@@ -42,7 +42,7 @@ public class URLParser extends AbstractParser {
 
 
     enum CallType {
-        COMMAND, FILE, GHOST, UNKNOWN
+        COMMAND, FILE, UNKNOWN
     }
     // ---------------------------------
     // - CONSTRUCTORS  -
@@ -77,10 +77,6 @@ public class URLParser extends AbstractParser {
     @Override
     public void parseRequest(String request) {
         mCallType = CallType.UNKNOWN;
-        if (request.length() == 1) {
-            mCallType = CallType.GHOST;
-            return;
-        }
         mHttpRequest = new HttpRequest(request);
         String url = mHttpRequest.getURL();
         //If is command call
@@ -114,10 +110,6 @@ public class URLParser extends AbstractParser {
     }
 
 
-    @Override
-    public boolean isGhostCall() {
-        return (mCallType == CallType.GHOST);
-    }
     // ---------------------------------
     // - PRIVATE STATIC  -
     // ---------------------------------
