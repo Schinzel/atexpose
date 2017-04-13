@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel.http;
 
-import com.atexpose.dispatcher.parser.urlparser.HttpRequest;
+import com.atexpose.dispatcher.parser.urlparser.http.HttpRequest;
 import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import io.schinzel.basicutils.Checker;
 

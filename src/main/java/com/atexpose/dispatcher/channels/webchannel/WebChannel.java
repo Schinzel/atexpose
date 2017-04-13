@@ -2,7 +2,7 @@ package com.atexpose.dispatcher.channels.webchannel;
 
 import com.atexpose.dispatcher.channels.AbstractChannel;
 import com.atexpose.dispatcher.channels.webchannel.http.HttpsRedirect;
-import com.atexpose.dispatcher.parser.urlparser.HttpRequest;
+import com.atexpose.dispatcher.parser.urlparser.http.HttpRequest;
 import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;

@@ -1,6 +1,7 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
 import com.atexpose.dispatcher.parser.AbstractParser;
+import com.atexpose.dispatcher.parser.urlparser.http.HttpRequest;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.SubStringer;
