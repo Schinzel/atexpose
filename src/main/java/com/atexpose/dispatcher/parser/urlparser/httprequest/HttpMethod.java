@@ -1,4 +1,4 @@
-package com.atexpose.dispatcher.parser.urlparser.http;
+package com.atexpose.dispatcher.parser.urlparser.httprequest;
 
 import com.atexpose.errors.RuntimeError;
 

@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel;
 
-import com.atexpose.dispatcher.parser.urlparser.http.HttpRequest;
+import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import com.atexpose.util.ByteStorage;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Sandman;

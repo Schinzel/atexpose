@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.atexpose.dispatcher.parser.urlparser.http;
+package com.atexpose.dispatcher.parser.urlparser.httprequest;
 
 import com.atexpose.dispatcher.parser.urlparser.URLParserTest;
 import org.junit.Test;
