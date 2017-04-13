@@ -8,7 +8,10 @@ import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.State;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -22,6 +25,7 @@ import java.net.SocketException;
  *
  * @author Schinzel
  */
+@Accessors(prefix = "m")
 public class WebChannel extends AbstractChannel {
     private static final int MAX_PENDING_REQUESTS = 50;
     /** The server socket. Shared by all threads listening to the same port. */
@@ -29,7 +33,7 @@ public class WebChannel extends AbstractChannel {
     /** The socket timeout. */
     final private int mSocketTimeout;
     /** If true, http requests are redirected to https requests. */
-    final boolean mForceHttps;
+    @Getter(AccessLevel.PACKAGE) private final boolean mToForceHttps;
     /** For logging and statistics, hold the time it took to read the message from first to last byte. */
     private long mLogRequestReadTime;
     /** The client socket connection. */
@@ -60,7 +64,7 @@ public class WebChannel extends AbstractChannel {
     private WebChannel(ServerSocket serverSocket, int timeout, boolean forceHttps) {
         mServerSocket = serverSocket;
         mSocketTimeout = timeout;
-        mForceHttps = forceHttps;
+        mToForceHttps = forceHttps;
     }
 
 
@@ -69,7 +73,7 @@ public class WebChannel extends AbstractChannel {
         return WebChannel.cloneBuilder()
                 .timeout(mSocketTimeout)
                 .serverSocket(mServerSocket)
-                .forceHttps(mForceHttps)
+                .forceHttps(this.isToForceHttps())
                 .buildClone();
     }
 
@@ -108,15 +112,15 @@ public class WebChannel extends AbstractChannel {
                 mClientSocket.setSoTimeout(mSocketTimeout);
                 HttpRequest httpRequest = SocketRW.read(request, mClientSocket);
                 //If is to force https and this is an http-request
-                if (mForceHttps && HttpsRedirect.isHttpReuqest(httpRequest)) {
+                if (this.isToForceHttps() && HttpsRedirect.isHttpReuqest(httpRequest)) {
                     //Get the full url with https
                     String urlWithHttps = HttpsRedirect.getUrlWithHttps(
                             httpRequest.getRequestHeaderValue("Host"),
                             httpRequest.getURL());
                     //Get redirect header
-                    String redirect = HttpsRedirect.wrapRedirect(urlWithHttps, RedirectHttpStatus.TEMPORARY);
-                    //Covert the redirect header to UTF-8
-                    byte[] redirectAsByteArr = EncodingUtil.convertToByteArray(redirect);
+                    String redirectHeader = HttpsRedirect.wrapRedirect(urlWithHttps, RedirectHttpStatus.TEMPORARY);
+                    //Covert the redirect header to UTF-8 byte array
+                    byte[] redirectAsByteArr = EncodingUtil.convertToByteArray(redirectHeader);
                     //Send the redirect instruction to client
                     this.writeResponse(redirectAsByteArr);
                     //Clear the incoming request.
@@ -191,6 +195,7 @@ public class WebChannel extends AbstractChannel {
                 .add("Port", mServerSocket.getLocalPort())
                 .add("Timeout", mSocketTimeout)
                 .add("Queue", MAX_PENDING_REQUESTS)
+                .add("ForceHttps", this.isToForceHttps())
                 .build();
     }
 }
