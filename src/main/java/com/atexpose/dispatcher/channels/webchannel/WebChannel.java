@@ -111,6 +111,9 @@ public class WebChannel extends AbstractChannel {
                 mLogRequestReadTime = System.currentTimeMillis();
                 mClientSocket.setSoTimeout(mSocketTimeout);
                 HttpRequest httpRequest = SocketRW.read(request, mClientSocket);
+                if (httpRequest.isGhostCall()){
+
+                }
                 //If is to force https and this is an http-request
                 if (this.isToForceHttps() && HttpsRedirect.isHttpReuqest(httpRequest)) {
                     //Get the full url with https

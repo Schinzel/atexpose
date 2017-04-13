@@ -4,6 +4,9 @@ import com.atexpose.errors.RuntimeError;
 import com.google.common.base.Splitter;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.Thrower;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +18,7 @@ import java.util.Map;
  *
  * @author schinzel
  */
+@Accessors(prefix = "m")
 public class HttpRequest {
     /** Marks the end of the url in http request. */
     private static final String END_OF_URL = " HTTP/1.1";
@@ -26,14 +30,18 @@ public class HttpRequest {
     private final HttpMethod mHttpMethod;
     /** Holds the http request. */
     private final String mHttpRequest;
+    /** True if this is a ghost call, i.e. that the whole request is one byte. */
+    @Getter private final boolean mGhostCall;
 
 
     /**
      * @param httpRequest A whole http request
      */
     public HttpRequest(String httpRequest) {
+        Thrower.throwIfNull(httpRequest, "httpRequest");
         mHttpMethod = HttpMethod.getRequestMethod(httpRequest);
         mHttpRequest = httpRequest;
+        mGhostCall = (httpRequest.length() == 1);
     }
 
 
