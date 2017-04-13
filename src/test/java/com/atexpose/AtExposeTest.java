@@ -1,26 +1,26 @@
 package com.atexpose;
 
 import com.atexpose.dispatcher.wrapper.FunnyChars;
-import java.io.IOException;
-import java.net.Socket;
-import java.nio.charset.Charset;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.After;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.nio.charset.Charset;
+
+import static org.junit.Assert.assertEquals;
+
 /**
- *
- *
- *
  * @author Schinzel
  */
 public class AtExposeTest {
     AtExpose mAtExpose;
     private static final String LOCAL_HOST_IP = "127.0.0.1";
     private static final String URL = "http://" + LOCAL_HOST_IP + ":5555/call/";
+
 
     @Before
     public void before() {
@@ -75,11 +75,11 @@ public class AtExposeTest {
         SocketRW.write(socket, baMessage);
         String expected = "HTTP/1.1 200 OK\r\n"
                 + "Server: AtExpose\r\n"
-                + "Content-Length: 8\r\n"
+                + "Content-Length: 9\r\n"
                 + "Content-Type: text/html; charset=UTF-8\r\n"
                 + "Cache-Control: max-age=0\r\n"
                 + "\r\n"
-                + "Hi Ghost";
+                + "Hi Ghost!";
         String response = SocketRW.read(socket);
         assertEquals(expected, response);
     }
@@ -89,7 +89,7 @@ public class AtExposeTest {
     public void test_WebServerCall_get_echo() throws IOException {
         String expected = "monkey";
         Connection.Response response = Jsoup
-                .connect(URL +  "echo")
+                .connect(URL + "echo")
                 .method(Connection.Method.GET)
                 .data("String", expected)
                 .execute();

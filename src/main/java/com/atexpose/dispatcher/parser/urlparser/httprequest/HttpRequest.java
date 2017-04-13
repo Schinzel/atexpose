@@ -39,9 +39,11 @@ public class HttpRequest {
      */
     public HttpRequest(String httpRequest) {
         Thrower.throwIfNull(httpRequest, "httpRequest");
-        mHttpMethod = HttpMethod.getRequestMethod(httpRequest);
         mHttpRequest = httpRequest;
         mGhostCall = (httpRequest.length() == 1);
+        mHttpMethod = this.isGhostCall()
+                ? HttpMethod.GET
+                : HttpMethod.getRequestMethod(httpRequest);
     }
 
 

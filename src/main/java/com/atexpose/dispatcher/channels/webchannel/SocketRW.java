@@ -79,8 +79,10 @@ class SocketRW {
      */
     private static HttpRequest getLaggardBytes(ByteStorage request, InputStream inputStream) throws IOException {
         HttpRequest hr = null;
-        //If there was any bytes
-        if (request.getNoOfBytesStored() > 1) {
+        if (request.getNoOfBytesStored() == 1) {
+            hr = new HttpRequest(" ");
+            //If there was any bytes
+        } else if (request.getNoOfBytesStored() > 1) {
             hr = new HttpRequest(request.getAsString());
             String sContentLength = hr.getRequestHeaderValue("Content-Length");
             //If there was a content length
