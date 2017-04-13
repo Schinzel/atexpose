@@ -170,7 +170,7 @@ public class HttpRequest {
     }
 
 
-    Map<String, String> getCookies() {
+    public Map<String, String> getCookies() {
         Map<String, String> cookies = new HashMap<>();
         String cookieString = getRequestHeaderValue("Cookie");
         if (Checker.isEmpty(cookieString)) {

@@ -32,7 +32,7 @@ enum HttpMethod {
 
     /**
      * @param httpRequest A whole http request
-     * @return Which enum the argument http request was
+     * @return The http method of the argument http request request
      */
     static HttpMethod getRequestMethod(String httpRequest) {
         if (GET.isThisTypeOfRequest(httpRequest)) {
