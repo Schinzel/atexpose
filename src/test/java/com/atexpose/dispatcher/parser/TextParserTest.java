@@ -1,13 +1,14 @@
 package com.atexpose.dispatcher.parser;
 
 import io.schinzel.basicutils.EmptyObjects;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
 /**
- *
  * @author Schinzel
  */
 public class TextParserTest {
@@ -54,7 +55,7 @@ public class TextParserTest {
         //
         textParser.parseRequest("getMonkey bananas");
         assertArrayEquals(EmptyObjects.EMPTY_STRING_ARRAY, textParser.getArgumentNames());
-        
+
     }
 
 
@@ -90,17 +91,5 @@ public class TextParserTest {
         assertEquals("44", textParser.getArgumentValues()[1]);
     }
 
-
-    @Test
-    public void test_toRedirectToHttps() {
-        assertFalse(new TextParser().toRedirectToHttps());
-    }
-
-
-    @Test
-    public void test_getUrlWithHttps() {
-        exception.expect(UnsupportedOperationException.class);
-        new TextParser().getUrlWithHttps();
-    }
 
 }

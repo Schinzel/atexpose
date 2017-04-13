@@ -170,10 +170,6 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
                 if (mParser.isGhostCall()) {
                     wrappedResponse = mWrapper.wrapResponse("Hi Ghost");
                     wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
-                } //If is to redirect to https
-                else if (mParser.toRedirectToHttps()) {
-                    wrappedResponse = mWrapper.wrapRedirect(mParser.getUrlWithHttps(), RedirectHttpStatus.TEMPORARY);
-                    wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
                 } // If this request should be redirected
                 else if (mParser.isRedirect()) {
                     Pair<String, RedirectHttpStatus> redirect = mParser.getRedirect();

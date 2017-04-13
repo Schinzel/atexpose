@@ -1,10 +1,10 @@
 package com.atexpose.dispatcher.parser;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.atexpose.errors.RuntimeError;
 import io.schinzel.basicutils.state.State;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class interprets requests in the TextParser format.
@@ -44,18 +44,6 @@ public class TextParser extends AbstractParser {
     @Override
     public State getState() {
         return State.getBuilder().build();
-    }
-
-
-    @Override
-    public boolean toRedirectToHttps() {
-        return false;
-    }
-
-
-    @Override
-    public String getUrlWithHttps() {
-        throw new UnsupportedOperationException("Not implemented.");
     }
 
 

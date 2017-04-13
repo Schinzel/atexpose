@@ -3,7 +3,6 @@ package com.atexpose.dispatcher.parser;
 import io.schinzel.basicutils.state.State;
 
 /**
- *
  * @author Schinzel
  */
 public class TestParser extends AbstractParser {
@@ -11,29 +10,31 @@ public class TestParser extends AbstractParser {
     public String[] mArgValues;
     public String mMethodName;
     public String mFilename;
-    
+
+
     @Override
-    public String[] getArgumentNames(){
+    public String[] getArgumentNames() {
         return mArgNames;
     }
 
-    
+
     @Override
-    public String[] getArgumentValues(){
+    public String[] getArgumentValues() {
         return mArgValues;
     }
-    
+
+
     @Override
-    public String getMethodName(){
+    public String getMethodName() {
         return mMethodName;
     }
-    
+
+
     @Override
     public String getFileName() {
         return mFilename;
     }
-    
-    
+
 
     @Override
     public AbstractParser getClone() {
@@ -48,20 +49,8 @@ public class TestParser extends AbstractParser {
 
 
     @Override
-    public boolean toRedirectToHttps() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
-    @Override
-    public String getUrlWithHttps() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
-    @Override
     public State getState() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

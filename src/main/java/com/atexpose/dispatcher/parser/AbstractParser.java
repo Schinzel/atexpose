@@ -26,21 +26,8 @@ public abstract class AbstractParser implements IStateNode {
      * @return Returns a clone of the current object.
      */
     public abstract AbstractParser getClone();
-    // ----------------------------------------------------------------
-    // REDIRECTS
-    // ----------------------------------------------------------------
 
 
-    /**
-     * @return True if the request a redirect is required
-     */
-    public abstract boolean toRedirectToHttps();
-
-
-    /**
-     * @return The URL of the request
-     */
-    public abstract String getUrlWithHttps();
     // ----------------------------------------------------------------
     // METHODS FOR PARSING
     // ----------------------------------------------------------------

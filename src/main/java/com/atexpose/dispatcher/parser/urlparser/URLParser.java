@@ -1,19 +1,18 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
 import com.atexpose.dispatcher.parser.AbstractParser;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.SubStringer;
 import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.tuple.Pair;
-import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.EmptyObjects;
-import io.schinzel.basicutils.SubStringer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The purpose of this class is to parse a request in the http format. Both post
@@ -135,31 +134,6 @@ public class URLParser extends AbstractParser {
         return returnString;
     }
     // ---------------------------------
-    // - REDIRECTS  -
-    // ---------------------------------
-
-
-    @Override
-    public boolean toRedirectToHttps() {
-        //If is to force https
-        if (mForceHttps) {
-            //Get the Heroku router protocol header
-            String herokuProtoHeader = mHttpRequest.getRequestHeaderValue("X-Forwarded-Proto");
-            //If there was a Heroku's router header and this header was "http"
-            if (!Checker.isEmpty(herokuProtoHeader) && herokuProtoHeader.equalsIgnoreCase("http")) {
-                //return true
-                return true;
-            }
-            //For unit test: if no Heroku router header
-            //and there was an url, i.e. the request was readable, i.e. the request was not a https request
-            if (Checker.isEmpty(herokuProtoHeader) && mHttpRequest.getURL() != null) {
-                return true;
-            }
-
-        }
-        return false;
-    }
-    // ---------------------------------
     // - STATUS  -
     // ---------------------------------
 
@@ -170,14 +144,6 @@ public class URLParser extends AbstractParser {
                 .add("Class", this.getClass().getSimpleName())
                 .add("ForceHttps", mForceHttps)
                 .build();
-    }
-
-
-    @Override
-    public String getUrlWithHttps() {
-        String host = mHttpRequest.getRequestHeaderValue("Host");
-        String url = mHttpRequest.getURL();
-        return "https://" + host + "/" + url;
     }
 
 
