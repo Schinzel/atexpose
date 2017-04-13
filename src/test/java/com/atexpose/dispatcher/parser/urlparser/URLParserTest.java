@@ -1,15 +1,13 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
 import com.atexpose.dispatcher.parser.urlparser.Redirect.RedirectType;
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import static org.junit.Assert.*;
-
-import org.junit.Test;
 
 /**
  * @author schinzel
@@ -477,48 +475,6 @@ public class URLParserTest {
         redirect = instance.getRedirect();
         //result = instance.getRedirectFile();
         assertEquals(expResult, redirect.getLeft());
-    }
-
-
-    @Test
-    public void testToRedirectToHttps() {
-        boolean toRedirectIfHttp = true;
-        URLParser instance = new URLParser(toRedirectIfHttp);
-        instance.parseRequest(HTTP_HEADER_HEROKU_HTTPS);
-        boolean expResult = false;
-        boolean result = instance.toRedirectToHttps();
-        assertEquals(expResult, result);
-        //
-        toRedirectIfHttp = true;
-        instance = new URLParser(toRedirectIfHttp);
-        instance.parseRequest(HTTP_HEADER_HEROKU_HTTP);
-        expResult = true;
-        result = instance.toRedirectToHttps();
-        assertEquals(expResult, result);
-        //
-        toRedirectIfHttp = false;
-        instance = new URLParser(toRedirectIfHttp);
-        instance.parseRequest(HTTP_HEADER_HEROKU_HTTP);
-        expResult = false;
-        result = instance.toRedirectToHttps();
-        assertEquals(expResult, result);
-        //
-        toRedirectIfHttp = false;
-        instance = new URLParser(toRedirectIfHttp);
-        instance.parseRequest(HTTP_HEADER_HEROKU_HTTPS);
-        expResult = false;
-        result = instance.toRedirectToHttps();
-        assertEquals(expResult, result);
-    }
-
-
-    @Test
-    public void testGetUrlWithHttps() {
-        URLParser instance = new URLParser();
-        instance.parseRequest(HTTP_HEADER_HEROKU_HTTP);
-        String result = instance.getUrlWithHttps();
-        String expResult = "https://127.0.0.1:5555/index.html?xyz=1234";
-        assertEquals(expResult, result);
     }
 
 
