@@ -1,6 +1,6 @@
 # @Expose
 
-The goal of @Expose is that is should be the fastest way to get a web server up and running that can 
+The goal of @Expose is that @Expose should be the fastest way to get a web server up and running that can 
 serve static file content such as HTML-files and handle proprietary Ajax requests. 
 
 Put differently: It should be the web server that distracts you the least from solving the actual problem you are working on.
@@ -9,7 +9,7 @@ Put differently: It should be the web server that distracts you the least from s
 
 [ ![Codeship Status for Schinzel/atexpose](https://app.codeship.com/projects/4c2a6360-e7b9-0134-79ff-465a81ad3c78/status?branch=master)](https://app.codeship.com/projects/207188)
 
-There are other frameworks and project that offers similar functionality to
+There are other frameworks and projects that offers similar functionality to
 @Expose. Many of them are a lot more well used and tested than @Expose. Notable
 examples are GlassFish and Jetty. If in doubt use these instead. 
 
