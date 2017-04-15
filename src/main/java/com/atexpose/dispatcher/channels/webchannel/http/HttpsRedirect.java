@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel.http;
 
-import com.atexpose.dispatcher.parser.urlparser.HttpRequest;
+import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import io.schinzel.basicutils.Checker;
 
@@ -10,7 +10,6 @@ import io.schinzel.basicutils.Checker;
  * Created by schinzel on 2017-04-10.
  */
 public class HttpsRedirect {
-    /** The name of the server as written in the response header **/
     private static final String RESPONSE_HEADER_LINE_BREAK = "\r\n";
     private static final String SERVER_NAME = "AtExpose";
 

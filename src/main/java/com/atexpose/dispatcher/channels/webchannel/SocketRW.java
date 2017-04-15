@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel;
 
-import com.atexpose.dispatcher.parser.urlparser.HttpRequest;
+import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import com.atexpose.util.ByteStorage;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Sandman;
@@ -79,8 +79,10 @@ class SocketRW {
      */
     private static HttpRequest getLaggardBytes(ByteStorage request, InputStream inputStream) throws IOException {
         HttpRequest hr = null;
-        //If there was any bytes
-        if (request.getNoOfBytesStored() > 1) {
+        if (request.getNoOfBytesStored() == 1) {
+            hr = new HttpRequest(" ");
+            //If there was any bytes
+        } else if (request.getNoOfBytesStored() > 1) {
             hr = new HttpRequest(request.getAsString());
             String sContentLength = hr.getRequestHeaderValue("Content-Length");
             //If there was a content length

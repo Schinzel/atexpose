@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel.http;
 
-import com.atexpose.dispatcher.parser.urlparser.HttpRequest;
+import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import org.junit.Assert;
 import org.junit.Test;
 

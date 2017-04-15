@@ -1,11 +1,14 @@
 package com.atexpose.dispatcher.channels.webchannel;
 
 import com.atexpose.dispatcher.channels.AbstractChannel;
+import com.atexpose.dispatcher.channels.webchannel.http.HttpResponse;
 import com.atexpose.dispatcher.channels.webchannel.http.HttpsRedirect;
-import com.atexpose.dispatcher.parser.urlparser.HttpRequest;
+import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
+import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
@@ -111,16 +114,10 @@ public class WebChannel extends AbstractChannel {
                 mLogRequestReadTime = System.currentTimeMillis();
                 mClientSocket.setSoTimeout(mSocketTimeout);
                 HttpRequest httpRequest = SocketRW.read(request, mClientSocket);
-                //If is to force https and this is an http-request
-                if (this.isToForceHttps() && HttpsRedirect.isHttpReuqest(httpRequest)) {
-                    //Get the full url with https
-                    String urlWithHttps = HttpsRedirect.getUrlWithHttps(
-                            httpRequest.getRequestHeaderValue("Host"),
-                            httpRequest.getURL());
-                    //Get redirect header
-                    String redirectHeader = HttpsRedirect.wrapRedirect(urlWithHttps, RedirectHttpStatus.TEMPORARY);
-                    //Covert the redirect header to UTF-8 byte array
-                    byte[] redirectAsByteArr = EncodingUtil.convertToByteArray(redirectHeader);
+                //Get direct response (empty string if there is no direct response)
+                String directResponse = this.getDirectResponse(httpRequest);
+                if (!Checker.isEmpty(directResponse)) {
+                    byte[] redirectAsByteArr = EncodingUtil.convertToByteArray(directResponse);
                     //Send the redirect instruction to client
                     this.writeResponse(redirectAsByteArr);
                     //Clear the incoming request.
@@ -146,6 +143,31 @@ public class WebChannel extends AbstractChannel {
         } while (keepReadingFromSocket);
         mLogRequestReadTime = System.currentTimeMillis() - mLogRequestReadTime;
         return true;
+    }
+
+
+    /**
+     * Get any direct response. Direct responses is when the WebChannel send the response directly without involving
+     * the rest of @expose. For example, if there is a http to https redirect.
+     *
+     * @param httpRequest
+     * @return Empty string if no direct response is to be sent. Else the direct response to send.
+     */
+    private String getDirectResponse(HttpRequest httpRequest) {
+        if (httpRequest.isGhostCall()) {
+            return HttpResponse.wrap("Hi Ghost!");
+        }
+        //If is to force https and this is an http-request
+        if (this.isToForceHttps() && HttpsRedirect.isHttpReuqest(httpRequest)) {
+            //Get the full url with https
+            String urlWithHttps = HttpsRedirect.getUrlWithHttps(
+                    httpRequest.getRequestHeaderValue("Host"),
+                    httpRequest.getURL());
+            //Get redirect header
+            return HttpsRedirect.wrapRedirect(urlWithHttps, RedirectHttpStatus.TEMPORARY);
+        }
+        //There was no direct response, and thus return empty string.
+        return EmptyObjects.EMPTY_STRING;
     }
 
 

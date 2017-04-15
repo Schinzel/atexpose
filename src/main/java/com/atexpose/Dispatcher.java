@@ -166,12 +166,8 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
                 decodedIncomingRequest = incomingRequest.getAsString();
                 //Send the incoming request to the protocol for extracting method name and arguments
                 mParser.parseRequest(decodedIncomingRequest);
-                // When request length is only one byte
-                if (mParser.isGhostCall()) {
-                    wrappedResponse = mWrapper.wrapResponse("Hi Ghost");
-                    wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
-                } // If this request should be redirected
-                else if (mParser.isRedirect()) {
+                // If this request should be redirected
+                if (mParser.isRedirect()) {
                     Pair<String, RedirectHttpStatus> redirect = mParser.getRedirect();
                     wrappedResponse = mWrapper.wrapRedirect(redirect.getLeft(), redirect.getRight());
                     wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);

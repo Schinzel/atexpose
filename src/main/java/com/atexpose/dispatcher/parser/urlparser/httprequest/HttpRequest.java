@@ -1,9 +1,12 @@
-package com.atexpose.dispatcher.parser.urlparser;
+package com.atexpose.dispatcher.parser.urlparser.httprequest;
 
 import com.atexpose.errors.RuntimeError;
 import com.google.common.base.Splitter;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.Thrower;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,76 +18,32 @@ import java.util.Map;
  *
  * @author schinzel
  */
+@Accessors(prefix = "m")
 public class HttpRequest {
-    /**
-     * Marks the end of the url in http request.
-     */
+    /** Marks the end of the url in http request. */
     private static final String END_OF_URL = " HTTP/1.1";
-    /**
-     * Marks the delimiter between header and body.
-     */
+    /** Marks the delimiter between header and body. */
     private static final String HEADER_BODY_DELIMITER = "\r\n\r\n";
-    /**
-     * The delimiter between header fields.
-     */
+    /** The delimiter between header fields. */
     private static final String HEADER_FIELD_DELIMITER = "\r\n";
-    /**
-     * Holds the request method used.
-     */
-    private final RequestMethod mRequestMethod;
-    /**
-     * Holds the http request.
-     */
+    /** Holds the request method used. */
+    private final HttpMethod mHttpMethod;
+    /** Holds the http request. */
     private final String mHttpRequest;
-
-    /**
-     * The purpose enum is to encapsualte the request methods.
-     */
-    private enum RequestMethod {
-        GET("GET"),
-        POST("POST");
-        private final String mRequestMethodAsString;
-
-
-        /**
-         * @param requestMethodAsString The name of the request method
-         */
-        RequestMethod(String requestMethodAsString) {
-            mRequestMethodAsString = requestMethodAsString + " /";
-        }
-
-
-        /**
-         * @param httpRequest A whole http requst with header and everything
-         * @return returns true if this argument http request was of this type
-         */
-        private boolean isThisTypeOfRequest(String httpRequest) {
-            return (httpRequest.indexOf(mRequestMethodAsString) == 0);
-        }
-
-
-        /**
-         * @param httpRequest A whole http request
-         * @return Which enum the argument http request was
-         */
-        static RequestMethod getRequestMethod(String httpRequest) {
-            if (GET.isThisTypeOfRequest(httpRequest)) {
-                return GET;
-            } else if (POST.isThisTypeOfRequest(httpRequest)) {
-                return POST;
-            } else {
-                throw new RuntimeError("Request not allowed. Request has to start with GET or POST. Request:' " + httpRequest + "'");
-            }
-        }
-    }
+    /** True if this is a ghost call, i.e. that the whole request is one byte. */
+    @Getter private final boolean mGhostCall;
 
 
     /**
      * @param httpRequest A whole http request
      */
     public HttpRequest(String httpRequest) {
-        mRequestMethod = RequestMethod.getRequestMethod(httpRequest);
+        Thrower.throwIfNull(httpRequest, "httpRequest");
         mHttpRequest = httpRequest;
+        mGhostCall = (httpRequest.length() == 1);
+        mHttpMethod = this.isGhostCall()
+                ? HttpMethod.GET
+                : HttpMethod.getRequestMethod(httpRequest);
     }
 
 
@@ -93,13 +52,13 @@ public class HttpRequest {
      * if any.
      */
     public String getURL() {
-        int start = mHttpRequest.indexOf(mRequestMethod.mRequestMethodAsString);
+        int start = mHttpRequest.indexOf(mHttpMethod.mRequestMethodAsString);
         if (start == -1) {
             //throw error
-            throw new RuntimeError("Request method marker '" + mRequestMethod.mRequestMethodAsString + "' was missing");
+            throw new RuntimeError("Request method marker '" + mHttpMethod.mRequestMethodAsString + "' was missing");
         }
         //Set the start to be where the request label was found plus the length of the request label
-        start += mRequestMethod.mRequestMethodAsString.length();
+        start += mHttpMethod.mRequestMethodAsString.length();
         //Set the end to be end of url
         int end = mHttpRequest.indexOf(END_OF_URL);
         //If the end of url marker was not found
@@ -114,7 +73,7 @@ public class HttpRequest {
     /**
      * @return The method name invoked
      */
-    String getPath() {
+    public String getPath() {
         String url = this.getURL();
         int end = url.indexOf('?');
         //If there was no question mark
@@ -132,7 +91,7 @@ public class HttpRequest {
      */
     String getVariablesAsString() {
         //If this is a GET method
-        if (mRequestMethod == RequestMethod.GET) {
+        if (mHttpMethod == HttpMethod.GET) {
             //Get and return the querystring
             return this.getQueryString();
         }//else, i.e. this is a POST method
@@ -147,7 +106,7 @@ public class HttpRequest {
      * @return The variable of the request. The body if this is a POST the
      * querystring of this is a GET.
      */
-    Map<String, String> getVariablesAsMap() {
+    public Map<String, String> getVariablesAsMap() {
         Map<String, String> map = EmptyObjects.EMPTY_MAP;
         String variablesAsString = this.getVariablesAsString();
         if (!Checker.isEmpty(variablesAsString)) {
@@ -221,7 +180,7 @@ public class HttpRequest {
     }
 
 
-    Map<String, String> getCookies() {
+    public Map<String, String> getCookies() {
         Map<String, String> cookies = new HashMap<>();
         String cookieString = getRequestHeaderValue("Cookie");
         if (Checker.isEmpty(cookieString)) {

@@ -26,8 +26,6 @@ public abstract class AbstractParser implements IStateNode {
      * @return Returns a clone of the current object.
      */
     public abstract AbstractParser getClone();
-
-
     // ----------------------------------------------------------------
     // METHODS FOR PARSING
     // ----------------------------------------------------------------
@@ -97,11 +95,6 @@ public abstract class AbstractParser implements IStateNode {
         mMethodName = EmptyObjects.EMPTY_STRING;
         mArgumentNames = EmptyObjects.EMPTY_STRING_ARRAY;
         mArgumentValues = EmptyObjects.EMPTY_STRING_ARRAY;
-    }
-
-
-    public boolean isGhostCall() {
-        return false;
     }
 
 
