@@ -57,13 +57,14 @@
         </extensions>
         <plugins>
             <plugin>
-                <!-- Generates JaCoCo code coverage repports-->
+                <!-- Generates JaCoCo code coverage reports
+                To run locally: mvn test jacoco:report -->
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.9</version>
                 <configuration>
                     <excludes>
-                    <exclude>io/schinzel/samples/**/*</exclude>
+                        <exclude>io/schinzel/samples/**/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
