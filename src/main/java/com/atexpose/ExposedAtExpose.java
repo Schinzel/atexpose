@@ -1,5 +1,8 @@
 package com.atexpose;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.json.JSONObject;
 
 /**
@@ -8,7 +11,9 @@ import org.json.JSONObject;
  * <p>
  * Created by schinzel on 2017-04-16.
  */
+@Accessors(prefix = "m")
 class ExposedAtExpose {
+    @Getter(AccessLevel.PACKAGE)
     private final AtExpose mAtExpose;
 
 
@@ -30,7 +35,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose"}
     )
     public String loadScriptFile(String fileName, String recipient) {
-        mAtExpose.loadScriptFile(fileName, recipient);
+        this.getAtExpose().loadScriptFile(fileName, recipient);
         return "Script file '" + fileName + "' loaded.";
     }
 
@@ -42,7 +47,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose"}
     )
     public String startWebServer(int port, String dir) {
-        mAtExpose.getWebServerBuilder()
+        this.getAtExpose().getWebServerBuilder()
                 .port(port)
                 .webServerDir(dir)
                 .startWebServer();
@@ -58,7 +63,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose"}
     )
     public String setSMTPServerGmail(String username, String password) {
-        mAtExpose.setSMTPServerGmail(username, password);
+        this.getAtExpose().setSMTPServerGmail(username, password);
         return "SMTP server settings set";
     }
 
@@ -69,7 +74,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose"}
     )
     public String setMockSMTPServer() {
-        mAtExpose.setMockSMTPServer();
+        this.getAtExpose().setMockSMTPServer();
         return "Mock SMTP server settings is set";
     }
 
@@ -85,7 +90,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
     public String addScheduledReport(String TaskName, String Request, String TimeOfDay, String recipient, String fromName) {
-        mAtExpose.addScheduledReport(TaskName, Request, TimeOfDay, recipient, fromName);
+        this.getAtExpose().addScheduledReport(TaskName, Request, TimeOfDay, recipient, fromName);
         return "Scheduled report '" + TaskName + "' has been set up";
     }
 
@@ -100,7 +105,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
     public String addDailyTask(String TaskName, String Request, String TimeOfDay) {
-        mAtExpose.addDailyTask(TaskName, Request, TimeOfDay);
+        this.getAtExpose().addDailyTask(TaskName, Request, TimeOfDay);
         return "Task '" + TaskName + "' set up";
     }
 
@@ -116,7 +121,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
     public String addTask(String TaskName, String Request, int Minutes) {
-        mAtExpose.addTask(TaskName, Request, Minutes);
+        this.getAtExpose().addTask(TaskName, Request, Minutes);
         return "Task '" + TaskName + "' set up";
     }
 
@@ -131,7 +136,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
     public String addMonthlyTask(String TaskName, String Request, String TimeOfDay, int DayOfMonth) {
-        mAtExpose.addMonthlyTask(TaskName, Request, TimeOfDay, DayOfMonth);
+        this.getAtExpose().addMonthlyTask(TaskName, Request, TimeOfDay, DayOfMonth);
         return "Task '" + TaskName + "' set up";
     }
 
@@ -144,7 +149,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
     public String removeTask(String TaskName) {
-        mAtExpose.removeTask(TaskName);
+        this.getAtExpose().removeTask(TaskName);
         return "Task '" + TaskName + "' was removed";
     }
 
@@ -157,7 +162,7 @@ class ExposedAtExpose {
             requiredArgumentCount = 1
     )
     public String addEventLogger(String DispatcherName, String LogFormatter, String LogWriter, String cryptoKey) {
-        mAtExpose.addEventLogger(DispatcherName, LogFormatter, LogWriter, cryptoKey);
+        this.getAtExpose().addEventLogger(DispatcherName, LogFormatter, LogWriter, cryptoKey);
         return "Dispatcher " + DispatcherName + " got an event logger";
     }
 
@@ -170,7 +175,7 @@ class ExposedAtExpose {
             requiredArgumentCount = 1
     )
     public String addErrorLogger(String DispatcherName, String LogFormatter, String LogWriter, String cryptoKey) {
-        mAtExpose.addErrorLogger(DispatcherName, LogFormatter, LogWriter, cryptoKey);
+        this.getAtExpose().addErrorLogger(DispatcherName, LogFormatter, LogWriter, cryptoKey);
         return "Dispatcher " + DispatcherName + " got an error logger";
     }
 
@@ -183,7 +188,7 @@ class ExposedAtExpose {
             requiredArgumentCount = 1
     )
     public String removeAllLoggers(String dispatcherName) {
-        mAtExpose.removeAllLoggers(dispatcherName);
+        this.getAtExpose().removeAllLoggers(dispatcherName);
         return "Removed all loggers from dispatcher '" + dispatcherName + "'";
     }
 
@@ -195,7 +200,7 @@ class ExposedAtExpose {
             labels = {"@Expose"}
     )
     public synchronized String shutdown() {
-        mAtExpose.shutdown();
+        this.getAtExpose().shutdown();
         return "Shutting down...";
     }
 
@@ -207,7 +212,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose"}
     )
     public String closeDispatcher(String name) {
-        mAtExpose.closeDispatcher(name);
+        this.getAtExpose().closeDispatcher(name);
         return "Dispatcher " + name + " has been closed";
     }
 
@@ -218,7 +223,7 @@ class ExposedAtExpose {
             labels = {"@Expose"}
     )
     public JSONObject apiAsJson() {
-        return mAtExpose.getAPI().getState().getJson();
+        return this.getAtExpose().getAPI().getState().getJson();
     }
 
 
@@ -228,7 +233,7 @@ class ExposedAtExpose {
             labels = {"@Expose"}
     )
     public String api() {
-        return mAtExpose.getAPI().getState().getString();
+        return this.getAtExpose().getAPI().getState().getString();
     }
 
 
