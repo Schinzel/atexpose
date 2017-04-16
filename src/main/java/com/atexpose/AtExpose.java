@@ -140,17 +140,17 @@ public class AtExpose implements IStateNode {
 
 
     /**
-     * @param TaskName  The name of the report.
-     * @param Request   The request to execute.
-     * @param TimeOfDay The time of day to run the report.
+     * @param taskName  The name of the report.
+     * @param request   The request to execute.
+     * @param timeOfDay The time of day to run the report.
      * @param recipient The recipient email address.
      * @param fromName  The name in the from field in the mail
      * @return Status of the operation message.
      */
-    public AtExpose addScheduledReport(String TaskName, String Request, String TimeOfDay, String recipient, String fromName) {
+    public AtExpose addScheduledReport(String taskName, String request, String timeOfDay, String recipient, String fromName) {
         Thrower.throwIfTrue(mMailSender == null, "You need to set SMTP settings before setting up a scheduled report. Use method setSMTPServer.");
         AbstractParser parser = new TextParser();
-        parser.parseRequest(Request);
+        parser.parseRequest(request);
         String methodName = parser.getMethodName();
         if (!mAPI.methodExits(methodName)) {
             throw new RuntimeException("No such method '" + methodName + "'");
@@ -158,12 +158,12 @@ public class AtExpose implements IStateNode {
         ScheduledReportChannel scheduledReport = ScheduledReportChannel.builder()
                 .emailSender(mMailSender)
                 .recipient(recipient)
-                .request(Request)
-                .taskName(TaskName)
-                .timeOfDay(TimeOfDay)
+                .request(request)
+                .taskName(taskName)
+                .timeOfDay(timeOfDay)
                 .fromName(fromName)
                 .build();
-        String dispatcherName = "ScheduledReport_" + TaskName;
+        String dispatcherName = "ScheduledReport_" + taskName;
         Dispatcher dispatcher = Dispatcher.builder()
                 .name(dispatcherName)
                 .accessLevel(3)
@@ -183,22 +183,22 @@ public class AtExpose implements IStateNode {
     //------------------------------------------------------------------------
     // SCHEDULED TASKS
     //------------------------------------------------------------------------
-    public AtExpose addDailyTask(String TaskName, String Request, String TimeOfDay) {
-        ScheduledTaskChannel scheduledTaskChannel = new ScheduledTaskChannel(TaskName, Request, TimeOfDay);
-        this.addTask(TaskName, scheduledTaskChannel);
+    public AtExpose addDailyTask(String taskName, String request, String timeOfDay) {
+        ScheduledTaskChannel scheduledTaskChannel = new ScheduledTaskChannel(taskName, request, timeOfDay);
+        this.addTask(taskName, scheduledTaskChannel);
         return this;
     }
 
 
-    public AtExpose addTask(String TaskName, String Request, int Minutes) {
-        ScheduledTaskChannel scheduledTaskChannel = new ScheduledTaskChannel(TaskName, Request, Minutes);
-        return this.addTask(TaskName, scheduledTaskChannel);
+    public AtExpose addTask(String taskName, String request, int minutes) {
+        ScheduledTaskChannel scheduledTaskChannel = new ScheduledTaskChannel(taskName, request, minutes);
+        return this.addTask(taskName, scheduledTaskChannel);
     }
 
 
-    public AtExpose addMonthlyTask(String TaskName, String Request, String TimeOfDay, int DayOfMonth) {
-        ScheduledTaskChannel scheduledTaskChannel = new ScheduledTaskChannel(TaskName, Request, TimeOfDay, DayOfMonth);
-        return this.addTask(TaskName, scheduledTaskChannel);
+    public AtExpose addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth) {
+        ScheduledTaskChannel scheduledTaskChannel = new ScheduledTaskChannel(taskName, request, timeOfDay, dayOfMonth);
+        return this.addTask(taskName, scheduledTaskChannel);
     }
 
 
@@ -209,19 +209,19 @@ public class AtExpose implements IStateNode {
             description = {"Removes the argument scheduled task."},
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
-    public AtExpose removeTask(String TaskName) {
-        String dispatcherName = "ScheduledTask_" + TaskName;
+    public AtExpose removeTask(String taskName) {
+        String dispatcherName = "ScheduledTask_" + taskName;
         this.closeDispatcher(dispatcherName);
         return this;
     }
 
 
-    private AtExpose addTask(String TaskName, ScheduledTaskChannel scheduledTask) {
+    private AtExpose addTask(String taskName, ScheduledTaskChannel scheduledTask) {
         AbstractParser parser = new TextParser();
         parser.parseRequest(scheduledTask.getRequestAsString());
         String methodName = parser.getMethodName();
         Thrower.throwIfFalse(mAPI.methodExits(methodName), "No such method '" + methodName + "'");
-        String dispatcherName = "ScheduledTask_" + TaskName;
+        String dispatcherName = "ScheduledTask_" + taskName;
         Dispatcher dispatcher = Dispatcher.builder()
                 .name(dispatcherName)
                 .accessLevel(3)
@@ -242,8 +242,8 @@ public class AtExpose implements IStateNode {
     // ---------------------------------
     // - Loggers  -
     // ---------------------------------
-    public AtExpose addEventLogger(String DispatcherName, String LogFormatter, String LogWriter, String cryptoKey) {
-        return this.addLogger(LoggerType.EVENT, DispatcherName, LogFormatter, LogWriter, cryptoKey);
+    public AtExpose addEventLogger(String dispatcherName, String logFormatter, String logWriter, String cryptoKey) {
+        return this.addLogger(LoggerType.EVENT, dispatcherName, logFormatter, logWriter, cryptoKey);
     }
 
 
@@ -252,19 +252,19 @@ public class AtExpose implements IStateNode {
     }
 
 
-    private AtExpose addLogger(LoggerType loggerType, String DispatcherName, String LogFormatter, String LogWriter, String cryptoKey) {
-        ILogFormatter logFormatter = LogFormatterFactory.get(LogFormatter).getInstance();
-        ILogWriter logWriter = LogWriterFactory.create(LogWriter).getInstance();
+    private AtExpose addLogger(LoggerType loggerType, String dispatcherName, String logFormatter, String logWriter, String cryptoKey) {
+        ILogFormatter logFormatterObj = LogFormatterFactory.get(logFormatter).getInstance();
+        ILogWriter logWriterObj = LogWriterFactory.create(logWriter).getInstance();
         ICrypto crypto = Checker.isEmpty(cryptoKey)
                 ? new NoCrypto()
                 : Crypto.getInstance(cryptoKey);
         Logger loggerBuilder = Logger.builder()
                 .loggerType(loggerType)
-                .logFormat(logFormatter)
-                .logWriter(logWriter)
+                .logFormat(logFormatterObj)
+                .logWriter(logWriterObj)
                 .crypto(crypto)
                 .build();
-        Dispatcher dispatcher = this.getDispatchers().get(DispatcherName);
+        Dispatcher dispatcher = this.getDispatchers().get(dispatcherName);
         return this.addLogger(dispatcher, loggerBuilder);
     }
 
@@ -306,11 +306,11 @@ public class AtExpose implements IStateNode {
     }
 
 
-    public String closeDispatcher(String name) {
-        Dispatcher dispatcher = this.getDispatchers().get(name);
+    public String closeDispatcher(String dispatcherName) {
+        Dispatcher dispatcher = this.getDispatchers().get(dispatcherName);
         dispatcher.shutdown();
-        this.getDispatchers().remove(name);
-        return "Dispatcher " + name + " has been closed";
+        this.getDispatchers().remove(dispatcherName);
+        return "Dispatcher " + dispatcherName + " has been closed";
     }
 
 
@@ -332,14 +332,6 @@ public class AtExpose implements IStateNode {
         //Start the messaging!
         dispatcher.commenceMessaging(isSynchronized);
         return dispatcher;
-    }
-    // ---------------------------------
-    // - API  -
-    // ---------------------------------
-
-
-    public API getAPI() {
-        return mAPI;
     }
     // ---------------------------------
     // - STATUS  -
