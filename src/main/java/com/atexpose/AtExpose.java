@@ -1,6 +1,7 @@
 package com.atexpose;
 
 import com.atexpose.api.API;
+import com.atexpose.atexpose.*;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.mail.IEmailSender;
@@ -26,13 +27,9 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
     /** Reference to the API. */
     @Getter private final API mAPI;
     /** Holds an email sender instance if such has been set up. */
-    @Getter
-    private IEmailSender mMailSender;
+    @Getter private IEmailSender mMailSender;
     /** Holds the running dispatchers */
     @Getter KeyValues<Dispatcher> mDispatchers = KeyValues.create("Dispatchers");
-    //------------------------------------------------------------------------
-    // CONSTRUCTION
-    //------------------------------------------------------------------------
 
 
     /**
@@ -50,6 +47,10 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
     }
 
 
+    /**
+     *
+     * @return A web server builder. 
+     */
     public WebServerBuilder getWebServerBuilder() {
         return new WebServerBuilder(this.getAPI(), this.getDispatchers());
     }
@@ -67,20 +68,6 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
         this.getDispatchers().clear();
         return this;
     }
-    // ---------------------------------
-    // - STATUS  -
-    // ---------------------------------
-
-
-    @Override
-    public State getState() {
-        return State.getBuilder()
-                .add("TimeNow", DateTimeStrings.getDateTimeUTC())
-                .add("StartTime", mInstanceStartTime)
-                .add("EmailSender", this.getMailSender())
-                .add("Dispatchers", this.getDispatchers())
-                .build();
-    }
 
 
     @Override
@@ -93,5 +80,16 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
     public AtExpose setMailSender(IEmailSender emailSender) {
         mMailSender = emailSender;
         return this;
+    }
+
+
+    @Override
+    public State getState() {
+        return State.getBuilder()
+                .add("TimeNow", DateTimeStrings.getDateTimeUTC())
+                .add("StartTime", mInstanceStartTime)
+                .add("EmailSender", this.getMailSender())
+                .add("Dispatchers", this.getDispatchers())
+                .build();
     }
 }

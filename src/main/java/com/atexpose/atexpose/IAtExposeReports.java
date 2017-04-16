@@ -1,4 +1,4 @@
-package com.atexpose;
+package com.atexpose.atexpose;
 
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.ScheduledReportChannel;
@@ -21,7 +21,7 @@ import io.schinzel.basicutils.Thrower;
  * <p>
  * Created by schinzel on 2017-04-16.
  */
-interface IAtExposeReports<T extends IAtExpose<T>> extends IAtExpose<T> {
+public interface IAtExposeReports<T extends IAtExpose<T>> extends IAtExpose<T> {
 
     T setMailSender(IEmailSender emailSender);
 

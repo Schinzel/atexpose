@@ -1,4 +1,4 @@
-package com.atexpose;
+package com.atexpose.atexpose;
 
 import com.atexpose.dispatcher.Dispatcher;
 

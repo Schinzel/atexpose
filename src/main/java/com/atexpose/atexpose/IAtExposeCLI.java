@@ -1,4 +1,4 @@
-package com.atexpose;
+package com.atexpose.atexpose;
 
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.CommandLineChannel;
@@ -10,7 +10,7 @@ import com.atexpose.dispatcher.wrapper.CsvWrapper;
  * <p>
  * Created by schinzel on 2017-04-16.
  */
-interface IAtExposeCLI<T extends IAtExpose<T>> extends IAtExpose<T> {
+public interface IAtExposeCLI<T extends IAtExpose<T>> extends IAtExpose<T> {
 
 
     /**

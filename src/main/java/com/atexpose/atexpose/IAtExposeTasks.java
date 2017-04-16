@@ -1,4 +1,4 @@
-package com.atexpose;
+package com.atexpose.atexpose;
 
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.ScheduledTaskChannel;
@@ -16,7 +16,7 @@ import io.schinzel.basicutils.Thrower;
  *
  * Created by schinzel on 2017-04-16.
  */
-interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
+public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
 
     /**
      * Sets up a task to run once a day at the argument time of the day.
