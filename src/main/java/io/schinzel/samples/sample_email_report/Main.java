@@ -18,12 +18,12 @@ import com.atexpose.AtExpose;
 class Main {
 
     public static void main(String[] args) {
-        AtExpose atExpose = AtExpose.create();
-        //Set your Gmail username and password
-        atExpose.setSMTPServerGmail("myusername@example.com", "mypassword");
-        //Set the the time to send in UTC a
-        atExpose.addScheduledReport("MyTask", "ping", "10:24", "recipient@example.com", "Me");
-        //Start command line interface
-        atExpose.startCLI();
+        AtExpose.create()
+                //Set your Gmail username and password
+                .setSMTPServerGmail("myusername@example.com", "mypassword")
+                //Set the the time to send in UTC a
+                .addScheduledReport("MyTask", "ping", "10:24", "recipient@example.com", "Me")
+                //Start command line interface
+                .startCLI();
     }
 }

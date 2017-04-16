@@ -17,14 +17,16 @@ public class Main {
 
     public static void main(String[] args) {
         AtExpose atExpose = AtExpose.create();
-        //Expose static methods in a class
-        atExpose.getAPI().expose(MyClass.class);
-        //Expose an instance
-        atExpose.getAPI().expose(new MyObject());
-        //Start a command line interface
-        atExpose.startCLI();
-        //Start a web server
-        atExpose.getWebServerBuilder()
+        atExpose.getAPI()
+                //Expose static methods in a class
+                .expose(MyClass.class)
+                //Expose an instance
+                .expose(new MyObject());
+        atExpose
+                //Start a command line interface
+                .startCLI()
+                //Start a web server
+                .getWebServerBuilder()
                 .webServerDir("web/sample3")
                 //Disable RAM cache so that change made kicks through without restarting the web server
                 .cacheFilesInRAM(false)

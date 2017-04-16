@@ -1,17 +1,16 @@
 package com.atexpose;
 
-import java.io.IOException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Schinzel
@@ -38,10 +37,10 @@ public class AtExposeTest2 {
         String taskName = "theTaskName";
         String request = "ping";
         String timeOfDay = "14:30";
-        AtExpose cc = AtExpose.create();
-        cc.setSMTPServerGmail("u1", "p1");
-        cc.addScheduledReport(taskName, request, timeOfDay, "monkey@example.com", "fn1");
-        JSONObject jo = cc.statusAsJson();
+        AtExpose atExpose = AtExpose.create();
+        atExpose.setSMTPServerGmail("u1", "p1");
+        atExpose.addScheduledReport(taskName, request, timeOfDay, "monkey@example.com", "fn1");
+        JSONObject jo = atExpose.getState().getJson();
         JSONObject joDispatcher = jo.getJSONArray("Dispatchers").getJSONObject(0);
         assertEquals("ScheduledReport_" + taskName, joDispatcher.getString("Name"));
     }
