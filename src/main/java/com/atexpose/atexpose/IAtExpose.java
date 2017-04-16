@@ -15,12 +15,29 @@ import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 interface IAtExpose<T extends IAtExpose<T>> {
 
 
+    /**
+     *
+     * @return The API used by this instance.
+     */
     API getAPI();
 
 
+    /**
+     *
+     * @return The collection with all dispatchers.
+     */
     KeyValues<Dispatcher> getDispatchers();
 
 
+    /**
+     * Exists for programming technical reasons only. Allows implementing classes and extending interfaces to return
+     * a "this" that refers to implementing class or extending interface, instead of the interface being implemented
+     * or extended. This as opposed to casting and/or overloading methods just to return the correct type.
+     * <p>
+     * This should really be package private or protected. But as this is not an option, it has to be public.
+     *
+     * @return This for chaining.
+     */
     T getThis();
 
 
