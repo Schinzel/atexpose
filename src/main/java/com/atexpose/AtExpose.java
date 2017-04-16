@@ -7,9 +7,7 @@ import com.atexpose.util.mail.IEmailSender;
 import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -22,17 +20,16 @@ import lombok.experimental.Accessors;
 @SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue", "UnusedReturnValue"})
 @Accessors(prefix = "m")
 public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeReports<AtExpose>,
-        IAtExposeScriptFile<AtExpose>, IAtExposeTasks<AtExpose> {
+        IAtExposeScriptFile<AtExpose>, IAtExposeTasks<AtExpose>, IAtExposeLog<AtExpose> {
     /** Instance creation time. For status and debug purposes. */
     private final String mInstanceStartTime = DateTimeStrings.getDateTimeUTC();
     /** Reference to the API. */
     @Getter private final API mAPI;
     /** Holds an email sender instance if such has been set up. */
-    @Getter(AccessLevel.PROTECTED)
-    @Setter(AccessLevel.PROTECTED)
+    @Getter
     private IEmailSender mMailSender;
     /** Holds the running dispatchers */
-    @Getter(AccessLevel.PRIVATE) KeyValues<Dispatcher> mDispatchers = KeyValues.create("Dispatchers");
+    @Getter KeyValues<Dispatcher> mDispatchers = KeyValues.create("Dispatchers");
     //------------------------------------------------------------------------
     // CONSTRUCTION
     //------------------------------------------------------------------------
@@ -88,6 +85,13 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
 
     @Override
     public AtExpose getThis() {
+        return this;
+    }
+
+
+    @Override
+    public AtExpose setMailSender(IEmailSender emailSender) {
+        mMailSender = emailSender;
         return this;
     }
 }

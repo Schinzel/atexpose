@@ -35,10 +35,10 @@ public enum LogWriterFactory {
      * @param className
      * @return 
      */
-    public static LogWriterFactory create(String className) {
-        for (LogWriterFactory logFormater : LogWriterFactory.values()) {
-            if (logFormater.mClass.getSimpleName().equalsIgnoreCase(className)) {
-                return logFormater;
+    public static LogWriterFactory get(String className) {
+        for (LogWriterFactory logWriter : LogWriterFactory.values()) {
+            if (logWriter.mClass.getSimpleName().equalsIgnoreCase(className)) {
+                return logWriter;
             }
         }
         throw new RuntimeException("Sorry. No LogWriter named '" + className + "' exists.");
