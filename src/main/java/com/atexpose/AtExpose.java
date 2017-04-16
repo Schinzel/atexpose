@@ -32,6 +32,7 @@ import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -49,7 +50,9 @@ public class AtExpose implements IStateNode {
     /** Reference to the API. */
     @Getter private final API mAPI;
     /** Holds an email sender instance if such has been set up. */
-    @Getter(AccessLevel.PROTECTED) private IEmailSender mMailSender;
+    @Getter(AccessLevel.PROTECTED)
+    @Setter(AccessLevel.PROTECTED)
+    private IEmailSender mMailSender;
     /** Holds the running dispatchers */
     @Getter(AccessLevel.PRIVATE) KeyValues<Dispatcher> mDispatchers = KeyValues.create("Dispatchers");
     //------------------------------------------------------------------------
@@ -105,7 +108,7 @@ public class AtExpose implements IStateNode {
             Logger eMailLogger = Logger.builder()
                     .loggerType(LoggerType.ERROR)
                     .logFormat(new MultiLineFormatter())
-                    .logWriter(new MailLogWriter(emailErrorLogRecipient, mMailSender))
+                    .logWriter(new MailLogWriter(emailErrorLogRecipient, this.getMailSender()))
                     .build();
             scriptFileDispatcher.addLogger(eMailLogger);
         }
@@ -133,7 +136,7 @@ public class AtExpose implements IStateNode {
 
 
     public WebServerBuilder getWebServerBuilder() {
-        return new WebServerBuilder(this.getAPI(), mDispatchers);
+        return new WebServerBuilder(this.getAPI(), this.getDispatchers());
     }
     //------------------------------------------------------------------------
     // SCHEDULED REPORTS
@@ -148,7 +151,7 @@ public class AtExpose implements IStateNode {
      * @return This for chaining.
      */
     public AtExpose setSMTPServerGmail(String username, String password) {
-        mMailSender = new GmailEmailSender(username, password);
+        this.setMailSender(new GmailEmailSender(username, password));
         return this;
     }
 
@@ -159,7 +162,7 @@ public class AtExpose implements IStateNode {
      * @return This for chaining.
      */
     public AtExpose setMockSMTPServer() {
-        mMailSender = new MockMailSender();
+        this.setMailSender(new MockMailSender());
         return this;
     }
 
@@ -176,7 +179,7 @@ public class AtExpose implements IStateNode {
      * @return This for chaining.
      */
     public AtExpose addScheduledReport(String taskName, String request, String timeOfDay, String recipient, String fromName) {
-        Thrower.throwIfTrue(mMailSender == null, "You need to set SMTP settings before setting up a scheduled report. Use method setSMTPServer.");
+        Thrower.throwIfTrue(this.getMailSender() == null, "You need to set SMTP settings before setting up a scheduled report. Use method setSMTPServer.");
         AbstractParser parser = new TextParser();
         parser.parseRequest(request);
         String methodName = parser.getMethodName();
@@ -184,7 +187,7 @@ public class AtExpose implements IStateNode {
             throw new RuntimeException("No such method '" + methodName + "'");
         }
         ScheduledReportChannel scheduledReport = ScheduledReportChannel.builder()
-                .emailSender(mMailSender)
+                .emailSender(this.getMailSender())
                 .recipient(recipient)
                 .request(request)
                 .taskName(taskName)
@@ -432,7 +435,7 @@ public class AtExpose implements IStateNode {
         return State.getBuilder()
                 .add("TimeNow", DateTimeStrings.getDateTimeUTC())
                 .add("StartTime", mInstanceStartTime)
-                .add("EmailSender", mMailSender)
+                .add("EmailSender", this.getMailSender())
                 .add("Dispatchers", this.getDispatchers())
                 .build();
     }
