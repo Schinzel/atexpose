@@ -1,4 +1,4 @@
-package com.atexpose;
+package com.atexpose.dispatcher;
 
 import com.atexpose.api.API;
 import com.atexpose.api.MethodObject;
@@ -110,7 +110,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
      * @param isSynchronized If true, the dispatcher is to run in the invoking thread. If false, the dispatcher
      *                       will start a new thread and execute in this.
      */
-    void commenceMessaging(boolean isSynchronized) {
+    public void commenceMessaging(boolean isSynchronized) {
         //If there is a next dispatcher
         if (mNextDispatcher != null) {
             //Tell the next dispatcher to start its messaging.
@@ -133,7 +133,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
     /**
      * Shutdown this and the next dispatcher.
      */
-    void shutdown() {
+    public void shutdown() {
         //If there was a next dispatchers
         if (this.mNextDispatcher != null) {
             //Tell the next dispatcher to shutdown
@@ -227,7 +227,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
      * @param logger The logger to add.
      * @return This for chaining
      */
-    Dispatcher addLogger(Logger logger) {
+    public Dispatcher addLogger(Logger logger) {
         mLoggers.add(logger);
         if (mNextDispatcher != null) {
             mNextDispatcher.addLogger(logger);
@@ -241,7 +241,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
      *
      * @return This for chaining.
      */
-    Dispatcher removeLoggers() {
+    public Dispatcher removeLoggers() {
         mLoggers = EmptyObjects.EMPTY_LIST;
         if (mNextDispatcher != null) {
             mNextDispatcher.removeLoggers();

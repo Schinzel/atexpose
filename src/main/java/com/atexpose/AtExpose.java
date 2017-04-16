@@ -1,6 +1,7 @@
 package com.atexpose;
 
 import com.atexpose.api.API;
+import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.CommandLineChannel;
 import com.atexpose.dispatcher.channels.ScheduledReportChannel;
 import com.atexpose.dispatcher.channels.ScheduledTaskChannel;

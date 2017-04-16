@@ -1,6 +1,7 @@
 package com.atexpose;
 
 import com.atexpose.api.API;
+import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.AbstractChannel;
 import com.atexpose.dispatcher.channels.webchannel.WebChannel;
 import com.atexpose.dispatcher.parser.AbstractParser;
