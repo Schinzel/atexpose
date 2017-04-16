@@ -97,7 +97,7 @@ public class AtExpose implements IStateNode {
                 .parser(new TextParser())
                 .wrapper(new CsvWrapper())
                 .noOfThreads(1)
-                .api(mAPI)
+                .api(this.getAPI())
                 .build();
         //If there was a recipient argument
         if (!Checker.isEmpty(emailErrorLogRecipient)) {
@@ -125,7 +125,7 @@ public class AtExpose implements IStateNode {
                 .parser(new TextParser())
                 .wrapper(new CsvWrapper())
                 .noOfThreads(1)
-                .api(mAPI)
+                .api(this.getAPI())
                 .build();
         this.startDispatcher(dispatcher, false, false);
         return this;
@@ -133,7 +133,7 @@ public class AtExpose implements IStateNode {
 
 
     public WebServerBuilder getWebServerBuilder() {
-        return new WebServerBuilder(mAPI, mDispatchers);
+        return new WebServerBuilder(this.getAPI(), mDispatchers);
     }
     //------------------------------------------------------------------------
     // SCHEDULED REPORTS
@@ -180,7 +180,7 @@ public class AtExpose implements IStateNode {
         AbstractParser parser = new TextParser();
         parser.parseRequest(request);
         String methodName = parser.getMethodName();
-        if (!mAPI.methodExits(methodName)) {
+        if (!this.getAPI().methodExits(methodName)) {
             throw new RuntimeException("No such method '" + methodName + "'");
         }
         ScheduledReportChannel scheduledReport = ScheduledReportChannel.builder()
@@ -199,7 +199,7 @@ public class AtExpose implements IStateNode {
                 .parser(parser)
                 .wrapper(new CsvWrapper())
                 .noOfThreads(1)
-                .api(mAPI)
+                .api(this.getAPI())
                 .build();
         this.startDispatcher(dispatcher, false, false);
         String cryptoKey = EmptyObjects.EMPTY_STRING;
@@ -270,7 +270,7 @@ public class AtExpose implements IStateNode {
         AbstractParser parser = new TextParser();
         parser.parseRequest(scheduledTask.getRequestAsString());
         String methodName = parser.getMethodName();
-        Thrower.throwIfFalse(mAPI.methodExits(methodName), "No such method '" + methodName + "'");
+        Thrower.throwIfFalse(this.getAPI().methodExits(methodName), "No such method '" + methodName + "'");
         String dispatcherName = "ScheduledTask_" + taskName;
         Dispatcher dispatcher = Dispatcher.builder()
                 .name(dispatcherName)
@@ -279,7 +279,7 @@ public class AtExpose implements IStateNode {
                 .parser(parser)
                 .wrapper(new CsvWrapper())
                 .noOfThreads(1)
-                .api(mAPI)
+                .api(this.getAPI())
                 .build();
         this.startDispatcher(dispatcher, false, false);
         String cryptoKey = EmptyObjects.EMPTY_STRING;
