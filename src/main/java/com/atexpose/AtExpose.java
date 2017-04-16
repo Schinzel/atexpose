@@ -41,7 +41,7 @@ import lombok.experimental.Accessors;
  *
  * @author Schinzel
  */
-@SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue"})
+@SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue", "UnusedReturnValue"})
 @Accessors(prefix = "m")
 public class AtExpose implements IStateNode {
     /** Instance creation time. For status and debug purposes. */

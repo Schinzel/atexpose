@@ -11,6 +11,7 @@ import org.json.JSONObject;
  * <p>
  * Created by schinzel on 2017-04-16.
  */
+@SuppressWarnings("unused")
 @Accessors(prefix = "m")
 class ExposedAtExpose {
     @Getter(AccessLevel.PACKAGE)
