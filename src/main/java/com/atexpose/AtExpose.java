@@ -34,21 +34,31 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
+ * The central class that is the spider in the web.
+ * <p>
+ * The core purpose of an instance of this class is to start and stop dispatchers.
+ *
  * @author Schinzel
  */
 @SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue"})
 @Accessors(prefix = "m")
 public class AtExpose implements IStateNode {
-    private static final int SINGLE_THREADED = 1;
-    private final String mStartTime = DateTimeStrings.getDateTimeUTC();
-    @Getter
-    private final API mAPI;
-    @Getter(AccessLevel.PROTECTED)
-    private IEmailSender mMailSender;
-    @Getter(AccessLevel.PRIVATE)
-    KeyValues<Dispatcher> mDispatchers = KeyValues.create("Dispatchers");
+    /** Instance creation time. For status and debug purposes. */
+    private final String mInstanceStartTime = DateTimeStrings.getDateTimeUTC();
+    /** Reference to the API. */
+    @Getter private final API mAPI;
+    /** Holds an email sender instance if such has been set up. */
+    @Getter(AccessLevel.PROTECTED) private IEmailSender mMailSender;
+    /** Holds the running dispatchers */
+    @Getter(AccessLevel.PRIVATE) KeyValues<Dispatcher> mDispatchers = KeyValues.create("Dispatchers");
+    //------------------------------------------------------------------------
+    // CONSTRUCTION
+    //------------------------------------------------------------------------
 
 
+    /**
+     * @return A freshly created instance.
+     */
     public static AtExpose create() {
         return new AtExpose();
     }
@@ -64,13 +74,22 @@ public class AtExpose implements IStateNode {
     //------------------------------------------------------------------------
 
 
+    /**
+     * @param fileName The name of the script file to read.
+     * @return This for chaining.
+     */
     public AtExpose loadScriptFile(String fileName) {
         return this.loadScriptFile(fileName, EmptyObjects.EMPTY_STRING);
     }
 
 
-    public AtExpose loadScriptFile(String fileName, String recipient) {
-        Dispatcher dispatcher = Dispatcher.builder()
+    /**
+     * @param fileName               The name of the script file to read.
+     * @param emailErrorLogRecipient Recipient of an error log if there are any errors.
+     * @return This for chaining.
+     */
+    public AtExpose loadScriptFile(String fileName, String emailErrorLogRecipient) {
+        Dispatcher scriptFileDispatcher = Dispatcher.builder()
                 .name("ScriptFile")
                 .accessLevel(3)
                 .channel(new ScriptFileChannel(fileName))
@@ -80,16 +99,16 @@ public class AtExpose implements IStateNode {
                 .api(mAPI)
                 .build();
         //If there was a recipient argument
-        if (!Checker.isEmpty(recipient)) {
+        if (!Checker.isEmpty(emailErrorLogRecipient)) {
             //Set up an error email logger
-            Logger logger = Logger.builder()
+            Logger eMailLogger = Logger.builder()
                     .loggerType(LoggerType.ERROR)
                     .logFormat(new MultiLineFormatter())
-                    .logWriter(new MailLogWriter(recipient, mMailSender))
+                    .logWriter(new MailLogWriter(emailErrorLogRecipient, mMailSender))
                     .build();
-            dispatcher.addLogger(logger);
+            scriptFileDispatcher.addLogger(eMailLogger);
         }
-        this.startDispatcher(dispatcher, true, true);
+        this.startDispatcher(scriptFileDispatcher, true, true);
         return this;
     }
 
@@ -121,11 +140,11 @@ public class AtExpose implements IStateNode {
 
 
     /**
-     * Sets the GMail SMTP server used for sending scheduled reports.
+     * Sets the Gmail SMTP server used for sending scheduled reports.
      *
-     * @param username The GMail username
-     * @param password The GMail password
-     * @return Status of the operation message.
+     * @param username The Gmail username
+     * @param password The Gmail password
+     * @return This for chaining.
      */
     public AtExpose setSMTPServerGmail(String username, String password) {
         mMailSender = new GmailEmailSender(username, password);
@@ -133,6 +152,11 @@ public class AtExpose implements IStateNode {
     }
 
 
+    /**
+     * Set a mock smtp server. For debugging and testing purposes.
+     *
+     * @return This for chaining.
+     */
     public AtExpose setMockSMTPServer() {
         mMailSender = new MockMailSender();
         return this;
@@ -140,12 +164,15 @@ public class AtExpose implements IStateNode {
 
 
     /**
+     * Sets up a scheduled report. This is a scheduled task where the result of the operation is sent to the argument
+     * recipient.
+     *
      * @param taskName  The name of the report.
-     * @param request   The request to execute.
-     * @param timeOfDay The time of day to run the report.
+     * @param request   The request to execute. Example: "echo hi"
+     * @param timeOfDay The time of day to run the report. Examples: "13:05" "07:55"
      * @param recipient The recipient email address.
-     * @param fromName  The name in the from field in the mail
-     * @return Status of the operation message.
+     * @param fromName  The name in the from field in the email
+     * @return This for chaining.
      */
     public AtExpose addScheduledReport(String taskName, String request, String timeOfDay, String recipient, String fromName) {
         Thrower.throwIfTrue(mMailSender == null, "You need to set SMTP settings before setting up a scheduled report. Use method setSMTPServer.");
@@ -178,11 +205,19 @@ public class AtExpose implements IStateNode {
         this.addEventLogger(dispatcherName, "JsonFormatter", "SystemOutLogWriter", cryptoKey);
         return this;
     }
-
-
     //------------------------------------------------------------------------
     // SCHEDULED TASKS
     //------------------------------------------------------------------------
+
+
+    /**
+     * Sets up a task to run once a day at the argument time of the day.
+     *
+     * @param taskName  The name of the task.
+     * @param request   The request to execute. Example: "time", "echo 123"
+     * @param timeOfDay The time for the day. UTC. Examples "23:55" "07:05"
+     * @return This for chaining.
+     */
     public AtExpose addDailyTask(String taskName, String request, String timeOfDay) {
         ScheduledTaskChannel scheduledTaskChannel = new ScheduledTaskChannel(taskName, request, timeOfDay);
         this.addTask(taskName, scheduledTaskChannel);
@@ -190,25 +225,39 @@ public class AtExpose implements IStateNode {
     }
 
 
+    /**
+     * Sets up a task to run every X minutes. Runs the first time after the argument number of minutes.
+     *
+     * @param taskName The name of the task.
+     * @param request  The request to execute. Example: "time", "echo 123"
+     * @param minutes  The interval at which to execute the task.
+     * @return This for chaining.
+     */
     public AtExpose addTask(String taskName, String request, int minutes) {
         ScheduledTaskChannel scheduledTaskChannel = new ScheduledTaskChannel(taskName, request, minutes);
         return this.addTask(taskName, scheduledTaskChannel);
     }
 
 
+    /**
+     * @param taskName   The name of the task.
+     * @param request    The request to execute. Example: "time", "echo 123"
+     * @param timeOfDay  The time for the day. UTC. Examples "23:55" "07:05"
+     * @param dayOfMonth The day of the month the task can execute.
+     * @return This for chaining.
+     */
     public AtExpose addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth) {
         ScheduledTaskChannel scheduledTaskChannel = new ScheduledTaskChannel(taskName, request, timeOfDay, dayOfMonth);
         return this.addTask(taskName, scheduledTaskChannel);
     }
 
 
-    @Expose(
-            arguments = {"TaskName"},
-            requiredAccessLevel = 3,
-            requiredArgumentCount = 1,
-            description = {"Removes the argument scheduled task."},
-            labels = {"@Expose", "AtExpose", "ScheduledTasks"}
-    )
+    /**
+     * Removes a running scheduled task. Is shut down immediately.
+     *
+     * @param taskName The name of the task to remove.
+     * @return This for chaining.
+     */
     public AtExpose removeTask(String taskName) {
         String dispatcherName = "ScheduledTask_" + taskName;
         this.closeDispatcher(dispatcherName);
@@ -237,18 +286,40 @@ public class AtExpose implements IStateNode {
         this.addErrorLogger(dispatcherName, "JsonFormatter", "SystemOutLogWriter", cryptoKey);
         return this;
     }
-
-
     // ---------------------------------
     // - Loggers  -
     // ---------------------------------
+
+
+    /**
+     * Adds an event logger to a running dispatcher.
+     *
+     * @param dispatcherName The name of the dispatcher that will have the even logger added.
+     * @param logFormatter   The name of the log formatter. Examples: "json", "multi_line", "single_line"
+     * @param logWriter      The name of the log writer. Examples: "mail", "system_out"
+     * @param cryptoKey      If empty the logs are not encrypted. If non empty it should be a 16 byte crypto key. If
+     *                       non
+     *                       empty, some parts of the logs will be encrypted with this key.
+     * @return This for chaining.
+     */
     public AtExpose addEventLogger(String dispatcherName, String logFormatter, String logWriter, String cryptoKey) {
         return this.addLogger(LoggerType.EVENT, dispatcherName, logFormatter, logWriter, cryptoKey);
     }
 
 
-    public AtExpose addErrorLogger(String DispatcherName, String LogFormatter, String LogWriter, String cryptoKey) {
-        return this.addLogger(LoggerType.ERROR, DispatcherName, LogFormatter, LogWriter, cryptoKey);
+    /**
+     * Adds an error logger to a running dispatcher.
+     *
+     * @param dispatcherName The name of the dispatcher that will have the even logger added.
+     * @param logFormatter   The name of the log formatter. Examples: "json", "multi_line", "single_line"
+     * @param logWriter      The name of the log writer. Examples: "mail", "system_out"
+     * @param cryptoKey      If empty the logs are not encrypted. If non empty it should be a 16 byte crypto key. If
+     *                       non
+     *                       empty, some parts of the logs will be encrypted with this key.
+     * @return This for chaining.
+     */
+    public AtExpose addErrorLogger(String dispatcherName, String logFormatter, String logWriter, String cryptoKey) {
+        return this.addLogger(LoggerType.ERROR, dispatcherName, logFormatter, logWriter, cryptoKey);
     }
 
 
@@ -270,12 +341,11 @@ public class AtExpose implements IStateNode {
 
 
     /**
-     * Note that sending in loggerBuilder instead of logger is to make sure
-     * that the same logger is not sent to more than one dispatcher.
+     * Adds the argument logger to the argument dispatcher.
      *
-     * @param dispatcher The dispatcher that will get the logger build by argument loggerBuilder
+     * @param dispatcher The dispatcher that will get the logger build by argument
      * @param logger     The logger.
-     * @return Status of the operation.
+     * @return This for chaining.
      */
     public AtExpose addLogger(Dispatcher dispatcher, Logger logger) {
         dispatcher.addLogger(logger);
@@ -283,6 +353,12 @@ public class AtExpose implements IStateNode {
     }
 
 
+    /**
+     * Removes all loggers from a dispatcher.
+     *
+     * @param dispatcherName The name of the dispatchers from which all loggers - event and error - will be removed.
+     * @return This for chaining.
+     */
     public AtExpose removeAllLoggers(String dispatcherName) {
         if (this.getDispatchers().has(dispatcherName)) {
             Dispatcher dispatcher = this.getDispatchers().get(dispatcherName);
@@ -297,6 +373,13 @@ public class AtExpose implements IStateNode {
     // ---------------------------------
     // - MISC  -
     // ---------------------------------
+
+
+    /**
+     * Shuts down all dispatchers of this instance.
+     *
+     * @return This for chaining.
+     */
     public synchronized AtExpose shutdown() {
         //Shutdown all the dispatchers
         this.getDispatchers().forEach(Dispatcher::shutdown);
@@ -306,11 +389,16 @@ public class AtExpose implements IStateNode {
     }
 
 
-    public String closeDispatcher(String dispatcherName) {
+    /**
+     *
+     * @param dispatcherName The dispatcher to shutdown.
+     * @return This for chaining.
+     */
+    public AtExpose closeDispatcher(String dispatcherName) {
         Dispatcher dispatcher = this.getDispatchers().get(dispatcherName);
         dispatcher.shutdown();
         this.getDispatchers().remove(dispatcherName);
-        return "Dispatcher " + dispatcherName + " has been closed";
+        return this;
     }
 
 
@@ -342,7 +430,7 @@ public class AtExpose implements IStateNode {
     public State getState() {
         return State.getBuilder()
                 .add("TimeNow", DateTimeStrings.getDateTimeUTC())
-                .add("StartTime", mStartTime)
+                .add("StartTime", mInstanceStartTime)
                 .add("EmailSender", mMailSender)
                 .add("Dispatchers", this.getDispatchers())
                 .build();
