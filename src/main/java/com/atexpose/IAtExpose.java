@@ -1,0 +1,57 @@
+package com.atexpose;
+
+import com.atexpose.api.API;
+import com.atexpose.dispatcher.Dispatcher;
+import io.schinzel.basicutils.collections.keyvalues.KeyValues;
+
+/**
+ * This is the base interface.
+ * <p>
+ * Actual functionality are implemented in a set of interfaces that extends this
+ * interface. The implementing class implements one or several of the interfaces that extended this.
+ * <p>
+ * Created by schinzel on 2017-04-16.
+ */
+interface IAtExpose<T extends IAtExpose<T>> {
+
+
+    API getAPI();
+
+
+    KeyValues<Dispatcher> getDispatchers();
+
+
+    T getThis();
+
+
+    /**
+     * @param dispatcherName The dispatcher to shutdown.
+     * @return This for chaining.
+     */
+    default T closeDispatcher(String dispatcherName) {
+        this.getDispatchers().get(dispatcherName).shutdown();
+        this.getDispatchers().remove(dispatcherName);
+        return this.getThis();
+    }
+
+    /**
+     * Central method for starting a dispatcher.
+     *
+     * @param dispatcher       The dispatcher to start
+     * @param isSynchronized   If true the dispatcher, is executed before this method returns.
+     * @param oneOffDispatcher If true the dispatcher is a one-off that executes and then terminates. Is never added
+     *                         to the dispatcher collection.
+     * @return The dispatcher that was just started.
+     */
+    default T startDispatcher(Dispatcher dispatcher, boolean isSynchronized, boolean oneOffDispatcher) {
+        //If this is not a temporary dispatcher, i.e. a dispatcher that dies once it has read its requests and delivered its responses
+        if (!oneOffDispatcher) {
+            //Add the newly created dispatcher to the dispatcher collection
+            this.getDispatchers().add(dispatcher);
+        }
+        //Start the messaging!
+        dispatcher.commenceMessaging(isSynchronized);
+        return this.getThis();
+    }
+
+}
