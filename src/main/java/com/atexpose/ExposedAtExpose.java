@@ -89,9 +89,9 @@ class ExposedAtExpose {
                             + "Reports are given an event logger with default logger and format."},
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
-    public String addScheduledReport(String TaskName, String Request, String TimeOfDay, String recipient, String fromName) {
-        this.getAtExpose().addScheduledReport(TaskName, Request, TimeOfDay, recipient, fromName);
-        return "Scheduled report '" + TaskName + "' has been set up";
+    public String addScheduledReport(String taskName, String request, String timeOfDay, String recipient, String fromName) {
+        this.getAtExpose().addScheduledReport(taskName, request, timeOfDay, recipient, fromName);
+        return "Scheduled report '" + taskName + "' has been set up";
     }
 
 
@@ -104,9 +104,9 @@ class ExposedAtExpose {
                     "Tasks are given an event logger with default logger and format."},
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
-    public String addDailyTask(String TaskName, String Request, String TimeOfDay) {
-        this.getAtExpose().addDailyTask(TaskName, Request, TimeOfDay);
-        return "Task '" + TaskName + "' set up";
+    public String addDailyTask(String taskName, String request, String timeOfDay) {
+        this.getAtExpose().addDailyTask(taskName, request, timeOfDay);
+        return "Daily task '" + taskName + "' set up";
     }
 
 
@@ -120,9 +120,9 @@ class ExposedAtExpose {
                     "Tasks are given an event logger with default logger and format."},
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
-    public String addTask(String TaskName, String Request, int Minutes) {
-        this.getAtExpose().addTask(TaskName, Request, Minutes);
-        return "Task '" + TaskName + "' set up";
+    public String addTask(String taskName, String request, int minutes) {
+        this.getAtExpose().addTask(taskName, request, minutes);
+        return "Task that runs every '" + minutes + "' minutes set up";
     }
 
 
@@ -135,9 +135,9 @@ class ExposedAtExpose {
             requiredArgumentCount = 4,
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
-    public String addMonthlyTask(String TaskName, String Request, String TimeOfDay, int DayOfMonth) {
-        this.getAtExpose().addMonthlyTask(TaskName, Request, TimeOfDay, DayOfMonth);
-        return "Task '" + TaskName + "' set up";
+    public String addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth) {
+        this.getAtExpose().addMonthlyTask(taskName, request, timeOfDay, dayOfMonth);
+        return "Montly task '" + taskName + "' set up";
     }
 
 
@@ -148,9 +148,9 @@ class ExposedAtExpose {
             description = {"Removes the argument scheduled task."},
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
-    public String removeTask(String TaskName) {
-        this.getAtExpose().removeTask(TaskName);
-        return "Task '" + TaskName + "' was removed";
+    public String removeTask(String taskName) {
+        this.getAtExpose().removeTask(taskName);
+        return "Task '" + taskName + "' was removed";
     }
 
 
@@ -161,9 +161,9 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose", "Logs"},
             requiredArgumentCount = 1
     )
-    public String addEventLogger(String DispatcherName, String LogFormatter, String LogWriter, String cryptoKey) {
-        this.getAtExpose().addEventLogger(DispatcherName, LogFormatter, LogWriter, cryptoKey);
-        return "Dispatcher " + DispatcherName + " got an event logger";
+    public String addEventLogger(String dispatcherName, String logFormatter, String logWriter, String cryptoKey) {
+        this.getAtExpose().addEventLogger(dispatcherName, logFormatter, logWriter, cryptoKey);
+        return "Dispatcher " + dispatcherName + " got an event logger";
     }
 
 
@@ -174,9 +174,9 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose", "Logs"},
             requiredArgumentCount = 1
     )
-    public String addErrorLogger(String DispatcherName, String LogFormatter, String LogWriter, String cryptoKey) {
-        this.getAtExpose().addErrorLogger(DispatcherName, LogFormatter, LogWriter, cryptoKey);
-        return "Dispatcher " + DispatcherName + " got an error logger";
+    public String addErrorLogger(String dispatcherName, String logFormatter, String logWriter, String cryptoKey) {
+        this.getAtExpose().addErrorLogger(dispatcherName, logFormatter, logWriter, cryptoKey);
+        return "Dispatcher " + dispatcherName + " got an error logger";
     }
 
 
