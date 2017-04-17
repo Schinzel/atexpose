@@ -7,8 +7,6 @@ Put differently: It should be the web server that distracts you the least from s
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/20d9426304f246c18f22402af9cb22bb)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Schinzel/atexpose&amp;utm_campaign=Badge_Grade)
 
-[ ![Codeship Status for Schinzel/atexpose](https://app.codeship.com/projects/4c2a6360-e7b9-0134-79ff-465a81ad3c78/status?branch=master)](https://app.codeship.com/projects/207188)
-
 There are other frameworks and projects that offers similar functionality to
 @Expose. Many of them are a lot more well used and tested than @Expose. Notable
 examples are GlassFish and Jetty. If in doubt use these instead. 
