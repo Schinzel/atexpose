@@ -35,7 +35,8 @@ public class AtExposeTest {
     @After
     public void after() {
         mAtExpose.shutdown();
-        Sandman.snoozeSeconds(1);
+        //Snooze required to get tests to work on Travis
+        Sandman.snoozeMillis(100);
     }
 
 
