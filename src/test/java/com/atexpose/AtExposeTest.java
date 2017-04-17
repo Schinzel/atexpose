@@ -1,6 +1,7 @@
 package com.atexpose;
 
 import com.atexpose.dispatcher.wrapper.FunnyChars;
+import io.schinzel.basicutils.Sandman;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.After;
@@ -34,6 +35,7 @@ public class AtExposeTest {
     @After
     public void after() {
         mAtExpose.shutdown();
+        Sandman.snoozeSeconds(1);
     }
 
 
