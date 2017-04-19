@@ -21,24 +21,16 @@ import java.util.Map;
 @Builder
 @Accessors(prefix = "m")
 public class Logger {
-    /**
-     * The type of the logger. E.g. error or event
-     */
+    /** The type of the logger. E.g. error or event */
     @Builder.Default
     private final LoggerType mLoggerType = LoggerType.EVENT;
-    /**
-     * Handles the writing of log entries.
-     */
+    /** Handles the writing of log entries. */
     @Builder.Default
     private final ILogWriter mLogWriter = LogWriterFactory.SYSTEM_OUT.getInstance();
-    /**
-     * Handles the formatting of log entries.
-     */
+    /** Handles the formatting of log entries. */
     @Builder.Default
     private final ILogFormatter mLogFormatter = LogFormatterFactory.JSON.getInstance();
-    /**
-     * Used to encrypt part of the log data.
-     */
+    /** Used to encrypt part of the log data. */
     @Builder.Default
     private final ICrypto mCrypto = new NoCrypto();
 
