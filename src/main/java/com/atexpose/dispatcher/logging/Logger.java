@@ -3,8 +3,11 @@ package com.atexpose.dispatcher.logging;
 import com.atexpose.dispatcher.logging.crypto.ICrypto;
 import com.atexpose.dispatcher.logging.crypto.NoCrypto;
 import com.atexpose.dispatcher.logging.format.ILogFormatter;
+import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.ILogWriter;
+import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import lombok.Builder;
+import lombok.experimental.Accessors;
 
 import java.util.Map;
 
@@ -15,26 +18,29 @@ import java.util.Map;
  *
  * @author schinzel
  */
+@Builder
+@Accessors(prefix = "m")
 public class Logger {
-    /** The type of the logger. E.g. error or event */
-    private final LoggerType mLoggerType;
-    /** Handles the writing of log entries. */
-    private final ILogWriter mLogWriter;
-    /** Handles the formatting of log entries. */
-    private final ILogFormatter mLogFormatter;
-    /** Used to encrypt part of the log data. */
-    private final ICrypto mCrypto;
-
-
-    @Builder
-    Logger(LoggerType loggerType, ILogFormatter logFormat, ILogWriter logWriter, ICrypto crypto) {
-        mLoggerType = loggerType;
-        mLogFormatter = logFormat;
-        mLogWriter = logWriter;
-        mCrypto = (crypto == null)
-                ? new NoCrypto()
-                : crypto;
-    }
+    /**
+     * The type of the logger. E.g. error or event
+     */
+    @Builder.Default
+    private final LoggerType mLoggerType = LoggerType.EVENT;
+    /**
+     * Handles the writing of log entries.
+     */
+    @Builder.Default
+    private final ILogWriter mLogWriter = LogWriterFactory.SYSTEM_OUT.getInstance();
+    /**
+     * Handles the formatting of log entries.
+     */
+    @Builder.Default
+    private final ILogFormatter mLogFormatter = LogFormatterFactory.JSON.getInstance();
+    /**
+     * Used to encrypt part of the log data.
+     */
+    @Builder.Default
+    private final ICrypto mCrypto = new NoCrypto();
 
 
     /**
