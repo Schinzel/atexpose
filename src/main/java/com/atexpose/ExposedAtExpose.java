@@ -193,7 +193,7 @@ class ExposedAtExpose {
                 : Crypto.getInstance(cryptoKey);
         Logger logger = Logger.builder()
                 .loggerType(LoggerType.EVENT)
-                .logFormat(LogFormatterFactory.get(logFormatter).getInstance())
+                .logFormatter(LogFormatterFactory.get(logFormatter).getInstance())
                 .logWriter(LogWriterFactory.get(logWriter).getInstance())
                 .crypto(crypto)
                 .build();

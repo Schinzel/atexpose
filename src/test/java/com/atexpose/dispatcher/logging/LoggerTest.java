@@ -5,9 +5,10 @@ import com.atexpose.dispatcher.logging.format.JsonFormatter;
 import com.atexpose.dispatcher.logging.writer.TestLogWriter;
 import com.atexpose.dispatcher.parser.TestParser;
 import org.json.JSONObject;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -25,7 +26,12 @@ public class LoggerTest {
     @Before
     public void before() {
         mLogWriter = new TestLogWriter();
-        mLogger = new Logger(LoggerType.EVENT, new JsonFormatter(), mLogWriter, new TestCrypto());
+        mLogger = Logger.builder()
+                .loggerType(LoggerType.EVENT)
+                .logFormatter(new JsonFormatter())
+                .logWriter(mLogWriter)
+                .crypto(new TestCrypto())
+                .build();
         mChannel = new TestChannel();
         mRequestParser = new TestParser();
         mLogEntry = new LogEntry(THREAD_NO, mChannel, mRequestParser);

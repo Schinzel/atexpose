@@ -23,16 +23,16 @@ import java.util.Map;
 public class Logger {
     /** The type of the logger. E.g. error or event */
     @Builder.Default
-    private final LoggerType mLoggerType = LoggerType.EVENT;
+    private LoggerType mLoggerType = LoggerType.EVENT;
     /** Handles the writing of log entries. */
     @Builder.Default
-    private final ILogWriter mLogWriter = LogWriterFactory.SYSTEM_OUT.getInstance();
+    private ILogWriter mLogWriter = LogWriterFactory.SYSTEM_OUT.getInstance();
     /** Handles the formatting of log entries. */
     @Builder.Default
-    private final ILogFormatter mLogFormatter = LogFormatterFactory.JSON.getInstance();
+    private ILogFormatter mLogFormatter = LogFormatterFactory.JSON.getInstance();
     /** Used to encrypt part of the log data. */
     @Builder.Default
-    private final ICrypto mCrypto = new NoCrypto();
+    private ICrypto mCrypto = new NoCrypto();
 
 
     /**
