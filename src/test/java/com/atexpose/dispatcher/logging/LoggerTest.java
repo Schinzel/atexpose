@@ -38,6 +38,46 @@ public class LoggerTest {
 
     }
 
+    @Test
+    public void testLog_EventLogger(){
+        TestLogWriter logWriter = new TestLogWriter();
+        Logger logger = Logger.builder()
+                .loggerType(LoggerType.EVENT)
+                .logFormatter(new JsonFormatter())
+                .logWriter(logWriter)
+                .build();
+        LogEntry logEntry1 = new LogEntry(THREAD_NO, mChannel, mRequestParser);
+        //An even should be logged
+        logger.log(logEntry1);
+        assertEquals(1, logWriter.mLogEntries.size());
+        LogEntry logEntry2 = new LogEntry(THREAD_NO, mChannel, mRequestParser);
+        logEntry2.setIsError();
+        //An error should be logged
+        logger.log(logEntry2);
+        assertEquals(2, logWriter.mLogEntries.size());
+    }
+
+
+
+    @Test
+    public void testLog_ErrorLogger(){
+        TestLogWriter logWriter = new TestLogWriter();
+        Logger logger = Logger.builder()
+                .loggerType(LoggerType.ERROR)
+                .logFormatter(new JsonFormatter())
+                .logWriter(logWriter)
+                .build();
+        LogEntry logEntry1 = new LogEntry(THREAD_NO, mChannel, mRequestParser);
+        //An even should be logged
+        logger.log(logEntry1);
+        assertEquals(0, logWriter.mLogEntries.size());
+        LogEntry logEntry2 = new LogEntry(THREAD_NO, mChannel, mRequestParser);
+        logEntry2.setIsError();
+        //An error should be logged
+        logger.log(logEntry2);
+        assertEquals(1, logWriter.mLogEntries.size());
+    }
+
 
     @Test
     public void testServeralLogEntries() {
