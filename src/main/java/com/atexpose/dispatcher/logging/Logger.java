@@ -41,35 +41,15 @@ public class Logger {
      * @param logEntry The entry to add to log.
      */
     public void log(LogEntry logEntry) {
-        //Should log this entry if this is an event logger
-        boolean shouldLogThisLogEntry = this.isEventLogger();
-        //If this was not an event logger
-        if (!shouldLogThisLogEntry) {
-            //Should log this entry if this is an error logger and the entry is an error
-            shouldLogThisLogEntry = this.isErrorLogger() && logEntry.isError();
-        }
-        //If should log this log entry
-        if (shouldLogThisLogEntry) {
+        //If this is an event logger
+        if (mLoggerType == LoggerType.EVENT
+                //OR (this is an error logger AND this is an error)
+                || (this.mLoggerType == LoggerType.ERROR && logEntry.isError())) {
             Map<LogKey, String> logData = logEntry.getLogData(mCrypto);
             String logEntryAsString = mLogFormatter.formatLogEntry(logData);
             mLogWriter.log(logEntryAsString);
         }
     }
 
-
-    /**
-     * @return True if this is an event logger, else false.
-     */
-    private boolean isEventLogger() {
-        return (this.mLoggerType == LoggerType.EVENT);
-    }
-
-
-    /**
-     * @return True if this is an error logger, else false.
-     */
-    private boolean isErrorLogger() {
-        return (this.mLoggerType == LoggerType.ERROR);
-    }
 
 }
