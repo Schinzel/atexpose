@@ -1,6 +1,5 @@
 package com.atexpose.dispatcher.channels.webchannel.redirect;
 
-import org.apache.http.client.utils.URIBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,22 +9,16 @@ public class HostRedirectTest {
 
     @Test
     public void shouldRedirect_should_not_redirect() throws Exception {
-        HostRedirect hostRedirect = HostRedirect.builder()
-                .from("www.example.com")
-                .to("www.example.com")
-                .build();
-        URI uri = new URIBuilder("http://example.com").build();
+        HostRedirect hostRedirect = HostRedirect.create("www.example.com", "www.example.com");
+        URI uri = new URI("http://example.com");
         Assert.assertFalse(hostRedirect.shouldRedirect(uri));
     }
 
 
     @Test
     public void shouldAndGetRedirect_root_to_www() throws Exception {
-        HostRedirect hostRedirect = HostRedirect.builder()
-                .from("example.com")
-                .to("www.example.com")
-                .build();
-        URI uri = new URIBuilder("http://example.com").build();
+        HostRedirect hostRedirect = HostRedirect.create("example.com", "www.example.com");
+        URI uri = new URI("http://example.com");
         Assert.assertTrue(hostRedirect.shouldRedirect(uri));
         Assert.assertEquals("http://www.example.com/", hostRedirect.getRedirect(uri).toString());
     }
@@ -33,11 +26,8 @@ public class HostRedirectTest {
 
     @Test
     public void shouldAndGetRedirect_another_domain() throws Exception {
-        HostRedirect hostRedirect = HostRedirect.builder()
-                .from("www.example.com")
-                .to("www.schinzel.io")
-                .build();
-        URI uri = new URIBuilder("http://www.example.com").build();
+        HostRedirect hostRedirect = HostRedirect.create("www.example.com", "www.schinzel.io");
+        URI uri = new URI("http://www.example.com");
         Assert.assertTrue(hostRedirect.shouldRedirect(uri));
         Assert.assertEquals("http://www.schinzel.io/", hostRedirect.getRedirect(uri).toString());
     }
@@ -45,11 +35,8 @@ public class HostRedirectTest {
 
     @Test
     public void shouldAndGetRedirect_subdomain() throws Exception {
-        HostRedirect hostRedirect = HostRedirect.builder()
-                .from("sub1.example.com")
-                .to("sub2.example.com")
-                .build();
-        URI uri = new URIBuilder("http://sub1.example.com").build();
+        HostRedirect hostRedirect = HostRedirect.create("sub1.example.com", "sub2.example.com");
+        URI uri = new URI("http://sub1.example.com");
         Assert.assertTrue(hostRedirect.shouldRedirect(uri));
         Assert.assertEquals("http://sub2.example.com/", hostRedirect.getRedirect(uri).toString());
     }
@@ -57,11 +44,8 @@ public class HostRedirectTest {
 
     @Test
     public void shouldAndGetRedirect_https() throws Exception {
-        HostRedirect hostRedirect = HostRedirect.builder()
-                .from("sub1.example.com")
-                .to("sub2.example.io")
-                .build();
-        URI uri = new URIBuilder("https://sub1.example.com").build();
+        HostRedirect hostRedirect = HostRedirect.create("sub1.example.com", "sub2.example.io");
+        URI uri = new URI("https://sub1.example.com");
         Assert.assertTrue(hostRedirect.shouldRedirect(uri));
         Assert.assertEquals("https://sub2.example.io/", hostRedirect.getRedirect(uri).toString());
     }
@@ -72,11 +56,8 @@ public class HostRedirectTest {
      */
     @Test
     public void shouldAndGetRedirect_with_querystring() throws Exception {
-        HostRedirect hostRedirect = HostRedirect.builder()
-                .from("www.example.com")
-                .to("www.schinzel.io")
-                .build();
-        URI uri = new URIBuilder("http://www.example.com?k1=ŹźŻż&k2=سش&k3=ДЂ").build();
+        HostRedirect hostRedirect = HostRedirect.create("www.example.com", "www.schinzel.io");
+        URI uri = new URI("http://www.example.com?k1=ŹźŻż&k2=سش&k3=ДЂ");
         Assert.assertTrue(hostRedirect.shouldRedirect(uri));
         Assert.assertEquals("http://www.schinzel.io/?k1=ŹźŻż&k2=سش&k3=ДЂ", hostRedirect.getRedirect(uri).toString());
     }
@@ -84,11 +65,8 @@ public class HostRedirectTest {
 
     @Test
     public void shouldAndGetRedirect_checkThatArgumentUriUnchanged() throws Exception {
-        HostRedirect hostRedirect = HostRedirect.builder()
-                .from("example.com")
-                .to("www.example.com")
-                .build();
-        URI uri = new URIBuilder("http://example.com").build();
+        HostRedirect hostRedirect = HostRedirect.create("example.com", "www.example.com");
+        URI uri = new URI("http://example.com");
         Assert.assertEquals("http://www.example.com/", hostRedirect.getRedirect(uri).toString());
         Assert.assertEquals("http://example.com", uri.toString());
     }
