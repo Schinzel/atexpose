@@ -1,10 +1,7 @@
 package com.atexpose.dispatcher.parser;
 
-import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
-import com.atexpose.errors.RuntimeError;
-import io.schinzel.basicutils.state.IStateNode;
-import org.apache.commons.lang3.tuple.Pair;
 import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.state.IStateNode;
 
 /**
  * This is the interface for implementing languages. E.g. XML, JSON and so on.
@@ -140,25 +137,6 @@ public abstract class AbstractParser implements IStateNode {
      */
     public String getFileName() {
         return mFilename;
-    }
-
-
-    /**
-     * @return
-     */
-    public Pair<String, RedirectHttpStatus> getRedirect() {
-        throw new RuntimeError("Should not be able to get here");
-    }
-
-
-    /**
-     * Is there a redirect for this request, default is false and might be
-     * overwritten by implementations
-     *
-     * @return
-     */
-    public boolean isRedirect() {
-        return false;
     }
 
 

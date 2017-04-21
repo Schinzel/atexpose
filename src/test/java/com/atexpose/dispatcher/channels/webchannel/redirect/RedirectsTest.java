@@ -18,7 +18,7 @@ public class RedirectsTest {
         Redirects redirects = new Redirects(myList);
         URI uri = new URI("http://example.com/a/b/c/source.html?k1=ŹźŻż&k2=سش&k3=ДЂ");
         Assert.assertTrue(redirects.shouldRedirect(uri));
-        Assert.assertEquals("https://www.schinzel.io/q/r/s/dest.html?k1=ŹźŻż&k2=سش&k3=ДЂ", redirects.getRedirects(uri).toString());
+        Assert.assertEquals("https://www.schinzel.io/q/r/s/dest.html?k1=ŹźŻż&k2=سش&k3=ДЂ", redirects.getNewLocation(uri).toString());
     }
 
     @Test

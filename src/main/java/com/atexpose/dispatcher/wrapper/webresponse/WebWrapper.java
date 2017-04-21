@@ -1,18 +1,11 @@
 package com.atexpose.dispatcher.wrapper.webresponse;
 
 import com.atexpose.MyProperties;
-import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.util.ArrayUtil;
 import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
-
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.collections.Cache;
 import io.schinzel.basicutils.state.State;
@@ -20,7 +13,12 @@ import lombok.Builder;
 import lombok.experimental.Accessors;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
-import io.schinzel.basicutils.Checker;
+
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This wrapper handles two types of responses: 1) JSON responses 2) file
@@ -268,22 +266,7 @@ public class WebWrapper implements IWrapper {
     }
 
 
-    /**
-     * Make redirect response to new location for file
-     *
-     * @param url
-     * @return A 301 or 302 redirect to the argument url
-     */
-    @Override
-    public String wrapRedirect(String url, RedirectHttpStatus redirectStatusCode) {
-        return new StringBuilder()
-                .append("HTTP/1.1 ").append(redirectStatusCode.getRedirectCode()).append(RESPONSE_HEADER_LINE_BREAK)
-                .append("Server: ").append(SERVER_NAME).append(RESPONSE_HEADER_LINE_BREAK)
-                .append("Content-Length: ").append("0").append(RESPONSE_HEADER_LINE_BREAK)
-                .append("Location: ").append(url).append(RESPONSE_HEADER_LINE_BREAK)
-                .append(RESPONSE_HEADER_LINE_BREAK)
-                .toString();
-    }
+
     // ------------------------------------
     // - SERVER SIDE INCLUDES
     // ------------------------------------

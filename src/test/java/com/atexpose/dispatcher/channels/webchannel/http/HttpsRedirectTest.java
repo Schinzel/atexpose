@@ -42,7 +42,7 @@ public class HttpsRedirectTest {
     public void testIsHttpReuqest() {
         boolean expected, actual;
         HttpRequest httpRequestWithHttp = new HttpRequest(HTTP_HEADER_HEROKU_HTTP);
-        actual = HttpsRedirect.isHttpReuqest(httpRequestWithHttp);
+        actual = HttpRedirect.isHttpReuqest(httpRequestWithHttp);
         expected = true;
         Assert.assertEquals(actual, expected);
     }
@@ -52,7 +52,7 @@ public class HttpsRedirectTest {
     public void testIsHttpReuqest2() {
         boolean expected, actual;
         HttpRequest httpRequestWithHttps = new HttpRequest(HTTP_HEADER_HEROKU_HTTPS);
-        actual = HttpsRedirect.isHttpReuqest(httpRequestWithHttps);
+        actual = HttpRedirect.isHttpReuqest(httpRequestWithHttps);
         expected = false;
         Assert.assertEquals(actual, expected);
     }

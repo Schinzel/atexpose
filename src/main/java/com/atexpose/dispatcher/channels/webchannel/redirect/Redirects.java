@@ -38,7 +38,7 @@ public class Redirects {
      * @param uri An URI to redirect.
      * @return Zero, one or several redirects applied to the argument URI.
      */
-    URI getRedirects(URI uri) {
+    public URI getNewLocation(URI uri) {
         for (IRedirect redirect : mRedirects) {
             if (redirect.shouldRedirect(uri)) {
                 uri = redirect.getRedirect(uri);

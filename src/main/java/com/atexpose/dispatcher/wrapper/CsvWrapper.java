@@ -1,6 +1,5 @@
 package com.atexpose.dispatcher.wrapper;
 
-import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import io.schinzel.basicutils.state.State;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,12 +44,6 @@ public class CsvWrapper implements IWrapper {
         return State.getBuilder()
                 .add("ColumnDelimiter", COL_DELIMITER)
                 .build();
-    }
-
-
-    @Override
-    public String wrapRedirect(String url, RedirectHttpStatus redirectStatusCode) {
-        throw new UnsupportedOperationException("Not implemented.");
     }
 
 
