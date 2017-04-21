@@ -1,7 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel.redirect;
 
 import lombok.SneakyThrows;
-import org.apache.http.client.utils.URIBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,23 +12,25 @@ public class HttpsRedirectTest {
     @Test
     @SneakyThrows
     public void testShouldRedirect_http() {
-        URI uri = new URIBuilder("http://www.example.com").build();
+        URI uri = new URI("http://www.example.com");
         Assert.assertTrue(HttpsRedirect.create().shouldRedirect(uri));
+        Assert.assertEquals("https://www.example.com", HttpsRedirect.create().getRedirect(uri).toString());
     }
 
 
     @Test
     @SneakyThrows
-    public void testShouldRedirect_HTTP_uppercase() {
-        URI uri = new URIBuilder("HTTP://www.example.com").build();
+    public void testShouldAndGetRedirect_HTTP_uppercase() {
+        URI uri = new URI("HTTP://www.example.com");
         Assert.assertTrue(HttpsRedirect.create().shouldRedirect(uri));
+        Assert.assertEquals("https://www.example.com", HttpsRedirect.create().getRedirect(uri).toString());
     }
 
 
     @Test
     @SneakyThrows
     public void testShouldRedirect_https() {
-        URI uri = new URIBuilder("https://www.example.com").build();
+        URI uri = new URI("https://www.example.com");
         Assert.assertFalse(HttpsRedirect.create().shouldRedirect(uri));
     }
 
@@ -37,7 +38,17 @@ public class HttpsRedirectTest {
     @Test
     @SneakyThrows
     public void testShouldRedirect_HTTPS_uppercase() {
-        URI uri = new URIBuilder("HTTPS://www.example.com").build();
+        URI uri = new URI("HTTPS://www.example.com");
         Assert.assertFalse(HttpsRedirect.create().shouldRedirect(uri));
     }
+
+
+    @Test
+    @SneakyThrows
+    public void testGetRedirect_argumentShouldNotChange() {
+        URI uri = new URI("http://www.example.com");
+        Assert.assertEquals("https://www.example.com", HttpsRedirect.create().getRedirect(uri).toString());
+        Assert.assertEquals("http://www.example.com", uri.toString());
+    }
+
 }
