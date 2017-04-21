@@ -157,6 +157,7 @@
             <version>2.5</version>
         </dependency>
         <dependency>
+            <!-- Added for URIBuilder -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.3</version>
