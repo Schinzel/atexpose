@@ -7,11 +7,6 @@ import org.junit.Test;
 
 import java.net.URI;
 
-/**
- * The purpose of this class
- * <p>
- * Created by Schinzel on 2017-04-21.
- */
 public class HttpsRedirectTest {
 
 
