@@ -20,6 +20,11 @@ public class Redirects {
     private final List<IRedirect> mRedirects;
 
 
+    /**
+     *
+     * @param uri The URI to check if it should be redirected.
+     * @return True if the argument URI should be redirected.
+     */
     public boolean shouldRedirect(URI uri) {
         for (IRedirect redirect : mRedirects) {
             if (redirect.shouldRedirect(uri)) {
@@ -31,8 +36,8 @@ public class Redirects {
 
 
     /**
-     * @param uri
-     * @return
+     * @param uri An URI to redirect.
+     * @return Zero, one or several redirects applied to the argument URI.
      */
     @SneakyThrows
     URI getRedirects(URI uri) {
