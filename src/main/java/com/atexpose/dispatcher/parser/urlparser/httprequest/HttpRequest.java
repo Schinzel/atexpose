@@ -4,10 +4,14 @@ import com.atexpose.errors.RuntimeError;
 import com.google.common.base.Splitter;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.SubStringer;
 import io.schinzel.basicutils.Thrower;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
+import org.apache.http.client.utils.URIBuilder;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +71,22 @@ public class HttpRequest {
         }
         //Get the substring
         return mHttpRequest.substring(start, end);
+    }
+
+
+    @SneakyThrows
+    public URI getURI() {
+        //Get protocol
+        String protocol = this.getRequestHeaderValue("X-Forwarded-Proto");
+        //Get host
+        String host = this.getRequestHeaderValue("Host");
+        //Get path and query
+        String pathAndQuery = SubStringer.create(mHttpRequest).start("GET").end("\r\n").toString();
+        return new URIBuilder()
+                .setScheme(protocol)
+                .setHost(host)
+                .setPath(pathAndQuery)
+                .build();
     }
 
 
