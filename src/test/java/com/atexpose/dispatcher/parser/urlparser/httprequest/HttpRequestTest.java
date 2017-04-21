@@ -39,7 +39,7 @@ public class HttpRequestTest {
     public void testGetURI() {
         HttpRequest request = new HttpRequest(HTTP_HEADER);
         URI uri = request.getURI();
-        assertEquals("http://127.0.0.1:5555/index.html%3Fxyz=1234", uri.toString());
+        assertEquals("http://127.0.0.1:5555/index.html?xyz=1234", uri.toString());
         assertEquals("http", uri.getScheme());
         assertEquals("127.0.0.1", uri.getHost());
         assertEquals(5555, uri.getPort());
