@@ -12,9 +12,14 @@ import java.net.URI;
  */
 public class HttpsRedirect implements IRedirect {
 
+    public static HttpsRedirect create() {
+        return new HttpsRedirect();
+    }
+
+
     @Override
     public boolean shouldRedirect(URI uri) {
-        return (uri.getScheme() == "http");
+        return (uri.getScheme().equalsIgnoreCase("http"));
     }
 
 
