@@ -23,4 +23,5 @@ public interface IRedirect {
      * @return A new URI instance with the location to redirect to.
      */
     URI getRedirect(URI uri);
+
 }
