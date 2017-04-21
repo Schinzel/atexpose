@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel.redirect;
 
-import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
+import java.net.URI;
 
 /**
  * The purpose of this interface is to
@@ -11,8 +11,8 @@ import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
  */
 public interface IRedirect {
 
-    boolean shouldRedirect(HttpRequest httpRequest);
+    boolean shouldRedirect(URI uri);
 
 
-    String getRedirect(HttpRequest httpRequest);
+    URI getRedirect(URI uri);
 }

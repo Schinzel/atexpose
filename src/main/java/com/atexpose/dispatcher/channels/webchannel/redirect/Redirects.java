@@ -1,10 +1,10 @@
 package com.atexpose.dispatcher.channels.webchannel.redirect;
 
-import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
-import io.schinzel.basicutils.EmptyObjects;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -20,24 +20,28 @@ public class Redirects {
     private final List<IRedirect> mRedirects;
 
 
-    /**
-     * @param httpRequest
-     * @return Empty string if argument request did not have a redirect. Else the url to redirect
-     * to.
-     */
-    String getRedirect(HttpRequest httpRequest) {
-        /*mRedirects.stream()
-                .filter(r -> r.shouldRedirect(httpRequest))
-                .findAny()
-                .get()*/
-
-
+    public boolean shouldRedirect(URI uri) {
         for (IRedirect redirect : mRedirects) {
-            if (redirect.shouldRedirect(httpRequest)) {
-                return redirect.getRedirect(httpRequest);
+            if (redirect.shouldRedirect(uri)) {
+                return true;
             }
         }
-        return EmptyObjects.EMPTY_STRING;
+        return false;
+    }
+
+
+    /**
+     * @param uri
+     * @return
+     */
+    @SneakyThrows
+    URI getRedirects(URI uri) {
+        for (IRedirect redirect : mRedirects) {
+            if (redirect.shouldRedirect(uri)) {
+                uri = redirect.getRedirect(uri);
+            }
+        }
+        return uri;
     }
 
 
