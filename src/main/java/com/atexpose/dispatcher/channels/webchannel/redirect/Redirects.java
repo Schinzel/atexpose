@@ -1,7 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel.redirect;
 
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 
 import java.net.URI;
@@ -39,7 +38,6 @@ public class Redirects {
      * @param uri An URI to redirect.
      * @return Zero, one or several redirects applied to the argument URI.
      */
-    @SneakyThrows
     URI getRedirects(URI uri) {
         for (IRedirect redirect : mRedirects) {
             if (redirect.shouldRedirect(uri)) {
