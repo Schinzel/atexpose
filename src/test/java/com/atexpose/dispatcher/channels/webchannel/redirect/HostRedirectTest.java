@@ -52,6 +52,17 @@ public class HostRedirectTest {
     }
 
 
+    @Test
+    public void shouldRedirect_https() throws Exception {
+        HostRedirect hostRedirect = HostRedirect.builder()
+                .from("sub1.example.com")
+                .to("sub2.example.io")
+                .build();
+        URI uri = new URIBuilder("https://sub1.example.com").build();
+        Assert.assertTrue(hostRedirect.shouldRedirect(uri));
+    }
+
+
     /**
      * Testing with query string with polish, persian and cyrillic chars.
      */
@@ -96,6 +107,17 @@ public class HostRedirectTest {
                 .build();
         URI uri = new URIBuilder("http://sub1.example.com").build();
         Assert.assertEquals("http://sub2.example.io/", hostRedirect.getRedirect(uri).toString());
+    }
+
+
+    @Test
+    public void getRedirect_https() throws Exception {
+        HostRedirect hostRedirect = HostRedirect.builder()
+                .from("sub1.example.com")
+                .to("sub2.example.io")
+                .build();
+        URI uri = new URIBuilder("https://sub1.example.com").build();
+        Assert.assertEquals("https://sub2.example.io/", hostRedirect.getRedirect(uri).toString());
     }
 
 
