@@ -4,7 +4,7 @@ import com.atexpose.errors.RuntimeError;
 import com.google.common.base.Splitter;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
-import io.schinzel.basicutils.SubStringer;
+import io.schinzel.basicutils.substringer.SubStringer;
 import io.schinzel.basicutils.Thrower;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -78,14 +78,27 @@ public class HttpRequest {
     public URI getURI() {
         //Get protocol
         String protocol = this.getRequestHeaderValue("X-Forwarded-Proto");
+        if (Checker.isEmpty(protocol)){
+            protocol = "http";
+        }
         //Get host
         String host = this.getRequestHeaderValue("Host");
         //Get path and query
-        String pathAndQuery = SubStringer.create(mHttpRequest).start("GET").end("\r\n").toString();
+        SubStringer pathAndQuery = SubStringer.create(mHttpRequest)
+                .startDelimiter("GET ")
+                .endDelimiter(" HTTP/1.1")
+                .getSubStringer();
+        String path = pathAndQuery.contains("?")
+                ? pathAndQuery.endDelimiter("?").toString()
+                : pathAndQuery.toString();
+        String query = pathAndQuery.contains("?")
+                ? pathAndQuery.startDelimiter("?").toString()
+                : EmptyObjects.EMPTY_STRING;
         return new URIBuilder()
                 .setScheme(protocol)
                 .setHost(host)
-                .setPath(pathAndQuery)
+                .setPath(path)
+                .setCustomQuery(query)
                 .build();
     }
 

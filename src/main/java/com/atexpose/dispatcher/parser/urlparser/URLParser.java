@@ -4,7 +4,7 @@ import com.atexpose.dispatcher.parser.AbstractParser;
 import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
-import io.schinzel.basicutils.SubStringer;
+import io.schinzel.basicutils.substringer.SubStringer;
 import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -104,12 +104,10 @@ public class URLParser extends AbstractParser {
             mCallType = CallType.FILE;
             mFileNameIncQueryString = url;
             //Get the part of the url before ?, if any
-            url = SubStringer.create(url).end("?").toString();
+            url = SubStringer.create(url).endDelimiter("?").toString();
             this.setFileRequest(url);
         }
     }
-
-
     // ---------------------------------
     // - PRIVATE STATIC  -
     // ---------------------------------

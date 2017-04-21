@@ -1,7 +1,7 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
 import org.apache.commons.lang3.tuple.Pair;
-import io.schinzel.basicutils.SubStringer;
+import io.schinzel.basicutils.substringer.SubStringer;
 
 /**
  * Purpose of this file is to hold a Redirect directive
@@ -113,7 +113,7 @@ public class Redirect {
      */
     private String getFilePath(String requestedFileName) {
         if (requestedFileName.contains("?")) {
-            return SubStringer.create(requestedFileName).end("?").toString();
+            return SubStringer.create(requestedFileName).endDelimiter("?").toString();
         }
         return requestedFileName;
     }
@@ -127,7 +127,7 @@ public class Redirect {
      */
     private String getFileQuery(String requestedFileName) {
         if (requestedFileName.contains("?")) {
-            return SubStringer.create(requestedFileName).start("?").toString();
+            return SubStringer.create(requestedFileName).startDelimiter("?").toString();
         }
         return "";
     }

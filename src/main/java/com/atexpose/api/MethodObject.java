@@ -1,27 +1,24 @@
 package com.atexpose.api;
 
-import com.atexpose.MyProperties;
 import com.atexpose.api.datatypes.AbstractDataType;
 import com.atexpose.errors.RuntimeError;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.rmi.Remote;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
+import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.collections.keyvalues.IValueKey;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import io.schinzel.basicutils.str.Str;
 import lombok.Builder;
 import lombok.Getter;
-import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.EmptyObjects;
-import io.schinzel.basicutils.Thrower;
 import lombok.experimental.Accessors;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * The definition of a method. Used to invoke methods. This object can be seen
@@ -31,8 +28,7 @@ import lombok.experimental.Accessors;
  */
 @Accessors(prefix = "m")
 public class MethodObject implements IValueKey, IStateNode {
-    @Getter
-    final String mKey;
+    @Getter final String mKey;
     //The type of the return of the method as defined by the static variables.
     @Getter private final AbstractDataType mReturnDataType;
     //The access level required to use this method.
@@ -302,11 +298,11 @@ public class MethodObject implements IValueKey, IStateNode {
     public State getState() {
         return State.getBuilder()
                 .add("Name", this.getKey())
-                .add("Labels", mLabels)
                 .add("Return", mReturnDataType.getKey())
                 .add("AccessLevelRequired", this.getAccessLevelRequiredToUseThisMethod())
                 .add("RequiredArgumentsCount", mNoOfRequiredArguments)
-                .add("Arguments", mArguments)
+                .addChildren("Labels", mLabels)
+                .addChildren("Arguments", mArguments)
                 .build();
     }
 

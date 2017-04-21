@@ -49,7 +49,7 @@ public class ScheduledReportChannel extends ScheduledTaskChannel {
     public State getState() {
         return State.getBuilder(super.getState())
                 .add("Recipient", mRecipient)
-                .add("MailSender", mEmailSender)
+                .addChild("MailSender", mEmailSender)
                 .build();
     }
 

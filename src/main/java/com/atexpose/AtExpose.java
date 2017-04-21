@@ -88,8 +88,8 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
         return State.getBuilder()
                 .add("TimeNow", DateTimeStrings.getDateTimeUTC())
                 .add("StartTime", mInstanceStartTime)
-                .add("EmailSender", this.getMailSender())
-                .add("Dispatchers", this.getDispatchers())
+                .addChild("EmailSender", this.getMailSender())
+                .addChildren("Dispatchers", this.getDispatchers())
                 .build();
     }
 }
