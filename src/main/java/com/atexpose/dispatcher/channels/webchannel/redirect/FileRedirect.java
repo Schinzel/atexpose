@@ -1,5 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel.redirect;
 
+import io.schinzel.basicutils.Thrower;
 import lombok.Builder;
 import lombok.SneakyThrows;
 import org.apache.http.client.utils.URIBuilder;
@@ -11,10 +12,21 @@ import java.net.URI;
  * <p>
  * Created by schinzel on 2017-04-20.
  */
-@Builder
-public class FileRedirect implements IRedirect{
+public class FileRedirect implements IRedirect {
     private final String from;
     private final String to;
+
+
+    @Builder
+    FileRedirect(String from, String to) {
+        Thrower.throwIfEmpty(from, "from");
+        Thrower.throwIfEmpty(to, "to");
+        //Set from. Add "/" as first char if is missing
+        this.from = (from.charAt(0) == '/') ? from : "/" + from;
+        //Set to. Add "/" as first char if is missing
+        this.to = (to.charAt(0) == '/') ? to : "/" + to;
+    }
+
 
     @Override
     public boolean shouldRedirect(URI uri) {
