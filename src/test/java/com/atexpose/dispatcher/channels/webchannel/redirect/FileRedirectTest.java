@@ -19,7 +19,7 @@ public class FileRedirectTest {
 
 
     @Test
-    public void shouldAndGetRedirect_basic() throws Exception {
+    public void shouldAndGetRedirect_basic_noSlashFirst() throws Exception {
         FileRedirect fileRedirect = FileRedirect.builder()
                 .from("summary.html")
                 .to("index.html")
@@ -31,7 +31,7 @@ public class FileRedirectTest {
 
 
     @Test
-    public void shouldAndGetRedirect_basic2() throws Exception {
+    public void shouldAndGetRedirect_basic() throws Exception {
         FileRedirect fileRedirect = FileRedirect.builder()
                 .from("/summary.html")
                 .to("/index.html")
@@ -63,6 +63,18 @@ public class FileRedirectTest {
         URI uri = new URIBuilder("https://www.example.com/a/b/c/summary.html?k1=ŹźŻż&k2=سش&k3=ДЂ").build();
         Assert.assertTrue(fileRedirect.shouldRedirect(uri));
         Assert.assertEquals("https://www.example.com/q/r/s/index.html?k1=ŹźŻż&k2=سش&k3=ДЂ", fileRedirect.getRedirect(uri).toString());
+    }
+
+
+    @Test
+    public void shouldAndGetRedirect_checkThatArgumentUriUnchanged() throws Exception {
+        FileRedirect fileRedirect = FileRedirect.builder()
+                .from("/summary.html")
+                .to("/index.html")
+                .build();
+        URI uri = new URIBuilder("http://www.example.com/summary.html").build();
+        Assert.assertEquals("http://www.example.com/index.html", fileRedirect.getRedirect(uri).toString());
+        Assert.assertEquals("http://www.example.com/summary.html", uri.toString());
     }
 
 }

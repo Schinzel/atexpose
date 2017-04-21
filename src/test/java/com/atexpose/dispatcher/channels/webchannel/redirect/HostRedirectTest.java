@@ -82,4 +82,16 @@ public class HostRedirectTest {
     }
 
 
+    @Test
+    public void shouldAndGetRedirect_checkThatArgumentUriUnchanged() throws Exception {
+        HostRedirect hostRedirect = HostRedirect.builder()
+                .from("example.com")
+                .to("www.example.com")
+                .build();
+        URI uri = new URIBuilder("http://example.com").build();
+        Assert.assertEquals("http://www.example.com/", hostRedirect.getRedirect(uri).toString());
+        Assert.assertEquals("http://example.com", uri.toString());
+    }
+
+
 }
