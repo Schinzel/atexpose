@@ -67,7 +67,7 @@ public class WebServerBuilder {
 
 
     /**
-     * Add redirect from one host to anther.
+     * Add redirect from one host to another.
      * Enter without protocol.
      * Example
      * .addHostRedirect("www.otherdomain.se", "www.thisdomain.se")
@@ -84,7 +84,7 @@ public class WebServerBuilder {
 
 
     /**
-     * If set to true the server redirects http calls to https.
+     * If set to true the server redirects http requests to https.
      *
      * @param forceHttps If true, all http requests will be redirected to https.
      * @return This for chaining.
@@ -95,11 +95,16 @@ public class WebServerBuilder {
     }
 
 
-    public WebServerBuilder setFailWhaleRedict(String failWhalePage){
+    /**
+     * Redirects all request to a single page. Typically used to set up a fail whale.
+     *
+     * @param failWhalePage
+     * @return This for chaining.
+     */
+    public WebServerBuilder setFailWhaleRedirect(String failWhalePage) {
         mFailWhaleRedirect = FailWhaleRedirect.create(failWhalePage);
         return this;
     }
-
 
 
     public WebServerBuilder addServerSideVar(String name, String value) {
