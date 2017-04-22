@@ -19,9 +19,12 @@ public class Redirects {
 
     public Redirects(List<IRedirect> redirects, FailWhaleRedirect failWhaleRedirect) {
         this.mRedirects = redirects;
-        //Add fail whale redirect last. This ensures that if there is a fail whale
-        //redirect to be made, this is where the redirect will be made to.
-        this.mRedirects.add(failWhaleRedirect);
+        if (failWhaleRedirect != null) {
+            //Add fail whale redirect last. This ensures that if there is a fail whale
+            //redirect to be made, this is where the redirect will be made to. But also that host
+            //and protocol redirects are made if there are any.
+            this.mRedirects.add(failWhaleRedirect);
+        }
     }
 
 

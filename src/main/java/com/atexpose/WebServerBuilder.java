@@ -4,10 +4,7 @@ import com.atexpose.api.API;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.AbstractChannel;
 import com.atexpose.dispatcher.channels.webchannel.WebChannel;
-import com.atexpose.dispatcher.channels.webchannel.redirect.FileRedirect;
-import com.atexpose.dispatcher.channels.webchannel.redirect.HostRedirect;
-import com.atexpose.dispatcher.channels.webchannel.redirect.ProtocolRedirect;
-import com.atexpose.dispatcher.channels.webchannel.redirect.IRedirect;
+import com.atexpose.dispatcher.channels.webchannel.redirect.*;
 import com.atexpose.dispatcher.parser.AbstractParser;
 import com.atexpose.dispatcher.parser.urlparser.URLParser;
 import com.atexpose.dispatcher.parser.urlparser.UrlParserWithGSuiteAuth;
@@ -42,6 +39,7 @@ public class WebServerBuilder {
     boolean mForceDefaultPage = false;
     private Map<String, String> mResponseHeaders = new HashMap<>();
     private List<IRedirect> mRedirects = new ArrayList<>();
+    private FailWhaleRedirect mFailWhaleRedirect;
     private final API mAPI;
     private String mAuthCookieName;
     private String mAuthDomain;
@@ -96,6 +94,13 @@ public class WebServerBuilder {
         mRedirects.add(ProtocolRedirect.create());
         return this;
     }
+
+
+    public WebServerBuilder setFailWhaleRedict(String failWhalePage){
+        mFailWhaleRedirect = FailWhaleRedirect.create(failWhalePage);
+        return this;
+    }
+
 
 
     public WebServerBuilder addServerSideVar(String name, String value) {
@@ -206,18 +211,6 @@ public class WebServerBuilder {
 
 
     /**
-     * Default page to return on default request
-     *
-     * @param htmlPage Name of the HTML-page.
-     * @return This for chaining.
-     */
-    public WebServerBuilder defaultHtmlPage(String htmlPage) {
-        mDefaultPage = htmlPage;
-        return this;
-    }
-
-
-    /**
      * Indicates if the default page should be forced an all requests
      *
      * @param forceDefaultPage If true, default is returned for a requests.
@@ -234,8 +227,6 @@ public class WebServerBuilder {
                 .webServerDir(mWebServerDir)
                 .browserCacheMaxAge(mBrowserCacheMaxAge)
                 .cacheFilesInRam(mUseCachedFiles)
-                .defaultPage(mDefaultPage)
-                .forceDefaultPage(mForceDefaultPage)
                 .serverSideVariables(mServerSideVariables)
                 .responseHeaders(mResponseHeaders)
                 .build();
@@ -261,6 +252,7 @@ public class WebServerBuilder {
                 .port(mPort)
                 .timeout(mTimeout)
                 .redirectList(mRedirects)
+                .failWhaleRedirect(mFailWhaleRedirect)
                 .build();
     }
 

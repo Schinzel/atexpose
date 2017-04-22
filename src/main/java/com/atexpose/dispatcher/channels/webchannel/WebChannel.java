@@ -3,6 +3,7 @@ package com.atexpose.dispatcher.channels.webchannel;
 import com.atexpose.dispatcher.channels.AbstractChannel;
 import com.atexpose.dispatcher.channels.webchannel.http.HttpRedirect;
 import com.atexpose.dispatcher.channels.webchannel.http.HttpResponse;
+import com.atexpose.dispatcher.channels.webchannel.redirect.FailWhaleRedirect;
 import com.atexpose.dispatcher.channels.webchannel.redirect.IRedirect;
 import com.atexpose.dispatcher.channels.webchannel.redirect.Redirects;
 import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
@@ -48,8 +49,8 @@ public class WebChannel extends AbstractChannel {
     // CONSTRUCTORS AND SHUTDOWN
     //------------------------------------------------------------------------
     @Builder
-    WebChannel(int port, int timeout, List<IRedirect> redirectList) {
-        this(getServerSocket(port), new Redirects(redirectList), timeout);
+    WebChannel(int port, int timeout, List<IRedirect> redirectList, FailWhaleRedirect failWhaleRedirect) {
+        this(getServerSocket(port), new Redirects(redirectList, failWhaleRedirect), timeout);
         Thrower.throwIfOutsideRange(port, "port", 1, 65535);
         Thrower.throwIfOutsideRange(timeout, "timeout", 50, 30000);
     }
@@ -62,6 +63,7 @@ public class WebChannel extends AbstractChannel {
             throw new RuntimeException("Error starting thread on port " + port + ". Most likely the port is busy. " + ioe.getMessage());
         }
     }
+
 
     @Builder(builderMethodName = "cloneBuilder", buildMethodName = "buildClone")
     private WebChannel(ServerSocket serverSocket, Redirects redirects, int timeout) {
