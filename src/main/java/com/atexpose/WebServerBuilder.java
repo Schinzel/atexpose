@@ -53,29 +53,28 @@ public class WebServerBuilder {
      * Example
      * .addFileRedirect("home.html", "index.html")
      *
-     * @param source      file path to file we do not want to show
-     * @param destination file path to file we want to redirect user to
+     * @param from file path to file we do not want to show
+     * @param to   file path to file we want to redirect user to
      * @return This for chaining.
      */
-    public WebServerBuilder addFileRedirect(String source, String destination) {
-        mRedirectsBuilder.addFileRedirect(source, destination);
+    public WebServerBuilder addFileRedirect(String from, String to) {
+        mRedirectsBuilder.addFileRedirect(from, to);
         return this;
     }
 
 
     /**
      * Add redirect from one host to another.
-     * Enter without protocol.
      * Example
      * .addHostRedirect("www.otherdomain.se", "www.thisdomain.se")
      * .addHostRedirect("otherdomain.se", "www.otherdomain.se")
      *
-     * @param source      host address we want to redirect from
-     * @param destination host address we want to redirect to
+     * @param from host address we want to redirect from
+     * @param to   host address we want to redirect to
      * @return This for chaining.
      */
-    public WebServerBuilder addHostRedirect(String source, String destination) {
-        mRedirectsBuilder.addHostRedirect(source, destination);
+    public WebServerBuilder addHostRedirect(String from, String to) {
+        mRedirectsBuilder.addHostRedirect(from, to);
         return this;
     }
 
