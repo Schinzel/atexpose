@@ -35,7 +35,6 @@ public class WebServerBuilder {
     boolean mForceHttps = false;
     boolean mUseCachedFiles = true;
     Map<String, String> mServerSideVariables = new HashMap<>();
-    String mDefaultPage = "index.html";
     boolean mForceDefaultPage = false;
     private Map<String, String> mResponseHeaders = new HashMap<>();
     private List<IRedirect> mRedirects = new ArrayList<>();
