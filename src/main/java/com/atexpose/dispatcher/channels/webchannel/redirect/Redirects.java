@@ -1,9 +1,10 @@
 package com.atexpose.dispatcher.channels.webchannel.redirect;
 
+import com.google.common.collect.ImmutableList;
+import lombok.AllArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.net.URI;
-import java.util.List;
 
 /**
  * The purpose of this class is to
@@ -13,18 +14,85 @@ import java.util.List;
  * Created by schinzel on 2017-04-20.
  */
 @Accessors(prefix = "m")
+@AllArgsConstructor
 public class Redirects {
-    private final List<IRedirect> mRedirects;
+    private final ImmutableList<IRedirect> mRedirects;
 
 
-    public Redirects(List<IRedirect> redirects, FailWhaleRedirect failWhaleRedirect) {
-        this.mRedirects = redirects;
-        if (failWhaleRedirect != null) {
-            //Add fail whale redirect last. This ensures that if there is a fail whale
-            //redirect to be made, this is where the redirect will be made to. But also that host
-            //and protocol redirects are made if there are any.
-            this.mRedirects.add(failWhaleRedirect);
+    public static RedirectsBuilder getBuilder() {
+        return new RedirectsBuilder();
+    }
+
+
+    public static class RedirectsBuilder {
+        FailWhaleRedirect mFailWhaleRedirect;
+        ImmutableList.Builder<IRedirect> mRedirectListBuilder = new ImmutableList.Builder<>();
+
+
+        /**
+         * Redirects all request to a single page. Typically used to set up a fail whale.
+         *
+         * @param failWhalePage
+         * @return
+         */
+        public RedirectsBuilder setFailWhaleRedirect(String failWhalePage) {
+            mFailWhaleRedirect = FailWhaleRedirect.create(failWhalePage);
+            return this;
         }
+
+
+        /**
+         * All http requests will be redirected to https.
+         *
+         * @return This of chaining.
+         */
+        public RedirectsBuilder setHttpsRedirect() {
+            mRedirectListBuilder.add(new HttpsRedirect());
+            return this;
+        }
+
+
+        /**
+         * Examples of from and to arguments:
+         * "index.html"
+         * "/index.html"
+         * "/a/b/c/summary.html"
+         * "a/b/c/summary.html"
+         *
+         * @param from The file to redirect from.
+         * @param to   The file to redirect to.
+         * @return A new instance.
+         */
+        public RedirectsBuilder addFileRedirect(String from, String to) {
+            mRedirectListBuilder.add(new FileRedirect(from, to));
+            return this;
+        }
+
+
+        /**
+         * Examples of from and to arguments:
+         * "example.com"
+         * "www.example.com"
+         * "sub1.example.com"
+         * "sub2.example.com"
+         * "www.schinzel.io"
+         *
+         * @param from The domain to redirect from.
+         * @param to   The domain to redirect ot.
+         * @return A new instance.
+         */
+        public RedirectsBuilder addHostRedirect(String from, String to) {
+            mRedirectListBuilder.add(new HostRedirect(from, to));
+            return this;
+        }
+
+
+        public Redirects build() {
+            mRedirectListBuilder.add(mFailWhaleRedirect);
+            return new Redirects(mRedirectListBuilder.build());
+
+        }
+
     }
 
 

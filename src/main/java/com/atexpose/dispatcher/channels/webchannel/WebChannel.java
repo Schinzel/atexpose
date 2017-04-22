@@ -3,8 +3,6 @@ package com.atexpose.dispatcher.channels.webchannel;
 import com.atexpose.dispatcher.channels.AbstractChannel;
 import com.atexpose.dispatcher.channels.webchannel.http.HttpRedirect;
 import com.atexpose.dispatcher.channels.webchannel.http.HttpResponse;
-import com.atexpose.dispatcher.channels.webchannel.redirect.FailWhaleRedirect;
-import com.atexpose.dispatcher.channels.webchannel.redirect.IRedirect;
 import com.atexpose.dispatcher.channels.webchannel.redirect.Redirects;
 import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import com.atexpose.util.ByteStorage;
@@ -22,7 +20,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URI;
-import java.util.List;
 
 /**
  * The purpose of this class is to listen for and read incoming request on
@@ -49,8 +46,8 @@ public class WebChannel extends AbstractChannel {
     // CONSTRUCTORS AND SHUTDOWN
     //------------------------------------------------------------------------
     @Builder
-    WebChannel(int port, int timeout, List<IRedirect> redirectList, FailWhaleRedirect failWhaleRedirect) {
-        this(getServerSocket(port), new Redirects(redirectList, failWhaleRedirect), timeout);
+    WebChannel(int port, int timeout, Redirects redirects) {
+        this(getServerSocket(port), redirects, timeout);
         Thrower.throwIfOutsideRange(port, "port", 1, 65535);
         Thrower.throwIfOutsideRange(timeout, "timeout", 50, 30000);
     }

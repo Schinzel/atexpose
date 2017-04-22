@@ -13,9 +13,7 @@ import com.atexpose.dispatcher.wrapper.webresponse.WebWrapper;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,8 +35,7 @@ public class WebServerBuilder {
     Map<String, String> mServerSideVariables = new HashMap<>();
     boolean mForceDefaultPage = false;
     private Map<String, String> mResponseHeaders = new HashMap<>();
-    private List<IRedirect> mRedirects = new ArrayList<>();
-    private FailWhaleRedirect mFailWhaleRedirect;
+    private Redirects.RedirectsBuilder mRedirectsBuilder = Redirects.getBuilder();
     private final API mAPI;
     private String mAuthCookieName;
     private String mAuthDomain;
@@ -61,7 +58,7 @@ public class WebServerBuilder {
      * @return This for chaining.
      */
     public WebServerBuilder addFileRedirect(String source, String destination) {
-        mRedirects.add(FileRedirect.create(source, destination));
+        mRedirectsBuilder.addFileRedirect(source, destination);
         return this;
     }
 
@@ -78,7 +75,7 @@ public class WebServerBuilder {
      * @return This for chaining.
      */
     public WebServerBuilder addHostRedirect(String source, String destination) {
-        mRedirects.add(HostRedirect.create(source, destination));
+        mRedirectsBuilder.addHostRedirect(source, destination);
         return this;
     }
 
@@ -90,7 +87,7 @@ public class WebServerBuilder {
      * @return This for chaining.
      */
     public WebServerBuilder forceHttps(boolean forceHttps) {
-        mRedirects.add(ProtocolRedirect.create());
+        mRedirectsBuilder.setHttpsRedirect();
         return this;
     }
 
@@ -102,7 +99,7 @@ public class WebServerBuilder {
      * @return This for chaining.
      */
     public WebServerBuilder setFailWhaleRedirect(String failWhalePage) {
-        mFailWhaleRedirect = FailWhaleRedirect.create(failWhalePage);
+        mRedirectsBuilder.setFailWhaleRedirect(failWhalePage);
         return this;
     }
 
@@ -255,8 +252,7 @@ public class WebServerBuilder {
         return WebChannel.builder()
                 .port(mPort)
                 .timeout(mTimeout)
-                .redirectList(mRedirects)
-                .failWhaleRedirect(mFailWhaleRedirect)
+                .redirects(mRedirectsBuilder.build())
                 .build();
     }
 

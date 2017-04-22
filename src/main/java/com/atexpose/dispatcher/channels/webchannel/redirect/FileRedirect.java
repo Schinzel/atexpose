@@ -11,28 +11,12 @@ import java.net.URI;
  * <p>
  * Created by schinzel on 2017-04-20.
  */
-public class FileRedirect implements IRedirect {
+class FileRedirect implements IRedirect {
     private final String from;
     private final String to;
 
 
-    /**
-     * Examples of from and to arguments:
-     * "index.html"
-     * "/index.html"
-     * "/a/b/c/summary.html"
-     * "a/b/c/summary.html"
-     *
-     * @param from The file to redirect from.
-     * @param to   The file to redirect to.
-     * @return A new instance.
-     */
-    public static FileRedirect create(String from, String to) {
-        return new FileRedirect(from, to);
-    }
-
-
-    private FileRedirect(String from, String to) {
+    FileRedirect(String from, String to) {
         Thrower.throwIfEmpty(from, "from");
         Thrower.throwIfEmpty(to, "to");
         //Set from. Add "/" as first char if is missing
