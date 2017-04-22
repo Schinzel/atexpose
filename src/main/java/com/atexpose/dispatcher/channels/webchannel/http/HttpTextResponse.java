@@ -23,8 +23,8 @@ public class HttpTextResponse {
                 .a("HTTP/1.1 200 OK").aws(WS.CR_LF)
                 .a("Server: ").a(SERVER_NAME).aws(WS.CR_LF)
                 .a("Content-Length: ").a(returnLength).aws(WS.CR_LF)
-                .a("Content-Type: ").a("text/html; charset=UTF-8").aws(WS.CR_LF)
-                .a("Cache-Control: ").a("max-age=0").aws(WS.CR_LF)
+                .a("Content-Type: text/html; charset=UTF-8").aws(WS.CR_LF)
+                .a("Cache-Control: max-age=0").aws(WS.CR_LF)
                 .aws(WS.CR_LF)
                 .a(message)
                 .toString();
