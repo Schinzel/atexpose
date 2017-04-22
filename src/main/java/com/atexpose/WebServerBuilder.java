@@ -6,7 +6,7 @@ import com.atexpose.dispatcher.channels.AbstractChannel;
 import com.atexpose.dispatcher.channels.webchannel.WebChannel;
 import com.atexpose.dispatcher.channels.webchannel.redirect.FileRedirect;
 import com.atexpose.dispatcher.channels.webchannel.redirect.HostRedirect;
-import com.atexpose.dispatcher.channels.webchannel.redirect.HttpsRedirect;
+import com.atexpose.dispatcher.channels.webchannel.redirect.ProtocolRedirect;
 import com.atexpose.dispatcher.channels.webchannel.redirect.IRedirect;
 import com.atexpose.dispatcher.parser.AbstractParser;
 import com.atexpose.dispatcher.parser.urlparser.URLParser;
@@ -93,7 +93,7 @@ public class WebServerBuilder {
      * @return This for chaining.
      */
     public WebServerBuilder forceHttps(boolean forceHttps) {
-        mRedirects.add(HttpsRedirect.create());
+        mRedirects.add(ProtocolRedirect.create());
         return this;
     }
 

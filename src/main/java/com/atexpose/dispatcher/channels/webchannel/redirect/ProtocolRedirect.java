@@ -10,10 +10,10 @@ import java.net.URI;
  * <p>
  * Created by Schinzel on 2017-04-21.
  */
-public class HttpsRedirect implements IRedirect {
+public class ProtocolRedirect implements IRedirect {
 
-    public static HttpsRedirect create() {
-        return new HttpsRedirect();
+    public static ProtocolRedirect create() {
+        return new ProtocolRedirect();
     }
 
 
