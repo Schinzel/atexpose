@@ -19,7 +19,7 @@ public class FileRedirectTest {
         FileRedirect fileRedirect = FileRedirect.create("summary.html", "index.html");
         URI uri = new URI("http://www.example.com/summary.html");
         Assert.assertTrue(fileRedirect.shouldRedirect(uri));
-        Assert.assertEquals("http://www.example.com/index.html", fileRedirect.getRedirect(uri).toString());
+        Assert.assertEquals("http://www.example.com/index.html", fileRedirect.getNewLocation(uri).toString());
     }
 
 
@@ -28,7 +28,7 @@ public class FileRedirectTest {
         FileRedirect fileRedirect = FileRedirect.create("/summary.html", "/index.html");
         URI uri = new URI("http://www.example.com/summary.html");
         Assert.assertTrue(fileRedirect.shouldRedirect(uri));
-        Assert.assertEquals("http://www.example.com/index.html", fileRedirect.getRedirect(uri).toString());
+        Assert.assertEquals("http://www.example.com/index.html", fileRedirect.getNewLocation(uri).toString());
     }
 
 
@@ -37,7 +37,7 @@ public class FileRedirectTest {
         FileRedirect fileRedirect = FileRedirect.create("/a/b/c/summary.html", "q/r/s/index.html");
         URI uri = new URI("http://www.example.com/a/b/c/summary.html");
         Assert.assertTrue(fileRedirect.shouldRedirect(uri));
-        Assert.assertEquals("http://www.example.com/q/r/s/index.html", fileRedirect.getRedirect(uri).toString());
+        Assert.assertEquals("http://www.example.com/q/r/s/index.html", fileRedirect.getNewLocation(uri).toString());
     }
 
 
@@ -46,7 +46,7 @@ public class FileRedirectTest {
         FileRedirect fileRedirect = FileRedirect.create("/a/b/c/summary.html", "q/r/s/index.html");
         URI uri = new URI("https://www.example.com/a/b/c/summary.html?k1=ŹźŻż&k2=سش&k3=ДЂ");
         Assert.assertTrue(fileRedirect.shouldRedirect(uri));
-        Assert.assertEquals("https://www.example.com/q/r/s/index.html?k1=ŹźŻż&k2=سش&k3=ДЂ", fileRedirect.getRedirect(uri).toString());
+        Assert.assertEquals("https://www.example.com/q/r/s/index.html?k1=ŹźŻż&k2=سش&k3=ДЂ", fileRedirect.getNewLocation(uri).toString());
     }
 
 
@@ -54,7 +54,7 @@ public class FileRedirectTest {
     public void shouldAndGetRedirect_checkThatArgumentUriUnchanged() throws Exception {
         FileRedirect fileRedirect = FileRedirect.create("/summary.html", "/index.html");
         URI uri = new URI("http://www.example.com/summary.html");
-        Assert.assertEquals("http://www.example.com/index.html", fileRedirect.getRedirect(uri).toString());
+        Assert.assertEquals("http://www.example.com/index.html", fileRedirect.getNewLocation(uri).toString());
         Assert.assertEquals("http://www.example.com/summary.html", uri.toString());
     }
 

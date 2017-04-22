@@ -14,7 +14,7 @@ public class HttpsRedirectTest {
     public void testShouldRedirect_http() {
         URI uri = new URI("http://www.example.com");
         Assert.assertTrue(ProtocolRedirect.create().shouldRedirect(uri));
-        Assert.assertEquals("https://www.example.com", ProtocolRedirect.create().getRedirect(uri).toString());
+        Assert.assertEquals("https://www.example.com", ProtocolRedirect.create().getNewLocation(uri).toString());
     }
 
 
@@ -23,7 +23,7 @@ public class HttpsRedirectTest {
     public void testShouldAndGetRedirect_HTTP_uppercase() {
         URI uri = new URI("HTTP://www.example.com");
         Assert.assertTrue(ProtocolRedirect.create().shouldRedirect(uri));
-        Assert.assertEquals("https://www.example.com", ProtocolRedirect.create().getRedirect(uri).toString());
+        Assert.assertEquals("https://www.example.com", ProtocolRedirect.create().getNewLocation(uri).toString());
     }
 
 
@@ -47,7 +47,7 @@ public class HttpsRedirectTest {
     @SneakyThrows
     public void testGetRedirect_argumentShouldNotChange() {
         URI uri = new URI("http://www.example.com");
-        Assert.assertEquals("https://www.example.com", ProtocolRedirect.create().getRedirect(uri).toString());
+        Assert.assertEquals("https://www.example.com", ProtocolRedirect.create().getNewLocation(uri).toString());
         Assert.assertEquals("http://www.example.com", uri.toString());
     }
 

@@ -46,7 +46,7 @@ public class Redirects {
     public URI getNewLocation(URI uri) {
         for (IRedirect redirect : mRedirects) {
             if (redirect.shouldRedirect(uri)) {
-                uri = redirect.getRedirect(uri);
+                uri = redirect.getNewLocation(uri);
             }
         }
         return uri;

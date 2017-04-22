@@ -47,7 +47,7 @@ public class FailWhaleRedirect implements IRedirect {
 
     @Override
     @SneakyThrows
-    public URI getRedirect(URI uri) {
+    public URI getNewLocation(URI uri) {
         return new URIBuilder(uri).setPath(this.to).build();
     }
 }
