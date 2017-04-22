@@ -53,8 +53,8 @@ public class AtExposeTest2 {
         Connection.Response response;
         AtExpose.create().getWebServerBuilder()
                 .numberOfThreads(5)
-                .addTemporaryFileRedirect("src.html", "dest.html")
-                .addTemporaryFileRedirect("dir1/dir2/src.html", "dirdest/dest.html")
+                .addFileRedirect("src.html", "dest.html")
+                .addFileRedirect("dir1/dir2/src.html", "dirdest/dest.html")
                 .startWebServer();
         //Basic test
         response = Jsoup

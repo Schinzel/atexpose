@@ -1,6 +1,5 @@
 package com.atexpose.dispatcher.channels.webchannel.redirect;
 
-import lombok.AllArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.net.URI;
@@ -13,10 +12,15 @@ import java.util.List;
  * <p>
  * Created by schinzel on 2017-04-20.
  */
-@AllArgsConstructor
 @Accessors(prefix = "m")
 public class Redirects {
     private final List<IRedirect> mRedirects;
+
+
+    @java.beans.ConstructorProperties({"redirects"})
+    public Redirects(List<IRedirect> redirects) {
+        this.mRedirects = redirects;
+    }
 
 
     /**

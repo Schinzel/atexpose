@@ -1,6 +1,5 @@
 package com.atexpose.dispatcher.wrapper.webresponse;
 
-import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import com.atexpose.util.EncodingUtil;
 
 import java.nio.charset.Charset;

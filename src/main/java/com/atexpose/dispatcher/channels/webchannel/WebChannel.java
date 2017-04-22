@@ -48,8 +48,8 @@ public class WebChannel extends AbstractChannel {
     // CONSTRUCTORS AND SHUTDOWN
     //------------------------------------------------------------------------
     @Builder
-    WebChannel(int port, int timeout, List<IRedirect> redirects) {
-        this(getServerSocket(port), timeout, new Redirects(redirects));
+    WebChannel(int port, int timeout, List<IRedirect> redirectList) {
+        this(getServerSocket(port), new Redirects(redirectList), timeout);
         Thrower.throwIfOutsideRange(port, "port", 1, 65535);
         Thrower.throwIfOutsideRange(timeout, "timeout", 50, 30000);
     }
@@ -63,9 +63,8 @@ public class WebChannel extends AbstractChannel {
         }
     }
 
-
     @Builder(builderMethodName = "cloneBuilder", buildMethodName = "buildClone")
-    private WebChannel(ServerSocket serverSocket, int timeout, Redirects redirects) {
+    private WebChannel(ServerSocket serverSocket, Redirects redirects, int timeout) {
         mServerSocket = serverSocket;
         mSocketTimeout = timeout;
         mRedirects = redirects;
@@ -75,9 +74,9 @@ public class WebChannel extends AbstractChannel {
     @Override
     public AbstractChannel getClone() {
         return WebChannel.cloneBuilder()
+                .redirects(mRedirects)
                 .timeout(mSocketTimeout)
                 .serverSocket(mServerSocket)
-                .redirects(mRedirects)
                 .buildClone();
     }
 
@@ -218,5 +217,6 @@ public class WebChannel extends AbstractChannel {
                 .add("Queue", MAX_PENDING_REQUESTS)
                 .build();
     }
+
 }
 

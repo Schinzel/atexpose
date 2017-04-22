@@ -260,7 +260,7 @@ public class WebServerBuilder {
         return WebChannel.builder()
                 .port(mPort)
                 .timeout(mTimeout)
-                .redirects(mRedirects)
+                .redirectList(mRedirects)
                 .build();
     }
 
