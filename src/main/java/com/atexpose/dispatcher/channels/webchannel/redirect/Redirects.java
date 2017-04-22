@@ -17,14 +17,12 @@ public class Redirects {
     private final List<IRedirect> mRedirects;
 
 
-    @java.beans.ConstructorProperties({"redirects"})
     public Redirects(List<IRedirect> redirects) {
         this.mRedirects = redirects;
     }
 
 
     /**
-     *
      * @param uri The URI to check if it should be redirected.
      * @return True if the argument URI should be redirected.
      */
