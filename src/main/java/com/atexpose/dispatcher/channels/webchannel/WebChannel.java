@@ -1,8 +1,8 @@
 package com.atexpose.dispatcher.channels.webchannel;
 
 import com.atexpose.dispatcher.channels.AbstractChannel;
-import com.atexpose.dispatcher.channels.webchannel.http.HttpRedirect;
-import com.atexpose.dispatcher.channels.webchannel.http.HttpResponse;
+import com.atexpose.dispatcher.channels.webchannel.http.HttpRedirectResponse;
+import com.atexpose.dispatcher.channels.webchannel.http.HttpTextResponse;
 import com.atexpose.dispatcher.channels.webchannel.redirect.Redirects;
 import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import com.atexpose.util.ByteStorage;
@@ -155,12 +155,12 @@ public class WebChannel extends AbstractChannel {
      */
     private String getDirectResponse(HttpRequest httpRequest) {
         if (httpRequest.isGhostCall()) {
-            return HttpResponse.wrap("Hi Ghost!");
+            return HttpTextResponse.wrap("Hi Ghost!");
         }
         URI uri = httpRequest.getURI();
         if (mRedirects.shouldRedirect(uri)) {
             uri = mRedirects.getNewLocation(uri);
-            return HttpRedirect.wrapRedirect(uri);
+            return HttpRedirectResponse.getHeader(uri);
 
         }
         //There was no direct response, and thus return empty string.
