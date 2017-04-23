@@ -11,7 +11,7 @@ public class HttpsRedirectTest {
 
     @Test
     @SneakyThrows
-    public void testShouldRedirect_http() {
+    public void testShouldRedirect_And_GetNewLocation_http() {
         URI uri = new URI("http://www.example.com");
         Assert.assertTrue(new HttpsRedirect().shouldRedirect(uri));
         Assert.assertEquals("https://www.example.com", new HttpsRedirect().getNewLocation(uri).toString());
@@ -20,7 +20,7 @@ public class HttpsRedirectTest {
 
     @Test
     @SneakyThrows
-    public void testShouldAndGetRedirect_HTTP_uppercase() {
+    public void testShouldRedirect_And_GetNewLocation_HTTP_uppercase() {
         URI uri = new URI("HTTP://www.example.com");
         Assert.assertTrue(new HttpsRedirect().shouldRedirect(uri));
         Assert.assertEquals("https://www.example.com", new HttpsRedirect().getNewLocation(uri).toString());

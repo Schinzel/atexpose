@@ -16,7 +16,7 @@ public class HostRedirectTest {
 
 
     @Test
-    public void shouldAndGetRedirect_root_to_www() throws Exception {
+    public void shouldRedirect_And_GetNewLocation_root_to_www() throws Exception {
         HostRedirect hostRedirect = new HostRedirect("example.com", "www.example.com");
         URI uri = new URI("http://example.com");
         Assert.assertTrue(hostRedirect.shouldRedirect(uri));
@@ -25,7 +25,7 @@ public class HostRedirectTest {
 
 
     @Test
-    public void shouldAndGetRedirect_another_domain() throws Exception {
+    public void shouldRedirect_And_GetNewLocation_another_domain() throws Exception {
         HostRedirect hostRedirect = new HostRedirect("www.example.com", "www.schinzel.io");
         URI uri = new URI("http://www.example.com");
         Assert.assertTrue(hostRedirect.shouldRedirect(uri));
@@ -34,7 +34,7 @@ public class HostRedirectTest {
 
 
     @Test
-    public void shouldAndGetRedirect_subdomain() throws Exception {
+    public void shouldRedirect_And_GetNewLocation_subdomain() throws Exception {
         HostRedirect hostRedirect = new HostRedirect("sub1.example.com", "sub2.example.com");
         URI uri = new URI("http://sub1.example.com");
         Assert.assertTrue(hostRedirect.shouldRedirect(uri));
@@ -43,7 +43,7 @@ public class HostRedirectTest {
 
 
     @Test
-    public void shouldAndGetRedirect_https() throws Exception {
+    public void shouldRedirect_And_GetNewLocation_https() throws Exception {
         HostRedirect hostRedirect = new HostRedirect("sub1.example.com", "sub2.example.io");
         URI uri = new URI("https://sub1.example.com");
         Assert.assertTrue(hostRedirect.shouldRedirect(uri));
@@ -55,7 +55,7 @@ public class HostRedirectTest {
      * Testing with query string with polish, persian and cyrillic chars.
      */
     @Test
-    public void shouldAndGetRedirect_with_querystring() throws Exception {
+    public void shouldRedirect_And_GetNewLocation_with_querystring() throws Exception {
         HostRedirect hostRedirect = new HostRedirect("www.example.com", "www.schinzel.io");
         URI uri = new URI("http://www.example.com?k1=ŹźŻż&k2=سش&k3=ДЂ");
         Assert.assertTrue(hostRedirect.shouldRedirect(uri));
@@ -64,7 +64,7 @@ public class HostRedirectTest {
 
 
     @Test
-    public void shouldAndGetRedirect_checkThatArgumentUriUnchanged() throws Exception {
+    public void shouldRedirect_And_GetNewLocation_checkThatArgumentUriUnchanged() throws Exception {
         HostRedirect hostRedirect = new HostRedirect("example.com", "www.example.com");
         URI uri = new URI("http://example.com");
         Assert.assertEquals("http://www.example.com/", hostRedirect.getNewLocation(uri).toString());
