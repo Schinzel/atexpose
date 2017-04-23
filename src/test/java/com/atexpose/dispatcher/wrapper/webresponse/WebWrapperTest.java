@@ -181,7 +181,7 @@ public class WebWrapperTest {
                 .build();
         String result = webWrapper.wrapJSON(jo);
         String expected = "HTTP/1.1 200 OK\r\n"
-                + "Server: AtExpose\r\n"
+                + "Server: @Expose\r\n"
                 + "Content-Length: 21\r\n"
                 + "Content-Type: application/json; charset=UTF-8\r\n"
                 + "Cache-Control: max-age=0\r\n\r\n"
