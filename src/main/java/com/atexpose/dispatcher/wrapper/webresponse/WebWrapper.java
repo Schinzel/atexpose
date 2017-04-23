@@ -1,6 +1,7 @@
 package com.atexpose.dispatcher.wrapper.webresponse;
 
 import com.atexpose.MyProperties;
+import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.util.ArrayUtil;
 import com.atexpose.util.EncodingUtil;
@@ -31,8 +32,6 @@ import java.util.regex.Pattern;
  */
 @Accessors(prefix = "m")
 public class WebWrapper implements IWrapper {
-    /** The name of the server as written in the response header **/
-    private static final String SERVER_NAME = "AtExpose";
     //Pattern for place holders for server side variables. Example <##=MY_VAR##>
     static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<##=([a-zA-Z1-9_]{3,25})##>");
     //Pattern for include files. For example <##include.inc##> or <##header.html##>
@@ -347,7 +346,7 @@ public class WebWrapper implements IWrapper {
         String statusCode = HTTPStatusCode.mCode;
         StringBuilder sb = new StringBuilder()
                 .append("HTTP/1.1 ").append(statusCode).append(RESPONSE_HEADER_LINE_BREAK)
-                .append("Server: ").append(SERVER_NAME).append(RESPONSE_HEADER_LINE_BREAK)
+                .append("Server: ").append(PropertiesDispatcher.RESP_HEADER_SERVER_NAME).append(RESPONSE_HEADER_LINE_BREAK)
                 .append("Content-Length: ").append(contentLength).append(RESPONSE_HEADER_LINE_BREAK)
                 .append("Content-Type: ").append(getResponseHeaderContentType(filename, contentType)).append(RESPONSE_HEADER_LINE_BREAK);
         //If there are any response headers to attach

@@ -62,4 +62,18 @@ public class RedirectsTest {
         Assert.assertEquals("https://www.schinzel.io/bapp.html", redirects.getNewLocation(uri).toString());
     }
 
+
+    @Test
+    public void getNewLocation_MethodCall() throws Exception {
+        Redirects redirects = Redirects.getBuilder()
+                .setFailWhaleRedirect("bapp.html")
+                .addHostRedirect("example.com", "www.example.com")
+                .addHostRedirect("www.example.com", "www.schinzel.io")
+                .addFileRedirect("a/b/c/source.html", "q/r/s/dest.html")
+                .setHttpsRedirect()
+                .build();
+        URI uri = new URI("http://example.com/call/time");
+        Assert.assertEquals("https://www.schinzel.io/bapp.html", redirects.getNewLocation(uri).toString());
+    }
+
 }
