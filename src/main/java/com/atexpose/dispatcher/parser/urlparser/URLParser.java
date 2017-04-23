@@ -1,5 +1,6 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
+import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.atexpose.dispatcher.parser.AbstractParser;
 import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import io.schinzel.basicutils.Checker;
@@ -25,7 +26,7 @@ public class URLParser extends AbstractParser {
      * http://127.0.0.1:5555/call/setName?name=anyname If this suffix is not
      * present a file i assumed http;//127.0.0.1:5555/myfile.jpg
      */
-    private static final String COMMAND_REQUEST_MARKER = "call/";
+    private static final String COMMAND_REQUEST_MARKER = PropertiesDispatcher.COMMAND_REQUEST_MARKER;
     @Getter(AccessLevel.PROTECTED) protected HttpRequest mHttpRequest;
     @Getter(AccessLevel.PROTECTED) protected CallType mCallType;
 
