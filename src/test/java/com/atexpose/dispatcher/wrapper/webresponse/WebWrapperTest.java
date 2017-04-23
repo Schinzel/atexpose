@@ -200,13 +200,11 @@ public class WebWrapperTest {
         responseHeaders.put("bear", "kodiak");
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
-                .browserCacheMaxAge(10)
-                .cacheFilesInRam(false)
                 .responseHeaders(responseHeaders)
                 .build();
         String result = webWrapper.wrapJSON(jo);
         String expected = "HTTP/1.1 200 OK\r\n"
-                + "Server: AtExpose\r\n"
+                + "Server: @Expose\r\n"
                 + "Content-Length: 21\r\n"
                 + "Content-Type: application/json; charset=UTF-8\r\n"
                 + "monkey: gibbon\r\n"
@@ -221,8 +219,7 @@ public class WebWrapperTest {
     public void testWrapFileHtml() {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
-                .browserCacheMaxAge(10)
-                .cacheFilesInRam(false)
+                .cacheFilesInRam(true)
                 .build();
         webWrapper.wrapFile("somefile.html");
         // should return the requested file and not the default index.html
@@ -234,8 +231,7 @@ public class WebWrapperTest {
     public void testWrapFileJs() {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
-                .browserCacheMaxAge(10)
-                .cacheFilesInRam(false)
+                .cacheFilesInRam(true)
                 .build();
         webWrapper.wrapFile("somefile.js");
         // should return the requested file and not the default
@@ -247,8 +243,7 @@ public class WebWrapperTest {
     public void testWrapFileDefault() {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
-                .browserCacheMaxAge(10)
-                .cacheFilesInRam(false)
+                .cacheFilesInRam(true)
                 .build();
         webWrapper.wrapFile("index.html");
         // should return the default file
@@ -260,8 +255,7 @@ public class WebWrapperTest {
     public void testWrapFileEmpty() {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
-                .browserCacheMaxAge(10)
-                .cacheFilesInRam(false)
+                .cacheFilesInRam(true)
                 .build();
         webWrapper.wrapFile("");
         // should return the default file
