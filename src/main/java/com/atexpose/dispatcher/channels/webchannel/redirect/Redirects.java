@@ -1,5 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel.redirect;
 
+import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.google.common.collect.ImmutableList;
 import lombok.AllArgsConstructor;
 import lombok.experimental.Accessors;
@@ -111,6 +112,9 @@ public class Redirects {
      * @return True if the argument URI should be redirected.
      */
     public boolean shouldRedirect(URI uri) {
+        if (Redirects.isMethodCall(uri)){
+            return false;
+        }
         for (IRedirect redirect : mRedirects) {
             if (redirect.shouldRedirect(uri)) {
                 return true;
@@ -131,6 +135,16 @@ public class Redirects {
             }
         }
         return uri;
+    }
+
+
+    /**
+     *
+     * @param uri
+     * @return True if the argument URI is a method call, else false.
+     */
+    static boolean isMethodCall(URI uri){
+        return uri.getPath().startsWith('/' + PropertiesDispatcher.COMMAND_REQUEST_MARKER);
     }
 
 

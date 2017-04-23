@@ -13,7 +13,7 @@ public class PropertiesDispatcher {
      * http://127.0.0.1:5555/call/setName?name=anyname If this suffix is not
      * present a file is assumed http;//127.0.0.1:5555/myfile.jpg
      */
-    public  static final String COMMAND_REQUEST_MARKER = "call/";
+    public static final String COMMAND_REQUEST_MARKER = "call/";
 
 
 }

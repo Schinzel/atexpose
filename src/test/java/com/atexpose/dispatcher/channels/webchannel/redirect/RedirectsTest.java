@@ -76,4 +76,17 @@ public class RedirectsTest {
         Assert.assertEquals("https://www.schinzel.io/bapp.html", redirects.getNewLocation(uri).toString());
     }
 
+
+    @Test
+    public void testIsMethodCall_htmlPageRequest() throws Exception {
+        URI uri = new URI("https://www.example.com/subdir/bear.html");
+        Assert.assertFalse(Redirects.isMethodCall(uri));
+    }
+
+    @Test
+    public void testIsMethodCall_methodCall() throws Exception {
+        URI uri = new URI("https://www.example.com/call/time");
+        Assert.assertTrue(Redirects.isMethodCall(uri));
+    }
+
 }

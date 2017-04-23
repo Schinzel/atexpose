@@ -1,5 +1,6 @@
 package com.atexpose;
 
+import com.atexpose.dispatcher.Dispatcher;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Connection;
@@ -51,7 +52,7 @@ public class AtExposeTest2 {
         int statusCode;
         String location;
         Connection.Response response;
-        AtExpose.create().getWebServerBuilder()
+        Dispatcher webServer = AtExpose.create().getWebServerBuilder()
                 .numberOfThreads(5)
                 .addFileRedirect("src.html", "dest.html")
                 .addFileRedirect("dir1/dir2/src.html", "dirdest/dest.html")
@@ -96,6 +97,7 @@ public class AtExposeTest2 {
         location = response.header("Location");
         assertEquals(302, statusCode);
         assertEquals("http://127.0.0.1:5555/dirdest/dest.html?key2=val2", location);
+        webServer.shutdown();
     }
 
 }
