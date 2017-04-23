@@ -27,7 +27,6 @@ public class WebServerBuilderTest {
         assertEquals("web", mWsb.mWebServerDir);
         assertEquals(300, mWsb.mTimeout);
         assertEquals(1200, mWsb.mBrowserCacheMaxAge);
-        assertEquals(false, mWsb.mForceHttps);
         assertEquals(true, mWsb.mUseCachedFiles);
         assertNotNull(mWsb.mServerSideVariables);
     }
@@ -72,17 +71,6 @@ public class WebServerBuilderTest {
     public void testCacheMaxAgeInSeconds() {
         mWsb.browserCacheMaxAge(888);
         assertEquals(888, mWsb.mBrowserCacheMaxAge);
-    }
-
-
-    @Test
-    public void testForceHttps() {
-        mWsb.forceHttps(true);
-        assertEquals(true, mWsb.mForceHttps);
-        mWsb.forceHttps(false);
-        assertEquals(false, mWsb.mForceHttps);
-        mWsb.forceHttps(true);
-        assertEquals(true, mWsb.mForceHttps);
     }
 
 

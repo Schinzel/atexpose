@@ -78,7 +78,7 @@ public class HttpRequest {
     public URI getURI() {
         //Get protocol
         String protocol = this.getRequestHeaderValue("X-Forwarded-Proto");
-        if (Checker.isEmpty(protocol)){
+        if (Checker.isEmpty(protocol)) {
             protocol = "http";
         }
         //Get host
@@ -88,17 +88,23 @@ public class HttpRequest {
                 .startDelimiter("GET ")
                 .endDelimiter(" HTTP/1.1")
                 .getSubStringer();
+        //Get the path. If there is a "?" in the string
         String path = pathAndQuery.contains("?")
+                //get everything before the "?"
                 ? pathAndQuery.endDelimiter("?").toString()
+                //else, get the whole string
                 : pathAndQuery.toString();
+        //Get the querystring. If there is a "?" in the string
         String query = pathAndQuery.contains("?")
+                //Get everything after the "?"
                 ? pathAndQuery.startDelimiter("?").toString()
+                //else, get empty string
                 : EmptyObjects.EMPTY_STRING;
         return new URIBuilder()
                 .setScheme(protocol)
                 .setHost(host)
                 .setPath(path)
-                .setCustomQuery(query)
+                .setQuery(query)
                 .build();
     }
 

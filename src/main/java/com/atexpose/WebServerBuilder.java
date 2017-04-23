@@ -30,7 +30,6 @@ public class WebServerBuilder {
     int mAccessLevel = 1;
     int mTimeout = 300;
     int mBrowserCacheMaxAge = 1200;
-    boolean mForceHttps = false;
     boolean mUseCachedFiles = true;
     Map<String, String> mServerSideVariables = new HashMap<>();
     boolean mForceDefaultPage = false;

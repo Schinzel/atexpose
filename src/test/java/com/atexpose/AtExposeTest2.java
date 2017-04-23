@@ -65,7 +65,7 @@ public class AtExposeTest2 {
         statusCode = response.statusCode();
         location = response.header("Location");
         assertEquals(302, statusCode);
-        assertEquals("dest.html", location);
+        assertEquals("http://127.0.0.1:5555/dest.html", location);
         //Test with dirs
         response = Jsoup
                 .connect("http://127.0.0.1:5555/dir1/dir2/src.html")
@@ -75,7 +75,7 @@ public class AtExposeTest2 {
         statusCode = response.statusCode();
         location = response.header("Location");
         assertEquals(302, statusCode);
-        assertEquals("dirdest/dest.html", location);
+        assertEquals("http://127.0.0.1:5555/dirdest/dest.html", location);
         //Test that query strings are passed on
         response = Jsoup
                 .connect("http://127.0.0.1:5555/src.html?key1=val1")
@@ -85,7 +85,7 @@ public class AtExposeTest2 {
         statusCode = response.statusCode();
         location = response.header("Location");
         assertEquals(302, statusCode);
-        assertEquals("dest.html?key1=val1", location);
+        assertEquals("http://127.0.0.1:5555/dest.html?key1=val1", location);
         //Test that query strings are passed on with dirs
         response = Jsoup
                 .connect("http://127.0.0.1:5555/dir1/dir2/src.html?key2=val2")
@@ -95,7 +95,7 @@ public class AtExposeTest2 {
         statusCode = response.statusCode();
         location = response.header("Location");
         assertEquals(302, statusCode);
-        assertEquals("dirdest/dest.html?key2=val2", location);
+        assertEquals("http://127.0.0.1:5555/dirdest/dest.html?key2=val2", location);
     }
 
 }

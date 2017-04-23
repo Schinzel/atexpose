@@ -1,5 +1,6 @@
 package com.atexpose;
 
+import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.atexpose.dispatcher.wrapper.FunnyChars;
 import io.schinzel.basicutils.Sandman;
 import org.jsoup.Connection;
@@ -59,7 +60,7 @@ public class AtExposeTest {
         byte[] baMessage = request.getBytes(Charset.forName("Utf-8"));
         SocketRW.write(socket, baMessage);
         String expected = "HTTP/1.1 500 Internal Server Error\r\n"
-                + "Server: AtExpose\r\n"
+                + "Server: " + PropertiesDispatcher.RESP_HEADER_SERVER_NAME + "\r\n"
                 + "Content-Length: 118\r\n"
                 + "Content-Type: text/html; charset=UTF-8\r\n"
                 + "Cache-Control: max-age=0\r\n"
@@ -77,7 +78,7 @@ public class AtExposeTest {
         byte[] baMessage = new byte[]{0};
         SocketRW.write(socket, baMessage);
         String expected = "HTTP/1.1 200 OK\r\n"
-                + "Server: AtExpose\r\n"
+                + "Server: " + PropertiesDispatcher.RESP_HEADER_SERVER_NAME + "\r\n"
                 + "Content-Length: 9\r\n"
                 + "Content-Type: text/html; charset=UTF-8\r\n"
                 + "Cache-Control: max-age=0\r\n"
