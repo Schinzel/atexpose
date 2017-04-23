@@ -274,7 +274,7 @@ public class WebWrapperTest {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
                 .browserCacheMaxAge(10)
-                .cacheFilesInRam(false)
+                .cacheFilesInRam(true)
                 .build();
         webWrapper.wrapFile("somefolder/");
         // should return the default file
