@@ -15,22 +15,7 @@ class FailWhaleRedirect implements IRedirect {
     private final String to;
 
 
-    /**
-     * Examples to argument:
-     * "index.html"
-     * "/index.html"
-     * "/a/b/c/summary.html"
-     * "a/b/c/summary.html"
-     *
-     * @param to The file to redirect to.
-     * @return A new instance.
-     */
-    public static FailWhaleRedirect create(String to) {
-        return new FailWhaleRedirect(to);
-    }
-
-
-    private FailWhaleRedirect(String to) {
+    FailWhaleRedirect(String to) {
         Thrower.throwIfEmpty(to, "to");
         //Set to. Add "/" as first char if is missing
         this.to = (to.charAt(0) == '/') ? to : "/" + to;

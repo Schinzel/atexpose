@@ -31,12 +31,18 @@ public class Redirects {
 
         /**
          * Redirects all request to a single page. Typically used to set up a fail whale.
+         * <p>
+         * Examples to argument:
+         * "fail.html"
+         * "/error.html"
+         * "/a/b/c/info.html"
+         * "a/b/c/index.html"
          *
-         * @param failWhalePage
-         * @return
+         * @param failWhalePage The file to redirect to.
+         * @return A new instance.
          */
         public RedirectsBuilder setFailWhaleRedirect(String failWhalePage) {
-            mFailWhaleRedirect = FailWhaleRedirect.create(failWhalePage);
+            mFailWhaleRedirect = new FailWhaleRedirect(failWhalePage);
             return this;
         }
 
