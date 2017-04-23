@@ -21,7 +21,7 @@ public class RedirectsTest {
 
 
     @Test
-    public void shouldRedirect_noRedidect() throws Exception {
+    public void shouldRedirect_noRedirect() throws Exception {
         Redirects redirects = Redirects.getBuilder()
                 .setHttpsRedirect()
                 .addHostRedirect("example.com", "www.example.com")
