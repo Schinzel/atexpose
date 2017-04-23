@@ -11,7 +11,7 @@ import java.net.URI;
  * <p>
  * Created by schinzel on 2017-04-22.
  */
-public class FailWhaleRedirect implements IRedirect {
+class FailWhaleRedirect implements IRedirect {
     private final String to;
 
 

@@ -9,7 +9,7 @@ import java.net.URI;
  * <p>
  * Created by schinzel on 2017-04-20.
  */
-public interface IRedirect {
+interface IRedirect {
 
     /**
      * @param uri An URI to check if it is to be redirected.

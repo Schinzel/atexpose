@@ -147,8 +147,7 @@ public class WebChannel extends AbstractChannel {
 
     /**
      * Get any direct response. Direct responses is when the WebChannel send the response directly
-     * without involving
-     * the rest of @expose. For example, if there is a http to https redirect.
+     * without involving the rest of @expose. For example, if there is a http to https redirect.
      *
      * @param httpRequest
      * @return Empty string if no direct response is to be sent. Else the direct response to send.

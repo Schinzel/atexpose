@@ -88,7 +88,11 @@ public class Redirects {
 
 
         public Redirects build() {
-            mRedirectListBuilder.add(mFailWhaleRedirect);
+            //If a fail whale page has been set
+            if (mFailWhaleRedirect != null) {
+                //Add it to list
+                mRedirectListBuilder.add(mFailWhaleRedirect);
+            }
             return new Redirects(mRedirectListBuilder.build());
 
         }
