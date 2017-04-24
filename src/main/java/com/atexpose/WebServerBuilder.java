@@ -81,11 +81,14 @@ public class WebServerBuilder {
     /**
      * If set to true the server redirects http requests to https.
      *
-     * @param forceHttps If true, all http requests will be redirected to https.
+     * @param forceHttps If true, all http requests will be redirected to https. If false, this
+     *                   method will do nothing.
      * @return This for chaining.
      */
     public WebServerBuilder forceHttps(boolean forceHttps) {
-        mRedirectsBuilder.setHttpsRedirect();
+        if (forceHttps) {
+            mRedirectsBuilder.setHttpsRedirect();
+        }
         return this;
     }
 
