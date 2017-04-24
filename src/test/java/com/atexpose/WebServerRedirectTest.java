@@ -29,12 +29,13 @@ public class WebServerRedirectTest {
     @After
     public void after() {
         mWebServer.shutdown();
+        //Snooze required to get tests to work on Travis
         Sandman.snoozeMillis(10);
     }
 
 
     @Test
-    public void testRedirect_pageInRoot() throws Exception {
+    public void testRedirect_pageInRoot_shouldRedirect() throws Exception {
         //Basic test
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/src.html")
@@ -47,7 +48,7 @@ public class WebServerRedirectTest {
 
 
     @Test
-    public void testRedirect_pageInSubDir() throws Exception {
+    public void testRedirect_pageInSubDir_shouldRedirect() throws Exception {
         //Basic test
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/dir1/dir2/src.html")
@@ -60,7 +61,7 @@ public class WebServerRedirectTest {
 
 
     @Test
-    public void testRedirect_pageInRoot_withQueryString() throws Exception {
+    public void testRedirect_pageInRoot_withQueryString_shouldRedirectWithQuery() throws Exception {
         //Basic test
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/src.html?key1=val1")
@@ -73,7 +74,7 @@ public class WebServerRedirectTest {
 
 
     @Test
-    public void testRedirect_pageInSubDir_withQueryStriing() throws IOException {
+    public void testRedirect_pageInSubDir_withQueryString_shouldRedirectWithQuery() throws IOException {
         //Test that query strings are passed on with dirs
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/dir1/dir2/src.html?key2=val2")

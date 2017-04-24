@@ -37,7 +37,7 @@ public class WebServerTest {
     public void after() {
         mAtExpose.shutdown();
         //Snooze required to get tests to work on Travis
-        Sandman.snoozeMillis(50);
+        Sandman.snoozeMillis(10);
     }
 
 
