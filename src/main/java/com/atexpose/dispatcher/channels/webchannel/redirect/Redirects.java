@@ -33,7 +33,7 @@ public class Redirects {
         /**
          * Redirects all request to a single page. Typically used to set up a fail whale.
          * <p>
-         * Examples to argument:
+         * Argument example:
          * "fail.html"
          * "/error.html"
          * "/a/b/c/info.html"

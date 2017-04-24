@@ -102,6 +102,28 @@ public class WebServerBuilder {
     }
 
 
+    /**
+     * Redirects all request to a single page. Typically used to set up a fail whale.
+     * <p>
+     * Argument examples:
+     * "fail.html"
+     * "/error.html"
+     * "/a/b/c/info.html"
+     * "a/b/c/index.html"
+     *
+     * @param failWhalePage
+     * @param useFailWhalePage If true the argument fail whale page will be redirect to. If false,
+     *                         this method will do nothing.
+     * @return This for chaining.
+     */
+    public WebServerBuilder setFailWhaleRedirect(String failWhalePage, boolean useFailWhalePage) {
+        if (useFailWhalePage) {
+            mRedirectsBuilder.setFailWhaleRedirect(failWhalePage);
+        }
+        return this;
+    }
+
+
     public WebServerBuilder addServerSideVar(String name, String value) {
         mServerSideVariables.put(name, value);
         return this;
