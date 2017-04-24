@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Schinzel
  */
-public class AtExposeTest {
+public class WebServerTest {
     AtExpose mAtExpose;
     private static final String LOCAL_HOST_IP = "127.0.0.1";
     private static final String URL = "http://" + LOCAL_HOST_IP + ":5555/call/";
@@ -58,7 +58,7 @@ public class AtExposeTest {
         Socket socket = new Socket(LOCAL_HOST_IP, port);
         String request = "no header call";
         byte[] baMessage = request.getBytes(Charset.forName("Utf-8"));
-        SocketRW.write(socket, baMessage);
+        SocketRWUtil.write(socket, baMessage);
         String expected = "HTTP/1.1 500 Internal Server Error\r\n"
                 + "Server: " + PropertiesDispatcher.RESP_HEADER_SERVER_NAME + "\r\n"
                 + "Content-Length: 118\r\n"
@@ -66,7 +66,7 @@ public class AtExposeTest {
                 + "Cache-Control: max-age=0\r\n"
                 + "\r\n"
                 + "Error while reading from socket. Request not allowed. Request has to start with GET or POST. Request:' " + request + "'";
-        String response = SocketRW.read(socket);
+        String response = SocketRWUtil.read(socket);
         assertEquals(expected, response);
     }
 
@@ -76,7 +76,7 @@ public class AtExposeTest {
         int port = 5555;
         Socket socket = new Socket(LOCAL_HOST_IP, port);
         byte[] baMessage = new byte[]{0};
-        SocketRW.write(socket, baMessage);
+        SocketRWUtil.write(socket, baMessage);
         String expected = "HTTP/1.1 200 OK\r\n"
                 + "Server: " + PropertiesDispatcher.RESP_HEADER_SERVER_NAME + "\r\n"
                 + "Content-Length: 9\r\n"
@@ -84,7 +84,7 @@ public class AtExposeTest {
                 + "Cache-Control: max-age=0\r\n"
                 + "\r\n"
                 + "Hi Ghost!";
-        String response = SocketRW.read(socket);
+        String response = SocketRWUtil.read(socket);
         assertEquals(expected, response);
     }
 
@@ -217,7 +217,7 @@ public class AtExposeTest {
 
     @Test
     public void test_WebServerCall_shortMethodName() throws IOException {
-        mAtExpose.getAPI().expose(new AtExposeTest());
+        mAtExpose.getAPI().expose(new WebServerTest());
         Connection.Response response = Jsoup
                 .connect(URL + "g")
                 .method(Connection.Method.GET)
