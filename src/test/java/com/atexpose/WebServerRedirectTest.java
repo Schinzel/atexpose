@@ -29,7 +29,7 @@ public class WebServerRedirectTest {
     @After
     public void after() {
         mWebServer.shutdown();
-        Sandman.snoozeMillis(20);
+        Sandman.snoozeMillis(10);
     }
 
 
