@@ -86,6 +86,109 @@ public class WebServerRedirectTest {
 
 
     @Test
+    public void WebServerRedirect_RequestFromFromHost_ShouldRedirect() throws Exception {
+        mWebServer = AtExpose.create().getWebServerBuilder()
+                .numberOfThreads(5)
+                .addHostRedirect("127.0.0.1", "localhost")
+                .startWebServer();
+        Connection.Response response = Jsoup
+                .connect("http://127.0.0.1:5555/dir1/dir2/src.html?key2=val2")
+                .method(Connection.Method.GET)
+                .followRedirects(false)
+                .execute();
+        assertEquals(302, response.statusCode());
+        assertEquals("http://localhost:5555/dir1/dir2/src.html?key2=val2", response.header("Location"));
+    }
+
+
+    @Test
+    public void WebServerRedirect_HttpsRedirectSetUp_HttpRequest_ShouldRedirect() throws Exception {
+        mWebServer = AtExpose.create().getWebServerBuilder()
+                .numberOfThreads(5)
+                .addHostRedirect("127.0.0.1", "localhost")
+                .startWebServer();
+        Connection.Response response = Jsoup
+                .connect("http://127.0.0.1:5555/dir1/dir2/src.html?key2=val2")
+                .method(Connection.Method.GET)
+                .followRedirects(false)
+                .execute();
+        assertEquals(302, response.statusCode());
+        assertEquals("http://localhost:5555/dir1/dir2/src.html?key2=val2", response.header("Location"));
+    }
+
+
+    @Test
+    public void WebServerRedirect_ComboRedirectSetUp_ShouldRedirect() throws Exception {
+        mWebServer = AtExpose.create().getWebServerBuilder()
+                .numberOfThreads(5)
+                .forceHttps(true)
+                .addHostRedirect("127.0.0.1", "localhost")
+                .addFileRedirect("src.html", "dest.html")
+                .addFileRedirect("dir1/dir2/src.html", "dirdest/dest.html")
+                .startWebServer();
+        Connection.Response response = Jsoup
+                .connect("http://127.0.0.1:5555/dir1/dir2/src.html?key2=val2")
+                .method(Connection.Method.GET)
+                .followRedirects(false)
+                .execute();
+        assertEquals(302, response.statusCode());
+        assertEquals("https://localhost:5555/dirdest/dest.html?key2=val2", response.header("Location"));
+    }
+
+
+    @Test
+    public void WebServerRedirect_FailWhaleDoNotRedirect_ShouldNotRedirect() throws Exception {
+        mWebServer = AtExpose.create().getWebServerBuilder()
+                .webServerDir("testfiles/")
+                .numberOfThreads(5)
+                .setFailWhaleRedirect("monkey.html", false)
+                .startWebServer();
+        Connection.Response response = Jsoup
+                .connect("http://127.0.0.1:5555/index.html")
+                .method(Connection.Method.GET)
+                .followRedirects(false)
+                .execute();
+        assertEquals(200, response.statusCode());
+    }
+
+
+    @Test
+    public void WebServerRedirect_HttpsDoNotRedirect_ShouldNotRedirect() throws Exception {
+        mWebServer = AtExpose.create().getWebServerBuilder()
+                .webServerDir("testfiles/")
+                .numberOfThreads(5)
+                .forceDefaultPage(false)
+                .startWebServer();
+        Connection.Response response = Jsoup
+                .connect("http://127.0.0.1:5555/index.html")
+                .method(Connection.Method.GET)
+                .followRedirects(false)
+                .execute();
+        assertEquals(200, response.statusCode());
+    }
+
+
+    @Test
+    public void WebServerRedirect_FailWhailRedirectInComboWithOtherRedirects_ShouldRedirectToHostHttpsAndFailWhalePageWithQueriesIntact() throws Exception {
+        mWebServer = AtExpose.create().getWebServerBuilder()
+                .numberOfThreads(5)
+                .setFailWhaleRedirect("monkey.html")
+                .forceHttps(true)
+                .addHostRedirect("127.0.0.1", "localhost")
+                .addFileRedirect("src.html", "dest.html")
+                .addFileRedirect("dir1/dir2/src.html", "dirdest/dest.html")
+                .startWebServer();
+        Connection.Response response = Jsoup
+                .connect("http://127.0.0.1:5555/dir1/dir2/src.html?key2=val2")
+                .method(Connection.Method.GET)
+                .followRedirects(false)
+                .execute();
+        assertEquals(302, response.statusCode());
+        assertEquals("https://localhost:5555/monkey.html?key2=val2", response.header("Location"));
+    }
+
+
+    @Test
     public void WebServerRedirect_MethodCall_ShouldNotRedirect() throws Exception {
         mWebServer = AtExpose.create().getWebServerBuilder()
                 .numberOfThreads(5)
