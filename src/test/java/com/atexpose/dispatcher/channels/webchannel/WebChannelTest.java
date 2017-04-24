@@ -16,7 +16,7 @@ public class WebChannelTest {
 
 
     @Test
-    public void testGetRequest_redirect_page() throws Exception {
+    public void testGetRequest_pageRequest_shouldRedirect() throws Exception {
         Redirects redirects = Redirects.getBuilder()
                 .addFileRedirect("apa.html", "bear.html")
                 .build();
@@ -43,7 +43,7 @@ public class WebChannelTest {
 
 
     @Test
-    public void testGetRequest_redirectMethodCall_shouldNotRedirect() throws Exception {
+    public void testGetRequest_methodCall_shouldNotRedirect() throws Exception {
         Redirects redirects = Redirects.getBuilder()
                 .setHttpsRedirect()
                 .build();
