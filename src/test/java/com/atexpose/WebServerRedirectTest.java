@@ -11,11 +11,6 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * The purpose of this class
- * <p>
- * Created by Schinzel on 2017-04-24.
- */
 public class WebServerRedirectTest {
     Dispatcher mWebServer;
 
