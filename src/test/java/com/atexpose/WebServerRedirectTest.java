@@ -8,8 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertEquals;
 
 public class WebServerRedirectTest {
@@ -20,6 +18,8 @@ public class WebServerRedirectTest {
     public void before() {
         mWebServer = AtExpose.create().getWebServerBuilder()
                 .numberOfThreads(5)
+                .forceHttps(true)
+                .addHostRedirect("127.0.0.1", "localhost")
                 .addFileRedirect("src.html", "dest.html")
                 .addFileRedirect("dir1/dir2/src.html", "dirdest/dest.html")
                 .startWebServer();
@@ -35,7 +35,7 @@ public class WebServerRedirectTest {
 
 
     @Test
-    public void testRedirect_pageInRoot_shouldRedirect() throws Exception {
+    public void WebServerRedirect_PageInRoot_ShouldRedirect() throws Exception {
         //Basic test
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/src.html")
@@ -43,12 +43,12 @@ public class WebServerRedirectTest {
                 .followRedirects(false)
                 .execute();
         assertEquals(302, response.statusCode());
-        assertEquals("http://127.0.0.1:5555/dest.html", response.header("Location"));
+        assertEquals("https://localhost:5555/dest.html", response.header("Location"));
     }
 
 
     @Test
-    public void testRedirect_pageInSubDir_shouldRedirect() throws Exception {
+    public void WebServerRedirect_PageInSubDir_ShouldRedirect() throws Exception {
         //Basic test
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/dir1/dir2/src.html")
@@ -56,12 +56,12 @@ public class WebServerRedirectTest {
                 .followRedirects(false)
                 .execute();
         assertEquals(302, response.statusCode());
-        assertEquals("http://127.0.0.1:5555/dirdest/dest.html", response.header("Location"));
+        assertEquals("https://localhost:5555/dirdest/dest.html", response.header("Location"));
     }
 
 
     @Test
-    public void testRedirect_pageInRoot_withQueryString_shouldRedirectWithQuery() throws Exception {
+    public void WebServerRedirect_PageInRootWithQueryString_ShouldRedirectWithQuery() throws Exception {
         //Basic test
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/src.html?key1=val1")
@@ -69,12 +69,12 @@ public class WebServerRedirectTest {
                 .followRedirects(false)
                 .execute();
         assertEquals(302, response.statusCode());
-        assertEquals("http://127.0.0.1:5555/dest.html?key1=val1", response.header("Location"));
+        assertEquals("https://localhost:5555/dest.html?key1=val1", response.header("Location"));
     }
 
 
     @Test
-    public void testRedirect_pageInSubDir_withQueryString_shouldRedirectWithQuery() throws IOException {
+    public void WebServerRedirect_PageInSubDirWithQueryString_ShouldRedirectWithQuery() throws Exception {
         //Test that query strings are passed on with dirs
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/dir1/dir2/src.html?key2=val2")
@@ -82,8 +82,19 @@ public class WebServerRedirectTest {
                 .followRedirects(false)
                 .execute();
         assertEquals(302, response.statusCode());
-        assertEquals("http://127.0.0.1:5555/dirdest/dest.html?key2=val2", response.header("Location"));
+        assertEquals("https://localhost:5555/dirdest/dest.html?key2=val2", response.header("Location"));
     }
 
 
+    @Test
+    public void WebServerRedirect_MethodCall_ShouldNotRedirect() throws Exception {
+        //Test that query strings are passed on with dirs
+        Connection.Response response = Jsoup
+                .connect("http://127.0.0.1:5555/call/ping")
+                .method(Connection.Method.GET)
+                .followRedirects(false)
+                .execute();
+        assertEquals(200, response.statusCode());
+        assertEquals("pong", response.body());
+    }
 }
