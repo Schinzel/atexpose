@@ -1,19 +1,17 @@
 package com.atexpose.dispatcher.channels.webchannel;
 
 import com.atexpose.dispatcher.channels.AbstractChannel;
-import com.atexpose.dispatcher.channels.webchannel.http.HttpResponse;
-import com.atexpose.dispatcher.channels.webchannel.http.HttpsRedirect;
+import com.atexpose.dispatcher.channels.webchannel.http.HttpRedirectResponse;
+import com.atexpose.dispatcher.channels.webchannel.http.HttpTextResponse;
+import com.atexpose.dispatcher.channels.webchannel.redirect.Redirects;
 import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
-import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.State;
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.io.IOException;
@@ -21,6 +19,7 @@ import java.io.InterruptedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.URI;
 
 /**
  * The purpose of this class is to listen for and read incoming request on
@@ -35,9 +34,9 @@ public class WebChannel extends AbstractChannel {
     final private ServerSocket mServerSocket;
     /** The socket timeout. */
     final private int mSocketTimeout;
-    /** If true, http requests are redirected to https requests. */
-    @Getter(AccessLevel.PACKAGE) private final boolean mToForceHttps;
-    /** For logging and statistics, hold the time it took to read the message from first to last byte. */
+    /** Holds the redirects. File, host and https redirects. */
+    final private Redirects mRedirects;
+    /** For logging and stats, hold the time it took to read the message from first to last byte. */
     private long mLogRequestReadTime;
     /** The client socket connection. */
     private Socket mClientSocket;
@@ -47,8 +46,8 @@ public class WebChannel extends AbstractChannel {
     // CONSTRUCTORS AND SHUTDOWN
     //------------------------------------------------------------------------
     @Builder
-    WebChannel(int port, int timeout, boolean forceHttps) {
-        this(getServerSocket(port), timeout, forceHttps);
+    WebChannel(int port, int timeout, Redirects redirects) {
+        this(getServerSocket(port), redirects, timeout);
         Thrower.throwIfOutsideRange(port, "port", 1, 65535);
         Thrower.throwIfOutsideRange(timeout, "timeout", 50, 30000);
     }
@@ -64,19 +63,19 @@ public class WebChannel extends AbstractChannel {
 
 
     @Builder(builderMethodName = "cloneBuilder", buildMethodName = "buildClone")
-    private WebChannel(ServerSocket serverSocket, int timeout, boolean forceHttps) {
+    private WebChannel(ServerSocket serverSocket, Redirects redirects, int timeout) {
         mServerSocket = serverSocket;
         mSocketTimeout = timeout;
-        mToForceHttps = forceHttps;
+        mRedirects = redirects;
     }
 
 
     @Override
     public AbstractChannel getClone() {
         return WebChannel.cloneBuilder()
+                .redirects(mRedirects)
                 .timeout(mSocketTimeout)
                 .serverSocket(mServerSocket)
-                .forceHttps(this.isToForceHttps())
                 .buildClone();
     }
 
@@ -147,24 +146,21 @@ public class WebChannel extends AbstractChannel {
 
 
     /**
-     * Get any direct response. Direct responses is when the WebChannel send the response directly without involving
-     * the rest of @expose. For example, if there is a http to https redirect.
+     * Get any direct response. Direct responses is when the WebChannel send the response directly
+     * without involving the rest of @expose. For example, if there is a http to https redirect.
      *
      * @param httpRequest
      * @return Empty string if no direct response is to be sent. Else the direct response to send.
      */
     private String getDirectResponse(HttpRequest httpRequest) {
         if (httpRequest.isGhostCall()) {
-            return HttpResponse.wrap("Hi Ghost!");
+            return HttpTextResponse.wrap("Hi Ghost!");
         }
-        //If is to force https and this is an http-request
-        if (this.isToForceHttps() && HttpsRedirect.isHttpReuqest(httpRequest)) {
-            //Get the full url with https
-            String urlWithHttps = HttpsRedirect.getUrlWithHttps(
-                    httpRequest.getRequestHeaderValue("Host"),
-                    httpRequest.getURL());
-            //Get redirect header
-            return HttpsRedirect.wrapRedirect(urlWithHttps, RedirectHttpStatus.TEMPORARY);
+        URI uri = httpRequest.getURI();
+        if (mRedirects.shouldRedirect(uri)) {
+            uri = mRedirects.getNewLocation(uri);
+            return HttpRedirectResponse.getHeader(uri);
+
         }
         //There was no direct response, and thus return empty string.
         return EmptyObjects.EMPTY_STRING;
@@ -217,8 +213,8 @@ public class WebChannel extends AbstractChannel {
                 .add("Port", mServerSocket.getLocalPort())
                 .add("Timeout", mSocketTimeout)
                 .add("Queue", MAX_PENDING_REQUESTS)
-                .add("ForceHttps", this.isToForceHttps())
                 .build();
     }
+
 }
 

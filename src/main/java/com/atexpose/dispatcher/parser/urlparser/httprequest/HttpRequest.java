@@ -4,10 +4,14 @@ import com.atexpose.errors.RuntimeError;
 import com.google.common.base.Splitter;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.substringer.SubStringer;
 import io.schinzel.basicutils.Thrower;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
+import org.apache.http.client.utils.URIBuilder;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +71,41 @@ public class HttpRequest {
         }
         //Get the substring
         return mHttpRequest.substring(start, end);
+    }
+
+
+    @SneakyThrows
+    public URI getURI() {
+        //Get protocol
+        String protocol = this.getRequestHeaderValue("X-Forwarded-Proto");
+        if (Checker.isEmpty(protocol)) {
+            protocol = "http";
+        }
+        //Get host
+        String host = this.getRequestHeaderValue("Host");
+        //Get path and query
+        SubStringer pathAndQuery = SubStringer.create(mHttpRequest)
+                .startDelimiter("GET ")
+                .endDelimiter(" HTTP/1.1")
+                .getSubStringer();
+        //Get the path. If there is a "?" in the string
+        String path = pathAndQuery.contains("?")
+                //get everything before the "?"
+                ? pathAndQuery.endDelimiter("?").toString()
+                //else, get the whole string
+                : pathAndQuery.toString();
+        //Get the querystring. If there is a "?" in the string
+        String query = pathAndQuery.contains("?")
+                //Get everything after the "?"
+                ? pathAndQuery.startDelimiter("?").toString()
+                //else, get empty string
+                : EmptyObjects.EMPTY_STRING;
+        return new URIBuilder()
+                .setScheme(protocol)
+                .setHost(host)
+                .setPath(path)
+                .setQuery(query)
+                .build();
     }
 
 

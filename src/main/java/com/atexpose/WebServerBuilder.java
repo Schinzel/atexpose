@@ -4,9 +4,8 @@ import com.atexpose.api.API;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.AbstractChannel;
 import com.atexpose.dispatcher.channels.webchannel.WebChannel;
+import com.atexpose.dispatcher.channels.webchannel.redirect.*;
 import com.atexpose.dispatcher.parser.AbstractParser;
-import com.atexpose.dispatcher.parser.urlparser.Redirect;
-import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import com.atexpose.dispatcher.parser.urlparser.URLParser;
 import com.atexpose.dispatcher.parser.urlparser.UrlParserWithGSuiteAuth;
 import com.atexpose.dispatcher.wrapper.IWrapper;
@@ -14,9 +13,7 @@ import com.atexpose.dispatcher.wrapper.webresponse.WebWrapper;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,13 +30,11 @@ public class WebServerBuilder {
     int mAccessLevel = 1;
     int mTimeout = 300;
     int mBrowserCacheMaxAge = 1200;
-    boolean mForceHttps = false;
     boolean mUseCachedFiles = true;
     Map<String, String> mServerSideVariables = new HashMap<>();
-    String mDefaultPage = "index.html";
     boolean mForceDefaultPage = false;
     private Map<String, String> mResponseHeaders = new HashMap<>();
-    private List<Redirect> mRedirects = new ArrayList<>();
+    private Redirects.RedirectsBuilder mRedirectsBuilder = Redirects.getBuilder();
     private final API mAPI;
     private String mAuthCookieName;
     private String mAuthDomain;
@@ -55,60 +50,79 @@ public class WebServerBuilder {
     /**
      * Add redirect from a file path to another
      * Example
-     * .addTemporaryFileRedirect("home.html", "index.html")
+     * .addFileRedirect("home.html", "index.html")
      *
-     * @param source      file path to file we do not want to show
-     * @param destination file path to file we want to redirect user to
+     * @param from file path to file we do not want to show
+     * @param to   file path to file we want to redirect user to
      * @return This for chaining.
      */
-    public WebServerBuilder addTemporaryFileRedirect(String source, String destination) {
-        mRedirects.add(new Redirect(
-                source,
-                destination,
-                Redirect.RedirectType.FILE,
-                RedirectHttpStatus.TEMPORARY));
+    public WebServerBuilder addFileRedirect(String from, String to) {
+        mRedirectsBuilder.addFileRedirect(from, to);
         return this;
     }
 
 
     /**
-     * Add a temporary host address redirect (302) from one server to another.
-     * Enter without protocol.
+     * Add redirect from one host to another.
      * Example
-     * .addTemporaryHostRedirect("www.otherdomain.se", "www.thisdomain.se")
-     * .addTemporaryHostRedirect("otherdomain.se", "www.otherdomain.se")
+     * .addHostRedirect("www.otherdomain.se", "www.thisdomain.se")
+     * .addHostRedirect("otherdomain.se", "www.otherdomain.se")
      *
-     * @param sourceHostAddress      host address we want to redirect from
-     * @param destinationHostAddress host address we want to redirect to
+     * @param from host address we want to redirect from
+     * @param to   host address we want to redirect to
      * @return This for chaining.
      */
-    public WebServerBuilder addTemporaryHostRedirect(String sourceHostAddress, String destinationHostAddress) {
-        mRedirects.add(new Redirect(
-                sourceHostAddress,
-                destinationHostAddress,
-                Redirect.RedirectType.HOST,
-                RedirectHttpStatus.TEMPORARY));
+    public WebServerBuilder addHostRedirect(String from, String to) {
+        mRedirectsBuilder.addHostRedirect(from, to);
         return this;
     }
 
 
     /**
-     * Add a permanent host address redirect (301) from one server to another.
-     * Enter without protocol.
-     * Example
-     * .addPermanentHostRedirect("www.otherdomain.se", "www.thisdomain.se")
-     * .addPermanentHostRedirect("otherdomain.se", "www.otherdomain.se")
+     * If set to true the server redirects http requests to https.
      *
-     * @param sourceHostAddress      host address we want to redirect from
-     * @param destinationHostAddress host address we want to redirect to
+     * @param forceHttps If true, all http requests will be redirected to https. If false, this
+     *                   method will do nothing.
      * @return This for chaining.
      */
-    public WebServerBuilder addPermanentHostRedirect(String sourceHostAddress, String destinationHostAddress) {
-        mRedirects.add(new Redirect(
-                sourceHostAddress,
-                destinationHostAddress,
-                Redirect.RedirectType.HOST,
-                RedirectHttpStatus.PERMANENT));
+    public WebServerBuilder forceHttps(boolean forceHttps) {
+        if (forceHttps) {
+            mRedirectsBuilder.setHttpsRedirect();
+        }
+        return this;
+    }
+
+
+    /**
+     * Redirects all request to a single page. Typically used to set up a fail whale.
+     *
+     * @param failWhalePage
+     * @return This for chaining.
+     */
+    public WebServerBuilder setFailWhaleRedirect(String failWhalePage) {
+        mRedirectsBuilder.setFailWhaleRedirect(failWhalePage);
+        return this;
+    }
+
+
+    /**
+     * Redirects all request to a single page. Typically used to set up a fail whale.
+     * <p>
+     * Argument examples:
+     * "fail.html"
+     * "/error.html"
+     * "/a/b/c/info.html"
+     * "a/b/c/index.html"
+     *
+     * @param failWhalePage
+     * @param useFailWhalePage If true the argument fail whale page will be redirect to. If false,
+     *                         this method will do nothing.
+     * @return This for chaining.
+     */
+    public WebServerBuilder setFailWhaleRedirect(String failWhalePage, boolean useFailWhalePage) {
+        if (useFailWhalePage) {
+            mRedirectsBuilder.setFailWhaleRedirect(failWhalePage);
+        }
         return this;
     }
 
@@ -208,18 +222,6 @@ public class WebServerBuilder {
 
 
     /**
-     * If set to true the server redirects http calls to https.
-     *
-     * @param forceHttps If true, all http requests will be redirected to https.
-     * @return This for chaining.
-     */
-    public WebServerBuilder forceHttps(boolean forceHttps) {
-        this.mForceHttps = forceHttps;
-        return this;
-    }
-
-
-    /**
      * If true files read from drive are caches in RAM.
      *
      * @param useCachedFiles If true static web content such as HTML files
@@ -228,18 +230,6 @@ public class WebServerBuilder {
      */
     public WebServerBuilder cacheFilesInRAM(boolean useCachedFiles) {
         this.mUseCachedFiles = useCachedFiles;
-        return this;
-    }
-
-
-    /**
-     * Default page to return on default request
-     *
-     * @param htmlPage Name of the HTML-page.
-     * @return This for chaining.
-     */
-    public WebServerBuilder defaultHtmlPage(String htmlPage) {
-        mDefaultPage = htmlPage;
         return this;
     }
 
@@ -261,8 +251,6 @@ public class WebServerBuilder {
                 .webServerDir(mWebServerDir)
                 .browserCacheMaxAge(mBrowserCacheMaxAge)
                 .cacheFilesInRam(mUseCachedFiles)
-                .defaultPage(mDefaultPage)
-                .forceDefaultPage(mForceDefaultPage)
                 .serverSideVariables(mServerSideVariables)
                 .responseHeaders(mResponseHeaders)
                 .build();
@@ -275,10 +263,8 @@ public class WebServerBuilder {
      */
     private AbstractParser getParser() {
         return (Checker.isEmpty(mAuthDomain)) ?
-                new URLParser(mForceHttps, mRedirects) :
+                new URLParser() :
                 UrlParserWithGSuiteAuth.builder()
-                        //.forceHttps(mForceHttps)
-                        .redirects(mRedirects)
                         .authCookieName(mAuthCookieName)
                         .domain(mAuthDomain)
                         .build();
@@ -289,7 +275,7 @@ public class WebServerBuilder {
         return WebChannel.builder()
                 .port(mPort)
                 .timeout(mTimeout)
-                .forceHttps(mForceHttps)
+                .redirects(mRedirectsBuilder.build())
                 .build();
     }
 

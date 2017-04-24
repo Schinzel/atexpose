@@ -8,6 +8,7 @@ package com.atexpose.dispatcher.parser.urlparser.httprequest;
 import com.atexpose.dispatcher.parser.urlparser.URLParserTest;
 import org.junit.Test;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +33,20 @@ public class HttpRequestTest {
             + "Cookie: db=19710101; ci=0733787878; __distillery=v20150227_0d85f699-344b-49d2-96e2-c0a072b93bb3; _gat=1; _ga=GA1.1.921947710.1426063424; ptl=0; undefined=0; cp=0\r\n"
             + "\r\n"
             + "The body\r\n";
+
+
+    @Test
+    public void testGetURI() {
+        HttpRequest request = new HttpRequest(HTTP_HEADER);
+        URI uri = request.getURI();
+        assertEquals("http://127.0.0.1:5555/index.html?xyz=1234", uri.toString());
+        assertEquals("http", uri.getScheme());
+        assertEquals("127.0.0.1", uri.getHost());
+        assertEquals(5555, uri.getPort());
+        assertEquals("xyz=1234", uri.getQuery());
+        assertEquals("/index.html", uri.getPath());
+
+    }
 
 
     @Test

@@ -6,7 +6,6 @@ import com.atexpose.dispatcher.channels.AbstractChannel;
 import com.atexpose.dispatcher.logging.LogEntry;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.parser.AbstractParser;
-import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
@@ -18,7 +17,6 @@ import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -49,7 +47,10 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
     private final AbstractParser mParser;
     /** Wraps the responses to send. */
     private final IWrapper mWrapper;
-    /** The access level of this dispatcher. The dispatcher can invoke methods with the same access level or lower. **/
+    /**
+     * The access level of this dispatcher. The dispatcher can invoke methods with the same access
+     * level or lower.
+     **/
     private final int mAccessLevel;
     /** Says which thread this object is. Useful for debugging and diagnostics. */
     private final int mThreadNumber;
@@ -104,10 +105,13 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
 
 
     /**
-     * Starts the messaging and tells the next dispatcher to start its messaging recursively until all dispatchers of
+     * Starts the messaging and tells the next dispatcher to start its messaging recursively until
+     * all dispatchers of
      * that a siblings to this have been started.
      *
-     * @param isSynchronized If true, the dispatcher is to run in the invoking thread. If false, the dispatcher
+     * @param isSynchronized If true, the dispatcher is to run in the invoking thread. If false,
+     *                       the
+     *                       dispatcher
      *                       will start a new thread and execute in this.
      */
     public void commenceMessaging(boolean isSynchronized) {
@@ -166,13 +170,8 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
                 decodedIncomingRequest = incomingRequest.getAsString();
                 //Send the incoming request to the protocol for extracting method name and arguments
                 mParser.parseRequest(decodedIncomingRequest);
-                // If this request should be redirected
-                if (mParser.isRedirect()) {
-                    Pair<String, RedirectHttpStatus> redirect = mParser.getRedirect();
-                    wrappedResponse = mWrapper.wrapRedirect(redirect.getLeft(), redirect.getRight());
-                    wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
-                } //else if is a file request
-                else if (mParser.isFileRequest()) {
+                //if is a file request
+                if (mParser.isFileRequest()) {
                     wrappedResponse = EmptyObjects.EMPTY_STRING;
                     wrappedResponseAsUtf8ByteArray = mWrapper.wrapFile(mParser.getFileName());
                 } // Else must be a method call 
@@ -272,9 +271,9 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
                 .add("Name", this.getKey())
                 .add("AccessLevel", mAccessLevel)
                 .add("Threads", this.mThreadNumber)
-                .add("Parser", mParser)
-                .add("Wrapper", mWrapper)
-                .add("Channel", mChannel)
+                .addChild("Parser", mParser)
+                .addChild("Wrapper", mWrapper)
+                .addChild("Channel", mChannel)
                 .build();
     }
 

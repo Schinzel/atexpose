@@ -1,12 +1,9 @@
 package com.atexpose;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * @author schinzel
@@ -30,7 +27,6 @@ public class WebServerBuilderTest {
         assertEquals("web", mWsb.mWebServerDir);
         assertEquals(300, mWsb.mTimeout);
         assertEquals(1200, mWsb.mBrowserCacheMaxAge);
-        assertEquals(false, mWsb.mForceHttps);
         assertEquals(true, mWsb.mUseCachedFiles);
         assertNotNull(mWsb.mServerSideVariables);
     }
@@ -79,17 +75,6 @@ public class WebServerBuilderTest {
 
 
     @Test
-    public void testForceHttps() {
-        mWsb.forceHttps(true);
-        assertEquals(true, mWsb.mForceHttps);
-        mWsb.forceHttps(false);
-        assertEquals(false, mWsb.mForceHttps);
-        mWsb.forceHttps(true);
-        assertEquals(true, mWsb.mForceHttps);
-    }
-
-
-    @Test
     public void testUseCachedFiles() {
         mWsb.cacheFilesInRAM(true);
         assertEquals(true, mWsb.mUseCachedFiles);
@@ -108,13 +93,6 @@ public class WebServerBuilderTest {
         assertEquals("a_value", mWsb.mServerSideVariables.get("a_key"));
         assertEquals("b_value", mWsb.mServerSideVariables.get("b_key"));
         assertEquals("c_value", mWsb.mServerSideVariables.get("c_key"));
-    }
-
-
-    @Test
-    public void testDefaultHtmlPage() {
-        mWsb.defaultHtmlPage("monkey.html");
-        assertEquals("monkey.html", mWsb.mDefaultPage);
     }
 
 

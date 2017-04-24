@@ -1,13 +1,9 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
-import com.atexpose.dispatcher.parser.urlparser.Redirect.RedirectType;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author schinzel
@@ -206,7 +202,7 @@ public class URLParserTest {
             + "Cookie: db=19710728; ci=+46733759593; _gat=1; cp=1; _ga=GA1.1.957030889.1423688797; ptl=2; undefined=1\r\n"
             + "";
 
-    public static final String HTTP_HEADER_HEROKU_HTTPS = "GET /index.html?xyz=1234 HTTP/1.1\r\n"
+    private static final String HTTP_HEADER_HEROKU_HTTPS = "GET /index.html?xyz=1234 HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Pragma: no-cache\r\n"
@@ -222,7 +218,7 @@ public class URLParserTest {
             + "\r\n"
             + "The body\r\n";
 
-    public static final String HTTP_HEADER_HEROKU_HTTP = "GET /index.html?xyz=1234 HTTP/1.1\r\n"
+    private static final String HTTP_HEADER_HEROKU_HTTP = "GET /index.html?xyz=1234 HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Pragma: no-cache\r\n"
@@ -238,7 +234,7 @@ public class URLParserTest {
             + "\r\n"
             + "The body\r\n";
 
-    public static final String HTTP_HEADER_HEROKU_HTTP_NO_QUERY = "GET /index123.html HTTP/1.1\r\n"
+    private static final String HTTP_HEADER_HEROKU_HTTP_NO_QUERY = "GET /index123.html HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Pragma: no-cache\r\n"
@@ -254,53 +250,6 @@ public class URLParserTest {
             + "\r\n"
             + "The body\r\n";
 
-    public static final String HTTP_HEADER_REDIRECT_HOST = "GET /index123.html HTTP/1.1\r\n"
-            + "Host: 127.0.0.1:5555\r\n"
-            + "Connection: keep-alive\r\n"
-            + "Pragma: no-cache\r\n"
-            + "Pragma2:\r\n"
-            + "Pragma3: This:is:the:value\r\n"
-            + "Cache-Control: no-cache\r\n"
-            + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n"
-            + "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36\r\n"
-            + "Accept-Encoding: gzip, deflate, sdch\r\n"
-            + "Accept-Language: en-US,en;q=0.8\r\n"
-            + "X-Forwarded-Proto: http\r\n"
-            + "Cookie: db=19710101; ci=0733787878; __distillery=v20150227_0d85f699-344b-49d2-96e2-c0a072b93bb3; _gat=1; _ga=GA1.1.921947710.1426063424; ptl=0; undefined=0; cp=0\r\n"
-            + "\r\n"
-            + "The body\r\n";
-
-    public static final String HTTP_HEADER_REDIRECT_FILE = "GET /index123.html HTTP/1.1\r\n"
-            + "Host: 127.0.0.1:5555\r\n"
-            + "Connection: keep-alive\r\n"
-            + "Pragma: no-cache\r\n"
-            + "Pragma2:\r\n"
-            + "Pragma3: This:is:the:value\r\n"
-            + "Cache-Control: no-cache\r\n"
-            + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n"
-            + "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36\r\n"
-            + "Accept-Encoding: gzip, deflate, sdch\r\n"
-            + "Accept-Language: en-US,en;q=0.8\r\n"
-            + "X-Forwarded-Proto: http\r\n"
-            + "Cookie: db=19710101; ci=0733787878; __distillery=v20150227_0d85f699-344b-49d2-96e2-c0a072b93bb3; _gat=1; _ga=GA1.1.921947710.1426063424; ptl=0; undefined=0; cp=0\r\n"
-            + "\r\n"
-            + "The body\r\n";
-
-    public static final String HTTP_HEADER_REDIRECT_FILE_QUERY = "GET /index123.html?xyz=test HTTP/1.1\r\n"
-            + "Host: 127.0.0.1:5555\r\n"
-            + "Connection: keep-alive\r\n"
-            + "Pragma: no-cache\r\n"
-            + "Pragma2:\r\n"
-            + "Pragma3: This:is:the:value\r\n"
-            + "Cache-Control: no-cache\r\n"
-            + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n"
-            + "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36\r\n"
-            + "Accept-Encoding: gzip, deflate, sdch\r\n"
-            + "Accept-Language: en-US,en;q=0.8\r\n"
-            + "X-Forwarded-Proto: http\r\n"
-            + "Cookie: db=19710101; ci=0733787878; __distillery=v20150227_0d85f699-344b-49d2-96e2-c0a072b93bb3; _gat=1; _ga=GA1.1.921947710.1426063424; ptl=0; undefined=0; cp=0\r\n"
-            + "\r\n"
-            + "The body\r\n";
 
 
     @Test
@@ -426,94 +375,5 @@ public class URLParserTest {
         assertEquals(expResult, result);
     }
 
-
-    @Test
-    public void testToRedirect() {
-        //No data
-        boolean toRedirectIfHttp = true;
-        URLParser instance = new URLParser(toRedirectIfHttp);
-        instance.parseRequest(HTTP_HEADER_HEROKU_HTTPS);
-        Pair<String, RedirectHttpStatus> result = instance.getRedirect();
-        assertNull(result);
-        //
-        List<Redirect> redirects = new ArrayList<>();
-        redirects.add(new Redirect("index.html", "1.thml", RedirectType.FILE, RedirectHttpStatus.TEMPORARY));
-        instance = new URLParser(toRedirectIfHttp, redirects);
-        instance.parseRequest(HTTP_HEADER_HEROKU_HTTP);
-        result = instance.getRedirect();
-        assertNotNull(result);
-        instance.parseRequest(HTTP_HEADER_HEROKU_HTTP_NO_QUERY);
-        result = instance.getRedirect();
-        assertNull(result);
-    }
-
-
-    @Test
-    public void testGetRedirectFile() {
-        boolean toRedirectIfHttp = true;
-        List<Redirect> redirects = new ArrayList<>();
-        redirects.add(new Redirect("index.html", "1.html", RedirectType.FILE, RedirectHttpStatus.TEMPORARY));
-        redirects.add(new Redirect("index123.html", "123.html", RedirectType.FILE, RedirectHttpStatus.TEMPORARY));
-        //
-        URLParser instance = new URLParser(toRedirectIfHttp, redirects);
-        instance.parseRequest(HTTP_HEADER_HEROKU_HTTPS);
-        String expResult = "1.html?xyz=1234";
-        Pair<String, RedirectHttpStatus> redirect = instance.getRedirect();
-//        String result = instance.getRedirectFile();
-        assertEquals(expResult, redirect.getLeft());
-        //
-        instance = new URLParser(toRedirectIfHttp, redirects);
-        instance.parseRequest(HTTP_HEADER_HEROKU_HTTP);
-        expResult = "1.html?xyz=1234";
-        redirect = instance.getRedirect();
-        //result = instance.getRedirectFile();
-        assertEquals(expResult, redirect.getLeft());
-        //
-        instance = new URLParser(toRedirectIfHttp, redirects);
-        instance.parseRequest(HTTP_HEADER_HEROKU_HTTP_NO_QUERY);
-        expResult = "123.html";
-        redirect = instance.getRedirect();
-        //result = instance.getRedirectFile();
-        assertEquals(expResult, redirect.getLeft());
-    }
-
-
-    @Test
-    public void testRedirectHost() {
-        List<Redirect> redirects = new ArrayList<>();
-        redirects.add(new Redirect("127.0.0.1:5555", "localhost:5555", RedirectType.HOST, RedirectHttpStatus.TEMPORARY));
-        URLParser instance = new URLParser(false, redirects);
-        instance.parseRequest(HTTP_HEADER_REDIRECT_HOST);
-        assertTrue(instance.isRedirect());
-        Pair<String, RedirectHttpStatus> info = instance.getRedirect();
-        assertEquals("http://localhost:5555/index123.html", info.getLeft());
-        assertEquals(RedirectHttpStatus.TEMPORARY, info.getRight());
-    }
-
-
-    @Test
-    public void testRedirectFile() {
-        List<Redirect> redirects = new ArrayList<>();
-        redirects.add(new Redirect("index123.html", "my_redirect.html", RedirectType.FILE, RedirectHttpStatus.TEMPORARY));
-        URLParser instance = new URLParser(false, redirects);
-        instance.parseRequest(HTTP_HEADER_REDIRECT_FILE);
-        assertTrue(instance.isRedirect());
-        Pair<String, RedirectHttpStatus> info = instance.getRedirect();
-        assertEquals("my_redirect.html", info.getLeft());
-        assertEquals(RedirectHttpStatus.TEMPORARY, info.getRight());
-    }
-
-
-    @Test
-    public void testRedirectFileQuery() {
-        List<Redirect> redirects = new ArrayList<>();
-        redirects.add(new Redirect("index123.html", "my_redirect.html", RedirectType.FILE, RedirectHttpStatus.TEMPORARY));
-        URLParser instance = new URLParser(false, redirects);
-        instance.parseRequest(HTTP_HEADER_REDIRECT_FILE_QUERY);
-        assertTrue(instance.isRedirect());
-        Pair<String, RedirectHttpStatus> info = instance.getRedirect();
-        assertEquals("my_redirect.html?xyz=test", info.getLeft());
-        assertEquals(RedirectHttpStatus.TEMPORARY, info.getRight());
-    }
 
 }

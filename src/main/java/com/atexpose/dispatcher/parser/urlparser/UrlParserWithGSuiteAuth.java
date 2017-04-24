@@ -13,11 +13,12 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
- * The purpose of this class is a parse URL requests. User's has to be logged into constructor argument domain to
- * do command requests. Note, requests for static resources does not require the user to be authenticated.
+ * The purpose of this class is a parse URL requests. User's has to be logged into constructor
+ * argument domain to
+ * do command requests. Note, requests for static resources does not require the user to be
+ * authenticated.
  * If user is not logged in, an error is thrown.
  * <p>
  * Created by Schinzel on 2017-03-03.
@@ -30,7 +31,8 @@ public class UrlParserWithGSuiteAuth extends URLParser {
     @Getter(AccessLevel.PRIVATE)
     private final String mAuthCookieName;
     /**
-     * The GSuite (my god that is a corny name, sounds like the name of a rap star's posse) domain that the user
+     * The GSuite (my god that is a corny name, sounds like the name of a rap star's posse) domain
+     * that the user
      * has to be logged into to make command requests.
      */
     @Getter(AccessLevel.PRIVATE)
@@ -38,8 +40,7 @@ public class UrlParserWithGSuiteAuth extends URLParser {
 
 
     @Builder
-    public UrlParserWithGSuiteAuth(boolean forceHttps, List<Redirect> redirects, String authCookieName, String domain) {
-        super(forceHttps, redirects);
+    public UrlParserWithGSuiteAuth(String authCookieName, String domain) {
         mAuthCookieName = authCookieName;
         mDomain = domain;
     }
@@ -48,8 +49,6 @@ public class UrlParserWithGSuiteAuth extends URLParser {
     @Override
     public AbstractParser getClone() {
         return UrlParserWithGSuiteAuth.builder()
-                .forceHttps(mForceHttps)
-                .redirects(mRedirects)
                 .authCookieName(this.getAuthCookieName())
                 .domain(this.getDomain())
                 .build();

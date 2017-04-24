@@ -4,19 +4,18 @@ import com.atexpose.Expose;
 import com.atexpose.api.datatypes.AbstractDataType;
 import com.atexpose.api.datatypes.DataType;
 import com.atexpose.errors.SetUpError;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
 import lombok.Getter;
-import io.schinzel.basicutils.Checker;
 import lombok.experimental.Accessors;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Schinzel
@@ -195,10 +194,10 @@ public class API implements IStateNode {
     @Override
     public State getState() {
         return State.getBuilder()
-                .add("DataTypes", mDataTypes)
-                .add("Arguments", mArguments)
-                .add("Labels", mLabels)
-                .add("Methods", mMethods)
+                .addChildren("DataTypes", mDataTypes)
+                .addChildren("Arguments", mArguments)
+                .addChildren("Labels", mLabels)
+                .addChildren("Methods", mMethods)
                 .build();
     }
 

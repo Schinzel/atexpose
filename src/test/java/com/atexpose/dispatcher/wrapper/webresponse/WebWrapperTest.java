@@ -1,23 +1,16 @@
 package com.atexpose.dispatcher.wrapper.webresponse;
 
-import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
 import com.atexpose.util.EncodingUtil;
+import io.schinzel.basicutils.collections.Cache;
+import org.json.JSONObject;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.schinzel.basicutils.collections.Cache;
-import lombok.val;
-import org.json.JSONObject;
-import org.junit.Assert;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-import io.schinzel.basicutils.EmptyObjects;
+import static org.junit.Assert.*;
 
 /**
  * @author schinzel
@@ -67,10 +60,12 @@ public class WebWrapperTest {
 
     @Test
     public void testCache() {
-        int cacheSecs = 10;
-        boolean useCachedFiles = true;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, useCachedFiles, EmptyObjects.EMPTY_STRING, false, null, EmptyObjects.EMPTY_MAP);
-        Cache<String, byte[]> filesCache = webWrapper.mFilesCache;
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(true)
+                .build();
+        Cache<String, byte[]> filesCache = webWrapper.getFilesCache();
         assertEquals(0, filesCache.cacheHits());
         assertEquals(0, filesCache.cacheSize());
         byte[] file1 = webWrapper.wrapFile("read_from_cache.html");
@@ -99,10 +94,12 @@ public class WebWrapperTest {
 
     @Test
     public void testCacheDefault() {
-        int cacheSecs = 10;
-        boolean useCachedFiles = true;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, useCachedFiles, EmptyObjects.EMPTY_STRING, false, null, EmptyObjects.EMPTY_MAP);
-        Cache<String, byte[]> filesCache = webWrapper.mFilesCache;
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(true)
+                .build();
+        Cache<String, byte[]> filesCache = webWrapper.getFilesCache();
         assertEquals(0, filesCache.cacheHits());
         assertEquals(0, filesCache.cacheSize());
         //These should hit index.html every time
@@ -123,10 +120,12 @@ public class WebWrapperTest {
 
     @Test
     public void testCacheDefault_staticFiles() {
-        int cacheSecs = 10;
-        boolean useCachedFiles = true;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, useCachedFiles, EmptyObjects.EMPTY_STRING, false, null, EmptyObjects.EMPTY_MAP);
-        Cache<String, byte[]> filesCache = webWrapper.mFilesCache;
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(true)
+                .build();
+        Cache<String, byte[]> filesCache = webWrapper.getFilesCache();
         assertEquals(0, filesCache.cacheHits());
         assertEquals(0, filesCache.cacheSize());
         //These should hit index.html every time
@@ -147,10 +146,12 @@ public class WebWrapperTest {
 
     @Test
     public void testNoCache() {
-        int cacheSecs = 10;
-        boolean useCachedFiles = false;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, useCachedFiles, EmptyObjects.EMPTY_STRING, false, null, EmptyObjects.EMPTY_MAP);
-        Cache<String, byte[]> filesCache = webWrapper.mFilesCache;
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(false)
+                .build();
+        Cache<String, byte[]> filesCache = webWrapper.getFilesCache();
         assertEquals(0, filesCache.cacheHits());
         assertEquals(0, filesCache.cacheSize());
         webWrapper.wrapFile("read_from_cache.html");
@@ -169,31 +170,18 @@ public class WebWrapperTest {
 
 
     @Test
-    public void testForcedDefault() {
-        String url = "http://www.example.com/subdir/index.html";
-        int cacheSecs = 10;
-        boolean useCachedFiles = false;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, useCachedFiles, EmptyObjects.EMPTY_STRING, false, null, EmptyObjects.EMPTY_MAP);
-        String result = webWrapper.wrapRedirect(url, RedirectHttpStatus.TEMPORARY);
-        String expected = "HTTP/1.1 302\r\n"
-                + "Server: AtExpose\r\n"
-                + "Content-Length: 0\r\n"
-                + "Location: http://www.example.com/subdir/index.html\r\n\r\n";
-        assertEquals(expected, result);
-    }
-
-
-    @Test
     public void testWrapJSON() {
         JSONObject jo = new JSONObject();
         jo.put("k1", "v1");
         jo.put("k2", "v2");
-        int cacheSecs = 10;
-        boolean useCachedFiles = false;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, useCachedFiles, EmptyObjects.EMPTY_STRING, false, null, EmptyObjects.EMPTY_MAP);
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(false)
+                .build();
         String result = webWrapper.wrapJSON(jo);
         String expected = "HTTP/1.1 200 OK\r\n"
-                + "Server: AtExpose\r\n"
+                + "Server: @Expose\r\n"
                 + "Content-Length: 21\r\n"
                 + "Content-Type: application/json; charset=UTF-8\r\n"
                 + "Cache-Control: max-age=0\r\n\r\n"
@@ -207,15 +195,16 @@ public class WebWrapperTest {
         JSONObject jo = new JSONObject();
         jo.put("k1", "v1");
         jo.put("k2", "v2");
-        int cacheSecs = 10;
-        boolean useCachedFiles = false;
         Map<String, String> responseHeaders = new HashMap<>();
         responseHeaders.put("monkey", "gibbon");
         responseHeaders.put("bear", "kodiak");
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, useCachedFiles, EmptyObjects.EMPTY_STRING, false, null, responseHeaders);
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .responseHeaders(responseHeaders)
+                .build();
         String result = webWrapper.wrapJSON(jo);
         String expected = "HTTP/1.1 200 OK\r\n"
-                + "Server: AtExpose\r\n"
+                + "Server: @Expose\r\n"
                 + "Content-Length: 21\r\n"
                 + "Content-Type: application/json; charset=UTF-8\r\n"
                 + "monkey: gibbon\r\n"
@@ -227,101 +216,90 @@ public class WebWrapperTest {
 
 
     @Test
-    public void testForceDefault() {
-        int cacheSecs = 10;
-        boolean useCachedFiles = false;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, useCachedFiles, "forced_file.html", true, null, EmptyObjects.EMPTY_MAP);
-        byte[] resultAsByte = webWrapper.wrapFile("index.html");
-        String resultAsString = EncodingUtil.convertToString(resultAsByte);
-        assertTrue(resultAsString.contains("<div>This file is forced when asking for any file</div>"));
-    }
-
-
-    @Test
     public void testWrapFileHtml() {
-        String path = "somefile.html";
-        int cacheSecs = 10;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, true, "default.html", false, null, EmptyObjects.EMPTY_MAP);
-        Cache<String, byte[]> filesCache = webWrapper.mFilesCache;
-        webWrapper.wrapFile(path);
-        // should return the requested file and not the default
-        assertTrue(filesCache.has("testfiles/somefile.html"));
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .cacheFilesInRam(true)
+                .build();
+        webWrapper.wrapFile("somefile.html");
+        // should return the requested file and not the default index.html
+        assertTrue(webWrapper.getFilesCache().has("testfiles/somefile.html"));
     }
 
 
     @Test
     public void testWrapFileJs() {
-        String path = "somefile.js";
-        int cacheSecs = 10;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, true, "default.html", false, null, EmptyObjects.EMPTY_MAP);
-        Cache<String, byte[]> filesCache = webWrapper.mFilesCache;
-        webWrapper.wrapFile(path);
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .cacheFilesInRam(true)
+                .build();
+        webWrapper.wrapFile("somefile.js");
         // should return the requested file and not the default
-        assertTrue(filesCache.has("testfiles/somefile.js"));
+        assertTrue(webWrapper.getFilesCache().has("testfiles/somefile.js"));
     }
 
 
     @Test
     public void testWrapFileDefault() {
-        String path = "";
-        int cacheSecs = 10;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, true, "", false, null, EmptyObjects.EMPTY_MAP);
-        Cache<String, byte[]> filesCache = webWrapper.mFilesCache;
-        webWrapper.wrapFile(path);
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .cacheFilesInRam(true)
+                .build();
+        webWrapper.wrapFile("index.html");
         // should return the default file
-        assertTrue(filesCache.has("testfiles/index.html"));
+        assertTrue(webWrapper.getFilesCache().has("testfiles/index.html"));
     }
 
 
     @Test
     public void testWrapFileEmpty() {
-        String path = "";
-        int cacheSecs = 10;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, true, "default.html", false, null, EmptyObjects.EMPTY_MAP);
-        Cache<String, byte[]> filesCache = webWrapper.mFilesCache;
-        webWrapper.wrapFile(path);
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .cacheFilesInRam(true)
+                .build();
+        webWrapper.wrapFile("");
         // should return the default file
-        assertTrue(filesCache.has("testfiles/default.html"));
+        assertTrue(webWrapper.getFilesCache().has("testfiles/index.html"));
     }
 
 
     @Test
     public void testWrapFileEmptyFolderSlash() {
-        String path = "somefolder/";
-        int cacheSecs = 10;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, true, "default.html", false, null, EmptyObjects.EMPTY_MAP);
-        Cache<String, byte[]> filesCache = webWrapper.mFilesCache;
-        webWrapper.wrapFile(path);
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(true)
+                .build();
+        webWrapper.wrapFile("somefolder/");
         // should return the default file
-        assertTrue(filesCache.has("testfiles/somefolder/default.html"));
+        assertTrue(webWrapper.getFilesCache().has("testfiles/somefolder/index.html"));
     }
 
 
     @Test
     public void testWrapFileEmptyFolderNoSlash() {
-        String path = "somefolder";
-        int cacheSecs = 10;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, true, "default.html", false, null, EmptyObjects.EMPTY_MAP);
-        Cache<String, byte[]> filesCache = webWrapper.mFilesCache;
-        webWrapper.wrapFile(path);
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(true)
+                .build();
+        webWrapper.wrapFile("somefolder");
         // should return the default file
-        assertTrue(filesCache.has("testfiles/somefolder/default.html"));
+        assertTrue(webWrapper.getFilesCache().has("testfiles/somefolder/index.html"));
     }
 
 
     @Test
     public void testFolderPath() {
-        int cacheSecs = 10;
-        val webWrapper = new WebWrapper("testfiles/", cacheSecs, true, "default.html", false, null, EmptyObjects.EMPTY_MAP);
-        boolean test1 = webWrapper.isFolderPath("somefolder");
+        boolean test1 = WebWrapper.isFolderPath("somefolder");
         assertTrue(test1);
-        boolean test2 = webWrapper.isFolderPath("/somefolder");
+        boolean test2 = WebWrapper.isFolderPath("/somefolder");
         assertTrue(test2);
-        boolean test3 = webWrapper.isFolderPath("/somefolder/");
+        boolean test3 = WebWrapper.isFolderPath("/somefolder/");
         assertTrue(test3);
-        boolean test4 = webWrapper.isFolderPath("somefolder.js");
+        boolean test4 = WebWrapper.isFolderPath("somefolder.js");
         assertFalse(test4);
-        boolean test5 = webWrapper.isFolderPath("/somefolder.html");
+        boolean test5 = WebWrapper.isFolderPath("/somefolder.html");
         assertFalse(test5);
     }
 
@@ -351,7 +329,11 @@ public class WebWrapperTest {
 
     @Test
     public void test_getTextFileHeaderAndContent() {
-        val webWrapper = new WebWrapper("testfiles/", 10, false, "default.html", false, null, EmptyObjects.EMPTY_MAP);
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(false)
+                .build();
         byte[] ab = webWrapper.getTextFileHeaderAndContent("nonexistingfile.html");
         String str = EncodingUtil.convertToString(ab);
         assertTrue(str.contains("File 'nonexistingfile.html' not found"));
@@ -360,7 +342,11 @@ public class WebWrapperTest {
 
     @Test
     public void test_getTextFileContent() {
-        val webWrapper = new WebWrapper("testfiles/", 10, false, "default.html", false, null, EmptyObjects.EMPTY_MAP);
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(false)
+                .build();
         byte[] ab = webWrapper.getTextFileContent("nonexistingfile.html");
         Assert.assertNull(ab);
     }
@@ -368,7 +354,11 @@ public class WebWrapperTest {
 
     @Test
     public void test_getStaticFileHeaderAndContent_nonExistingFile() {
-        val webWrapper = new WebWrapper("testfiles/", 10, false, "default.html", false, null, EmptyObjects.EMPTY_MAP);
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(false)
+                .build();
         byte[] ab = webWrapper.getStaticFileHeaderAndContent("nonexistingfile.jpg");
         String str = EncodingUtil.convertToString(ab);
         assertTrue(str.contains("File 'nonexistingfile.jpg' not found"));
@@ -377,7 +367,11 @@ public class WebWrapperTest {
 
     @Test
     public void test_getStaticFileHeaderAndContent() {
-        val webWrapper = new WebWrapper("testfiles/", 10, false, "default.html", false, null, EmptyObjects.EMPTY_MAP);
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(false)
+                .build();
         //Read file
         String fileName = webWrapper.getActualFilename("monkey.jpg");
         byte[] ab = webWrapper.getStaticFileHeaderAndContent(fileName);
@@ -396,7 +390,11 @@ public class WebWrapperTest {
 
     @Test
     public void test_wrapFile_staticFile() {
-        val webWrapper = new WebWrapper("testfiles/", 10, false, "default.html", false, null, EmptyObjects.EMPTY_MAP);
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(false)
+                .build();
         //Read file
         byte[] ab = webWrapper.wrapFile("monkey.jpg");
         //Get header

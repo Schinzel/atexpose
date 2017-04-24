@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.Charset;
 
-public class SocketRW {
+public class SocketRWUtil {
 	private static final int BUF_SIZE = 100;
 
 	/**

@@ -1,18 +1,16 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
+import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.atexpose.dispatcher.parser.AbstractParser;
 import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
-import io.schinzel.basicutils.SubStringer;
 import io.schinzel.basicutils.state.State;
+import io.schinzel.basicutils.substringer.SubStringer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,17 +26,9 @@ public class URLParser extends AbstractParser {
      * http://127.0.0.1:5555/call/setName?name=anyname If this suffix is not
      * present a file i assumed http;//127.0.0.1:5555/myfile.jpg
      */
-    private static final String COMMAND_REQUEST_MARKER = "call/";
-    /**
-     * Holds redirect hosts
-     */
-    final List<Redirect> mRedirects;
-    final boolean mForceHttps;
-    @Getter(AccessLevel.PROTECTED)
-    protected HttpRequest mHttpRequest;
-    private String mFileNameIncQueryString;
-    @Getter(AccessLevel.PROTECTED)
-    protected CallType mCallType;
+    private static final String COMMAND_REQUEST_MARKER = PropertiesDispatcher.COMMAND_REQUEST_MARKER;
+    @Getter(AccessLevel.PROTECTED) protected HttpRequest mHttpRequest;
+    @Getter(AccessLevel.PROTECTED) protected CallType mCallType;
 
 
     enum CallType {
@@ -49,25 +39,9 @@ public class URLParser extends AbstractParser {
     // ---------------------------------
 
 
-    URLParser() {
-        this(false);
-    }
-
-
-    URLParser(boolean forceHttps) {
-        this(forceHttps, new ArrayList<>());
-    }
-
-
-    public URLParser(boolean forceHttps, List<Redirect> redirects) {
-        mForceHttps = forceHttps;
-        mRedirects = redirects;
-    }
-
-
     @Override
     public AbstractParser getClone() {
-        return new URLParser(mForceHttps, mRedirects);
+        return new URLParser();
     }
 
 
@@ -102,14 +76,11 @@ public class URLParser extends AbstractParser {
         }//else, is request for file
         else {
             mCallType = CallType.FILE;
-            mFileNameIncQueryString = url;
             //Get the part of the url before ?, if any
-            url = SubStringer.create(url).end("?").toString();
+            url = SubStringer.create(url).endDelimiter("?").toString();
             this.setFileRequest(url);
         }
     }
-
-
     // ---------------------------------
     // - PRIVATE STATIC  -
     // ---------------------------------
@@ -135,47 +106,8 @@ public class URLParser extends AbstractParser {
     public State getState() {
         return State.getBuilder()
                 .add("Class", this.getClass().getSimpleName())
-                .add("ForceHttps", mForceHttps)
                 .build();
     }
 
-
-    @Override
-    public boolean isRedirect() {
-        String hostName = getHostName();
-        String fileName = getFileName();
-        for (Redirect redirect : mRedirects) {
-            if (redirect.isRedirectHost(hostName)) {
-                return true;
-            }
-            if (redirect.isRedirectFile(fileName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    /**
-     * @return Pair of path to where we should redirect the user request and type of redirect
-     */
-    @Override
-    public Pair<String, RedirectHttpStatus> getRedirect() {
-        String hostName = getHostName();
-        for (Redirect redirect : mRedirects) {
-            if (redirect.isRedirectHost(hostName)) {
-                return redirect.getRedirectInfo(mForceHttps, mFileNameIncQueryString);
-            }
-            if (redirect.isRedirectFile(mFileNameIncQueryString)) {
-                return redirect.getRedirectInfo(mForceHttps, mFileNameIncQueryString);
-            }
-        }
-        return null;
-    }
-
-
-    private String getHostName() {
-        return mHttpRequest.getRequestHeaderValue("Host");
-    }
 
 }

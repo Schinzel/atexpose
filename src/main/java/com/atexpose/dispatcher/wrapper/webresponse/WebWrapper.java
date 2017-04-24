@@ -1,26 +1,28 @@
 package com.atexpose.dispatcher.wrapper.webresponse;
 
 import com.atexpose.MyProperties;
-import com.atexpose.dispatcher.parser.urlparser.RedirectHttpStatus;
+import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.util.ArrayUtil;
 import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
+import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.collections.Cache;
+import io.schinzel.basicutils.state.State;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+import org.apache.commons.io.FilenameUtils;
+import org.json.JSONObject;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import io.schinzel.basicutils.Thrower;
-import io.schinzel.basicutils.collections.Cache;
-import io.schinzel.basicutils.state.State;
-import lombok.Builder;
-import lombok.experimental.Accessors;
-import org.apache.commons.io.FilenameUtils;
-import org.json.JSONObject;
-import io.schinzel.basicutils.Checker;
 
 /**
  * This wrapper handles two types of responses: 1) JSON responses 2) file
@@ -30,15 +32,13 @@ import io.schinzel.basicutils.Checker;
  */
 @Accessors(prefix = "m")
 public class WebWrapper implements IWrapper {
-    /** The name of the server as written in the response header **/
-    private static final String SERVER_NAME = "AtExpose";
     //Pattern for place holders for server side variables. Example <##=MY_VAR##>
     static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<##=([a-zA-Z1-9_]{3,25})##>");
     //Pattern for include files. For example <##include.inc##> or <##header.html##>
     private static final Pattern INCLUDE_FILE_PATTERN = Pattern.compile("<##([\\w,/]+\\.[A-Za-z]{2,4})##>");
     private static final String RESPONSE_HEADER_LINE_BREAK = "\r\n";
-    /** The default default page to use if no no default page was specified. */
-    private static final String DEFAULT_DEFAULT_PAGE = "index.html";
+    /** The default to return if no page was specified. */
+    private static final String DEFAULT_PAGE = "index.html";
     /** Where the files to server resides on the hard drive **/
     private final String mWebServerDir;
     /** Browser cache age instruction. **/
@@ -46,12 +46,9 @@ public class WebWrapper implements IWrapper {
     private final Map<String, String> mServerSideVariables;
     //If true, files read - e.g. HTML files - will be cached in RAM.
     private boolean mFilesCacheOn = true;
-    /** The default page to return. **/
-    private final String mDefaultPage;
-    // if default page should be forced on all requests
-    private final boolean mToReturnOnlyDefaultPage;
     private Map<String, String> mResponseHeaders = new HashMap<>();
-    Cache<String, byte[]> mFilesCache;
+    @Getter(AccessLevel.PACKAGE)
+    private Cache<String, byte[]> mFilesCache;
 
     private enum ReturnType {
         FILE, JSON, STRING
@@ -71,27 +68,20 @@ public class WebWrapper implements IWrapper {
 
 
     @Builder
-    WebWrapper(String webServerDir, int browserCacheMaxAge,
-               boolean cacheFilesInRam, String defaultPage, boolean forceDefaultPage,
+    WebWrapper(String webServerDir, int browserCacheMaxAge, boolean cacheFilesInRam,
                Map<String, String> serverSideVariables, Map<String, String> responseHeaders) {
         //If the last char is not a file separator, then add it
         mWebServerDir = (!webServerDir.endsWith(MyProperties.FILE_SEPARATOR)) ?
                 webServerDir + MyProperties.FILE_SEPARATOR : webServerDir;
         mBrowserCacheMaxAge = browserCacheMaxAge;
         mFilesCacheOn = cacheFilesInRam;
-        mServerSideVariables = serverSideVariables;
+        mServerSideVariables = (serverSideVariables != null)
+                ? serverSideVariables
+                : EmptyObjects.EMPTY_MAP;
         Thrower.throwIfOutsideRange(browserCacheMaxAge, "browserCacheMaxAge", 0, 604800);
-        //If empty default page was passed as argument
-        if (Checker.isEmpty(defaultPage)) {
-            //Set the default page to be the default default page
-            mDefaultPage = DEFAULT_DEFAULT_PAGE;
-            mToReturnOnlyDefaultPage = false;
-        } else {
-            //Set the default page be the argument one.
-            mDefaultPage = defaultPage;
-            mToReturnOnlyDefaultPage = forceDefaultPage;
-        }
-        mResponseHeaders = responseHeaders;
+        mResponseHeaders = (responseHeaders != null)
+                ? responseHeaders
+                : EmptyObjects.EMPTY_MAP;
         mFilesCache = new Cache<>();
     }
 
@@ -230,9 +220,9 @@ public class WebWrapper implements IWrapper {
      * @return
      */
     String getActualFilename(String requestedFile) {
-        // if filename is empty or we should force the default page
-        if (Checker.isEmpty(requestedFile) || mToReturnOnlyDefaultPage) {
-            requestedFile = mDefaultPage;
+        // if filename is empty
+        if (Checker.isEmpty(requestedFile)) {
+            requestedFile = DEFAULT_PAGE;
         } // if the request if a folder path, we return the default file in this folder
         else if (isFolderPath(requestedFile)) {
             // suffix with / if not there
@@ -240,7 +230,7 @@ public class WebWrapper implements IWrapper {
                 requestedFile += "/";
             }
             // suffix with default page
-            requestedFile += mDefaultPage;
+            requestedFile += DEFAULT_PAGE;
         }
         //Prefix with path to directory where files resides
         requestedFile = mWebServerDir + requestedFile;
@@ -265,24 +255,6 @@ public class WebWrapper implements IWrapper {
         String responseHeader = getResponseHeader("", contentLength, HTTPStatusCode.OK, ReturnType.JSON);
         //The two extra new-lines needs to be there for Safari to be able to parse the JSON.
         return (responseHeader + methodReturn + "\n\n");
-    }
-
-
-    /**
-     * Make redirect response to new location for file
-     *
-     * @param url
-     * @return A 301 or 302 redirect to the argument url
-     */
-    @Override
-    public String wrapRedirect(String url, RedirectHttpStatus redirectStatusCode) {
-        return new StringBuilder()
-                .append("HTTP/1.1 ").append(redirectStatusCode.getRedirectCode()).append(RESPONSE_HEADER_LINE_BREAK)
-                .append("Server: ").append(SERVER_NAME).append(RESPONSE_HEADER_LINE_BREAK)
-                .append("Content-Length: ").append("0").append(RESPONSE_HEADER_LINE_BREAK)
-                .append("Location: ").append(url).append(RESPONSE_HEADER_LINE_BREAK)
-                .append(RESPONSE_HEADER_LINE_BREAK)
-                .toString();
     }
     // ------------------------------------
     // - SERVER SIDE INCLUDES
@@ -374,7 +346,7 @@ public class WebWrapper implements IWrapper {
         String statusCode = HTTPStatusCode.mCode;
         StringBuilder sb = new StringBuilder()
                 .append("HTTP/1.1 ").append(statusCode).append(RESPONSE_HEADER_LINE_BREAK)
-                .append("Server: ").append(SERVER_NAME).append(RESPONSE_HEADER_LINE_BREAK)
+                .append("Server: ").append(PropertiesDispatcher.RESP_HEADER_SERVER_NAME).append(RESPONSE_HEADER_LINE_BREAK)
                 .append("Content-Length: ").append(contentLength).append(RESPONSE_HEADER_LINE_BREAK)
                 .append("Content-Type: ").append(getResponseHeaderContentType(filename, contentType)).append(RESPONSE_HEADER_LINE_BREAK);
         //If there are any response headers to attach
@@ -430,7 +402,7 @@ public class WebWrapper implements IWrapper {
      * @param requestName
      * @return
      */
-    boolean isFolderPath(String requestName) {
+    static boolean isFolderPath(String requestName) {
         int lastSlash = requestName.lastIndexOf('/');
         int lastDot = requestName.lastIndexOf('.');
         // if we have not dot, it is a folder
@@ -445,9 +417,7 @@ public class WebWrapper implements IWrapper {
         return State.getBuilder()
                 .add("Directory", mWebServerDir)
                 .add("BrowserCacheMaxAge", mBrowserCacheMaxAge)
-                .add("DefaultPage", mDefaultPage)
                 .add("FilesInRamCache", mFilesCacheOn)
-                .add("ReturnOnlyDefaultPage", mToReturnOnlyDefaultPage)
                 .build();
     }
 
