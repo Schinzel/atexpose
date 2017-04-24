@@ -1,6 +1,7 @@
 package com.atexpose;
 
 import com.atexpose.dispatcher.Dispatcher;
+import io.schinzel.basicutils.Sandman;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.After;
@@ -28,6 +29,7 @@ public class WebServerRedirectTest {
     @After
     public void after() {
         mWebServer.shutdown();
+        Sandman.snoozeMillis(20);
     }
 
 
