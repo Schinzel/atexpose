@@ -99,12 +99,12 @@ public class HttpRequest {
                 //Get everything after the "?"
                 ? pathAndQuery.startDelimiter("?").toString()
                 //else, get empty string
-                : EmptyObjects.EMPTY_STRING;
+                : null;
         return new URIBuilder()
                 .setScheme(protocol)
                 .setHost(host)
                 .setPath(path)
-                .setQuery(query)
+                .setCustomQuery(query)
                 .build();
     }
 
