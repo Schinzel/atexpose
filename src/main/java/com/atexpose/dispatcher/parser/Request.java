@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
 /**
  * An instance of this object is an incoming request.
  * <p>
@@ -16,8 +14,8 @@ import java.util.List;
 @Accessors(prefix = "m")
 public class Request {
     @Getter @Builder.Default private String mMethodName = "";
-    @Getter @Builder.Default private List<String> mArgumentNames = EmptyObjects.EMPTY_LIST;
-    @Getter @Builder.Default private List<String> mArgumentValues = EmptyObjects.EMPTY_LIST;
+    @Getter @Builder.Default private String[] mArgumentNames = EmptyObjects.EMPTY_STRING_ARRAY;
+    @Getter @Builder.Default private String[] mArgumentValues = EmptyObjects.EMPTY_STRING_ARRAY;
     @Getter @Builder.Default private String mFileName = "";
     @Getter @Builder.Default private boolean mFileRequest = false;
 

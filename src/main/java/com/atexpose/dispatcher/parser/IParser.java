@@ -9,5 +9,8 @@ import io.schinzel.basicutils.state.IStateNode;
  * Created by schinzel on 2017-04-25.
  */
 public interface IParser extends IStateNode {
+
     Request getRequest(String incomingRequest);
+
+    IParser getClone();
 }
