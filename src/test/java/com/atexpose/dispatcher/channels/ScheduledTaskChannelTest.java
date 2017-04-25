@@ -238,8 +238,10 @@ public class ScheduledTaskChannelTest {
     @Test
     public void testGetRequestAsBytes() {
         ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "thisIsAtask", 1);
-        //override next-fire-time and set it to be one second from now
-        stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(1);
+        //override next-fire-time and set it to be a short time in the future
+        long millisToSleep = 10;
+        long nanosToSleep = millisToSleep * 1000000;
+        stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusNanos(nanosToSleep);
         ByteStorage bs = new ByteStorage();
         boolean wasNormalWakeUp = stc.getRequest(bs);
         assertTrue(wasNormalWakeUp);
