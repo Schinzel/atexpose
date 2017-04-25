@@ -6,7 +6,7 @@ import io.schinzel.basicutils.state.State;
 /**
  * @author Schinzel
  */
-public class TestChannel extends IChannel {
+public class TestChannel implements IChannel {
     public long mTestWriteTime;
     public long mTestReadTime;
     public String mSenderInfo;
