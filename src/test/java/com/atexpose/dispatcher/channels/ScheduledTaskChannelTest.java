@@ -1,22 +1,22 @@
 package com.atexpose.dispatcher.channels;
 
 import com.atexpose.util.ByteStorage;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+import org.hamcrest.Matchers;
 import org.json.JSONObject;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+
+import static org.junit.Assert.*;
+
 /**
- *
  * @author Schinzel
  */
 public class ScheduledTaskChannelTest {
@@ -144,12 +144,11 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void test_FireTime_MonthlyTask() {
-
         //Get day of month 25 days and 2 minutes from now
         LocalDateTime ldtFuture = LocalDateTime.now(ZoneOffset.UTC)
                 .plus(25, ChronoUnit.DAYS)
                 .plus(2, ChronoUnit.MINUTES);
-        while(ldtFuture.getDayOfMonth() > 28){
+        while (ldtFuture.getDayOfMonth() > 28) {
             ldtFuture = ldtFuture.minusDays(1);
         }
         //Get the time of the day in the future
@@ -187,16 +186,15 @@ public class ScheduledTaskChannelTest {
         String request = "request";
         int interval = 15;
         ScheduledTaskChannel stc = new ScheduledTaskChannel(taskName, request, interval);
+        long millisToSleep = 20;
+        long nanosToSleep = millisToSleep * 1000000;
+        long start = System.nanoTime();
+        stc.sleep(nanosToSleep);
+        //Calc the time to do all iterations
+        long executionTimeInMS = (System.nanoTime() - start) / 1000000;
+        Assert.assertThat(executionTimeInMS, Matchers.lessThan(30l));
+        Assert.assertThat(executionTimeInMS, Matchers.greaterThan(20l));
 
-        long oneSecondInNanons = 1000000000;
-        //Sleep one second
-        Instant start = Instant.now();
-        stc.sleep(oneSecondInNanons);
-        Instant end = Instant.now();
-        //Start plus almost a second is before end
-        assertTrue(start.plus(oneSecondInNanons - 10000000, ChronoUnit.NANOS).isBefore(end));
-        //Start plus little more than a second is after end
-        assertTrue(start.plus(oneSecondInNanons + 10000000, ChronoUnit.NANOS).isAfter(end));
     }
 
 
@@ -262,7 +260,6 @@ public class ScheduledTaskChannelTest {
         assertFalse(status.has("time"));
         assertFalse(status.has("day_of_month"));
         assertTrue(status.has("next_task_time_utc"));
-
         //Test time of day task
         stc = new ScheduledTaskChannel("The task 2", "getStatus", "23:55");
         status = stc.getState().getJson();
@@ -272,7 +269,6 @@ public class ScheduledTaskChannelTest {
         assertFalse(status.has("minutes"));
         assertFalse(status.has("day_of_month"));
         assertTrue(status.has("next_task_time_utc"));
-
         //Test day of month task
         stc = new ScheduledTaskChannel("The task 2", "getStatus", "23:55", 28);
         status = stc.getState().getJson();
@@ -299,6 +295,7 @@ public class ScheduledTaskChannelTest {
         //assert that false is returned as the wake-up was not normal, but a shutwon
         assertFalse(tr.mWasNormalWakeUp);
     }
+
 
     /**
      * Help class that waits for a task to wake up.
