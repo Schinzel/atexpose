@@ -1,14 +1,19 @@
 package com.atexpose;
 
 import com.atexpose.errors.RuntimeError;
-import java.util.regex.Pattern;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import io.schinzel.basicutils.Sandman;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author schinzel
  */
 public class MiscTest {
@@ -45,28 +50,13 @@ public class MiscTest {
 
 
     @Test
-    public void testSnooze() {
-        Misc misc = new Misc();
-        int msToSleepFor = 100;
-        String result = misc.snooze(msToSleepFor);
-        assertEquals("Good morning! Slept for " + msToSleepFor + " milliseconds", result);
-        int nrOfItterations = 20;
-        int snoozeTime = 100;
+    public void snooze_snooze20ms_shouldSnoozeBetween20And30ms() {
         long start = System.nanoTime();
-        for (int i = 0; i < nrOfItterations; i++) {
-            misc.snooze(snoozeTime);
-        }
-        long end = System.nanoTime();
+        Sandman.snoozeMillis(20);
         //Calc the time to do all iterations
-        long executionTimeInMS = (end - start) / 1000000;
-        //Calc the actual average snooze time
-        long averageSnoozeTime = executionTimeInMS / nrOfItterations;
-        //True if average snooze time is less than requestion snooze time +10%
-        boolean notTenPercentOver = (averageSnoozeTime < (snoozeTime + snoozeTime / 10));
-        //True if average snooze time is more than requestion snooze time -10%
-        boolean notTenPercentUnder = (averageSnoozeTime > (snoozeTime - snoozeTime / 10));
-        //Assert that snooze time is withint plus minus 10%
-        assertTrue(notTenPercentOver && notTenPercentUnder);
+        long executionTimeInMS = (System.nanoTime() - start) / 1000000;
+        Assert.assertThat(executionTimeInMS, Matchers.lessThan(30l));
+        Assert.assertThat(executionTimeInMS, Matchers.greaterThan(20l));
     }
 
 
