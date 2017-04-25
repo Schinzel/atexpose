@@ -3,20 +3,15 @@ package com.atexpose.dispatcher.channels;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.EncodingUtil;
+import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.state.State;
+import io.schinzel.basicutils.state.StateBuilder;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-
-import io.schinzel.basicutils.state.State;
-import io.schinzel.basicutils.state.StateBuilder;
-import io.schinzel.basicutils.Thrower;
 
 /**
  * The purpose of this class is to execute a custom command at a regular
@@ -27,7 +22,7 @@ import io.schinzel.basicutils.Thrower;
  *
  * @author Schinzel
  */
-public class ScheduledTaskChannel extends AbstractChannel {
+public class ScheduledTaskChannel implements IChannel {
     /** Pattern for time for daily tasks. */
     private static final Pattern TIME_PATTERN = Pattern.compile("^[0-2][0-9]:[0-5][0-9]");
     /** Flag for that day of month is not set, i.e. not used. */
@@ -146,7 +141,7 @@ public class ScheduledTaskChannel extends AbstractChannel {
 
 
     @Override
-    public AbstractChannel getClone() {
+    public IChannel getClone() {
         throw new UnsupportedOperationException(this.getClass().getSimpleName()
                 + " does not support multithreaded dispatchers.");
     }
@@ -218,6 +213,12 @@ public class ScheduledTaskChannel extends AbstractChannel {
     @Override
     public void writeResponse(byte[] response) {
         //Do nothing. The default event log is where one will look for the response. 
+    }
+
+
+    @Override
+    public long responseWriteTime() {
+        return 0;
     }
     //------------------------------------------------------------------------
     // STATIC UTIL

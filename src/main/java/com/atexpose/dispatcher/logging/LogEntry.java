@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.logging;
 
-import com.atexpose.dispatcher.channels.AbstractChannel;
+import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.dispatcher.parser.AbstractParser;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.dispatcher.logging.crypto.ICrypto;
@@ -35,13 +35,13 @@ public class LogEntry {
      *
      */
     private final String mThreadNumber;
-    private final AbstractChannel mChannel;
+    private final IChannel mChannel;
     private final AbstractParser mRequestParser;
     private String mRequest;
     private String mResponse;
 
 
-    public LogEntry(int threadNumber, AbstractChannel channel, AbstractParser requestParser) {
+    public LogEntry(int threadNumber, IChannel channel, AbstractParser requestParser) {
         mThreadNumber = String.valueOf(threadNumber);
         mChannel = channel;
         mRequestParser = requestParser;

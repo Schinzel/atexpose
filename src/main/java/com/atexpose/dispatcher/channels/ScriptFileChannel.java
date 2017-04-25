@@ -5,6 +5,8 @@ import com.atexpose.errors.RuntimeError;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
+import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.state.State;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,15 +14,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
-import io.schinzel.basicutils.state.State;
-import io.schinzel.basicutils.Checker;
-
 /**
  * The purpose of this class is to read a text file containing one or several commands.
  *
  * @author Schinzel
  */
-public class ScriptFileChannel extends AbstractChannel {
+public class ScriptFileChannel implements IChannel {
     /**
      * If a line starts with a comment qualifier, that line is ignored.
      */
@@ -64,7 +63,7 @@ public class ScriptFileChannel extends AbstractChannel {
 
 
     @Override
-    public AbstractChannel getClone() {
+    public IChannel getClone() {
         throw new RuntimeError("Script File Channels are single threaded.");
     }
 
@@ -106,6 +105,12 @@ public class ScriptFileChannel extends AbstractChannel {
                 throw new RuntimeError("Error while writing to CLI.");
             }
         }
+    }
+
+
+    @Override
+    public long responseWriteTime() {
+        return 0;
     }
 
 

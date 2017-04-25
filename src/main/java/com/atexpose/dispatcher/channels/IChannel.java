@@ -9,11 +9,7 @@ import io.schinzel.basicutils.state.IStateNode;
  *
  * @author Schinzel
  */
-public abstract class AbstractChannel implements IStateNode {
-    /**
-     * The time it took to write a response.
-     */
-    private long mWriteTime;
+public interface IChannel extends IStateNode {
 
 
     /**
@@ -25,7 +21,7 @@ public abstract class AbstractChannel implements IStateNode {
      * @param request The message returned is stored in the argument variable.
      * @return True if had a message, else false.
      */
-    public abstract boolean getRequest(ByteStorage request);
+    boolean getRequest(ByteStorage request);
 
 
     /**
@@ -33,27 +29,13 @@ public abstract class AbstractChannel implements IStateNode {
      *
      * @param response The response to write.
      */
-    public abstract void writeResponse(byte[] response);
-
-
-    /**
-     * Writes the response and measures the time it takes and stores the info.
-     *
-     * @param response The response to send to client.
-     */
-    public void writeResponseExternal(byte[] response) {
-        mWriteTime = System.currentTimeMillis();
-        this.writeResponse(response);
-        mWriteTime = System.currentTimeMillis() - mWriteTime;
-    }
+    void writeResponse(byte[] response);
 
 
     /**
      * @return The time it took to write a response in milliseconds.
      */
-    public long responseWriteTime() {
-        return mWriteTime;
-    }
+    long responseWriteTime();
 
 
     /**
@@ -62,7 +44,7 @@ public abstract class AbstractChannel implements IStateNode {
      * @param thread The thread that uses this channel. The thread can be
      *               required to interrupt processes.
      */
-    public abstract void shutdown(Thread thread);
+    void shutdown(Thread thread);
 
 
     /**
@@ -72,7 +54,7 @@ public abstract class AbstractChannel implements IStateNode {
      *
      * @return A clone of itself.
      */
-    public abstract AbstractChannel getClone();
+    IChannel getClone();
 
 
     /**
@@ -82,7 +64,7 @@ public abstract class AbstractChannel implements IStateNode {
      *
      * @return The read time of the latest message.
      */
-    public abstract long requestReadTime();
+    long requestReadTime();
 
 
     /**
@@ -95,6 +77,6 @@ public abstract class AbstractChannel implements IStateNode {
      *
      * @return Information on the sender of the message.
      */
-    public abstract String senderInfo();
+    String senderInfo();
 
 }

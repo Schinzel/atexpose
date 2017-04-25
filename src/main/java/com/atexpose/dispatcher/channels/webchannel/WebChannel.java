@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel;
 
-import com.atexpose.dispatcher.channels.AbstractChannel;
+import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.dispatcher.channels.webchannel.http.HttpRedirectResponse;
 import com.atexpose.dispatcher.channels.webchannel.http.HttpTextResponse;
 import com.atexpose.dispatcher.channels.webchannel.redirect.Redirects;
@@ -28,7 +28,7 @@ import java.net.URI;
  * @author Schinzel
  */
 @Accessors(prefix = "m")
-public class WebChannel extends AbstractChannel {
+public class WebChannel implements IChannel {
     private static final int MAX_PENDING_REQUESTS = 50;
     /** The server socket. Shared by all threads listening to the same port. */
     final private ServerSocket mServerSocket;
@@ -40,6 +40,8 @@ public class WebChannel extends AbstractChannel {
     private long mLogRequestReadTime;
     /** The client socket connection. */
     private Socket mClientSocket;
+    /** The response write time. For logging and stats */
+    private long mResponseWriteTime = 0L;
 
 
     //------------------------------------------------------------------------
@@ -71,7 +73,7 @@ public class WebChannel extends AbstractChannel {
 
 
     @Override
-    public AbstractChannel getClone() {
+    public IChannel getClone() {
         return WebChannel.cloneBuilder()
                 .redirects(mRedirects)
                 .timeout(mSocketTimeout)
@@ -170,6 +172,7 @@ public class WebChannel extends AbstractChannel {
     @Override
     public void writeResponse(byte[] response) {
         try {
+            mResponseWriteTime = System.currentTimeMillis();
             //Send the Response to the client.
             SocketRW.write(mClientSocket, response);
         } catch (IOException ioe) {
@@ -180,9 +183,10 @@ public class WebChannel extends AbstractChannel {
                 throw new RuntimeException("Error while writing to socket " + ioe.getMessage());
             }
         } finally {
-            //Close the client connection.
             try {
+                //Close the client connection.
                 mClientSocket.close();
+                mResponseWriteTime = (System.currentTimeMillis() - mResponseWriteTime);
             } catch (IOException e) {
             }
         }
@@ -192,6 +196,12 @@ public class WebChannel extends AbstractChannel {
     //------------------------------------------------------------------------
     // LOGGING & STATS
     //------------------------------------------------------------------------
+    @Override
+    public long responseWriteTime() {
+        return mResponseWriteTime;
+    }
+
+
     @Override
     public long requestReadTime() {
         return mLogRequestReadTime;

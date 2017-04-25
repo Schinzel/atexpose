@@ -2,7 +2,7 @@ package com.atexpose.dispatcher;
 
 import com.atexpose.api.API;
 import com.atexpose.api.MethodObject;
-import com.atexpose.dispatcher.channels.AbstractChannel;
+import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.dispatcher.logging.LogEntry;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.parser.AbstractParser;
@@ -42,7 +42,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
     /** The API that is exposed. */
     private final API mAPI;
     /** Receives incoming messages and sends wrapped responses. */
-    private final AbstractChannel mChannel;
+    private final IChannel mChannel;
     /** Parses the incoming messages. */
     private final AbstractParser mParser;
     /** Wraps the responses to send. */
@@ -74,7 +74,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
      * Sets up a dispatcher.
      */
     @Builder
-    private Dispatcher(String name, int noOfThreads, int accessLevel, AbstractChannel channel, AbstractParser parser, IWrapper wrapper, API api) {
+    private Dispatcher(String name, int noOfThreads, int accessLevel, IChannel channel, AbstractParser parser, IWrapper wrapper, API api) {
         mKey = name;
         Thrower.throwIfTooSmall(noOfThreads, "noOfThreads", 1);
         Thrower.throwIfEmpty(name, "name");
@@ -199,7 +199,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
                 wrappedResponse = mWrapper.wrapError(e.getMessage());
                 wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
             }
-            mChannel.writeResponseExternal(wrappedResponseAsUtf8ByteArray);
+            mChannel.writeResponse(wrappedResponseAsUtf8ByteArray);
             logEntry.setLogData(decodedIncomingRequest, wrappedResponse);
             this.log(logEntry);
             logEntry.cleanUpLogData();

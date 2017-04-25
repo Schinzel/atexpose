@@ -2,7 +2,7 @@ package com.atexpose;
 
 import com.atexpose.api.API;
 import com.atexpose.dispatcher.Dispatcher;
-import com.atexpose.dispatcher.channels.AbstractChannel;
+import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.dispatcher.channels.webchannel.WebChannel;
 import com.atexpose.dispatcher.channels.webchannel.redirect.*;
 import com.atexpose.dispatcher.parser.AbstractParser;
@@ -271,7 +271,7 @@ public class WebServerBuilder {
     }
 
 
-    private AbstractChannel getChannel() {
+    private IChannel getChannel() {
         return WebChannel.builder()
                 .port(mPort)
                 .timeout(mTimeout)
@@ -288,7 +288,7 @@ public class WebServerBuilder {
     public Dispatcher startWebServer() {
         //Construct web server name
         String webServerName = "WebServer_" + mPort;
-        AbstractChannel webChannel = this.getChannel();
+        IChannel webChannel = this.getChannel();
         AbstractParser parser = this.getParser();
         IWrapper wrapper = this.getWrapper();
         Dispatcher dispatcher = Dispatcher.builder()

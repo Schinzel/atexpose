@@ -19,7 +19,7 @@ import java.nio.charset.Charset;
  *
  * @author Schinzel
  */
-public class CommandLineChannel extends AbstractChannel {
+public class CommandLineChannel implements IChannel {
     private final InputStream mInputStream;
     private boolean mIsToShutdown = false;
     private static final String CLI_START_OF_LINE = "[@Expose]>";
@@ -39,7 +39,7 @@ public class CommandLineChannel extends AbstractChannel {
 
 
     @Override
-    public AbstractChannel getClone() {
+    public IChannel getClone() {
         throw new RuntimeError("The command line interface cannot be multi-threaded.");
     }
 
@@ -94,6 +94,12 @@ public class CommandLineChannel extends AbstractChannel {
     //------------------------------------------------------------------------
     // LOGGING & STATS
     //------------------------------------------------------------------------
+    @Override
+    public long responseWriteTime() {
+        return 0;
+    }
+
+
     @Override
     public String senderInfo() {
         return "CLI";

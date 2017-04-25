@@ -6,7 +6,7 @@ import io.schinzel.basicutils.state.State;
 /**
  * @author Schinzel
  */
-public class TestChannel extends AbstractChannel {
+public class TestChannel extends IChannel {
     public long mTestWriteTime;
     public long mTestReadTime;
     public String mSenderInfo;
@@ -54,7 +54,7 @@ public class TestChannel extends AbstractChannel {
 
 
     @Override
-    public AbstractChannel getClone() {
+    public IChannel getClone() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
