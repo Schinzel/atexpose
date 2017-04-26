@@ -5,7 +5,7 @@ import io.schinzel.basicutils.state.State;
 /**
  * @author Schinzel
  */
-public class TestParser extends AbstractParser {
+public class TestParser implements IParser {
     public String[] mArgNames;
     public String[] mArgValues;
     public String mMethodName;
@@ -13,37 +13,19 @@ public class TestParser extends AbstractParser {
 
 
     @Override
-    public String[] getArgumentNames() {
-        return mArgNames;
+    public Request getRequest(String incomingRequest) {
+        return Request.builder()
+                .methodName(mMethodName)
+                .argumentNames(mArgNames)
+                .argumentValues(mArgValues)
+                .fileName(mFilename)
+                .fileRequest((mFilename != null))
+                .build();
     }
 
 
     @Override
-    public String[] getArgumentValues() {
-        return mArgValues;
-    }
-
-
-    @Override
-    public String getMethodName() {
-        return mMethodName;
-    }
-
-
-    @Override
-    public String getFileName() {
-        return mFilename;
-    }
-
-
-    @Override
-    public AbstractParser getClone() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
-    @Override
-    public void parseRequest(String message) {
+    public IParser getClone() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

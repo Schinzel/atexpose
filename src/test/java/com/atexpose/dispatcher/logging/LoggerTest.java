@@ -11,7 +11,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- *
  * @author Schinzel
  */
 public class LoggerTest {
@@ -33,24 +32,24 @@ public class LoggerTest {
                 .crypto(new TestCrypto())
                 .build();
         mChannel = new TestChannel();
-        mRequestParser = new TestParser();
-        mLogEntry = new LogEntry(THREAD_NO, mChannel, mRequestParser);
+        mLogEntry = new LogEntry(THREAD_NO, mChannel);
 
     }
 
+
     @Test
-    public void testLog_EventLogger(){
+    public void testLog_EventLogger() {
         TestLogWriter logWriter = new TestLogWriter();
         Logger logger = Logger.builder()
                 .loggerType(LoggerType.EVENT)
                 .logFormatter(new JsonFormatter())
                 .logWriter(logWriter)
                 .build();
-        LogEntry logEntry1 = new LogEntry(THREAD_NO, mChannel, mRequestParser);
+        LogEntry logEntry1 = new LogEntry(THREAD_NO, mChannel);
         //An even should be logged
         logger.log(logEntry1);
         assertEquals(1, logWriter.mLogEntries.size());
-        LogEntry logEntry2 = new LogEntry(THREAD_NO, mChannel, mRequestParser);
+        LogEntry logEntry2 = new LogEntry(THREAD_NO, mChannel);
         logEntry2.setIsError();
         //An error should be logged
         logger.log(logEntry2);
@@ -58,20 +57,19 @@ public class LoggerTest {
     }
 
 
-
     @Test
-    public void testLog_ErrorLogger(){
+    public void testLog_ErrorLogger() {
         TestLogWriter logWriter = new TestLogWriter();
         Logger logger = Logger.builder()
                 .loggerType(LoggerType.ERROR)
                 .logFormatter(new JsonFormatter())
                 .logWriter(logWriter)
                 .build();
-        LogEntry logEntry1 = new LogEntry(THREAD_NO, mChannel, mRequestParser);
+        LogEntry logEntry1 = new LogEntry(THREAD_NO, mChannel);
         //An even should be logged
         logger.log(logEntry1);
         assertEquals(0, logWriter.mLogEntries.size());
-        LogEntry logEntry2 = new LogEntry(THREAD_NO, mChannel, mRequestParser);
+        LogEntry logEntry2 = new LogEntry(THREAD_NO, mChannel);
         logEntry2.setIsError();
         //An error should be logged
         logger.log(logEntry2);
@@ -92,13 +90,11 @@ public class LoggerTest {
         mRequestParser.mFilename = filename;
         String senderInfo = "MySenderInfo";
         mChannel.mSenderInfo = senderInfo;
-
         //
         for (int i = 0; i < 100; i++) {
             mChannel.mTestWriteTime = i;
             mChannel.mTestReadTime = i * 2;
-
-            mLogEntry.setLogData(request + i, response + i);
+            mLogEntry.setLogData(request + i, response + i, mRequestParser.getRequest(request));
             mLogger.log(mLogEntry);
             mLogEntry.cleanUpLogData();
         }
@@ -108,7 +104,7 @@ public class LoggerTest {
             String logEntryAsString = mLogWriter.mLogEntries.get(i);
             JSONObject jo = new JSONObject(logEntryAsString);
             assertEquals(i, jo.getInt(LogKey.WRITE_TIME_IN_MS.toString()));
-            assertEquals(i*2, jo.getInt(LogKey.READ_TIME_IN_MS.toString()));
+            assertEquals(i * 2, jo.getInt(LogKey.READ_TIME_IN_MS.toString()));
             assertEquals(TestCrypto.ENC_PREFIX + request + i, jo.getString(LogKey.REQUEST.toString()));
             assertEquals(response + i, jo.getString(LogKey.RESPONSE.toString()));
         }
@@ -119,7 +115,7 @@ public class LoggerTest {
     public void testLogData() {
         String request = "MyRequest";
         String response = "MyResponse";
-        mLogEntry.setLogData(request, response);
+        mLogEntry.setLogData(request, response, mRequestParser.getRequest(request));
         //Set request parser
         mRequestParser.mArgNames = new String[]{"ArgName1", "ArgName2"};
         mRequestParser.mArgValues = new String[]{"ArgVal1", "ArgVal2"};

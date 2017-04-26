@@ -2,7 +2,7 @@ package com.atexpose.atexpose;
 
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.CommandLineChannel;
-import com.atexpose.dispatcher.parser.TextParser;
+import com.atexpose.dispatcher.parser.TextParser2;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 
 /**
@@ -21,7 +21,7 @@ public interface IAtExposeCLI<T extends IAtExpose<T>> extends IAtExpose<T> {
                 .name("CommandLine")
                 .accessLevel(3)
                 .channel(new CommandLineChannel())
-                .parser(new TextParser())
+                .parser(new TextParser2())
                 .wrapper(new CsvWrapper())
                 .noOfThreads(1)
                 .api(this.getAPI())

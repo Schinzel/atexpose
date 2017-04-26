@@ -4,9 +4,9 @@ import com.atexpose.api.API;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.dispatcher.channels.webchannel.WebChannel;
-import com.atexpose.dispatcher.channels.webchannel.redirect.*;
-import com.atexpose.dispatcher.parser.AbstractParser;
-import com.atexpose.dispatcher.parser.urlparser.URLParser;
+import com.atexpose.dispatcher.channels.webchannel.redirect.Redirects;
+import com.atexpose.dispatcher.parser.IParser;
+import com.atexpose.dispatcher.parser.urlparser.UrlParser2;
 import com.atexpose.dispatcher.parser.urlparser.UrlParserWithGSuiteAuth;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.dispatcher.wrapper.webresponse.WebWrapper;
@@ -261,9 +261,9 @@ public class WebServerBuilder {
      * @return If there has been an auth domain set, a UrlParserWithGSuiteAuth is
      * returned. Else a URLParser is returned.
      */
-    private AbstractParser getParser() {
+    private IParser getParser() {
         return (Checker.isEmpty(mAuthDomain)) ?
-                new URLParser() :
+                new UrlParser2() :
                 UrlParserWithGSuiteAuth.builder()
                         .authCookieName(mAuthCookieName)
                         .domain(mAuthDomain)
@@ -289,7 +289,7 @@ public class WebServerBuilder {
         //Construct web server name
         String webServerName = "WebServer_" + mPort;
         IChannel webChannel = this.getChannel();
-        AbstractParser parser = this.getParser();
+        IParser parser = this.getParser();
         IWrapper wrapper = this.getWrapper();
         Dispatcher dispatcher = Dispatcher.builder()
                 .name(webServerName)

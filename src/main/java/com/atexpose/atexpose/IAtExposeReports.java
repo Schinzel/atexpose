@@ -6,8 +6,9 @@ import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
-import com.atexpose.dispatcher.parser.AbstractParser;
-import com.atexpose.dispatcher.parser.TextParser;
+import com.atexpose.dispatcher.parser.IParser;
+import com.atexpose.dispatcher.parser.Request;
+import com.atexpose.dispatcher.parser.TextParser2;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import com.atexpose.util.mail.GmailEmailSender;
 import com.atexpose.util.mail.IEmailSender;
@@ -56,24 +57,24 @@ public interface IAtExposeReports<T extends IAtExpose<T>> extends IAtExpose<T> {
      * recipient.
      *
      * @param taskName  The name of the report.
-     * @param request   The request to execute. Example: "echo hi"
+     * @param rawRequest   The request to execute. Example: "echo hi"
      * @param timeOfDay The time of day to run the report. Examples: "13:05" "07:55"
      * @param recipient The recipient email address.
      * @param fromName  The name in the from field in the email
      * @return This for chaining.
      */
-    default T addScheduledReport(String taskName, String request, String timeOfDay, String recipient, String fromName) {
+    default T addScheduledReport(String taskName, String rawRequest, String timeOfDay, String recipient, String fromName) {
         Thrower.throwIfTrue(this.getMailSender() == null, "You need to set SMTP settings before setting up a scheduled report. Use method setSMTPServer.");
-        AbstractParser parser = new TextParser();
-        parser.parseRequest(request);
-        String methodName = parser.getMethodName();
+        IParser parser = new TextParser2();
+        Request request1 = parser.getRequest(rawRequest);
+        String methodName = request1.getMethodName();
         if (!this.getAPI().methodExits(methodName)) {
             throw new RuntimeException("No such method '" + methodName + "'");
         }
         ScheduledReportChannel scheduledReport = ScheduledReportChannel.builder()
                 .emailSender(this.getMailSender())
                 .recipient(recipient)
-                .request(request)
+                .request(rawRequest)
                 .taskName(taskName)
                 .timeOfDay(timeOfDay)
                 .fromName(fromName)
