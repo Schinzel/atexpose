@@ -1,6 +1,7 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
-import com.atexpose.dispatcher.parser.AbstractParser;
+import com.atexpose.dispatcher.parser.IParser;
+import com.atexpose.dispatcher.parser.Request;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.state.State;
 import io.schinzel.basicutils.str.Str;
@@ -24,7 +25,7 @@ import java.io.IOException;
  * Created by Schinzel on 2017-03-03.
  */
 @Accessors(prefix = "m")
-public class UrlParserWithGSuiteAuth extends URLParser {
+public class UrlParserWithGSuiteAuth extends UrlParser2 {
     /**
      * The name of the cookie that holds the authentication token.
      */
@@ -47,7 +48,7 @@ public class UrlParserWithGSuiteAuth extends URLParser {
 
 
     @Override
-    public AbstractParser getClone() {
+    public IParser getClone() {
         return UrlParserWithGSuiteAuth.builder()
                 .authCookieName(this.getAuthCookieName())
                 .domain(this.getDomain())
@@ -56,8 +57,8 @@ public class UrlParserWithGSuiteAuth extends URLParser {
 
 
     @Override
-    public void parseRequest(String request) {
-        super.parseRequest(request);
+    public Request getRequest(String incomingRequest) {
+        Request request = super.getRequest(incomingRequest);
         //If the call was a command call
         if (this.getCallType() == CallType.COMMAND) {
             //Get the auth cookie value
@@ -68,6 +69,7 @@ public class UrlParserWithGSuiteAuth extends URLParser {
                 throw new RuntimeException("User was not logged in to the GSuite domain '" + this.getDomain() + "'.");
             }
         }
+        return request;
     }
 
 

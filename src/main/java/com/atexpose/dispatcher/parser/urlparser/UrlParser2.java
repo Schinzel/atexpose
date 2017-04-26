@@ -10,6 +10,7 @@ import io.schinzel.basicutils.state.State;
 import io.schinzel.basicutils.substringer.SubStringer;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 import java.util.Map;
 
@@ -19,9 +20,10 @@ import java.util.Map;
  * <p>
  * Created by schinzel on 2017-04-25.
  */
+@Accessors(prefix = "m")
 public class UrlParser2 implements IParser {
-    @Getter(AccessLevel.PROTECTED) protected URLParser.CallType mCallType;
-
+    @Getter(AccessLevel.PROTECTED) protected CallType mCallType;
+    @Getter(AccessLevel.PROTECTED) HttpRequest mHttpRequest;
 
     enum CallType {
         COMMAND, FILE, UNKNOWN
@@ -30,12 +32,12 @@ public class UrlParser2 implements IParser {
 
     @Override
     public Request getRequest(String incomingRequest) {
-        mCallType = URLParser.CallType.UNKNOWN;
-        HttpRequest mHttpRequest = new HttpRequest(incomingRequest);
+        mCallType = CallType.UNKNOWN;
+        mHttpRequest = new HttpRequest(incomingRequest);
         String url = mHttpRequest.getURL();
         //If is command call
         if (url.contains(PropertiesDispatcher.COMMAND_REQUEST_MARKER)) {
-            mCallType = URLParser.CallType.COMMAND;
+            mCallType = CallType.COMMAND;
             Map<String, String> map = mHttpRequest.getVariablesAsMap();
             String[] argValues = new String[map.size()];
             String[] argNames = new String[map.size()];
@@ -60,7 +62,7 @@ public class UrlParser2 implements IParser {
             // }
         }//else, is request for file
         else {
-            mCallType = URLParser.CallType.FILE;
+            mCallType = CallType.FILE;
             //Get the part of the url before ?, if any
             url = SubStringer.create(url).endDelimiter("?").toString();
             return Request.builder()
