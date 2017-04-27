@@ -1,5 +1,6 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
+import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.str.Str;
 import org.json.JSONObject;
 import org.jsoup.Connection;
@@ -9,11 +10,26 @@ import java.io.IOException;
 
 /**
  * The purpose of this class is to retrieve an GSuite email address from Google.
- **
+ * *
  * Created by schinzel on 2017-04-27.
  */
-class GSuiteEmailRetriever {
+class GSuiteAuth {
     private static String GOOGLE_AUTH_URL = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=";
+
+
+    /**
+     * Checks is a user is logged into the argument domain or not.
+     *
+     * @param authCookieValue The auth cookie value from the user's request.
+     * @param domain          The domain that the user should be logged into.
+     * @return True if user is logged into argument domain else false.
+     */
+    boolean isUserLoggedIn(String authCookieValue, String domain) {
+        if (Checker.isEmpty(authCookieValue)) {
+            return false;
+        }
+        return this.requestUsersEmail(authCookieValue).endsWith(domain);
+    }
 
 
     /**

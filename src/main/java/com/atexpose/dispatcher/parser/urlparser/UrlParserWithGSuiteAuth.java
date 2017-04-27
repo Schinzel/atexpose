@@ -2,11 +2,11 @@ package com.atexpose.dispatcher.parser.urlparser;
 
 import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.Request;
-import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -26,8 +26,9 @@ public class UrlParserWithGSuiteAuth extends UrlParser2 {
     /** The GSuite domain that the user has to be logged into to make command requests. */
     @Getter(AccessLevel.PACKAGE)
     private final String mDomain;
-
-    GSuiteEmailRetriever mGSuiteEmailRetriever = new GSuiteEmailRetriever();
+    /** Authenticates against a GSuite domain. Setter for tests. */
+    @Setter(AccessLevel.PACKAGE)
+    GSuiteAuth mGSuiteAuth = new GSuiteAuth();
 
 
     @Override
@@ -48,26 +49,11 @@ public class UrlParserWithGSuiteAuth extends UrlParser2 {
             String authCookieValue = this.getHttpRequest()
                     .getCookies()
                     .get(this.getAuthCookieName());
-            if (!this.isUserLoggedIn(authCookieValue, this.getDomain())) {
+            if (!mGSuiteAuth.isUserLoggedIn(authCookieValue, this.getDomain())) {
                 throw new RuntimeException("User was not logged in to the GSuite domain '" + this.getDomain() + "'.");
             }
         }
         return request;
-    }
-
-
-    /**
-     * Checks is a user is logged into the argument domain or not.
-     *
-     * @param authCookieValue The auth cookie value from the user's request.
-     * @param domain          The domain that the user should be logged into.
-     * @return True if user is logged into argument domain else false.
-     */
-    private boolean isUserLoggedIn(String authCookieValue, String domain) {
-        if (Checker.isEmpty(authCookieValue)) {
-            return false;
-        }
-        return mGSuiteEmailRetriever.requestUsersEmail(authCookieValue).endsWith(domain);
     }
 
 
