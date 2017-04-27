@@ -24,6 +24,7 @@ import java.io.IOException;
  * <p>
  * Created by Schinzel on 2017-03-03.
  */
+@Builder
 @Accessors(prefix = "m")
 public class UrlParserWithGSuiteAuth extends UrlParser2 {
     /**
@@ -38,13 +39,6 @@ public class UrlParserWithGSuiteAuth extends UrlParser2 {
      */
     @Getter(AccessLevel.PRIVATE)
     private final String mDomain;
-
-
-    @Builder
-    public UrlParserWithGSuiteAuth(String authCookieName, String domain) {
-        mAuthCookieName = authCookieName;
-        mDomain = domain;
-    }
 
 
     @Override
