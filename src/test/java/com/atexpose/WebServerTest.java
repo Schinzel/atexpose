@@ -1,7 +1,7 @@
 package com.atexpose;
 
 import com.atexpose.dispatcher.PropertiesDispatcher;
-import com.atexpose.dispatcher.wrapper.FunnyChars;
+import io.schinzel.basicutils.FunnyChars;
 import io.schinzel.basicutils.Sandman;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

@@ -1,11 +1,12 @@
 package com.atexpose.dispatcher.logging.crypto;
 
-import com.atexpose.dispatcher.logging.crypto.Crypto;
-import com.atexpose.dispatcher.wrapper.FunnyChars;
-import org.junit.Test;
+import io.schinzel.basicutils.FunnyChars;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *

@@ -18,10 +18,10 @@ public class TextParser2 implements IParser {
 
 
     @Override
-    public Request getRequest(String incomingRequest) {
-        Matcher m = REQUEST_PATTERN.matcher(incomingRequest);
+    public Request getRequest(String requestAsString) {
+        Matcher m = REQUEST_PATTERN.matcher(requestAsString);
         if (!m.find()) {
-            throw new RuntimeError("Request '" + incomingRequest + "' is not formed correctly.");
+            throw new RuntimeError("Request '" + requestAsString + "' is not formed correctly.");
         }
         String methodName = m.group(1);
         String[] argumentValues = StringSplitter.splitOnComma_DoubleQuoteQualifier(m.group(3));

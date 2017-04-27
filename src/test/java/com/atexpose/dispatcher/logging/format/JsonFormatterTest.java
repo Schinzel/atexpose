@@ -1,12 +1,14 @@
 package com.atexpose.dispatcher.logging.format;
 
 import com.atexpose.dispatcher.logging.LogKey;
-import com.atexpose.dispatcher.wrapper.FunnyChars;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import io.schinzel.basicutils.FunnyChars;
 import org.json.JSONObject;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
