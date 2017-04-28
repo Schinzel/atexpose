@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by schinzel on 2017-04-25.
  */
 @Accessors(prefix = "m")
-public class UrlParser2 implements IParser {
+public class UrlParser implements IParser {
     @Getter(AccessLevel.PROTECTED) protected CallType mCallType;
     @Getter(AccessLevel.PROTECTED) HttpRequest mHttpRequest;
 
@@ -75,7 +75,7 @@ public class UrlParser2 implements IParser {
 
     @Override
     public IParser getClone() {
-        return new UrlParser2();
+        return new UrlParser();
     }
 
 

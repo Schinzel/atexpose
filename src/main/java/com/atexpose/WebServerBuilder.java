@@ -6,7 +6,7 @@ import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.dispatcher.channels.webchannel.WebChannel;
 import com.atexpose.dispatcher.channels.webchannel.redirect.Redirects;
 import com.atexpose.dispatcher.parser.IParser;
-import com.atexpose.dispatcher.parser.urlparser.UrlParser2;
+import com.atexpose.dispatcher.parser.urlparser.UrlParser;
 import com.atexpose.dispatcher.parser.urlparser.UrlParserWithGSuiteAuth;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.dispatcher.wrapper.webresponse.WebWrapper;
@@ -263,7 +263,7 @@ public class WebServerBuilder {
      */
     private IParser getParser() {
         return (Checker.isEmpty(mAuthDomain)) ?
-                new UrlParser2() :
+                new UrlParser() :
                 UrlParserWithGSuiteAuth.builder()
                         .authCookieName(mAuthCookieName)
                         .domain(mAuthDomain)

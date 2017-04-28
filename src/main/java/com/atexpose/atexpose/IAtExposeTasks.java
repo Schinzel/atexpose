@@ -8,7 +8,7 @@ import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.Request;
-import com.atexpose.dispatcher.parser.TextParser2;
+import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import io.schinzel.basicutils.Thrower;
 
@@ -74,7 +74,7 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
 
 
     default T addTask(String taskName, ScheduledTaskChannel scheduledTask) {
-        IParser parser = new TextParser2();
+        IParser parser = new TextParser();
         Request request = parser.getRequest(scheduledTask.getRequestAsString());
         String methodName = request.getMethodName();
         Thrower.throwIfFalse(this.getAPI().methodExits(methodName), "No such method '" + methodName + "'");

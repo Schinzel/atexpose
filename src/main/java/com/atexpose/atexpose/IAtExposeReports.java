@@ -8,7 +8,7 @@ import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.Request;
-import com.atexpose.dispatcher.parser.TextParser2;
+import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import com.atexpose.util.mail.GmailEmailSender;
 import com.atexpose.util.mail.IEmailSender;
@@ -65,7 +65,7 @@ public interface IAtExposeReports<T extends IAtExpose<T>> extends IAtExpose<T> {
      */
     default T addScheduledReport(String taskName, String rawRequest, String timeOfDay, String recipient, String fromName) {
         Thrower.throwIfTrue(this.getMailSender() == null, "You need to set SMTP settings before setting up a scheduled report. Use method setSMTPServer.");
-        IParser parser = new TextParser2();
+        IParser parser = new TextParser();
         Request request1 = parser.getRequest(rawRequest);
         String methodName = request1.getMethodName();
         if (!this.getAPI().methodExits(methodName)) {

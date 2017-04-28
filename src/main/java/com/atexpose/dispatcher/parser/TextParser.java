@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * <p>
  * Created by schinzel on 2017-04-25.
  */
-public class TextParser2 implements IParser {
+public class TextParser implements IParser {
     private static final Pattern REQUEST_PATTERN = Pattern.compile("(\\S+)( *)?([\\S\\s]*)");
 
 
@@ -34,7 +34,7 @@ public class TextParser2 implements IParser {
 
     @Override
     public IParser getClone() {
-        return new TextParser2();
+        return new TextParser();
     }
 
 

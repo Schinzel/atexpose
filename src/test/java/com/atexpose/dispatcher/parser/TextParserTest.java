@@ -20,14 +20,14 @@ public class TextParserTest {
 
     @Test
     public void getClone_NormalTextParser_ClassTextPraser() {
-        String cloneClassName = new TextParser2().getClone().getClass().getSimpleName();
-        assertEquals(TextParser2.class.getSimpleName(), cloneClassName);
+        String cloneClassName = new TextParser().getClone().getClass().getSimpleName();
+        assertEquals(TextParser.class.getSimpleName(), cloneClassName);
     }
 
 
     @Test
     public void getMethodName_SimpleRequest_MethodName() {
-        String actualMethodName = new TextParser2()
+        String actualMethodName = new TextParser()
                 .getRequest("getMonkey")
                 .getMethodName();
         assertEquals("getMonkey", actualMethodName);
@@ -36,7 +36,7 @@ public class TextParserTest {
 
     @Test
     public void getMethodName_ShortMethodName_MethodName() {
-        String actualMethodName = new TextParser2()
+        String actualMethodName = new TextParser()
                 .getRequest("g")
                 .getMethodName();
         assertEquals("g", actualMethodName);
@@ -45,7 +45,7 @@ public class TextParserTest {
 
     @Test
     public void getMethodName_LongMethodName_MethodName() {
-        String actualMethodName = new TextParser2()
+        String actualMethodName = new TextParser()
                 .getRequest(FunnyChars.LONG_STRING.getString())
                 .getMethodName();
         assertEquals(FunnyChars.LONG_STRING.getString(), actualMethodName);
@@ -54,7 +54,7 @@ public class TextParserTest {
 
     @Test
     public void getArgumentNames_NoArguments_EmptyArray() {
-        String[] argumentNames = new TextParser2()
+        String[] argumentNames = new TextParser()
                 .getRequest("getMonkey")
                 .getArgumentNames();
         assertArrayEquals(EmptyObjects.EMPTY_STRING_ARRAY, argumentNames);
@@ -63,7 +63,7 @@ public class TextParserTest {
 
     @Test
     public void getArgumentNames_TwoArguments_EmptyArray() {
-        String[] argumentNames = new TextParser2()
+        String[] argumentNames = new TextParser()
                 .getRequest("getMonkey arg1, arg2")
                 .getArgumentNames();
         assertArrayEquals(EmptyObjects.EMPTY_STRING_ARRAY, argumentNames);
@@ -72,7 +72,7 @@ public class TextParserTest {
 
     @Test
     public void getArgumentValues_NoArguments_EmptyArray() {
-        String[] argumentValues = new TextParser2()
+        String[] argumentValues = new TextParser()
                 .getRequest("getMonkey")
                 .getArgumentValues();
         assertEquals(0, argumentValues.length);
@@ -81,7 +81,7 @@ public class TextParserTest {
 
     @Test
     public void getArgumentValues_OneArgument_ArrayOneLongAndArgName() {
-        String[] argumentValues = new TextParser2()
+        String[] argumentValues = new TextParser()
                 .getRequest("getMonkey bananas")
                 .getArgumentValues();
         assertEquals(1, argumentValues.length);
@@ -91,7 +91,7 @@ public class TextParserTest {
 
     @Test
     public void getArgumentValues_TwoArguments_ArrayTwoLongAndArgNames() {
-        String[] argumentValues = new TextParser2()
+        String[] argumentValues = new TextParser()
                 .getRequest("getMonkey bananas, 44")
                 .getArgumentValues();
         assertEquals(2, argumentValues.length);
@@ -102,7 +102,7 @@ public class TextParserTest {
 
     @Test
     public void getArgumentValues_20Arguments_Array20LongAndArgNames() {
-        String[] argumentValues = new TextParser2()
+        String[] argumentValues = new TextParser()
                 .getRequest("getMonkey  1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20")
                 .getArgumentValues();
         assertEquals(20, argumentValues.length);
@@ -114,7 +114,7 @@ public class TextParserTest {
 
     @Test
     public void getArgumentValues_TwoArgumentsWithSpaces_ArrayTwoLongAndArgNames() {
-        String[] argumentValues = new TextParser2()
+        String[] argumentValues = new TextParser()
                 .getRequest("getMonkey          bananas      ,      44    ")
                 .getArgumentValues();
         assertEquals(2, argumentValues.length);

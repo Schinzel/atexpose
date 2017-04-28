@@ -56,70 +56,70 @@ public class UrlParser_FileRequestsTest {
 
     @Test
     public void isFileRequest_HerokuHttpsFileRequest_True() {
-        boolean isFileRequest = new UrlParser2().getRequest(HTTP_HEADER_HEROKU_HTTPS).isFileRequest();
+        boolean isFileRequest = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTPS).isFileRequest();
         assertEquals(true, isFileRequest);
     }
 
 
     @Test
     public void fileName_HerokuHttpsFileRequestQueryString_NameOfFile() {
-        String fileName = new UrlParser2().getRequest(HTTP_HEADER_HEROKU_HTTPS).getFileName();
+        String fileName = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTPS).getFileName();
         assertEquals("index.html", fileName);
     }
 
 
     @Test
     public void getArgumentNames_HerokuHttpsGetFileRequestQueryString_EmptyArray() {
-        String[] argumentNames = new UrlParser2().getRequest(HTTP_HEADER_HEROKU_HTTPS).getArgumentNames();
+        String[] argumentNames = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTPS).getArgumentNames();
         assertEquals(0, argumentNames.length);
     }
 
 
     @Test
     public void getArgumentValues_HerokuHttpsGetFileRequestQueryString_EmptyArray() {
-        String[] argumentValues = new UrlParser2().getRequest(HTTP_HEADER_HEROKU_HTTPS).getArgumentValues();
+        String[] argumentValues = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTPS).getArgumentValues();
         assertEquals(0, argumentValues.length);
     }
 
 
     @Test
     public void fileName_HerokuHttpFileRequestQueryString_NameOfFile() {
-        String fileName = new UrlParser2().getRequest(HTTP_HEADER_HEROKU_HTTP).getFileName();
+        String fileName = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP).getFileName();
         assertEquals("index.html", fileName);
     }
 
 
     @Test
     public void getArgumentNames_HerokuHttpGetFileRequestQueryString_EmptyArray() {
-        String[] argumentNames = new UrlParser2().getRequest(HTTP_HEADER_HEROKU_HTTP).getArgumentNames();
+        String[] argumentNames = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP).getArgumentNames();
         assertEquals(0, argumentNames.length);
     }
 
 
     @Test
     public void getArgumentValues_HerokuHttpGetFileRequestQueryString_EmptyArray() {
-        String[] argumentValues = new UrlParser2().getRequest(HTTP_HEADER_HEROKU_HTTP).getArgumentValues();
+        String[] argumentValues = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP).getArgumentValues();
         assertEquals(0, argumentValues.length);
     }
 
 
     @Test
     public void fileName_HerokuHttpFileRequest_NameOfFile() {
-        String fileName = new UrlParser2().getRequest(HTTP_HEADER_HEROKU_HTTP_NO_QUERY).getFileName();
+        String fileName = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP_NO_QUERY).getFileName();
         assertEquals("index123.html", fileName);
     }
 
 
     @Test
     public void getArgumentNames_HerokuHttpGetFileRequest_ArgName() {
-        String[] argumentNames = new UrlParser2().getRequest(HTTP_HEADER_HEROKU_HTTP_NO_QUERY).getArgumentNames();
+        String[] argumentNames = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP_NO_QUERY).getArgumentNames();
         assertEquals(0, argumentNames.length);
     }
 
 
     @Test
     public void getArgumentValues_HerokuHttpGetFileRequest_ArgName() {
-        String[] argumentValues = new UrlParser2().getRequest(HTTP_HEADER_HEROKU_HTTP_NO_QUERY).getArgumentValues();
+        String[] argumentValues = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP_NO_QUERY).getArgumentValues();
         assertEquals(0, argumentValues.length);
     }
 }

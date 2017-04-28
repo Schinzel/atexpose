@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
  */
 @Builder
 @Accessors(prefix = "m")
-public class UrlParserWithGSuiteAuth extends UrlParser2 {
+public class UrlParserWithGSuiteAuth extends UrlParser {
     /** The name of the cookie that holds the authentication token. */
     @Getter(AccessLevel.PACKAGE)
     private final String mAuthCookieName;

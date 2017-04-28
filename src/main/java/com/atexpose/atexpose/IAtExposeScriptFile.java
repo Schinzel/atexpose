@@ -2,7 +2,7 @@ package com.atexpose.atexpose;
 
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.ScriptFileChannel;
-import com.atexpose.dispatcher.parser.TextParser2;
+import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 
 /**
@@ -22,7 +22,7 @@ public interface IAtExposeScriptFile<T extends IAtExpose<T>> extends IAtExpose<T
                 .name("ScriptFile")
                 .accessLevel(3)
                 .channel(new ScriptFileChannel(fileName))
-                .parser(new TextParser2())
+                .parser(new TextParser())
                 .wrapper(new CsvWrapper())
                 .noOfThreads(1)
                 .api(this.getAPI())

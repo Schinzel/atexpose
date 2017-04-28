@@ -73,21 +73,21 @@ public class UrlParser_GetRequestsTest {
 
     @Test
     public void getMethodName_Request_MethodName() {
-        String methodName = new UrlParser2().getRequest(GET_REQUEST_NORMAL).getMethodName();
+        String methodName = new UrlParser().getRequest(GET_REQUEST_NORMAL).getMethodName();
         assertEquals("getDataFromPM", methodName);
     }
 
 
     @Test
     public void getMethodName_LongMethodName_MethodName() {
-        String methodName = new UrlParser2().getRequest(GET_REQUEST_LONG_METHODNAME).getMethodName();
+        String methodName = new UrlParser().getRequest(GET_REQUEST_LONG_METHODNAME).getMethodName();
         assertEquals("abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz", methodName);
     }
 
 
     @Test
     public void getArgumentNames_TwoArguments_ArgNamesLengthAndNames() {
-        String[] argumentNames = new UrlParser2().getRequest(GET_REQUEST_NORMAL).getArgumentNames();
+        String[] argumentNames = new UrlParser().getRequest(GET_REQUEST_NORMAL).getArgumentNames();
         assertEquals(2, argumentNames.length);
         assertEquals("SSN", argumentNames[0]);
         assertEquals("Pin", argumentNames[1]);
@@ -96,7 +96,7 @@ public class UrlParser_GetRequestsTest {
 
     @Test
     public void getArgumentValues_TwoArguments_ArgValuesLengthAndStrings() {
-        String[] argumentValues = new UrlParser2().getRequest(GET_REQUEST_NORMAL).getArgumentValues();
+        String[] argumentValues = new UrlParser().getRequest(GET_REQUEST_NORMAL).getArgumentValues();
         assertEquals(2, argumentValues.length);
         assertEquals("197107282222", argumentValues[0]);
         assertEquals("88889", argumentValues[1]);
@@ -105,35 +105,35 @@ public class UrlParser_GetRequestsTest {
 
     @Test
     public void getMethodName_RequestWithQuestionMarkButNoVariable_MethodName() {
-        String methodName = new UrlParser2().getRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getMethodName();
+        String methodName = new UrlParser().getRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getMethodName();
         assertEquals("getDataFromPM", methodName);
     }
 
 
     @Test
     public void getArgNames_RequestWithQuestionMarkButNoVariable_EmptyArray() {
-        String[] argumentValues = new UrlParser2().getRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getArgumentNames();
+        String[] argumentValues = new UrlParser().getRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getArgumentNames();
         assertArrayEquals(EmptyObjects.EMPTY_STRING_ARRAY, argumentValues);
     }
 
 
     @Test
     public void getArgValues_RequestWithQuestionMarkButNoVariable_EmptyArray() {
-        String[] argumentValues = new UrlParser2().getRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getArgumentValues();
+        String[] argumentValues = new UrlParser().getRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getArgumentValues();
         assertArrayEquals(EmptyObjects.EMPTY_STRING_ARRAY, argumentValues);
     }
 
 
     @Test
     public void getMethodName_ShortMethodName_MethodName() {
-        String methodName = new UrlParser2().getRequest(GET_REQUEST_SHORT_METHODNAME).getMethodName();
+        String methodName = new UrlParser().getRequest(GET_REQUEST_SHORT_METHODNAME).getMethodName();
         assertEquals("a", methodName);
     }
 
 
     @Test
     public void getArgumentNames_OneVariable_OneElement() {
-        String[] argumentNames = new UrlParser2().getRequest(GET_REQUEST_ONE_VARIABLE).getArgumentNames();
+        String[] argumentNames = new UrlParser().getRequest(GET_REQUEST_ONE_VARIABLE).getArgumentNames();
         assertEquals(1, argumentNames.length);
         assertEquals("SSN", argumentNames[0]);
     }
@@ -141,7 +141,7 @@ public class UrlParser_GetRequestsTest {
 
     @Test
     public void getArgumentValues_OneVariable_OneElement() {
-        String[] argumentValues = new UrlParser2().getRequest(GET_REQUEST_ONE_VARIABLE).getArgumentValues();
+        String[] argumentValues = new UrlParser().getRequest(GET_REQUEST_ONE_VARIABLE).getArgumentValues();
         assertEquals(1, argumentValues.length);
         assertEquals("197107282222", argumentValues[0]);
     }
@@ -149,7 +149,7 @@ public class UrlParser_GetRequestsTest {
 
     @Test
     public void isFileRequest_MethodRequest_False() {
-        boolean isFileRequest = new UrlParser2().getRequest(GET_REQUEST_NORMAL).isFileRequest();
+        boolean isFileRequest = new UrlParser().getRequest(GET_REQUEST_NORMAL).isFileRequest();
         assertEquals(false, isFileRequest);
     }
 
