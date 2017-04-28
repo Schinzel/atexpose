@@ -59,7 +59,6 @@ public class UrlParser implements IParser {
                     .argumentNames(argNames)
                     .fileRequest(false)
                     .build();
-            // }
         }//else, is request for file
         else {
             mCallType = CallType.FILE;
