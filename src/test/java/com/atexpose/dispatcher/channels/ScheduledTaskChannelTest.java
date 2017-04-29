@@ -193,7 +193,7 @@ public class ScheduledTaskChannelTest {
         //Calc the time to do all iterations
         long executionTimeInMS = (System.nanoTime() - start) / 1000000;
         Assert.assertThat(executionTimeInMS, Matchers.lessThan(30l));
-        Assert.assertThat(executionTimeInMS, Matchers.greaterThan(20l));
+        Assert.assertThat(executionTimeInMS, Matchers.greaterThanOrEqualTo(20l));
 
     }
 
