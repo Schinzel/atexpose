@@ -117,6 +117,7 @@ public class WebChannel implements IChannel {
                 HttpRequest httpRequest = SocketRW.read(request, mClientSocket);
                 //Get direct response (empty string if there is no direct response)
                 String directResponse = this.getDirectResponse(httpRequest);
+                //If there was no direct response
                 if (!Checker.isEmpty(directResponse)) {
                     byte[] redirectAsByteArr = EncodingUtil.convertToByteArray(directResponse);
                     //Send the redirect instruction to client
