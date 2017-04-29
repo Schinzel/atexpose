@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.atexpose.util;
 
-import com.atexpose.dispatcher.wrapper.FunnyChars;
-import static org.junit.Assert.*;
-
-import org.junit.Test;
 import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.FunnyChars;
+import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  *

@@ -1,16 +1,15 @@
 package com.atexpose.dispatcher.logging;
 
 import com.atexpose.dispatcher.channels.IChannel;
-import com.atexpose.dispatcher.parser.AbstractParser;
-import com.atexpose.util.DateTimeStrings;
 import com.atexpose.dispatcher.logging.crypto.ICrypto;
+import com.atexpose.dispatcher.parser.Request;
+import com.atexpose.util.DateTimeStrings;
+import io.schinzel.basicutils.Checker;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import io.schinzel.basicutils.Checker;
 
 /**
  * The purpose of this class to hold the data wholly or partially end up in a
@@ -36,15 +35,14 @@ public class LogEntry {
      */
     private final String mThreadNumber;
     private final IChannel mChannel;
-    private final AbstractParser mRequestParser;
-    private String mRequest;
+    private String mDecodedIncomingRequest;
     private String mResponse;
+    private Request mRequest;
 
 
-    public LogEntry(int threadNumber, IChannel channel, AbstractParser requestParser) {
+    public LogEntry(int threadNumber, IChannel channel) {
         mThreadNumber = String.valueOf(threadNumber);
         mChannel = channel;
-        mRequestParser = requestParser;
     }
 
 
@@ -85,9 +83,9 @@ public class LogEntry {
      * @return A map with log data.
      */
     Map<LogKey, String> getLogData(ICrypto crypto) {
-        String request = crypto.encrypt(mRequest);
-        String[] argNames = mRequestParser.getArgumentNames();
-        String[] argValues = mRequestParser.getArgumentValues();
+        String request = crypto.encrypt(mDecodedIncomingRequest);
+        String[] argNames = mRequest.getArgumentNames();
+        String[] argValues = mRequest.getArgumentValues();
         //Encrypt argument values
         if (!Checker.isEmpty(argValues)) {
             for (int i = 0; i < argValues.length; i++) {
@@ -99,9 +97,9 @@ public class LogEntry {
             mTimeOfIncomingCall = Instant.now();
         }
         mLogValues.put(LogKey.CALL_TIME_UTC, DateTimeStrings.getDateTimeUTC(mTimeOfIncomingCall));
-        mLogValues.put(LogKey.METHOD_NAME, mRequestParser.getMethodName());
+        mLogValues.put(LogKey.METHOD_NAME, mRequest.getMethodName());
         mLogValues.put(LogKey.ARGUMENTS, arguments);
-        mLogValues.put(LogKey.FILENAME, mRequestParser.getFileName());
+        mLogValues.put(LogKey.FILENAME, mRequest.getFileName());
         mLogValues.put(LogKey.RESPONSE, mResponse);
         mLogValues.put(LogKey.THREAD, mThreadNumber);
         mLogValues.put(LogKey.READ_TIME_IN_MS, String.valueOf(mChannel.requestReadTime()));
@@ -119,9 +117,10 @@ public class LogEntry {
      * @param request  The incoming request.
      * @param response The response sent.
      */
-    public void setLogData(String request, String response) {
-        mRequest = request;
+    public void setLogData(String decodedIncomingRequest, String response, Request request) {
+        mDecodedIncomingRequest = decodedIncomingRequest;
         mResponse = response;
+        mRequest = request;
     }
 
 

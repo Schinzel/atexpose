@@ -5,7 +5,8 @@ import com.atexpose.api.MethodObject;
 import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.dispatcher.logging.LogEntry;
 import com.atexpose.dispatcher.logging.Logger;
-import com.atexpose.dispatcher.parser.AbstractParser;
+import com.atexpose.dispatcher.parser.IParser;
+import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
@@ -44,7 +45,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
     /** Receives incoming messages and sends wrapped responses. */
     private final IChannel mChannel;
     /** Parses the incoming messages. */
-    private final AbstractParser mParser;
+    private final IParser mParser;
     /** Wraps the responses to send. */
     private final IWrapper mWrapper;
     /**
@@ -74,7 +75,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
      * Sets up a dispatcher.
      */
     @Builder
-    private Dispatcher(String name, int noOfThreads, int accessLevel, IChannel channel, AbstractParser parser, IWrapper wrapper, API api) {
+    private Dispatcher(String name, int noOfThreads, int accessLevel, IChannel channel, IParser parser, IWrapper wrapper, API api) {
         mKey = name;
         Thrower.throwIfTooSmall(noOfThreads, "noOfThreads", 1);
         Thrower.throwIfEmpty(name, "name");
@@ -159,7 +160,8 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
         Object responseAsStrings;
         String wrappedResponse;
         byte[] wrappedResponseAsUtf8ByteArray;
-        LogEntry logEntry = new LogEntry(mThreadNumber, mChannel, mParser);
+        Request request = null;
+        LogEntry logEntry = new LogEntry(mThreadNumber, mChannel);
         while (true) {
             try {
                 if (!mChannel.getRequest(incomingRequest)) {
@@ -169,18 +171,18 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
                 // Get incoming request as string.
                 decodedIncomingRequest = incomingRequest.getAsString();
                 //Send the incoming request to the protocol for extracting method name and arguments
-                mParser.parseRequest(decodedIncomingRequest);
+                request = mParser.getRequest(decodedIncomingRequest);
                 //if is a file request
-                if (mParser.isFileRequest()) {
+                if (request.isFileRequest()) {
                     wrappedResponse = EmptyObjects.EMPTY_STRING;
-                    wrappedResponseAsUtf8ByteArray = mWrapper.wrapFile(mParser.getFileName());
+                    wrappedResponseAsUtf8ByteArray = mWrapper.wrapFile(request.getFileName());
                 } // Else must be a method call 
                 else {
-                    MethodObject methodObject = mAPI.getMethodObject(mParser.getMethodName());
+                    MethodObject methodObject = mAPI.getMethodObject(request.getMethodName());
                     // is the dispatcher authorized to access this method
                     checkAccessLevel(methodObject.getAccessLevelRequiredToUseThisMethod());
-                    responseAsObjects = methodObject.invoke(mParser.getArgumentValues(),
-                            mParser.getArgumentNames(), mAccessLevel);
+                    responseAsObjects = methodObject.invoke(request.getArgumentValues(),
+                            request.getArgumentNames(), mAccessLevel);
                     //If return type is Json
                     if (methodObject.getReturnDataType().isJson()) {
                         //Do json wrapping
@@ -200,11 +202,10 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
                 wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
             }
             mChannel.writeResponse(wrappedResponseAsUtf8ByteArray);
-            logEntry.setLogData(decodedIncomingRequest, wrappedResponse);
+            logEntry.setLogData(decodedIncomingRequest, wrappedResponse, request);
             this.log(logEntry);
             logEntry.cleanUpLogData();
             incomingRequest.clear();
-            mParser.clear();
         }
     }
 
