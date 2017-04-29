@@ -40,6 +40,8 @@ public class WebChannelTest {
         //And that the location is correct
         Assert.assertEquals("http://127.0.0.1:5555/bear.html", response.header("location"));
         webChannel.shutdown(Thread.currentThread());
+        //Snooze for tests to work on Travis
+        Sandman.snoozeMillis(10);
     }
 
 
@@ -81,10 +83,11 @@ public class WebChannelTest {
                 "Via: 1.1 vegur\r\n" +
                 "\r\n"
                 + "pong";
-
         webChannel.writeResponse(EncodingUtil.convertToByteArray(httpResponse));
         URI uri = new HttpRequest(byteStorage.getAsString()).getURI();
         Assert.assertEquals("http://127.0.0.1:5555/call/ping", uri.toString());
         webChannel.shutdown(Thread.currentThread());
+        //Snooze for tests to work on Travis
+        Sandman.snoozeMillis(10);
     }
 }
