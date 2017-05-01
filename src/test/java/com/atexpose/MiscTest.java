@@ -1,7 +1,6 @@
 package com.atexpose;
 
 import com.atexpose.errors.RuntimeError;
-import io.schinzel.basicutils.Sandman;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -52,7 +51,7 @@ public class MiscTest {
     @Test
     public void snooze_snooze20ms_shouldSnoozeBetween20And30ms() {
         long start = System.nanoTime();
-        Sandman.snoozeMillis(20);
+        new Misc().snooze(20);
         //Calc the time to do all iterations
         long executionTimeInMS = (System.nanoTime() - start) / 1000000;
         Assert.assertThat(executionTimeInMS, Matchers.lessThan(30l));
