@@ -34,8 +34,8 @@ import java.util.regex.Pattern;
 public class WebWrapper implements IWrapper {
     //Pattern for place holders for server side variables. Example <##=MY_VAR##>
     static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<##=([a-zA-Z1-9_]{3,25})##>");
-    //Pattern for include files. For example <##include.inc##> or <##header.html##>
-    private static final Pattern INCLUDE_FILE_PATTERN = Pattern.compile("<##([\\w,/]+\\.[A-Za-z]{2,4})##>");
+    //Pattern for include files. For example <!--#include file="header.html" -->
+    private static final Pattern INCLUDE_FILE_PATTERN = Pattern.compile("<!--#include file=\"([\\w,/]+\\.[A-Za-z]{2,4})\" -->");
     private static final String RESPONSE_HEADER_LINE_BREAK = "\r\n";
     /** The default to return if no page was specified. */
     private static final String DEFAULT_PAGE = "index.html";

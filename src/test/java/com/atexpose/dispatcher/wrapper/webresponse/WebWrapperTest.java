@@ -49,7 +49,7 @@ public class WebWrapperTest {
 
     @Test
     public void setServerIncludeFiles() {
-        String htmlPage = "<html><head><##inc1.inc##></head><body><##inc2.inc##><br></body></html>";
+        String htmlPage = "<html><head><!--#include file=\"inc1.inc\" --></head><body><!--#include file=\"inc2.inc\" --><br></body></html>";
         String expected = "<html><head>ThisIsIncludeFile1</head><body>ThisIsIncludeFile2<br></body></html>";
         byte[] htmlPageAsByteArr = EncodingUtil.convertToByteArray(htmlPage);
         byte[] resultAsByteArr = WebWrapper.setServerIncludeFiles(htmlPageAsByteArr, "includefiles/");
