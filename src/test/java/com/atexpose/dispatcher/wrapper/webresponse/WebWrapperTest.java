@@ -1,6 +1,7 @@
 package com.atexpose.dispatcher.wrapper.webresponse;
 
 import com.atexpose.util.EncodingUtil;
+import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.collections.Cache;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -10,6 +11,8 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 
 /**
@@ -19,7 +22,7 @@ public class WebWrapperTest {
 
     @Test
     public void testSetServerSideVariables() {
-        String htmlPage = "<html><head><##=VaRiAbLe##></head><body><##=variable##><br><##=VARIABLE##></body></html>";
+        String htmlPage = "<html><head><!--#echo var=\"VaRiAbLe\" --></head><body><!--#echo var=\"variable\" --><br><!--#echo var=\"VARIABLE\" --></body></html>";
         String expected = "<html><head>var1</head><body>var2<br>var3</body></html>";
         byte[] htmlPageAsByteArr = EncodingUtil.convertToByteArray(htmlPage);
         Map<String, String> ssv = new HashMap<>();
@@ -34,7 +37,7 @@ public class WebWrapperTest {
 
     @Test
     public void testSetServerSideVariables2() {
-        String htmlPage = "<##=first##><html><head></head><body><##=middle##></body></html><##=last##>";
+        String htmlPage = "<!--#echo var=\"first\" --><html><head></head><body><!--#echo var=\"middle\" --></body></html><!--#echo var=\"last\" -->";
         String expected = "var1<html><head></head><body>var3</body></html>var2";
         byte[] htmlPageAsByteArr = EncodingUtil.convertToByteArray(htmlPage);
         Map<String, String> ssv = new HashMap<>();
@@ -49,12 +52,49 @@ public class WebWrapperTest {
 
     @Test
     public void setServerIncludeFiles() {
-        String htmlPage = "<html><head><##inc1.inc##></head><body><##inc2.inc##><br></body></html>";
+        String htmlPage = "<html><head><!--#include file=\"inc1.inc\" --></head><body><!--#include file=\"inc2.inc\" --><br></body></html>";
         String expected = "<html><head>ThisIsIncludeFile1</head><body>ThisIsIncludeFile2<br></body></html>";
         byte[] htmlPageAsByteArr = EncodingUtil.convertToByteArray(htmlPage);
         byte[] resultAsByteArr = WebWrapper.setServerIncludeFiles(htmlPageAsByteArr, "includefiles/");
         String result = EncodingUtil.convertToString(resultAsByteArr);
         assertEquals(expected, result);
+    }
+
+
+    @Test
+    public void readFile_FileHasIncludeFiles_IncludeStringShouldBeReplacedWithFile() {
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(false)
+                .build();
+        byte[] file = webWrapper.wrapFile("with_includes.html");
+        String fileAsString = EncodingUtil.convertToString(file);
+        //The include file command should not be in read file
+        assertThat(fileAsString, not(containsString("<!--#include file=\"inc_file.inc\" -->")));
+        //The content of the include file should be in the read file
+        assertThat(fileAsString, containsString("<b>This is an include file</b>"));
+    }
+
+
+    @Test
+    public void readFile_FileHasServerSideVar_VaribleShouldBeReplacedWithValue(){
+        Map<String, String> serverSideVars = ImmutableMap.<String, String>builder()
+                .put("MY_VAR", "this_is_an_inserted_value")
+                .build();
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .serverSideVariables(serverSideVars)
+                .cacheFilesInRam(false)
+                .build();
+        byte[] file = webWrapper.wrapFile("with_server_side_var.html");
+        String fileAsString = EncodingUtil.convertToString(file);
+        //The server side variable reference should not be inte the file
+        assertThat(fileAsString, not(containsString("MY_VAR")));
+        //The value of the server side value should be in the file
+        assertThat(fileAsString, containsString("this_is_an_inserted_value"));
+
     }
 
 
