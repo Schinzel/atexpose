@@ -10,6 +10,8 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 
 /**
@@ -59,6 +61,21 @@ public class WebWrapperTest {
 
 
     @Test
+    public void readFile_FileHasIncludeFiles_IncludeStringShouldBeReplacedWithFile() {
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .cacheFilesInRam(false)
+                .build();
+        byte[] file = webWrapper.wrapFile("with_includes.html");
+        String fileAsString = EncodingUtil.convertToString(file);
+        //The include file command should not be in read file
+        assertThat(fileAsString, not(containsString("<!--#include file=\"inc_file.inc\" -->")));
+        //The content of the include file should be in the read file
+        assertThat(fileAsString, containsString("<b>This is an include file</b>"));
+    }
+
+        @Test
     public void testCache() {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
