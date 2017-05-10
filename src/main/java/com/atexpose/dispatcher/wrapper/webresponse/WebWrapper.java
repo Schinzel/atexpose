@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * <p>
  * Text files support two types of server side includes
  * 1) Files <!--#include file="header.html" -->
- * 2) Variables <!--#echo var="MY_VAR" -->
+ * 2) Variables <!--#echo var="my_var" -->
  * The format is according to SSI: https://en.wikipedia.org/wiki/Server_Side_Includes
  * First are files in included and after that the variables are inserted in the resulting file.
  *
@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
  */
 @Accessors(prefix = "m")
 public class WebWrapper implements IWrapper {
-    //Pattern for place holders for server side variables. Example: <!--#echo var="MY_VAR" -->
+    //Pattern for place holders for server side variables. Example: <!--#echo var="my_var" -->
     static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<!--#echo var=\"([a-zA-Z1-9_]{3,25})\" -->");
     //Pattern for include files. Example: <!--#include file="header.html" -->
     private static final Pattern INCLUDE_FILE_PATTERN = Pattern.compile("<!--#include file=\"([\\w,/]+\\.[A-Za-z]{2,4})\" -->");

@@ -68,7 +68,7 @@ public class WebWrapperTest {
                 .browserCacheMaxAge(10)
                 .cacheFilesInRam(false)
                 .build();
-        byte[] file = webWrapper.wrapFile("with_includes.html");
+        byte[] file = webWrapper.wrapFile("with_include_file.html");
         String fileAsString = EncodingUtil.convertToString(file);
         //The include file command should not be in read file
         assertThat(fileAsString, not(containsString("<!--#include file=\"inc_file.inc\" -->")));
