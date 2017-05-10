@@ -1,6 +1,7 @@
 package com.atexpose.dispatcher.wrapper.webresponse;
 
 import com.atexpose.util.EncodingUtil;
+import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.collections.Cache;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -75,7 +76,29 @@ public class WebWrapperTest {
         assertThat(fileAsString, containsString("<b>This is an include file</b>"));
     }
 
-        @Test
+
+    @Test
+    public void readFile_FileHasServerSideVar_VaribleShouldBeReplacedWithValue(){
+        Map<String, String> serverSideVars = ImmutableMap.<String, String>builder()
+                .put("MY_VAR", "this_is_an_inserted_value")
+                .build();
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .serverSideVariables(serverSideVars)
+                .cacheFilesInRam(false)
+                .build();
+        byte[] file = webWrapper.wrapFile("with_server_side_var.html");
+        String fileAsString = EncodingUtil.convertToString(file);
+        //The server side variable reference should not be inte the file
+        assertThat(fileAsString, not(containsString("MY_VAR")));
+        //The value of the server side value should be in the file
+        assertThat(fileAsString, containsString("this_is_an_inserted_value"));
+
+    }
+
+
+    @Test
     public void testCache() {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
