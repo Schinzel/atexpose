@@ -1,2 +1,1 @@
-#START#<##=var1##><##=var2##><##=var3##>#END#
-
+#START#<!--#echo var="var1" --><!--#echo var="var2" --><!--#echo var="var3" -->#END#

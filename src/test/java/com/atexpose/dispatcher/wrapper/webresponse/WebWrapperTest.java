@@ -78,7 +78,7 @@ public class WebWrapperTest {
 
 
     @Test
-    public void readFile_FileHasServerSideVar_VaribleShouldBeReplacedWithValue(){
+    public void readFile_FileHasServerSideVar_VaribleShouldBeReplacedWithValue() {
         Map<String, String> serverSideVars = ImmutableMap.<String, String>builder()
                 .put("MY_VAR", "this_is_an_inserted_value")
                 .build();
@@ -94,9 +94,30 @@ public class WebWrapperTest {
         assertThat(fileAsString, not(containsString("MY_VAR")));
         //The value of the server side value should be in the file
         assertThat(fileAsString, containsString("this_is_an_inserted_value"));
-
     }
 
+
+    @Test
+    public void readFile_FileHasIncludeFileWhichHasServerSideVars_TheServerSideVarsShouldBePresent() {
+        Map<String, String> serverSideVars = ImmutableMap.<String, String>builder()
+                .put("var1", "111")
+                .put("var2", "222")
+                .put("var3", "333")
+                .build();
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .browserCacheMaxAge(10)
+                .serverSideVariables(serverSideVars)
+                .cacheFilesInRam(false)
+                .build();
+        byte[] file = webWrapper.wrapFile("with_inc_file_which_has_vars.html");
+        String fileAsString = EncodingUtil.convertToString(file);
+        //The server side variable reference should not be inte the file
+        assertThat(fileAsString, not(containsString("<!--#include file=\"inc_with_include_vars.inc\" -->")));
+        //The value of the server side value should be in the file
+        assertThat(fileAsString, containsString("#START#111222333#END#"));
+    }
+    
 
     @Test
     public void testCache() {
