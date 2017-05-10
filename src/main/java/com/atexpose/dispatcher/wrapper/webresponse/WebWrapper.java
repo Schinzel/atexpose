@@ -25,8 +25,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This wrapper handles two types of responses: 1) JSON responses 2) file
- * responses (image, html, js and so on)
+ * This wrapper handles two types of responses:
+ * 1) JSON responses
+ * 2) file responses (image, html, js and so on)
+ * <p>
+ * The file responses are divided into two groups:
+ * 1) Text files. Examples: html and text.
+ * 2) Static files. Examples: jpg and pdf.
+ * <p>
+ * Text files support two types of server side includes
+ * 1) Files <!--#include file="header.html" -->
+ * 2) Variables <!--#echo var="MY_VAR" -->
+ * The format is according to SSI: https://en.wikipedia.org/wiki/Server_Side_Includes
+ * First are files in included and after that the variables are inserted in the resulting file.
  *
  * @author Schinzel
  */
