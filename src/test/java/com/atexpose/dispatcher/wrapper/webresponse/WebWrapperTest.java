@@ -21,7 +21,7 @@ public class WebWrapperTest {
 
     @Test
     public void testSetServerSideVariables() {
-        String htmlPage = "<html><head><##=VaRiAbLe##></head><body><##=variable##><br><##=VARIABLE##></body></html>";
+        String htmlPage = "<html><head><!--#echo var=\"VaRiAbLe\" --></head><body><!--#echo var=\"variable\" --><br><!--#echo var=\"VARIABLE\" --></body></html>";
         String expected = "<html><head>var1</head><body>var2<br>var3</body></html>";
         byte[] htmlPageAsByteArr = EncodingUtil.convertToByteArray(htmlPage);
         Map<String, String> ssv = new HashMap<>();
@@ -36,7 +36,7 @@ public class WebWrapperTest {
 
     @Test
     public void testSetServerSideVariables2() {
-        String htmlPage = "<##=first##><html><head></head><body><##=middle##></body></html><##=last##>";
+        String htmlPage = "<!--#echo var=\"first\" --><html><head></head><body><!--#echo var=\"middle\" --></body></html><!--#echo var=\"last\" -->";
         String expected = "var1<html><head></head><body>var3</body></html>var2";
         byte[] htmlPageAsByteArr = EncodingUtil.convertToByteArray(htmlPage);
         Map<String, String> ssv = new HashMap<>();

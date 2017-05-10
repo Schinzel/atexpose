@@ -32,9 +32,9 @@ import java.util.regex.Pattern;
  */
 @Accessors(prefix = "m")
 public class WebWrapper implements IWrapper {
-    //Pattern for place holders for server side variables. Example <##=MY_VAR##>
-    static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<##=([a-zA-Z1-9_]{3,25})##>");
-    //Pattern for include files. For example <!--#include file="header.html" -->
+    //Pattern for place holders for server side variables. Example: <!--#echo var="MY_VAR" -->
+    static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<!--#echo var=\"([a-zA-Z1-9_]{3,25})\" -->");
+    //Pattern for include files. Example: <!--#include file="header.html" -->
     private static final Pattern INCLUDE_FILE_PATTERN = Pattern.compile("<!--#include file=\"([\\w,/]+\\.[A-Za-z]{2,4})\" -->");
     private static final String RESPONSE_HEADER_LINE_BREAK = "\r\n";
     /** The default to return if no page was specified. */
@@ -262,7 +262,7 @@ public class WebWrapper implements IWrapper {
 
 
     /**
-     * Replaces all the server side variable placeholders <##BASE_HREF##> with
+     * Replaces all the server side variable placeholders <!--#echo var="MY_VAR" --> with
      * the server side variable value.
      *
      * @param fileContent
@@ -296,7 +296,7 @@ public class WebWrapper implements IWrapper {
 
 
     /**
-     * Replaces all include file placeholders <##MyIncludeFile.html##> with the
+     * Replaces all include file placeholders <!--#include file="header.html" --> with the
      * content of the include file.
      *
      * @param fileContent
