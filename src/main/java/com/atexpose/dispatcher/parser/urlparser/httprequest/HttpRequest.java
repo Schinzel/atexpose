@@ -9,6 +9,7 @@ import io.schinzel.basicutils.Thrower;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
 import java.net.URI;
@@ -203,7 +204,7 @@ public class HttpRequest {
         //Add a colon to header name
         headerName = headerName + ":";
         //Get the start pos of the header name
-        int startPosHeaderName = mHttpRequest.indexOf(headerName);
+        int startPosHeaderName = StringUtils.indexOfIgnoreCase(mHttpRequest, headerName);
         //If the header name was found and it was before the end of the header
         if (startPosHeaderName > -1 && startPosHeaderName < endOfRequestHeader) {
             //Get the end of the line after the header name
