@@ -17,8 +17,8 @@ class FileRedirect implements IRedirect {
 
 
     FileRedirect(String from, String to) {
-        Thrower.throwIfEmpty(from, "from");
-        Thrower.throwIfEmpty(to, "to");
+        Thrower.throwIfVarEmpty(from, "from");
+        Thrower.throwIfVarEmpty(to, "to");
         //Set from. Add "/" as first char if is missing
         this.from = (from.charAt(0) == '/') ? from : "/" + from;
         //Set to. Add "/" as first char if is missing

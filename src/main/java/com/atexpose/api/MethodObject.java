@@ -63,7 +63,7 @@ public class MethodObject implements IValueKey, IStateNode {
         this.mKey = methodName;
         mObject = theObject;
         mMethod = method;
-        Thrower.throwIfNull(mMethod, "Error in setting up method '" + theObject.getClass().getName() + "." + methodName + "'. Class not found.");
+        Thrower.throwIfVarNull(mMethod, "Error in setting up method '" + theObject.getClass().getName() + "." + methodName + "'. Class not found.");
         mDescription = description;
         mMethod.setAccessible(true);
         mReturnDataType = returnDataType;

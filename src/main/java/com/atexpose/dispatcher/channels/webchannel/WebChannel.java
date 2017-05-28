@@ -50,8 +50,8 @@ public class WebChannel implements IChannel {
     @Builder
     WebChannel(int port, int timeout, Redirects redirects) {
         this(getServerSocket(port), redirects, timeout);
-        Thrower.throwIfOutsideRange(port, "port", 1, 65535);
-        Thrower.throwIfOutsideRange(timeout, "timeout", 50, 30000);
+        Thrower.throwIfVarOutsideRange(port, "port", 1, 65535);
+        Thrower.throwIfVarOutsideRange(timeout, "timeout", 50, 30000);
     }
 
 

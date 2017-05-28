@@ -4,7 +4,7 @@ import com.atexpose.errors.RuntimeError;
 import com.google.common.base.Splitter;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
-import io.schinzel.basicutils.substringer.SubStringer;
+import io.schinzel.basicutils.substring.SubString;
 import io.schinzel.basicutils.Thrower;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -43,7 +43,7 @@ public class HttpRequest {
      * @param httpRequest A whole http request
      */
     public HttpRequest(String httpRequest) {
-        Thrower.throwIfNull(httpRequest, "httpRequest");
+        Thrower.throwIfVarNull(httpRequest, "httpRequest");
         mHttpRequest = httpRequest;
         mGhostCall = (httpRequest.length() == 1);
         mHttpMethod = this.isGhostCall()
@@ -85,20 +85,20 @@ public class HttpRequest {
         //Get host
         String host = this.getRequestHeaderValue("Host");
         //Get path and query
-        SubStringer pathAndQuery = SubStringer.create(mHttpRequest)
+        String pathAndQuery = SubString.create(mHttpRequest)
                 .startDelimiter("GET ")
                 .endDelimiter(" HTTP/1.1")
-                .getSubStringer();
+                .getString();
         //Get the path. If there is a "?" in the string
         String path = pathAndQuery.contains("?")
                 //get everything before the "?"
-                ? pathAndQuery.endDelimiter("?").toString()
+                ? SubString.create(pathAndQuery).endDelimiter("?").getString()
                 //else, get the whole string
-                : pathAndQuery.toString();
-        //Get the querystring. If there is a "?" in the string
+                : pathAndQuery;
+        //Get the query string. If there is a "?" in the string
         String query = pathAndQuery.contains("?")
                 //Get everything after the "?"
-                ? pathAndQuery.startDelimiter("?").toString()
+                ? SubString.create(pathAndQuery).startDelimiter("?").getString()
                 //else, get empty string
                 : null;
         return new URIBuilder()

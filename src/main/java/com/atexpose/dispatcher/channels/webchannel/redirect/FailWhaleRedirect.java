@@ -16,7 +16,7 @@ class FailWhaleRedirect implements IRedirect {
 
 
     FailWhaleRedirect(String to) {
-        Thrower.throwIfEmpty(to, "to");
+        Thrower.throwIfVarEmpty(to, "to");
         //Set to. Add "/" as first char if is missing
         this.to = (to.charAt(0) == '/') ? to : "/" + to;
     }

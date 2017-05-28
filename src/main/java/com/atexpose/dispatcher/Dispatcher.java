@@ -77,9 +77,9 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
     @Builder
     private Dispatcher(String name, int noOfThreads, int accessLevel, IChannel channel, IParser parser, IWrapper wrapper, API api) {
         mKey = name;
-        Thrower.throwIfTooSmall(noOfThreads, "noOfThreads", 1);
-        Thrower.throwIfEmpty(name, "name");
-        Thrower.throwIfOutsideRange(accessLevel, "accessLevel", 1, 3);
+        Thrower.throwIfVarTooSmall(noOfThreads, "noOfThreads", 1);
+        Thrower.throwIfVarEmpty(name, "name");
+        Thrower.throwIfVarOutsideRange(accessLevel, "accessLevel", 1, 3);
         mThreadNumber = noOfThreads;
         mAccessLevel = accessLevel;
         mChannel = channel;

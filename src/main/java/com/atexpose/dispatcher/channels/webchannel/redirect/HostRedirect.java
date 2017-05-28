@@ -17,8 +17,8 @@ class HostRedirect implements IRedirect {
 
 
     HostRedirect(String from, String to) {
-        Thrower.throwIfEmpty(from, "from");
-        Thrower.throwIfEmpty(to, "to");
+        Thrower.throwIfVarEmpty(from, "from");
+        Thrower.throwIfVarEmpty(to, "to");
         this.from = from;
         this.to = to;
     }
