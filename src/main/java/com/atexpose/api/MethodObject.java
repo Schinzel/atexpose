@@ -37,8 +37,8 @@ public class MethodObject implements IValueKey, IStateNode {
     private final Object mObject;
     //The method that this object defines
     private final Method mMethod;
-    //Holds a description of the method. Each element in array is a paragraph.
-    private final String[] mDescriptionParagraphs;
+    //Holds a description of the method.
+    private final String mDescription;
     //How many of the arguments are required.
     private final int mNoOfRequiredArguments;
     //Holds the arguments of this object.
@@ -56,7 +56,7 @@ public class MethodObject implements IValueKey, IStateNode {
 
 
     @Builder
-    private MethodObject(Object theObject, Method method, String[] description, int noOfRequiredArguments,
+    private MethodObject(Object theObject, Method method, String description, int noOfRequiredArguments,
                          List<Argument> arguments, int accessLevel, List<Label> labels,
                          AbstractDataType returnDataType, List<Alias> aliases, boolean requireAuthentication) {
         String methodName = method.getName();
@@ -64,7 +64,7 @@ public class MethodObject implements IValueKey, IStateNode {
         mObject = theObject;
         mMethod = method;
         Thrower.throwIfNull(mMethod, "Error in setting up method '" + theObject.getClass().getName() + "." + methodName + "'. Class not found.");
-        mDescriptionParagraphs = description;
+        mDescription = description;
         mMethod.setAccessible(true);
         mReturnDataType = returnDataType;
         mNoOfRequiredArguments = noOfRequiredArguments;
@@ -289,7 +289,6 @@ public class MethodObject implements IValueKey, IStateNode {
             }
         }
         str.a(")");
-        StringBuilder sbReturn = new StringBuilder();
         return str.getString();
     }
 
@@ -298,12 +297,13 @@ public class MethodObject implements IValueKey, IStateNode {
     public State getState() {
         return State.getBuilder()
                 .add("Name", this.getKey())
-                .add("Class", mObject.getClass().getSimpleName())
                 .add("Return", mReturnDataType.getKey())
+                .add("Description", mDescription)
                 .add("AccessLevelRequired", this.getAccessLevelRequiredToUseThisMethod())
                 .add("RequiredArgumentsCount", mNoOfRequiredArguments)
-                .addChildren("Labels", mLabels)
+                .add("JavaClass", mObject.getClass().getCanonicalName())
                 .addChildren("Arguments", mArguments)
+                .addChildren("Labels", mLabels)
                 .build();
     }
 

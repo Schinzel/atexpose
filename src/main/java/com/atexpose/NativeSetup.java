@@ -26,7 +26,7 @@ class NativeSetup {
                 .addLabel("Util", "Misc util methods.")
                 .addLabel("AtExpose", "Administrating @Expose.")
                 .addLabel("ScheduledTasks", "Scheduled tasks")
-                .addLabel("Misc", "Misc mMethods")
+                .addLabel("Misc", "Misc methods")
                 .addLabel("Logs", "Logs");
     }
 

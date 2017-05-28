@@ -24,7 +24,7 @@ class Help {
     @Expose(
             arguments = {"SearchString", "Options"},
             requiredAccessLevel = 3,
-            description = {"Returns help on the argument method.", "Wildcards \"*\" can be used."},
+            description = "Returns help on the argument method. Wildcards \"*\" can be used.",
             labels = {"API"}
     )
     public String help(String searchString, String options) {

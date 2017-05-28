@@ -41,7 +41,7 @@ class ExposedAtExpose {
             arguments = {"FileName"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 1,
-            description = {"Reads and executes the argument script file.", "Useful for setting up settings, scheduled tasks and so on."},
+            description = "Reads and executes the argument script file. Useful for setting up settings, scheduled tasks and so on.",
             labels = {"@Expose", "AtExpose"}
     )
     public String loadScriptFile(String fileName) {
@@ -53,7 +53,7 @@ class ExposedAtExpose {
     @Expose(
             arguments = {"Port", "WebServerDir"},
             requiredAccessLevel = 3,
-            description = {"Starts a web server."},
+            description = "Starts a web server.",
             labels = {"@Expose", "AtExpose"}
     )
     public String startWebServer(int port, String dir) {
@@ -69,7 +69,7 @@ class ExposedAtExpose {
             arguments = {"Username", "Password"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 2,
-            description = {"Sets the SMTP server to user for outgoing mails."},
+            description = "Sets the SMTP server to user for outgoing mails.",
             labels = {"@Expose", "AtExpose"}
     )
     public String setSMTPServerGmail(String username, String password) {
@@ -80,7 +80,7 @@ class ExposedAtExpose {
 
     @Expose(
             requiredAccessLevel = 3,
-            description = {"Set usage of Mock SMTP server, i.e. do not send any real e-mail."},
+            description = "Set usage of Mock SMTP server, i.e. do not send any real e-mail.",
             labels = {"@Expose", "AtExpose"}
     )
     public String setMockSMTPServer() {
@@ -93,10 +93,10 @@ class ExposedAtExpose {
             arguments = {"TaskName", "Request", "TimeOfDay", "Recipient", "FromName"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 4,
-            description = {"Performs a task every day at the stated time of day.",
-                    "The time stated is in UTC.",
-                    "Scheduled reports are close relatives of scheduled tasks with the difference that the result of operations are sent as mail."
-                            + "Reports are given an event logger with default logger and format."},
+            description = "Performs a task every day at the stated time of day. " +
+                    "The time stated is in UTC. " +
+                    "Scheduled reports are close relatives of scheduled tasks with the difference that the result of operations are sent as mail. " +
+                    "Reports are given an event logger with default logger and format.",
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
     public String addScheduledReport(String taskName, String request, String timeOfDay, String recipient, String fromName) {
@@ -109,9 +109,9 @@ class ExposedAtExpose {
             arguments = {"TaskName", "Request", "TimeOfDay"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 3,
-            description = {"Performs a task every day at the stated time of day.",
-                    "The time stated is in UTC.",
-                    "Tasks are given an event logger with default logger and format."},
+            description = "Performs a task every day at the stated time of day. " +
+                    "The time stated is in UTC. " +
+                    "Tasks are given an event logger with default logger and format. ",
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
     public String addDailyTask(String taskName, String request, String timeOfDay) {
@@ -124,10 +124,10 @@ class ExposedAtExpose {
             arguments = {"TaskName", "Request", "Minutes"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 3,
-            description = {"Adds a scheduled a task that will run every stated number of minutes.",
-                    "The first time the task will run at the stated number minutes after the task was added.",
-                    "The after the first time, the task will run the stated number of minutes after the execution of the previous task was finished.",
-                    "Tasks are given an event logger with default logger and format."},
+            description = "Adds a scheduled a task that will run every stated number of minutes. " +
+                    "The first time the task will run at the stated number minutes after the task was added. " +
+                    "The after the first time, the task will run the stated number of minutes after the execution of the previous task was finished. " +
+                    "Tasks are given an event logger with default logger and format.",
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
     public String addTask(String taskName, String request, int minutes) {
@@ -139,9 +139,9 @@ class ExposedAtExpose {
     @Expose(
             arguments = {"TaskName", "Request", "TimeOfDay", "DayOfMonth"},
             requiredAccessLevel = 3,
-            description = {"Adds a scheduled a task that will run monthly at the stated time of day at the stated day of month",
-                    "The time stated is in UTC.",
-                    "Tasks are given an event logger with default logger and format."},
+            description = "Adds a scheduled a task that will run monthly at the stated time of day at the stated day of month " +
+                    "The time stated is in UTC. " +
+                    "Tasks are given an event logger with default logger and format.",
             requiredArgumentCount = 4,
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
@@ -155,7 +155,7 @@ class ExposedAtExpose {
             arguments = {"TaskName"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 1,
-            description = {"Removes the argument scheduled task."},
+            description = "Removes the argument scheduled task.",
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
     public String removeTask(String taskName) {
@@ -167,7 +167,7 @@ class ExposedAtExpose {
     @Expose(
             arguments = {"DispatcherName", "LogWriter", "LogFormatter", "CryptoKey"},
             requiredAccessLevel = 3,
-            description = {"Adds an event logger to a dispatcher."},
+            description = "Adds an event logger to a dispatcher.",
             labels = {"@Expose", "AtExpose", "Logs"},
             requiredArgumentCount = 1
     )
@@ -179,7 +179,7 @@ class ExposedAtExpose {
     @Expose(
             arguments = {"DispatcherName", "LogWriter", "LogFormatter", "CryptoKey"},
             requiredAccessLevel = 3,
-            description = {"Adds an error logger to a dispatcher."},
+            description = "Adds an error logger to a dispatcher.",
             labels = {"@Expose", "AtExpose", "Logs"},
             requiredArgumentCount = 1
     )
@@ -206,7 +206,7 @@ class ExposedAtExpose {
     @Expose(
             arguments = {"DispatcherName"},
             requiredAccessLevel = 3,
-            description = {"Removes all loggers from a dispatcher."},
+            description = "Removes all loggers from a dispatcher.",
             labels = {"@Expose", "AtExpose", "Logs"},
             requiredArgumentCount = 1
     )
@@ -217,7 +217,7 @@ class ExposedAtExpose {
 
 
     @Expose(
-            description = {"Shuts down the system"},
+            description = "Shuts down the system",
             requiredAccessLevel = 3,
             aliases = {"close", "bye", "exit"},
             labels = {"@Expose"}
@@ -231,7 +231,7 @@ class ExposedAtExpose {
     @Expose(
             arguments = {"DispatcherName"},
             requiredAccessLevel = 3,
-            description = {"Closes the argument dispatcher."},
+            description = "Closes the argument dispatcher.",
             labels = {"@Expose", "AtExpose"}
     )
     public String closeDispatcher(String name) {
@@ -241,7 +241,7 @@ class ExposedAtExpose {
 
 
     @Expose(
-            description = {"Returns the API."},
+            description = "Returns the API.",
             requiredAccessLevel = 2,
             labels = {"@Expose"}
     )
@@ -251,7 +251,7 @@ class ExposedAtExpose {
 
 
     @Expose(
-            description = {"Returns the current @Expose state."},
+            description = "Returns the current @Expose state.",
             requiredAccessLevel = 2,
             labels = {"@Expose"}
     )
