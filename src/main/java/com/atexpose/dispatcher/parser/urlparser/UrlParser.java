@@ -7,7 +7,7 @@ import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.state.State;
-import io.schinzel.basicutils.substringer.SubStringer;
+import io.schinzel.basicutils.substring.SubString;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -18,7 +18,7 @@ import java.util.Map;
  * The purpose of this class is to parse a request in the http format. Both post
  * and get is supported. It the whole request including the header.
  * <p>
- * Created by schinzel on 2017-04-25.
+ * Created by Schinzel on 2017-04-25.
  */
 @Accessors(prefix = "m")
 public class UrlParser implements IParser {
@@ -63,7 +63,7 @@ public class UrlParser implements IParser {
         else {
             mCallType = CallType.FILE;
             //Get the part of the url before ?, if any
-            url = SubStringer.create(url).endDelimiter("?").toString();
+            url = SubString.create(url).endDelimiter("?").getString();
             return Request.builder()
                     .fileRequest(true)
                     .fileName(url)

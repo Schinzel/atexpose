@@ -62,7 +62,7 @@ public class ScheduledTaskChannel implements IChannel {
      */
     public ScheduledTaskChannel(String taskName, String request, int intervalInMinutes) {
         this(taskName, request, ChronoUnit.MINUTES, intervalInMinutes, TIME_OF_DAY_NOT_SET, DAY_OF_MONTH_NOT_SET);
-        Thrower.throwIfOutsideRange(intervalInMinutes, "Mintues", 1, 1440);
+        Thrower.throwIfVarOutsideRange(intervalInMinutes, "Mintues", 1, 1440);
         //Set start time to be one interval in the future
         mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(mIntervalAmount);
     }

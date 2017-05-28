@@ -89,7 +89,7 @@ public class WebWrapper implements IWrapper {
         mServerSideVariables = (serverSideVariables != null)
                 ? serverSideVariables
                 : EmptyObjects.EMPTY_MAP;
-        Thrower.throwIfOutsideRange(browserCacheMaxAge, "browserCacheMaxAge", 0, 604800);
+        Thrower.throwIfVarOutsideRange(browserCacheMaxAge, "browserCacheMaxAge", 0, 604800);
         mResponseHeaders = (responseHeaders != null)
                 ? responseHeaders
                 : EmptyObjects.EMPTY_MAP;

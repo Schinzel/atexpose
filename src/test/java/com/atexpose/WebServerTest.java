@@ -26,6 +26,7 @@ public class WebServerTest {
 
     @Before
     public void before() {
+        Sandman.snoozeMillis(10);
         mAtExpose = AtExpose.create();
         mAtExpose.getWebServerBuilder()
                 .numberOfThreads(5)
