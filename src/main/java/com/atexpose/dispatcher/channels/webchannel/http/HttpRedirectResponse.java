@@ -5,8 +5,6 @@ import io.schinzel.basicutils.str.Str;
 
 import java.net.URI;
 
-import static io.schinzel.basicutils.str.Str.WS;
-
 /**
  * The purpose of this class is to handle redirects from http to https.
  * <p>
@@ -22,11 +20,12 @@ public class HttpRedirectResponse {
      * @return A response header to send to the client.
      */
     public static String getHeader(URI uri) {
-        return Str.create().a("HTTP/1.1 302").aws(WS.CR_LF)
-                .a("Server: ").a(PropertiesDispatcher.RESP_HEADER_SERVER_NAME).aws(WS.CR_LF)
-                .a("Content-Length: ").a("0").aws(WS.CR_LF)
-                .a("Location: ").a(uri.toString()).aws(WS.CR_LF)
-                .aws(WS.CR_LF)
+        return Str.create()
+                .acrlf("HTTP/1.1 302")
+                .a("Server: ").acrlf(PropertiesDispatcher.RESP_HEADER_SERVER_NAME)
+                .a("Content-Length: ").acrlf("0")
+                .a("Location: ").acrlf(uri.toString())
+                .acrlf()
                 .toString();
     }
 }

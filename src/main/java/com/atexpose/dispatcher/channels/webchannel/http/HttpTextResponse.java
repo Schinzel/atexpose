@@ -4,8 +4,6 @@ import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.str.Str;
 
-import static io.schinzel.basicutils.str.Str.WS;
-
 /**
  * The purpose of this class
  * <p>
@@ -20,12 +18,12 @@ public class HttpTextResponse {
     public static String wrap(String message) {
         int returnLength = EncodingUtil.convertToByteArray(message).length;
         return Str.create()
-                .a("HTTP/1.1 200 OK").aws(WS.CR_LF)
-                .a("Server: ").a(PropertiesDispatcher.RESP_HEADER_SERVER_NAME).aws(WS.CR_LF)
-                .a("Content-Length: ").a(returnLength).aws(WS.CR_LF)
-                .a("Content-Type: text/html; charset=UTF-8").aws(WS.CR_LF)
-                .a("Cache-Control: max-age=0").aws(WS.CR_LF)
-                .aws(WS.CR_LF)
+                .acrlf("HTTP/1.1 200 OK")
+                .a("Server: ").acrlf(PropertiesDispatcher.RESP_HEADER_SERVER_NAME)
+                .a("Content-Length: ").acrlf(String.valueOf(returnLength))
+                .acrlf("Content-Type: text/html; charset=UTF-8")
+                .acrlf("Cache-Control: max-age=0")
+                .acrlf()
                 .a(message)
                 .toString();
     }
