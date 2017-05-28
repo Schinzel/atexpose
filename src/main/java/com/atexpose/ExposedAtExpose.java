@@ -14,7 +14,8 @@ import lombok.experimental.Accessors;
 import org.json.JSONObject;
 
 /**
- * The purpose of this class is to expose @Expose and allow string returns that contain status of the operation
+ * The purpose of this class is to expose @Expose and allow string returns that contain status of
+ * the operation
  * messages.
  * <p>
  * Created by schinzel on 2017-04-16.
@@ -240,23 +241,22 @@ class ExposedAtExpose {
 
 
     @Expose(
-            description = {"Returns the current state of this instance as json."},
+            description = {"Returns the API."},
             requiredAccessLevel = 2,
             labels = {"@Expose"}
     )
-    public JSONObject apiAsJson() {
+    public JSONObject api() {
         return this.getAtExpose().getAPI().getState().getJson();
     }
 
 
     @Expose(
-            description = {"Returns the current state of this instance."},
+            description = {"Returns the current @Expose state."},
             requiredAccessLevel = 2,
             labels = {"@Expose"}
     )
-    public String api() {
-        return this.getAtExpose().getAPI().getState().getString();
+    public JSONObject status() {
+        return this.getAtExpose().getState().getJson();
     }
-
 
 }

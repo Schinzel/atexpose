@@ -298,6 +298,7 @@ public class MethodObject implements IValueKey, IStateNode {
     public State getState() {
         return State.getBuilder()
                 .add("Name", this.getKey())
+                .add("Class", mObject.getClass().getSimpleName())
                 .add("Return", mReturnDataType.getKey())
                 .add("AccessLevelRequired", this.getAccessLevelRequiredToUseThisMethod())
                 .add("RequiredArgumentsCount", mNoOfRequiredArguments)
