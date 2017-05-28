@@ -6,11 +6,13 @@ import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.util.ArrayUtil;
 import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
+import com.google.common.base.Joiner;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.collections.Cache;
 import io.schinzel.basicutils.state.State;
+import io.schinzel.basicutils.str.Str;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -350,31 +352,21 @@ public class WebWrapper implements IWrapper {
      * @return A response header for the argument filename and content length
      */
     private String getResponseHeader(String filename, int contentLength, HTTPStatusCode HTTPStatusCode, ReturnType contentType) {
-        String statusCode = HTTPStatusCode.mCode;
-        StringBuilder sb = new StringBuilder()
-                .append("HTTP/1.1 ").append(statusCode).append(RESPONSE_HEADER_LINE_BREAK)
-                .append("Server: ").append(PropertiesDispatcher.RESP_HEADER_SERVER_NAME).append(RESPONSE_HEADER_LINE_BREAK)
-                .append("Content-Length: ").append(contentLength).append(RESPONSE_HEADER_LINE_BREAK)
-                .append("Content-Type: ").append(getResponseHeaderContentType(filename, contentType)).append(RESPONSE_HEADER_LINE_BREAK);
+        Str str = Str.create()
+                .a("HTTP/1.1 ").acrlf(HTTPStatusCode.mCode)
+                .a("Server: ").acrlf(PropertiesDispatcher.RESP_HEADER_SERVER_NAME)
+                .a("Content-Length: ").acrlf(String.valueOf(contentLength))
+                .a("Content-Type: ").acrlf(getResponseHeaderContentType(filename, contentType));
         //If there are any response headers to attach
         if (!mResponseHeaders.isEmpty()) {
-            //Go through all response headers
-            for (Map.Entry<String, String> entry : mResponseHeaders.entrySet()) {
-                String headerKey = entry.getKey();
-                String headerVal = entry.getValue();
-                sb.append(headerKey).append(": ").append(headerVal)
-                        .append(RESPONSE_HEADER_LINE_BREAK);
-            }
+            //Add the response headers
+            str.acrlf(Joiner.on("\r\n").withKeyValueSeparator(": ").join(mResponseHeaders));
         }
-        int cacheMaxAgeInSeconds = mBrowserCacheMaxAge;
-        //If there was no filename, i.e. is a method call
-        if (Checker.isEmpty(filename)) {
-            //Set the cache to zero seconds
-            cacheMaxAgeInSeconds = 0;
-        }
-        sb.append("Cache-Control: ").append("max-age=").append(cacheMaxAgeInSeconds).append(RESPONSE_HEADER_LINE_BREAK)
-                .append(RESPONSE_HEADER_LINE_BREAK);
-        return sb.toString();
+        //If there was no filename, i.e. is a method call Set the cache to zero seconds
+        int cacheMaxAgeInSeconds = Checker.isEmpty(filename) ? 0 : mBrowserCacheMaxAge;
+        return str.a("Cache-Control: ").a("max-age=")
+                .acrlf(String.valueOf(cacheMaxAgeInSeconds))
+                .acrlf().toString();
     }
 
 
