@@ -230,11 +230,8 @@ public class MethodObject implements IValueKey, IStateNode {
      * Return the position of a single argument name.
      */
     private int getArgumentPosition(String argumentName) {
-        Integer arg_position = mArgumentPositions.get(argumentName);
-        if (arg_position == null) {
-            throw new RuntimeError("Unknown argument name: '" + argumentName + "'.");
-        }
-        return arg_position;
+        Thrower.throwIfTrue(mArgumentPositions.containsKey(argumentName), "No such argument named '" + argumentName + "' in method " + this.getKey());
+        return mArgumentPositions.get(argumentName);
     }
 
 
