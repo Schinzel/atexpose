@@ -230,7 +230,7 @@ public class MethodObject implements IValueKey, IStateNode {
      * Return the position of a single argument name.
      */
     private int getArgumentPosition(String argumentName) {
-        Thrower.throwIfTrue(mArgumentPositions.containsKey(argumentName), "No such argument named '" + argumentName + "' in method " + this.getKey());
+        Thrower.throwIfFalse(mArgumentPositions.containsKey(argumentName), "No such argument named '" + argumentName + "' in method " + this.getKey());
         return mArgumentPositions.get(argumentName);
     }
 
@@ -239,7 +239,7 @@ public class MethodObject implements IValueKey, IStateNode {
      * Returns a copy if the default values.
      */
     private Object[] getCopyOfArgumentDefaultValues() {
-        if (mArguments == null || mArguments.isEmpty()) {
+        if (Checker.isEmpty(mArguments)) {
             return EmptyObjects.EMPTY_OBJECT_ARRAY;
         } else {
             Object[] returnObjects;
