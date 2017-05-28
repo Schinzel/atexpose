@@ -1,6 +1,6 @@
 # @Expose
 
-The goal of @Expose is that @Expose should be the fastest way to get a web server up and running that can 
+The goal of @Expose is that it should be the fastest way to get a web server up and running that can 
 serve static file content such as HTML-files and handle proprietary Ajax requests. 
 
 Put differently: It should be the web server that distracts you the least from solving the actual problem you are working on.
