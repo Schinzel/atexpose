@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(value = ElementType.METHOD)
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface Expose {
-    String[] description() default {"No description available"};
+    String description() default "No description available";
 
 
     int requiredArgumentCount() default 0;

@@ -18,7 +18,7 @@ public class Misc {
      */
     @Expose(
             arguments = {"String"},
-            description = {"Returns the argument string.", "Util method for testing."},
+            description = "Returns the argument string. Util method for testing.",
             labels = {"@Expose", "Util"},
             requiredArgumentCount = 1
     )
@@ -28,7 +28,7 @@ public class Misc {
 
 
     @Expose(
-            description = {"Simply returns the string \"pong\".", "Util method for testing."},
+            description = "Simply returns the string \"pong\". Util method for testing.",
             labels = {"@Expose", "Util"}
     )
     public String ping() {
@@ -37,7 +37,7 @@ public class Misc {
 
 
     @Expose(
-            description = {"Returns the current server time."},
+            description = "Returns the current server time.",
             labels = {"@Expose", "Util"}
     )
     public String time() {
@@ -49,7 +49,7 @@ public class Misc {
             requiredAccessLevel = 3,
             requiredArgumentCount = 1,
             arguments = {"Int"},
-            description = {"Put the invoking thread to sleep for the argument amount of milliseconds."},
+            description = "Put the invoking thread to sleep for the argument amount of milliseconds.",
             labels = {"@Expose", "Util"}
     )
     public String snooze(int timeInMilliseconds) {
@@ -59,7 +59,7 @@ public class Misc {
 
 
     @Expose(
-            description = {"Throws an error. Useful for testing."},
+            description = "Throws an error. Useful for testing.",
             requiredAccessLevel = 3,
             labels = {"@Expose", "Util"}
     )
