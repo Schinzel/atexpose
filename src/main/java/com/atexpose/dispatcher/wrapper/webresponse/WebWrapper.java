@@ -43,9 +43,9 @@ import java.util.regex.Pattern;
  */
 @Accessors(prefix = "m")
 public class WebWrapper implements IWrapper {
-    //Pattern for place holders for server side variables. Example: <!--#echo var="my_var" -->
+    //Pattern for server side variables. Example: <!--#echo var="my_var" -->
     static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<!--#echo var=\"([a-zA-Z1-9_]{3,25})\" -->");
-    //Pattern for include files. Example: <!--#include file="header.html" -->
+    //Pattern for server side include files. Example: <!--#include file="header.html" -->
     private static final Pattern INCLUDE_FILE_PATTERN = Pattern.compile("<!--#include file=\"([\\w,/]+\\.[A-Za-z]{2,4})\" -->");
     private static final String RESPONSE_HEADER_LINE_BREAK = "\r\n";
     /** The default to return if no page was specified. */
@@ -116,13 +116,9 @@ public class WebWrapper implements IWrapper {
     @Override
     public byte[] wrapFile(String requestedFile) {
         String filename = this.getActualFilename(requestedFile);
-        byte[] fileHeaderAndContent;
-        if (isTextFile(filename)) {
-            fileHeaderAndContent = this.getTextFileHeaderAndContent(filename);
-        } else {
-            fileHeaderAndContent = this.getStaticFileHeaderAndContent(filename);
-        }
-        return fileHeaderAndContent;
+        return isTextFile(filename)
+                ? this.getTextFileHeaderAndContent(filename)
+                : this.getStaticFileHeaderAndContent(filename);
     }
 
 
