@@ -18,8 +18,9 @@ public class HttpHeader {
     @Getter
     private final Str header;
 
+
     @Builder
-    HttpHeader(HttpStatusCode httpStatusCode, Map<String, String> customResponseHeaders, int browserCacheMaxAgeInSeconds, ContentType contentType, int contentLength) {
+    HttpHeader(HttpStatusCode httpStatusCode, Map<String, String> customResponseHeaders, ContentType contentType, int browserCacheMaxAgeInSeconds, int contentLength) {
         header = Str.create()
                 .a("HTTP/1.1 ").acrlf(httpStatusCode.getCode())
                 .a("Server: ").acrlf(PropertiesDispatcher.RESP_HEADER_SERVER_NAME)
