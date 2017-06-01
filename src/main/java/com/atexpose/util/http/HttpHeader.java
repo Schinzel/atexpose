@@ -4,6 +4,7 @@ import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.google.common.base.Joiner;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.str.Str;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Map;
@@ -17,6 +18,7 @@ public class HttpHeader {
     @Getter
     private final Str header;
 
+    @Builder
     HttpHeader(HttpStatusCode httpStatusCode, Map<String, String> customResponseHeaders, int browserCacheMaxAgeInSeconds, ContentType contentType, int contentLength) {
         header = Str.create()
                 .a("HTTP/1.1 ").acrlf(httpStatusCode.getCode())
