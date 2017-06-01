@@ -17,11 +17,11 @@ public class HttpHeader {
     @Getter
     private final Str header;
 
-    HttpHeader(HttpStatusCode httpStatusCode, Map<String, String> customResponseHeaders, int browserCacheMaxAgeInSeconds, String contentType, int contentLength) {
+    HttpHeader(HttpStatusCode httpStatusCode, Map<String, String> customResponseHeaders, int browserCacheMaxAgeInSeconds, ContentType contentType, int contentLength) {
         header = Str.create()
                 .a("HTTP/1.1 ").acrlf(httpStatusCode.getCode())
                 .a("Server: ").acrlf(PropertiesDispatcher.RESP_HEADER_SERVER_NAME)
-                .a("Content-Type: ").acrlf(contentType)
+                .a("Content-Type: ").acrlf(contentType.getContentType())
                 .a("Cache-Control: ").a("max-age=").acrlf(String.valueOf(browserCacheMaxAgeInSeconds))
                 .a("Content-Length: ").acrlf(String.valueOf(contentLength));
         //If there are any response headers to attach
