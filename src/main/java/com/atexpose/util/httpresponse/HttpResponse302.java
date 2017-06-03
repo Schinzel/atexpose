@@ -1,4 +1,4 @@
-package com.atexpose.util.http;
+package com.atexpose.util.httpresponse;
 
 import lombok.Builder;
 import lombok.Getter;

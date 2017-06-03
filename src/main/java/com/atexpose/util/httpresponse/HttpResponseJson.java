@@ -1,4 +1,4 @@
-package com.atexpose.util.http;
+package com.atexpose.util.httpresponse;
 
 import io.schinzel.basicutils.UTF8;
 import lombok.Builder;

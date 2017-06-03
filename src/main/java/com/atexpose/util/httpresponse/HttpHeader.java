@@ -1,4 +1,4 @@
-package com.atexpose.util.http;
+package com.atexpose.util.httpresponse;
 
 import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.google.common.base.Joiner;

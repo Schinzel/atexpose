@@ -1,4 +1,4 @@
-package com.atexpose.util.http;
+package com.atexpose.util.httpresponse;
 
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.Thrower;

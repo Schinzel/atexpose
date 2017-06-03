@@ -3,7 +3,7 @@ package com.atexpose.dispatcher.wrapper;
 import com.atexpose.MyProperties;
 import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
-import com.atexpose.util.http.*;
+import com.atexpose.util.httpresponse.*;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
