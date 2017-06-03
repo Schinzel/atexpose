@@ -8,6 +8,7 @@ import com.atexpose.util.FileRW;
 import com.atexpose.util.http.HttpResponse404;
 import com.atexpose.util.http.HttpResponseFile;
 import com.atexpose.util.http.HttpResponseJson;
+import com.atexpose.util.http.HttpResponseString;
 import com.google.common.base.Joiner;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
@@ -103,9 +104,11 @@ public class WebWrapper implements IWrapper {
 
     @Override
     public String wrapResponse(String methodReturn) {
-        int contentLength = EncodingUtil.convertToByteArray(methodReturn).length;
-        String responseHeader = getResponseHeader("", contentLength, HTTPStatusCode.OK, ReturnType.STRING);
-        return responseHeader + methodReturn;
+        return HttpResponseString.builder()
+                .body(methodReturn)
+                .customResponseHeaders(this.getResponseHeaders())
+                .build()
+                .getResponse();
     }
 
 

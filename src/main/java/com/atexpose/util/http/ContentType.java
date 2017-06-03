@@ -23,7 +23,7 @@ enum ContentType {
     WOFF("application/font-woff"),
     WOFF2("application/font-woff2"),
     //Text return
-    TEXT("Content-Type: text/html; charset=UTF-8");
+    TEXT("text/html; charset=UTF-8");
 
 
     @Getter
