@@ -13,7 +13,7 @@ public class HttpResponse404Test {
 
 
     @Test
-    public void HttpResponse404_Default_HeaderShouldContainStatusCode404() {
+    public void getResponse_Default_HeaderShouldContainStatusCode404() {
         String header = UTF8.getString(HttpResponse404.builder()
                 .filenameMissingFile("monkey.txt")
                 .build()
@@ -27,7 +27,7 @@ public class HttpResponse404Test {
     }
 
     @Test
-    public void HttpResponse404_Default_BodyShouldContainFileName() {
+    public void getResponse_Default_BodyShouldContainFileName() {
         String header = UTF8.getString(HttpResponse404.builder()
                 .filenameMissingFile("monkey.txt")
                 .build()
@@ -40,7 +40,7 @@ public class HttpResponse404Test {
     }
 
     @Test
-    public void HttpResponse404_CustomHeader_HeaderShouldContainCustomHeader() {
+    public void getResponse_CustomHeader_HeaderShouldContainCustomHeader() {
         Map<String, String> map = ImmutableMap.<String, String>builder()
                 .put("key", "val")
                 .build();

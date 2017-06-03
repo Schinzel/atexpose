@@ -11,7 +11,7 @@ import static junit.framework.TestCase.assertEquals;
 public class HttpResponse302Test {
 
     @Test
-    public void HttpResponse302_Default_HeaderShouldContainStatusCode302() {
+    public void getResponse_Default_HeaderShouldContainStatusCode302() {
         String header = HttpResponse302.builder()
                 .location("monkey.html")
                 .build()
@@ -25,7 +25,7 @@ public class HttpResponse302Test {
     }
 
     @Test
-    public void HttpResponse302_SetLocation_HeaderShouldContainLocation(){
+    public void getResponse_SetLocation_HeaderShouldContainLocation(){
         String header = HttpResponse302.builder()
                 .location("monkey.html")
                 .build()
@@ -39,7 +39,7 @@ public class HttpResponse302Test {
     }
 
     @Test
-    public void HttpResponse302_SetCustomerHeader_HeaderShouldContainLocation(){
+    public void getResponse_SetCustomerHeader_HeaderShouldContainLocation(){
         Map<String, String> map = ImmutableMap.<String, String>builder()
                 .put("Key", "Val")
                 .build();
@@ -58,7 +58,7 @@ public class HttpResponse302Test {
 
 
     @Test
-    public void HttpResponse302_SetCustomerHeader_HeaderShouldContainCustomHeader(){
+    public void getResponse_SetCustomerHeader_HeaderShouldContainCustomHeader(){
         Map<String, String> map = ImmutableMap.<String, String>builder()
                 .put("Key", "Val")
                 .build();

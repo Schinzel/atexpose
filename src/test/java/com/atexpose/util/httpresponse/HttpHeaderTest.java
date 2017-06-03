@@ -11,7 +11,7 @@ import static junit.framework.TestCase.assertEquals;
 public class HttpHeaderTest {
 
     @Test
-    public void HttpHeader_StatusCode200_200InHeader() {
+    public void getHeader_StatusCode200_200InHeader() {
         String header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.OK)
                 .contentType(ContentType.TEXT)
@@ -29,7 +29,7 @@ public class HttpHeaderTest {
 
 
     @Test
-    public void HttpHeader_ContentTypeSVG_SVG() {
+    public void getHeader_ContentTypeSVG_SVG() {
         String header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.OK)
                 .contentType(ContentType.SVG)
@@ -47,7 +47,7 @@ public class HttpHeaderTest {
 
 
     @Test
-    public void HttpHeader_BrowserCacheMaxAgeInSeconds567_567() {
+    public void getHeader_BrowserCacheMaxAgeInSeconds567_567() {
         String header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.OK)
                 .contentType(ContentType.SVG)
@@ -66,7 +66,7 @@ public class HttpHeaderTest {
 
 
     @Test
-    public void HttpHeader_ContentLength123_123() {
+    public void getHeader_ContentLength123_123() {
         String header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.OK)
                 .contentType(ContentType.SVG)
@@ -85,7 +85,7 @@ public class HttpHeaderTest {
 
 
     @Test
-    public void HttpHeader_CustomHeadersKey1Val1Key2Val2GetFirstKey_Key1Val1() {
+    public void getHeader_CustomHeadersKey1Val1Key2Val2GetFirstKey_Key1Val1() {
         Map<String, String> customHeaders = ImmutableMap.<String, String>builder()
                 .put("Key1", "Val1")
                 .put("Key2", "Val2")
@@ -109,7 +109,7 @@ public class HttpHeaderTest {
 
 
     @Test
-    public void HttpHeader_CustomHeadersKey1Val1Key2Val2GetFirstKey_Key2Val2() {
+    public void getHeader_CustomHeadersKey1Val1Key2Val2GetFirstKey_Key2Val2() {
         Map<String, String> customHeaders = ImmutableMap.<String, String>builder()
                 .put("Key1", "Val1")
                 .put("Key2", "Val2")

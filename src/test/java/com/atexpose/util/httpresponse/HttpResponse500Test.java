@@ -7,7 +7,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class HttpResponse500Test {
     @Test
-    public void HttpResponse500_Default_HeaderShouldContainStatusCode500() {
+    public void getResponse_Default_HeaderShouldContainStatusCode500() {
         String header = HttpResponse500.builder()
                 .body("Something is rotten in the state of Denmark")
                 .build()
@@ -22,7 +22,7 @@ public class HttpResponse500Test {
 
 
     @Test
-    public void HttpResponse500_SetMessage_BodyShouldBeMessage() {
+    public void getResponse_SetMessage_BodyShouldBeMessage() {
         String message = "Something is rotten in the state of Denmark";
         String header = HttpResponse500.builder()
                 .body(message)
