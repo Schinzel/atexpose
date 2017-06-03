@@ -3,6 +3,7 @@ package com.atexpose.util.httpresponse;
 import io.schinzel.basicutils.UTF8;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class HttpResponseString {
 
 
     @Builder
-    HttpResponseString(String body, Map<String, String> customHeaders) {
+    HttpResponseString(@NonNull String body, Map<String, String> customHeaders) {
         int contentLength = UTF8.getBytes(body).length;
         HttpHeader header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.OK)
