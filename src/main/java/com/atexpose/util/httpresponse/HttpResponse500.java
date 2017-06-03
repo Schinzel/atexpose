@@ -16,11 +16,11 @@ public class HttpResponse500 {
     private final String response;
 
     @Builder
-    HttpResponse500(String body, Map<String, String> customResponseHeaders) {
+    HttpResponse500(String body, Map<String, String> customHeaders) {
         int contentLength = UTF8.getBytes(body).length;
         HttpHeader header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.INTERNAL_SERVER_ERROR)
-                .customResponseHeaders(customResponseHeaders)
+                .customHeaders(customHeaders)
                 .contentType(ContentType.TEXT)
                 .contentLength(contentLength)
                 .build();

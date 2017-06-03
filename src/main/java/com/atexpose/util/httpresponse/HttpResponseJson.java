@@ -17,12 +17,12 @@ public class HttpResponseJson {
     private final String response;
 
     @Builder
-    HttpResponseJson(JSONObject body, Map<String, String> customResponseHeaders) {
+    HttpResponseJson(JSONObject body, Map<String, String> customHeaders) {
         String bodyAsString = body.toString();
         int contentLength = UTF8.getBytes(bodyAsString).length;
         HttpHeader header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.OK)
-                .customResponseHeaders(customResponseHeaders)
+                .customHeaders(customHeaders)
                 .contentType(ContentType.JSON)
                 .contentLength(contentLength)
                 .build();

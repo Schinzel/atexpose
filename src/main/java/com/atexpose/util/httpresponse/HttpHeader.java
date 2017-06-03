@@ -21,10 +21,10 @@ class HttpHeader {
 
 
     @Builder
-    HttpHeader(HttpStatusCode httpStatusCode, Map<String, String> customResponseHeaders,
+    HttpHeader(HttpStatusCode httpStatusCode, Map<String, String> customHeaders,
                ContentType contentType, int browserCacheMaxAgeInSeconds, int contentLength) {
-        if(customResponseHeaders == null){
-            customResponseHeaders = EmptyObjects.EMPTY_MAP;
+        if(customHeaders == null){
+            customHeaders = EmptyObjects.EMPTY_MAP;
         }
         header = Str.create()
                 .a("HTTP/1.1 ").acrlf(httpStatusCode.getCode())
@@ -33,9 +33,9 @@ class HttpHeader {
                 .a("Cache-Control: ").a("max-age=").acrlf(String.valueOf(browserCacheMaxAgeInSeconds))
                 .a("Content-Length: ").acrlf(String.valueOf(contentLength))
                 //If there are custom response headers
-                .ifTrue(Checker.isNotEmpty(customResponseHeaders))
+                .ifTrue(Checker.isNotEmpty(customHeaders))
                 //Add the custom response headers
-                .acrlf(Joiner.on("\r\n").withKeyValueSeparator(": ").join(customResponseHeaders))
+                .acrlf(Joiner.on("\r\n").withKeyValueSeparator(": ").join(customHeaders))
                 .endIf()
                 .acrlf();
     }

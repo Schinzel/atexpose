@@ -17,14 +17,14 @@ public class HttpResponse302 {
 
 
     @Builder
-    HttpResponse302(String location, Map<String, String> customResponseHeaders) {
-        if (customResponseHeaders == null) {
-            customResponseHeaders = new HashMap<>();
+    HttpResponse302(String location, Map<String, String> customHeaders) {
+        if (customHeaders == null) {
+            customHeaders = new HashMap<>();
         }
-        customResponseHeaders.put("location", location);
+        customHeaders.put("location", location);
         response = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.REDIRECT)
-                .customResponseHeaders(customResponseHeaders)
+                .customHeaders(customHeaders)
                 .contentType(ContentType.TEXT)
                 .build()
                 .getHeader()

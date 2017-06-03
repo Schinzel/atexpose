@@ -81,7 +81,7 @@ public class WebWrapper implements IWrapper {
     public String wrapResponse(String methodReturn) {
         return HttpResponseString.builder()
                 .body(methodReturn)
-                .customResponseHeaders(this.getCustomResponseHeaders())
+                .customHeaders(this.getCustomResponseHeaders())
                 .build()
                 .getResponse();
     }
@@ -91,7 +91,7 @@ public class WebWrapper implements IWrapper {
     public String wrapError(String error) {
         return HttpResponse500.builder()
                 .body(error)
-                .customResponseHeaders(this.getCustomResponseHeaders())
+                .customHeaders(this.getCustomResponseHeaders())
                 .build()
                 .getResponse();
     }
@@ -110,7 +110,7 @@ public class WebWrapper implements IWrapper {
     public String wrapJSON(JSONObject response) {
         return HttpResponseJson.builder()
                 .body(response)
-                .customResponseHeaders(this.getCustomResponseHeaders())
+                .customHeaders(this.getCustomResponseHeaders())
                 .build()
                 .getResponse();
     }
@@ -126,7 +126,7 @@ public class WebWrapper implements IWrapper {
         //If there was no such file
         if (abFileContent == null) {
             return HttpResponse404.builder()
-                    .customResponseHeaders(this.getCustomResponseHeaders())
+                    .customHeaders(this.getCustomResponseHeaders())
                     .filenameMissingFile(filename)
                     .build()
                     .getResponse();
@@ -135,7 +135,7 @@ public class WebWrapper implements IWrapper {
             abFileContent = WebWrapper.setServerSideVariables(abFileContent, mServerSideVariables);
             return HttpResponseFile.builder()
                     .body(abFileContent)
-                    .customResponseHeaders(this.getCustomResponseHeaders())
+                    .customHeaders(this.getCustomResponseHeaders())
                     .fileName(filename)
                     .build()
                     .getResponse();
@@ -184,7 +184,7 @@ public class WebWrapper implements IWrapper {
         //If file doesn't exists
         if (!FileRW.fileExists(filename)) {
             return HttpResponse404.builder()
-                    .customResponseHeaders(this.getCustomResponseHeaders())
+                    .customHeaders(this.getCustomResponseHeaders())
                     .filenameMissingFile(filename)
                     .build()
                     .getResponse();
@@ -192,7 +192,7 @@ public class WebWrapper implements IWrapper {
             abFileContent = FileRW.readFileAsByteArray(filename);
             byte[] abFileHeaderAndContent = HttpResponseFile.builder()
                     .body(abFileContent)
-                    .customResponseHeaders(this.getCustomResponseHeaders())
+                    .customHeaders(this.getCustomResponseHeaders())
                     .fileName(filename)
                     .build()
                     .getResponse();

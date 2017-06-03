@@ -18,11 +18,11 @@ public class HttpResponseFile {
 
 
     @Builder
-    HttpResponseFile(byte[] body, String fileName, Map<String, String> customResponseHeaders) {
+    HttpResponseFile(byte[] body, String fileName, Map<String, String> customHeaders) {
         ContentType contentType = FileExtensions.getContentType(fileName);
         String header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.OK)
-                .customResponseHeaders(customResponseHeaders)
+                .customHeaders(customHeaders)
                 .contentType(contentType)
                 .contentLength(body.length)
                 .build()

@@ -17,12 +17,12 @@ public class HttpResponse404 {
     private final byte[] response;
 
     @Builder
-    HttpResponse404(String filenameMissingFile, Map<String, String> customResponseHeaders) {
+    HttpResponse404(String filenameMissingFile, Map<String, String> customHeaders) {
         String body = "File '" + filenameMissingFile + "' not found";
         int contentLength = UTF8.getBytes(body).length;
         HttpHeader header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.FILE_NOT_FOUND)
-                .customResponseHeaders(customResponseHeaders)
+                .customHeaders(customHeaders)
                 .contentType(ContentType.TEXT)
                 .contentLength(contentLength)
                 .build();
