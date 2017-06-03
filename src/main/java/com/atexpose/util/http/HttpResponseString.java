@@ -13,6 +13,7 @@ public class HttpResponseString {
     @Getter
     private final String response;
 
+
     @Builder
     HttpResponseString(String body, Map<String, String> customResponseHeaders) {
         int contentLength = UTF8.getBytes(body).length;
@@ -25,6 +26,14 @@ public class HttpResponseString {
         response = header.getHeader()
                 .a(body)
                 .getString();
+    }
+
+
+    public static String wrap(String body) {
+        return HttpResponseString.builder()
+                .body(body)
+                .build()
+                .getResponse();
     }
 
 }

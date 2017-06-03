@@ -13,9 +13,10 @@ public class HttpResponse302 {
     @Getter
     private final String response;
 
+
     @Builder
     HttpResponse302(String location, Map<String, String> customResponseHeaders) {
-        if(customResponseHeaders == null){
+        if (customResponseHeaders == null) {
             customResponseHeaders = new HashMap<>();
         }
         customResponseHeaders.put("location", location);
@@ -26,5 +27,13 @@ public class HttpResponse302 {
                 .build()
                 .getHeader()
                 .getString();
+    }
+
+
+    public static String wrap(String newLocation) {
+        return HttpResponse302.builder()
+                .location(newLocation)
+                .build()
+                .getResponse();
     }
 }

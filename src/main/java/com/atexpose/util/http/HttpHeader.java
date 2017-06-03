@@ -3,6 +3,7 @@ package com.atexpose.util.http;
 import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.google.common.base.Joiner;
 import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.str.Str;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,9 @@ public class HttpHeader {
     @Builder
     HttpHeader(HttpStatusCode httpStatusCode, Map<String, String> customResponseHeaders,
                ContentType contentType, int browserCacheMaxAgeInSeconds, int contentLength) {
+        if(customResponseHeaders == null){
+            customResponseHeaders = EmptyObjects.EMPTY_MAP;
+        }
         header = Str.create()
                 .a("HTTP/1.1 ").acrlf(httpStatusCode.getCode())
                 .a("Server: ").acrlf(PropertiesDispatcher.RESP_HEADER_SERVER_NAME)
