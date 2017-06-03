@@ -11,7 +11,7 @@ import lombok.Getter;
 import java.util.Map;
 
 /**
- * The purpose of this class
+ * The purpose of this class is to represent an header header.
  * <p>
  * Created by Schinzel on 2017-05-31.
  */

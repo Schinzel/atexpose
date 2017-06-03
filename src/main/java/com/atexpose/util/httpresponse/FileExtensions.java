@@ -7,6 +7,8 @@ import org.apache.commons.io.FilenameUtils;
 import java.util.Map;
 
 /**
+ * Mapping between file extensions and http header content types.
+ * <p>
  * Created by schinzel on 2017-06-01.
  */
 class FileExtensions {
@@ -40,6 +42,10 @@ class FileExtensions {
     }
 
 
+    /**
+     * @param filename The filename to check.
+     * @return The content type for the argument filename
+     */
     static ContentType getContentType(String filename) {
         String filenameExtension = FilenameUtils.getExtension(filename);
         Thrower.throwIfFalse(CONTENT_TYPES.containsKey(filenameExtension), "No know content type for file '" + filename + "'");

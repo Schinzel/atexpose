@@ -7,6 +7,8 @@ import lombok.Getter;
 import java.util.Map;
 
 /**
+ * The purpose of this file is to compile a http string response.
+ *
  * Created by schinzel on 2017-06-03.
  */
 public class HttpResponseString {

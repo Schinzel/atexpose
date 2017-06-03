@@ -3,6 +3,9 @@ package com.atexpose.util.httpresponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * The http header content types.
+ */
 @AllArgsConstructor
 enum ContentType {
     //Images

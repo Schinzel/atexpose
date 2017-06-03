@@ -8,6 +8,8 @@ import lombok.Getter;
 import java.util.Map;
 
 /**
+ * The purpose of this file is to compile a 404 http response.
+ *
  * Created by schinzel on 2017-06-01.
  */
 public class HttpResponse404 {

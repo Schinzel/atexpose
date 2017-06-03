@@ -8,6 +8,8 @@ import org.json.JSONObject;
 import java.util.Map;
 
 /**
+ * The purpose of this file is to compile a http json response.
+ *
  * Created by schinzel on 2017-06-03.
  */
 public class HttpResponseJson {

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * The purpose of this class is to represent a 302 redirect.
+ *
  * Created by schinzel on 2017-06-03.
  */
 public class HttpResponse302 {
