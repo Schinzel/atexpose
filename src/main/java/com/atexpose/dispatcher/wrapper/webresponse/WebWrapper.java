@@ -1,23 +1,19 @@
 package com.atexpose.dispatcher.wrapper.webresponse;
 
 import com.atexpose.MyProperties;
-import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
 import com.atexpose.util.http.*;
-import com.google.common.base.Joiner;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.collections.Cache;
 import io.schinzel.basicutils.state.State;
-import io.schinzel.basicutils.str.Str;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -63,22 +59,6 @@ public class WebWrapper implements IWrapper {
     @Getter(AccessLevel.PACKAGE)
     private Cache<String, byte[]> mFilesCache;
 
-    private enum ReturnType {
-        FILE, JSON, STRING
-    }
-
-    private enum HTTPStatusCode {
-        OK("200 OK"),
-        FileNotFound("404  Not Found"),
-        InternalServerError("500 Internal Server Error");
-        final String mCode;
-
-
-        HTTPStatusCode(String code) {
-            mCode = code;
-        }
-    }
-
 
     @Builder
     WebWrapper(String webServerDir, int browserCacheMaxAge, boolean cacheFilesInRam,
@@ -122,7 +102,7 @@ public class WebWrapper implements IWrapper {
     @Override
     public byte[] wrapFile(String requestedFile) {
         String filename = this.getActualFilename(requestedFile);
-        return isTextFile(filename)
+        return FileUtil.isTextFile(filename)
                 ? this.getTextFileHeaderAndContent(filename)
                 : this.getStaticFileHeaderAndContent(filename);
     }
@@ -253,16 +233,6 @@ public class WebWrapper implements IWrapper {
     }
 
 
-    /**
-     * @param filename
-     * @return True if argument file has a text file extension, else false.
-     */
-    static boolean isTextFile(String filename) {
-        String fileExtension = FilenameUtils.getExtension(filename);
-        return FileTypes.getInstance().getProps(fileExtension).isTextFile();
-    }
-
-
     @Override
     public String wrapJSON(JSONObject response) {
         return HttpResponseJson.builder()
@@ -350,55 +320,6 @@ public class WebWrapper implements IWrapper {
     // ------------------------------------
     // - PRIVATE STATIC UTIL
     // ------------------------------------
-
-
-    /**
-     * @param filename
-     * @param contentLength
-     * @return A response header for the argument filename and content length
-     */
-    private String getResponseHeader(String filename, int contentLength, HTTPStatusCode HTTPStatusCode, ReturnType contentType) {
-        Str str = Str.create()
-                .a("HTTP/1.1 ").acrlf(HTTPStatusCode.mCode)
-                .a("Server: ").acrlf(PropertiesDispatcher.RESP_HEADER_SERVER_NAME)
-                .a("Content-Length: ").acrlf(String.valueOf(contentLength))
-                .a("Content-Type: ").acrlf(getResponseHeaderContentType(filename, contentType));
-        //If there are any response headers to attach
-        if (!mResponseHeaders.isEmpty()) {
-            //Add the response headers
-            str.acrlf(Joiner.on("\r\n").withKeyValueSeparator(": ").join(mResponseHeaders));
-        }
-        //If there was no filename, i.e. is a method call Set the cache to zero seconds
-        int cacheMaxAgeInSeconds = Checker.isEmpty(filename) ? 0 : mBrowserCacheMaxAge;
-        return str.a("Cache-Control: ").a("max-age=")
-                .acrlf(String.valueOf(cacheMaxAgeInSeconds))
-                .acrlf().toString();
-    }
-
-
-    /**
-     * @param filename
-     * @return The content-type to use in a response header for the argument
-     * file name
-     */
-    private static String getResponseHeaderContentType(String filename, ReturnType contentType) {
-        String headerContentType;
-        switch (contentType) {
-            case JSON:
-                headerContentType = "application/json; charset=UTF-8";
-                break;
-            case STRING:
-                headerContentType = "text/html; charset=UTF-8";
-                break;
-            case FILE:
-                String filenameExtension = FilenameUtils.getExtension(filename);
-                headerContentType = FileTypes.getInstance().getProps(filenameExtension).getHeaderContentType();
-                break;
-            default:
-                throw new RuntimeException("Unhandled content type '" + contentType.name() + "'.");
-        }
-        return headerContentType;
-    }
 
 
     /**

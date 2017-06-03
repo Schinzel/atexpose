@@ -367,29 +367,6 @@ public class WebWrapperTest {
 
 
     @Test
-    public void testIsTextFile() {
-        assertTrue(WebWrapper.isTextFile("m.html"));
-        assertTrue(WebWrapper.isTextFile("really_really_really_long_file_name.html"));
-        assertTrue(WebWrapper.isTextFile("dot.in.name.html"));
-        assertTrue(WebWrapper.isTextFile("m.HTML"));
-        assertTrue(WebWrapper.isTextFile("m.hTmL"));
-        //
-        assertTrue(WebWrapper.isTextFile("file.htm"));
-        assertTrue(WebWrapper.isTextFile("file.css"));
-        assertTrue(WebWrapper.isTextFile("file.js"));
-        assertTrue(WebWrapper.isTextFile("file.txt"));
-        //
-        assertFalse(WebWrapper.isTextFile("file.ico"));
-        assertFalse(WebWrapper.isTextFile("file.png"));
-        assertFalse(WebWrapper.isTextFile("file.jpg"));
-        assertFalse(WebWrapper.isTextFile("file.jpeg"));
-        assertFalse(WebWrapper.isTextFile("file.gif"));
-        assertFalse(WebWrapper.isTextFile("file.svg"));
-        assertFalse(WebWrapper.isTextFile("file.map"));
-    }
-
-
-    @Test
     public void test_getTextFileHeaderAndContent() {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
