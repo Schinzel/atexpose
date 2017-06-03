@@ -1,5 +1,6 @@
 package com.atexpose.util.httpresponse;
 
+import io.schinzel.basicutils.Checker;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The purpose of this class is to represent a 302 redirect.
+ * The purpose of this class is to compile a 302 redirect.
  * <p>
  * Created by schinzel on 2017-06-03.
  */
@@ -18,13 +19,14 @@ public class HttpResponse302 {
 
     @Builder
     HttpResponse302(String location, Map<String, String> customHeaders) {
-        if (customHeaders == null) {
-            customHeaders = new HashMap<>();
+        Map<String,String> locationHeader = new HashMap<>();
+        locationHeader.put("Location", location);
+        if (Checker.isNotEmpty(customHeaders)){
+            locationHeader.putAll(customHeaders);
         }
-        customHeaders.put("location", location);
         response = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.REDIRECT)
-                .customHeaders(customHeaders)
+                .customHeaders(locationHeader)
                 .contentType(ContentType.TEXT)
                 .build()
                 .getHeader()

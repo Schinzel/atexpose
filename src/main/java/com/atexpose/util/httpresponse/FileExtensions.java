@@ -36,13 +36,6 @@ class FileExtensions {
 
 
     /**
-     * Private as should not be initialized
-     */
-    private FileExtensions() {
-    }
-
-
-    /**
      * @param filename The filename to check.
      * @return The content type for the argument filename
      */
