@@ -136,7 +136,7 @@ public class WebWrapper implements IWrapper {
             return HttpResponseFile.builder()
                     .body(abFileContent)
                     .customHeaders(this.getCustomResponseHeaders())
-                    .fileName(filename)
+                    .filename(filename)
                     .build()
                     .getResponse();
         }
@@ -193,7 +193,7 @@ public class WebWrapper implements IWrapper {
             byte[] abFileHeaderAndContent = HttpResponseFile.builder()
                     .body(abFileContent)
                     .customHeaders(this.getCustomResponseHeaders())
-                    .fileName(filename)
+                    .filename(filename)
                     .build()
                     .getResponse();
             //If is to use file cache

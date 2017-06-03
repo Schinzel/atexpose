@@ -12,11 +12,11 @@ public class HttpResponse302Test {
 
     @Test
     public void getResponse_Default_HeaderShouldContainStatusCode302() {
-        String header = HttpResponse302.builder()
+        String httpResponse = HttpResponse302.builder()
                 .location("monkey.html")
                 .build()
                 .getResponse();
-        String actual = SubString.create(header)
+        String actual = SubString.create(httpResponse)
                 .startDelimiter("HTTP/1.1 ")
                 .endDelimiter("\r\n")
                 .toString();
@@ -26,11 +26,11 @@ public class HttpResponse302Test {
 
     @Test
     public void getResponse_SetLocation_HeaderShouldContainLocation(){
-        String header = HttpResponse302.builder()
+        String httpResponse = HttpResponse302.builder()
                 .location("monkey.html")
                 .build()
                 .getResponse();
-        String actual = SubString.create(header)
+        String actual = SubString.create(httpResponse)
                 .startDelimiter("Location: ")
                 .endDelimiter("\r\n")
                 .toString();
@@ -43,12 +43,12 @@ public class HttpResponse302Test {
         Map<String, String> map = ImmutableMap.<String, String>builder()
                 .put("Key", "Val")
                 .build();
-        String header = HttpResponse302.builder()
+        String httpResponse = HttpResponse302.builder()
                 .location("monkey.html")
                 .customHeaders(map)
                 .build()
                 .getResponse();
-        String actual = SubString.create(header)
+        String actual = SubString.create(httpResponse)
                 .startDelimiter("Location: ")
                 .endDelimiter("\r\n")
                 .toString();
