@@ -3,12 +3,10 @@ package com.atexpose.dispatcher.wrapper.webresponse;
 import com.atexpose.MyProperties;
 import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.atexpose.dispatcher.wrapper.IWrapper;
-import com.atexpose.util.ArrayUtil;
 import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
 import com.atexpose.util.http.HttpResponse404;
 import com.atexpose.util.http.HttpResponseFile;
-import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
@@ -23,7 +21,6 @@ import lombok.experimental.Accessors;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -141,8 +138,7 @@ public class WebWrapper implements IWrapper {
                     .customResponseHeaders(this.getResponseHeaders())
                     .filenameMissingFile(filename)
                     .build()
-                    .getResponse()
-                    .getBytes(Charsets.UTF_8);
+                    .getResponse();
         } else {
             //Add server side variables
             abFileContent = WebWrapper.setServerSideVariables(abFileContent, mServerSideVariables);
@@ -189,32 +185,34 @@ public class WebWrapper implements IWrapper {
      */
     byte[] getStaticFileHeaderAndContent(String filename) {
         byte[] abFileContent;
-        HTTPStatusCode httpStatusCode;
         //If is to use cache AND the argument file is cached
         if (mFilesCacheOn && mFilesCache.has(filename)) {
             //Return cached file
             return mFilesCache.get(filename);
         }
-        //If file exists
-        if (FileRW.fileExists(filename)) {
-            httpStatusCode = HTTPStatusCode.OK;
-            abFileContent = FileRW.readFileAsByteArray(filename);
+        //If file doesn't exists
+        if (!FileRW.fileExists(filename)) {
+            return HttpResponse404.builder()
+                    .customResponseHeaders(this.getResponseHeaders())
+                    .filenameMissingFile(filename)
+                    .build()
+                    .getResponse();
         } else {
-            httpStatusCode = HTTPStatusCode.FileNotFound;
-            abFileContent = ("File '" + filename + "' not found").getBytes(Charset.forName(MyProperties.ENCODING));
+            abFileContent = FileRW.readFileAsByteArray(filename);
+            byte[] abFileHeaderAndContent = HttpResponseFile.builder()
+                    .body(abFileContent)
+                    .customResponseHeaders(this.getResponseHeaders())
+                    .fileName(filename)
+                    .build()
+                    .getResponse();
+            //If is to use file cache
+            if (mFilesCacheOn) {
+                //Add file header and content to cache
+                this.mFilesCache.put(filename, abFileHeaderAndContent);
+            }
+            return abFileHeaderAndContent;
         }
-        //Get response header
-        String sResponseHeader = getResponseHeader(filename, abFileContent.length, httpStatusCode, ReturnType.FILE);
-        //Convert header to byte array
-        byte[] abResponseHeader = EncodingUtil.convertToByteArray(sResponseHeader);
-        //Concat and return header and file content
-        byte[] abFileHeaderAndContent = ArrayUtil.concat(abResponseHeader, abFileContent);
-        //If is to use file cache
-        if (mFilesCacheOn) {
-            //Add file header and content to cache
-            this.mFilesCache.put(filename, abFileHeaderAndContent);
-        }
-        return abFileHeaderAndContent;
+
     }
 
 

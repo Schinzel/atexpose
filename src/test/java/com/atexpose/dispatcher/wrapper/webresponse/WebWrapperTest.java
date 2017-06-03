@@ -2,12 +2,13 @@ package com.atexpose.dispatcher.wrapper.webresponse;
 
 import com.atexpose.util.EncodingUtil;
 import com.google.common.collect.ImmutableMap;
+import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.collections.Cache;
+import io.schinzel.basicutils.substring.SubString;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -436,16 +437,12 @@ public class WebWrapperTest {
         //Read file
         String fileName = webWrapper.getActualFilename("monkey.jpg");
         byte[] ab = webWrapper.getStaticFileHeaderAndContent(fileName);
-        //Get header
-        String partOfHeader = new String(ab, 0, 70, Charset.forName("UTF-8"));
-        //Get conent length in header
-        String conentLengthHeader = "Content-Length: ";
-        int start = partOfHeader.indexOf(conentLengthHeader) + conentLengthHeader.length();
-        int end = partOfHeader.indexOf("\r\n", start);
-        String lengthAsString = partOfHeader.substring(start, end);
-        int contentLengthInHeader = Integer.parseInt(lengthAsString);
-        //Check that conent length in header is same as size of actual file
-        assertEquals(416176, contentLengthInHeader);
+        String httpResponse = UTF8.getString(ab);
+        String contentLength= SubString.create(httpResponse)
+                .startDelimiter("Content-Length: ")
+                .endDelimiter("\r\n")
+                .getString();
+        assertEquals("416176", contentLength);
     }
 
 
@@ -458,16 +455,12 @@ public class WebWrapperTest {
                 .build();
         //Read file
         byte[] ab = webWrapper.wrapFile("monkey.jpg");
-        //Get header
-        String partOfHeader = new String(ab, 0, 70, Charset.forName("UTF-8"));
-        //Get conent length in header
-        String conentLengthHeader = "Content-Length: ";
-        int start = partOfHeader.indexOf(conentLengthHeader) + conentLengthHeader.length();
-        int end = partOfHeader.indexOf("\r\n", start);
-        String lengthAsString = partOfHeader.substring(start, end);
-        int contentLengthInHeader = Integer.parseInt(lengthAsString);
-        //Check that conent length in header is same as size of actual file
-        assertEquals(416176, contentLengthInHeader);
+        String httpResponse = UTF8.getString(ab);
+        String contentLength= SubString.create(httpResponse)
+                .startDelimiter("Content-Length: ")
+                .endDelimiter("\r\n")
+                .getString();
+        assertEquals("416176", contentLength);
     }
 
 }

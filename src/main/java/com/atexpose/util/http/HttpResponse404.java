@@ -1,5 +1,6 @@
 package com.atexpose.util.http;
 
+import com.google.common.base.Charsets;
 import io.schinzel.basicutils.UTF8;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import java.util.Map;
  */
 public class HttpResponse404 {
     @Getter
-    private final String response;
+    private final byte[] response;
 
     @Builder
     HttpResponse404(String filenameMissingFile, Map<String, String> customResponseHeaders) {
@@ -25,6 +26,7 @@ public class HttpResponse404 {
                 .build();
         response = header.getHeader()
                 .a(body)
-                .getString();
+                .getString()
+                .getBytes(Charsets.UTF_8);
     }
 }
