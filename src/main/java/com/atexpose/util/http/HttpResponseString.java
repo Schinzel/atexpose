@@ -9,15 +9,15 @@ import java.util.Map;
 /**
  * Created by schinzel on 2017-06-03.
  */
-public class HttpResponse500 {
+public class HttpResponseString {
     @Getter
     private final String response;
 
     @Builder
-    HttpResponse500(String body, Map<String, String> customResponseHeaders) {
+    HttpResponseString(String body, Map<String, String> customResponseHeaders) {
         int contentLength = UTF8.getBytes(body).length;
         HttpHeader header = HttpHeader.builder()
-                .httpStatusCode(HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .httpStatusCode(HttpStatusCode.OK)
                 .customResponseHeaders(customResponseHeaders)
                 .contentType(ContentType.TEXT)
                 .contentLength(contentLength)
@@ -26,4 +26,5 @@ public class HttpResponse500 {
                 .a(body)
                 .getString();
     }
+
 }

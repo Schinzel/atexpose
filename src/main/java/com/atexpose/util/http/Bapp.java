@@ -37,7 +37,7 @@ public class Bapp {
     }
 
 
-    static ContentType get(String filename) {
+    static ContentType getContentType(String filename) {
         String filenameExtension = FilenameUtils.getExtension(filename);
         Thrower.throwIfFalse(CONTENT_TYPES.containsKey(filenameExtension), "No know content type for file '" + filename + "'");
         return CONTENT_TYPES.get(filenameExtension);

@@ -15,8 +15,8 @@ public class HttpResponse404 {
 
     @Builder
     HttpResponse404(String filenameMissingFile, Map<String, String> customResponseHeaders) {
-        String message = "File '" + filenameMissingFile + "' not found";
-        int contentLength = UTF8.getBytes(message).length;
+        String body = "File '" + filenameMissingFile + "' not found";
+        int contentLength = UTF8.getBytes(body).length;
         HttpHeader header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.FILE_NOT_FOUND)
                 .customResponseHeaders(customResponseHeaders)
@@ -24,7 +24,7 @@ public class HttpResponse404 {
                 .contentLength(contentLength)
                 .build();
         response = header.getHeader()
-                .a(message)
+                .a(body)
                 .getString();
     }
 }
