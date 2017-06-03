@@ -3,6 +3,7 @@ package com.atexpose.util.httpresponse;
 import io.schinzel.basicutils.UTF8;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.util.Map;
 
@@ -16,7 +17,7 @@ public class HttpResponse500 {
     private final String response;
 
     @Builder
-    HttpResponse500(String body, Map<String, String> customHeaders) {
+    HttpResponse500(@NonNull String body, Map<String, String> customHeaders) {
         int contentLength = UTF8.getBytes(body).length;
         HttpHeader header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.INTERNAL_SERVER_ERROR)

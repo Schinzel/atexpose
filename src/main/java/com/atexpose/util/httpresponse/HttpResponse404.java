@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import io.schinzel.basicutils.UTF8;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class HttpResponse404 {
     private final byte[] response;
 
     @Builder
-    HttpResponse404(String filenameMissingFile, Map<String, String> customHeaders) {
+    HttpResponse404(@NonNull String filenameMissingFile, Map<String, String> customHeaders) {
         String body = "File '" + filenameMissingFile + "' not found";
         int contentLength = UTF8.getBytes(body).length;
         HttpHeader header = HttpHeader.builder()

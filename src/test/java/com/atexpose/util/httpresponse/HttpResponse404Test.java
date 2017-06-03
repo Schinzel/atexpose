@@ -15,6 +15,7 @@ public class HttpResponse404Test {
     @Test
     public void HttpResponse404_Default_HeaderShouldContainStatusCode404() {
         String header = UTF8.getString(HttpResponse404.builder()
+                .filenameMissingFile("monkey.txt")
                 .build()
                 .getResponse());
         String actual = SubString.create(header)
