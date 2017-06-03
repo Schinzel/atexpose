@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 @Accessors(prefix = "m")
 public class WebWrapper implements IWrapper {
     //Pattern for server side variables. Example: <!--#echo var="my_var" -->
-    static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<!--#echo var=\"([a-zA-Z1-9_]{3,25})\" -->");
+    private static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<!--#echo var=\"([a-zA-Z1-9_]{3,25})\" -->");
     //Pattern for server side include files. Example: <!--#include file="header.html" -->
     private static final Pattern INCLUDE_FILE_PATTERN = Pattern.compile("<!--#include file=\"([\\w,/]+\\.[A-Za-z]{2,4})\" -->");
     /** The default to return if no page was specified. */
@@ -117,7 +117,7 @@ public class WebWrapper implements IWrapper {
 
 
     /**
-     * @param filename
+     * @param filename The name of the file
      * @return The content of argument file including HTTP headers.
      */
     byte[] getTextFileHeaderAndContent(String filename) {
@@ -144,7 +144,7 @@ public class WebWrapper implements IWrapper {
 
 
     /**
-     * @param filename
+     * @param filename The name of the file to return
      * @return The content of the argument file. Null if there was no such file.
      */
     byte[] getTextFileContent(String filename) {
@@ -171,7 +171,7 @@ public class WebWrapper implements IWrapper {
 
 
     /**
-     * @param filename
+     * @param filename The name of the file
      * @return The content of argument file including HTTP headers.
      */
     byte[] getStaticFileHeaderAndContent(String filename) {
@@ -219,8 +219,8 @@ public class WebWrapper implements IWrapper {
      * The directory on the hard drive is added as a prefix to argument file
      * name.
      *
-     * @param requestedFile
-     * @return
+     * @param requestedFile The requested file
+     * @return The name of the actual file to return
      */
     String getActualFilename(String requestedFile) {
         // if filename is empty
@@ -248,7 +248,9 @@ public class WebWrapper implements IWrapper {
      * Replaces all the server side variable placeholders <!--#echo var="MY_VAR" --> with
      * the server side variable value.
      *
-     * @param fileContent
+     * @param fileContent         The file content into which the argument variables are to be
+     *                            injected
+     * @param serverSideVariables The variables to inject.
      * @return The argument with the placeholders replaced with server side
      * variables.
      */
@@ -282,8 +284,10 @@ public class WebWrapper implements IWrapper {
      * Replaces all include file placeholders <!--#include file="header.html" --> with the
      * content of the include file.
      *
-     * @param fileContent
-     * @return The argument with the placeholders replaced with filecontent.
+     * @param fileContent The content of the file in which include files are to be injected
+     * @param directory   The directory to prepend to the name of the include files.
+     * @return The argument file content with the placeholders replaced with the content of the
+     * include files.
      */
     static byte[] setServerIncludeFiles(byte[] fileContent, String directory) {
         //Create a string from the file content
@@ -305,7 +309,7 @@ public class WebWrapper implements IWrapper {
             } else {
                 includeFileContent = "Include file '" + includeFilename + "' not found";
             }
-            //Replace all $ with \$. This as dollar sign has a sepcial meaning in Matcher.appendRelacement
+            //Replace all $ with \$. This as dollar sign has a special meaning in Matcher.appendReplacement
             includeFileContent = includeFileContent.replaceAll("\\$", "\\\\\\$");
             //Add content up until include file and replace include file reference with include file content
             includeFileMatcher.appendReplacement(fileContentReturn, includeFileContent);
@@ -315,8 +319,6 @@ public class WebWrapper implements IWrapper {
         //Create byte array and return
         return EncodingUtil.convertToByteArray(fileContentReturn.toString());
     }
-
-
 
 
     @Override
