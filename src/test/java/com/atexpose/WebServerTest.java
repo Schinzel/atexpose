@@ -62,9 +62,9 @@ public class WebServerTest {
         SocketRWUtil.write(socket, baMessage);
         String expected = "HTTP/1.1 500 Internal Server Error\r\n"
                 + "Server: " + PropertiesDispatcher.RESP_HEADER_SERVER_NAME + "\r\n"
-                + "Content-Length: 118\r\n"
                 + "Content-Type: text/html; charset=UTF-8\r\n"
                 + "Cache-Control: max-age=0\r\n"
+                + "Content-Length: 118\r\n"
                 + "\r\n"
                 + "Error while reading from socket. Request not allowed. Request has to start with GET or POST. Request:' " + request + "'";
         String response = SocketRWUtil.read(socket);
@@ -80,9 +80,9 @@ public class WebServerTest {
         SocketRWUtil.write(socket, baMessage);
         String expected = "HTTP/1.1 200 OK\r\n"
                 + "Server: " + PropertiesDispatcher.RESP_HEADER_SERVER_NAME + "\r\n"
-                + "Content-Length: 9\r\n"
                 + "Content-Type: text/html; charset=UTF-8\r\n"
                 + "Cache-Control: max-age=0\r\n"
+                + "Content-Length: 9\r\n"
                 + "\r\n"
                 + "Hi Ghost!";
         String response = SocketRWUtil.read(socket);

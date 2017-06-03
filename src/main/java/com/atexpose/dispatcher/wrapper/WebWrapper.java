@@ -1,26 +1,20 @@
-package com.atexpose.dispatcher.wrapper.webresponse;
+package com.atexpose.dispatcher.wrapper;
 
 import com.atexpose.MyProperties;
-import com.atexpose.dispatcher.PropertiesDispatcher;
-import com.atexpose.dispatcher.wrapper.IWrapper;
-import com.atexpose.util.ArrayUtil;
 import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
-import com.google.common.base.Joiner;
+import com.atexpose.util.httpresponse.*;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.collections.Cache;
 import io.schinzel.basicutils.state.State;
-import io.schinzel.basicutils.str.Str;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -46,10 +40,9 @@ import java.util.regex.Pattern;
 @Accessors(prefix = "m")
 public class WebWrapper implements IWrapper {
     //Pattern for server side variables. Example: <!--#echo var="my_var" -->
-    static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<!--#echo var=\"([a-zA-Z1-9_]{3,25})\" -->");
+    private static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<!--#echo var=\"([a-zA-Z1-9_]{3,25})\" -->");
     //Pattern for server side include files. Example: <!--#include file="header.html" -->
     private static final Pattern INCLUDE_FILE_PATTERN = Pattern.compile("<!--#include file=\"([\\w,/]+\\.[A-Za-z]{2,4})\" -->");
-    private static final String RESPONSE_HEADER_LINE_BREAK = "\r\n";
     /** The default to return if no page was specified. */
     private static final String DEFAULT_PAGE = "index.html";
     /** Where the files to server resides on the hard drive **/
@@ -59,25 +52,10 @@ public class WebWrapper implements IWrapper {
     private final Map<String, String> mServerSideVariables;
     //If true, files read - e.g. HTML files - will be cached in RAM.
     private boolean mFilesCacheOn = true;
-    private Map<String, String> mResponseHeaders = new HashMap<>();
+    @Getter(AccessLevel.PACKAGE)
+    private Map<String, String> mCustomResponseHeaders = new HashMap<>();
     @Getter(AccessLevel.PACKAGE)
     private Cache<String, byte[]> mFilesCache;
-
-    private enum ReturnType {
-        FILE, JSON, STRING
-    }
-
-    private enum HTTPStatusCode {
-        OK("200 OK"),
-        FileNotFound("404  Not Found"),
-        InternalServerError("500 Internal Server Error");
-        final String mCode;
-
-
-        HTTPStatusCode(String code) {
-            mCode = code;
-        }
-    }
 
 
     @Builder
@@ -92,7 +70,7 @@ public class WebWrapper implements IWrapper {
                 ? serverSideVariables
                 : EmptyObjects.EMPTY_MAP;
         Thrower.throwIfVarOutsideRange(browserCacheMaxAge, "browserCacheMaxAge", 0, 604800);
-        mResponseHeaders = (responseHeaders != null)
+        mCustomResponseHeaders = (responseHeaders != null)
                 ? responseHeaders
                 : EmptyObjects.EMPTY_MAP;
         mFilesCache = new Cache<>();
@@ -101,58 +79,72 @@ public class WebWrapper implements IWrapper {
 
     @Override
     public String wrapResponse(String methodReturn) {
-        int contentLength = EncodingUtil.convertToByteArray(methodReturn).length;
-        String responseHeader = getResponseHeader("", contentLength, HTTPStatusCode.OK, ReturnType.STRING);
-        return responseHeader + methodReturn;
+        return HttpResponseString.builder()
+                .body(methodReturn)
+                .customHeaders(this.getCustomResponseHeaders())
+                .build()
+                .getResponse();
     }
 
 
     @Override
     public String wrapError(String error) {
-        int contentLength = EncodingUtil.convertToByteArray(error).length;
-        String responseHeader = getResponseHeader("", contentLength, HTTPStatusCode.InternalServerError, ReturnType.STRING);
-        return responseHeader + error;
+        return HttpResponse500.builder()
+                .body(error)
+                .customHeaders(this.getCustomResponseHeaders())
+                .build()
+                .getResponse();
     }
 
 
     @Override
     public byte[] wrapFile(String requestedFile) {
         String filename = this.getActualFilename(requestedFile);
-        return isTextFile(filename)
+        return FileUtil.isTextFile(filename)
                 ? this.getTextFileHeaderAndContent(filename)
                 : this.getStaticFileHeaderAndContent(filename);
     }
 
 
+    @Override
+    public String wrapJSON(JSONObject response) {
+        return HttpResponseJson.builder()
+                .body(response)
+                .customHeaders(this.getCustomResponseHeaders())
+                .build()
+                .getResponse();
+    }
+
+
     /**
-     * @param filename
+     * @param filename The name of the file
      * @return The content of argument file including HTTP headers.
      */
     byte[] getTextFileHeaderAndContent(String filename) {
         //Get the text file
         byte[] abFileContent = this.getTextFileContent(filename);
-        HTTPStatusCode httpStatusCode;
         //If there was no such file
         if (abFileContent == null) {
-            httpStatusCode = HTTPStatusCode.FileNotFound;
-            abFileContent = ("File '" + filename + "' not found").getBytes(Charset.forName(MyProperties.ENCODING));
+            return HttpResponse404.builder()
+                    .customHeaders(this.getCustomResponseHeaders())
+                    .filenameMissingFile(filename)
+                    .build()
+                    .getResponse();
         } else {
-            httpStatusCode = HTTPStatusCode.OK;
             //Add server side variables
             abFileContent = WebWrapper.setServerSideVariables(abFileContent, mServerSideVariables);
+            return HttpResponseFile.builder()
+                    .body(abFileContent)
+                    .customHeaders(this.getCustomResponseHeaders())
+                    .filename(filename)
+                    .build()
+                    .getResponse();
         }
-        //Get response header
-        String sResponseHeader = getResponseHeader(filename, abFileContent.length, httpStatusCode, ReturnType.FILE);
-        //Convert header to byte array
-        byte[] abResponseHeader = EncodingUtil.convertToByteArray(sResponseHeader);
-        //Concat and return header and file content
-        byte[] abFileHeaderAndContent = ArrayUtil.concat(abResponseHeader, abFileContent);
-        return abFileHeaderAndContent;
     }
 
 
     /**
-     * @param filename
+     * @param filename The name of the file to return
      * @return The content of the argument file. Null if there was no such file.
      */
     byte[] getTextFileContent(String filename) {
@@ -179,37 +171,39 @@ public class WebWrapper implements IWrapper {
 
 
     /**
-     * @param filename
+     * @param filename The name of the file
      * @return The content of argument file including HTTP headers.
      */
     byte[] getStaticFileHeaderAndContent(String filename) {
         byte[] abFileContent;
-        HTTPStatusCode httpStatusCode;
         //If is to use cache AND the argument file is cached
         if (mFilesCacheOn && mFilesCache.has(filename)) {
             //Return cached file
             return mFilesCache.get(filename);
         }
-        //If file exists
-        if (FileRW.fileExists(filename)) {
-            httpStatusCode = HTTPStatusCode.OK;
-            abFileContent = FileRW.readFileAsByteArray(filename);
+        //If file doesn't exists
+        if (!FileRW.fileExists(filename)) {
+            return HttpResponse404.builder()
+                    .customHeaders(this.getCustomResponseHeaders())
+                    .filenameMissingFile(filename)
+                    .build()
+                    .getResponse();
         } else {
-            httpStatusCode = HTTPStatusCode.FileNotFound;
-            abFileContent = ("File '" + filename + "' not found").getBytes(Charset.forName(MyProperties.ENCODING));
+            abFileContent = FileRW.readFileAsByteArray(filename);
+            byte[] abFileHeaderAndContent = HttpResponseFile.builder()
+                    .body(abFileContent)
+                    .customHeaders(this.getCustomResponseHeaders())
+                    .filename(filename)
+                    .build()
+                    .getResponse();
+            //If is to use file cache
+            if (mFilesCacheOn) {
+                //Add file header and content to cache
+                this.mFilesCache.put(filename, abFileHeaderAndContent);
+            }
+            return abFileHeaderAndContent;
         }
-        //Get response header
-        String sResponseHeader = getResponseHeader(filename, abFileContent.length, httpStatusCode, ReturnType.FILE);
-        //Convert header to byte array
-        byte[] abResponseHeader = EncodingUtil.convertToByteArray(sResponseHeader);
-        //Concat and return header and file content
-        byte[] abFileHeaderAndContent = ArrayUtil.concat(abResponseHeader, abFileContent);
-        //If is to use file cache
-        if (mFilesCacheOn) {
-            //Add file header and content to cache
-            this.mFilesCache.put(filename, abFileHeaderAndContent);
-        }
-        return abFileHeaderAndContent;
+
     }
 
 
@@ -225,15 +219,15 @@ public class WebWrapper implements IWrapper {
      * The directory on the hard drive is added as a prefix to argument file
      * name.
      *
-     * @param requestedFile
-     * @return
+     * @param requestedFile The requested file
+     * @return The name of the actual file to return
      */
     String getActualFilename(String requestedFile) {
         // if filename is empty
         if (Checker.isEmpty(requestedFile)) {
             requestedFile = DEFAULT_PAGE;
         } // if the request if a folder path, we return the default file in this folder
-        else if (isFolderPath(requestedFile)) {
+        else if (FileUtil.isDirPath(requestedFile)) {
             // suffix with / if not there
             if (!requestedFile.endsWith("/")) {
                 requestedFile += "/";
@@ -245,26 +239,6 @@ public class WebWrapper implements IWrapper {
         requestedFile = mWebServerDir + requestedFile;
         return requestedFile;
     }
-
-
-    /**
-     * @param filename
-     * @return True if argument file has a text file extension, else false.
-     */
-    static boolean isTextFile(String filename) {
-        String fileExtension = FilenameUtils.getExtension(filename);
-        return FileTypes.getInstance().getProps(fileExtension).isTextFile();
-    }
-
-
-    @Override
-    public String wrapJSON(JSONObject response) {
-        String methodReturn = response.toString();
-        int contentLength = EncodingUtil.convertToByteArray(methodReturn).length;
-        String responseHeader = getResponseHeader("", contentLength, HTTPStatusCode.OK, ReturnType.JSON);
-        //The two extra new-lines needs to be there for Safari to be able to parse the JSON.
-        return (responseHeader + methodReturn + "\n\n");
-    }
     // ------------------------------------
     // - SERVER SIDE INCLUDES
     // ------------------------------------
@@ -274,7 +248,9 @@ public class WebWrapper implements IWrapper {
      * Replaces all the server side variable placeholders <!--#echo var="MY_VAR" --> with
      * the server side variable value.
      *
-     * @param fileContent
+     * @param fileContent         The file content into which the argument variables are to be
+     *                            injected
+     * @param serverSideVariables The variables to inject.
      * @return The argument with the placeholders replaced with server side
      * variables.
      */
@@ -308,8 +284,10 @@ public class WebWrapper implements IWrapper {
      * Replaces all include file placeholders <!--#include file="header.html" --> with the
      * content of the include file.
      *
-     * @param fileContent
-     * @return The argument with the placeholders replaced with filecontent.
+     * @param fileContent The content of the file in which include files are to be injected
+     * @param directory   The directory to prepend to the name of the include files.
+     * @return The argument file content with the placeholders replaced with the content of the
+     * include files.
      */
     static byte[] setServerIncludeFiles(byte[] fileContent, String directory) {
         //Create a string from the file content
@@ -331,7 +309,7 @@ public class WebWrapper implements IWrapper {
             } else {
                 includeFileContent = "Include file '" + includeFilename + "' not found";
             }
-            //Replace all $ with \$. This as dollar sign has a sepcial meaning in Matcher.appendRelacement
+            //Replace all $ with \$. This as dollar sign has a special meaning in Matcher.appendReplacement
             includeFileContent = includeFileContent.replaceAll("\\$", "\\\\\\$");
             //Add content up until include file and replace include file reference with include file content
             includeFileMatcher.appendReplacement(fileContentReturn, includeFileContent);
@@ -340,74 +318,6 @@ public class WebWrapper implements IWrapper {
         includeFileMatcher.appendTail(fileContentReturn);
         //Create byte array and return
         return EncodingUtil.convertToByteArray(fileContentReturn.toString());
-    }
-    // ------------------------------------
-    // - PRIVATE STATIC UTIL
-    // ------------------------------------
-
-
-    /**
-     * @param filename
-     * @param contentLength
-     * @return A response header for the argument filename and content length
-     */
-    private String getResponseHeader(String filename, int contentLength, HTTPStatusCode HTTPStatusCode, ReturnType contentType) {
-        Str str = Str.create()
-                .a("HTTP/1.1 ").acrlf(HTTPStatusCode.mCode)
-                .a("Server: ").acrlf(PropertiesDispatcher.RESP_HEADER_SERVER_NAME)
-                .a("Content-Length: ").acrlf(String.valueOf(contentLength))
-                .a("Content-Type: ").acrlf(getResponseHeaderContentType(filename, contentType));
-        //If there are any response headers to attach
-        if (!mResponseHeaders.isEmpty()) {
-            //Add the response headers
-            str.acrlf(Joiner.on("\r\n").withKeyValueSeparator(": ").join(mResponseHeaders));
-        }
-        //If there was no filename, i.e. is a method call Set the cache to zero seconds
-        int cacheMaxAgeInSeconds = Checker.isEmpty(filename) ? 0 : mBrowserCacheMaxAge;
-        return str.a("Cache-Control: ").a("max-age=")
-                .acrlf(String.valueOf(cacheMaxAgeInSeconds))
-                .acrlf().toString();
-    }
-
-
-    /**
-     * @param filename
-     * @return The content-type to use in a response header for the argument
-     * file name
-     */
-    private static String getResponseHeaderContentType(String filename, ReturnType contentType) {
-        String headerContentType;
-        switch (contentType) {
-            case JSON:
-                headerContentType = "application/json; charset=UTF-8";
-                break;
-            case STRING:
-                headerContentType = "text/html; charset=UTF-8";
-                break;
-            case FILE:
-                String filenameExtension = FilenameUtils.getExtension(filename);
-                headerContentType = FileTypes.getInstance().getProps(filenameExtension).getHeaderContentType();
-                break;
-            default:
-                throw new RuntimeException("Unhandled content type '" + contentType.name() + "'.");
-        }
-        return headerContentType;
-    }
-
-
-    /**
-     * Method to test if request is for a file or folder
-     *
-     * @param requestName
-     * @return
-     */
-    static boolean isFolderPath(String requestName) {
-        int lastSlash = requestName.lastIndexOf('/');
-        int lastDot = requestName.lastIndexOf('.');
-        // if we have not dot, it is a folder
-        // if we have a slash after the last dot, it is a folder
-        // else it is a file
-        return lastDot == -1 || lastSlash > lastDot;
     }
 
 

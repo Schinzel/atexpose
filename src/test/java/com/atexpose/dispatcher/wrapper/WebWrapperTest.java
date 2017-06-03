@@ -1,13 +1,15 @@
-package com.atexpose.dispatcher.wrapper.webresponse;
+package com.atexpose.dispatcher.wrapper;
 
+import com.atexpose.dispatcher.wrapper.WebWrapper;
 import com.atexpose.util.EncodingUtil;
 import com.google.common.collect.ImmutableMap;
+import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.collections.Cache;
+import io.schinzel.basicutils.substring.SubString;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,7 +119,7 @@ public class WebWrapperTest {
         //The value of the server side value should be in the file
         assertThat(fileAsString, containsString("#START#111222333#END#"));
     }
-    
+
 
     @Test
     public void testCache() {
@@ -232,20 +234,20 @@ public class WebWrapperTest {
 
     @Test
     public void testWrapJSON() {
-        JSONObject jo = new JSONObject();
-        jo.put("k1", "v1");
-        jo.put("k2", "v2");
-        WebWrapper webWrapper = WebWrapper.builder()
+        JSONObject json = new JSONObject()
+                .put("k1", "v1")
+                .put("k2", "v2");
+        String result = WebWrapper.builder()
                 .webServerDir("testfiles/")
                 .browserCacheMaxAge(10)
                 .cacheFilesInRam(false)
-                .build();
-        String result = webWrapper.wrapJSON(jo);
+                .build()
+                .wrapJSON(json);
         String expected = "HTTP/1.1 200 OK\r\n"
                 + "Server: @Expose\r\n"
-                + "Content-Length: 21\r\n"
                 + "Content-Type: application/json; charset=UTF-8\r\n"
-                + "Cache-Control: max-age=0\r\n\r\n"
+                + "Cache-Control: max-age=0\r\n"
+                + "Content-Length: 21\r\n\r\n"
                 + "{\"k1\":\"v1\",\"k2\":\"v2\"}\n\n";
         assertEquals(expected, result);
     }
@@ -266,11 +268,11 @@ public class WebWrapperTest {
         String result = webWrapper.wrapJSON(jo);
         String expected = "HTTP/1.1 200 OK\r\n"
                 + "Server: @Expose\r\n"
-                + "Content-Length: 21\r\n"
                 + "Content-Type: application/json; charset=UTF-8\r\n"
+                + "Cache-Control: max-age=0\r\n"
+                + "Content-Length: 21\r\n"
                 + "monkey: gibbon\r\n"
-                + "bear: kodiak\r\n"
-                + "Cache-Control: max-age=0\r\n\r\n"
+                + "bear: kodiak\r\n\r\n"
                 + "{\"k1\":\"v1\",\"k2\":\"v2\"}\n\n";
         assertEquals(expected, result);
     }
@@ -351,44 +353,6 @@ public class WebWrapperTest {
 
 
     @Test
-    public void testFolderPath() {
-        boolean test1 = WebWrapper.isFolderPath("somefolder");
-        assertTrue(test1);
-        boolean test2 = WebWrapper.isFolderPath("/somefolder");
-        assertTrue(test2);
-        boolean test3 = WebWrapper.isFolderPath("/somefolder/");
-        assertTrue(test3);
-        boolean test4 = WebWrapper.isFolderPath("somefolder.js");
-        assertFalse(test4);
-        boolean test5 = WebWrapper.isFolderPath("/somefolder.html");
-        assertFalse(test5);
-    }
-
-
-    @Test
-    public void testIsTextFile() {
-        assertTrue(WebWrapper.isTextFile("m.html"));
-        assertTrue(WebWrapper.isTextFile("really_really_really_long_file_name.html"));
-        assertTrue(WebWrapper.isTextFile("dot.in.name.html"));
-        assertTrue(WebWrapper.isTextFile("m.HTML"));
-        assertTrue(WebWrapper.isTextFile("m.hTmL"));
-        //
-        assertTrue(WebWrapper.isTextFile("file.htm"));
-        assertTrue(WebWrapper.isTextFile("file.css"));
-        assertTrue(WebWrapper.isTextFile("file.js"));
-        assertTrue(WebWrapper.isTextFile("file.txt"));
-        //
-        assertFalse(WebWrapper.isTextFile("file.ico"));
-        assertFalse(WebWrapper.isTextFile("file.png"));
-        assertFalse(WebWrapper.isTextFile("file.jpg"));
-        assertFalse(WebWrapper.isTextFile("file.jpeg"));
-        assertFalse(WebWrapper.isTextFile("file.gif"));
-        assertFalse(WebWrapper.isTextFile("file.svg"));
-        assertFalse(WebWrapper.isTextFile("file.map"));
-    }
-
-
-    @Test
     public void test_getTextFileHeaderAndContent() {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
@@ -436,16 +400,12 @@ public class WebWrapperTest {
         //Read file
         String fileName = webWrapper.getActualFilename("monkey.jpg");
         byte[] ab = webWrapper.getStaticFileHeaderAndContent(fileName);
-        //Get header
-        String partOfHeader = new String(ab, 0, 70, Charset.forName("UTF-8"));
-        //Get conent length in header
-        String conentLengthHeader = "Content-Length: ";
-        int start = partOfHeader.indexOf(conentLengthHeader) + conentLengthHeader.length();
-        int end = partOfHeader.indexOf("\r\n", start);
-        String lengthAsString = partOfHeader.substring(start, end);
-        int contentLengthInHeader = Integer.parseInt(lengthAsString);
-        //Check that conent length in header is same as size of actual file
-        assertEquals(416176, contentLengthInHeader);
+        String httpResponse = UTF8.getString(ab);
+        String contentLength = SubString.create(httpResponse)
+                .startDelimiter("Content-Length: ")
+                .endDelimiter("\r\n")
+                .getString();
+        assertEquals("416176", contentLength);
     }
 
 
@@ -458,16 +418,12 @@ public class WebWrapperTest {
                 .build();
         //Read file
         byte[] ab = webWrapper.wrapFile("monkey.jpg");
-        //Get header
-        String partOfHeader = new String(ab, 0, 70, Charset.forName("UTF-8"));
-        //Get conent length in header
-        String conentLengthHeader = "Content-Length: ";
-        int start = partOfHeader.indexOf(conentLengthHeader) + conentLengthHeader.length();
-        int end = partOfHeader.indexOf("\r\n", start);
-        String lengthAsString = partOfHeader.substring(start, end);
-        int contentLengthInHeader = Integer.parseInt(lengthAsString);
-        //Check that conent length in header is same as size of actual file
-        assertEquals(416176, contentLengthInHeader);
+        String httpResponse = UTF8.getString(ab);
+        String contentLength = SubString.create(httpResponse)
+                .startDelimiter("Content-Length: ")
+                .endDelimiter("\r\n")
+                .getString();
+        assertEquals("416176", contentLength);
     }
 
 }
