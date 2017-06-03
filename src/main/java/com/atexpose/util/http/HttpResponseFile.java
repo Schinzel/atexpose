@@ -10,18 +10,18 @@ import java.util.Map;
 /**
  * Created by schinzel on 2017-06-03.
  */
-public class HttpReponseFile {
+public class HttpResponseFile {
     @Getter
     private final byte[] response;
 
 
     @Builder
-    HttpReponseFile(byte[] body, String fileName, Map<String, String> customResponseHeaders) {
-        ContentType contentType = Bapp.getContentType(fileName);
+    HttpResponseFile(byte[] body, String fileName, Map<String, String> customResponseHeaders) {
+        ContentType contentType = FileExtensions.getContentType(fileName);
         String header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.OK)
                 .customResponseHeaders(customResponseHeaders)
-                .contentType(ContentType.TEXT)
+                .contentType(contentType)
                 .contentLength(body.length)
                 .build()
                 .getHeader()

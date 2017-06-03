@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by schinzel on 2017-06-01.
  */
-public class Bapp {
+class FileExtensions {
     private static final Map<String, ContentType> CONTENT_TYPES = ImmutableMap.<String, ContentType>builder()
             //Images
             .put("ico", ContentType.ICO)
@@ -33,7 +33,10 @@ public class Bapp {
             .build();
 
 
-    private Bapp() {
+    /**
+     * Private as should not be initilized
+     */
+    private FileExtensions() {
     }
 
 

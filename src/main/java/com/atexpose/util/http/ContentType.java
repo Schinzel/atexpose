@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public enum ContentType {
+enum ContentType {
     //Images
     ICO("image/ico"),
     PNG("image/png"),

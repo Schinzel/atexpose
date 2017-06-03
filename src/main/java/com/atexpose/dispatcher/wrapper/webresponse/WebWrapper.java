@@ -6,6 +6,9 @@ import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.util.ArrayUtil;
 import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
+import com.atexpose.util.http.HttpResponse404;
+import com.atexpose.util.http.HttpResponseFile;
+import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
@@ -59,6 +62,7 @@ public class WebWrapper implements IWrapper {
     private final Map<String, String> mServerSideVariables;
     //If true, files read - e.g. HTML files - will be cached in RAM.
     private boolean mFilesCacheOn = true;
+    @Getter(AccessLevel.PACKAGE)
     private Map<String, String> mResponseHeaders = new HashMap<>();
     @Getter(AccessLevel.PACKAGE)
     private Cache<String, byte[]> mFilesCache;
@@ -131,23 +135,24 @@ public class WebWrapper implements IWrapper {
     byte[] getTextFileHeaderAndContent(String filename) {
         //Get the text file
         byte[] abFileContent = this.getTextFileContent(filename);
-        HTTPStatusCode httpStatusCode;
         //If there was no such file
         if (abFileContent == null) {
-            httpStatusCode = HTTPStatusCode.FileNotFound;
-            abFileContent = ("File '" + filename + "' not found").getBytes(Charset.forName(MyProperties.ENCODING));
+            return HttpResponse404.builder()
+                    .customResponseHeaders(this.getResponseHeaders())
+                    .filenameMissingFile(filename)
+                    .build()
+                    .getResponse()
+                    .getBytes(Charsets.UTF_8);
         } else {
-            httpStatusCode = HTTPStatusCode.OK;
             //Add server side variables
             abFileContent = WebWrapper.setServerSideVariables(abFileContent, mServerSideVariables);
+            return HttpResponseFile.builder()
+                    .body(abFileContent)
+                    .customResponseHeaders(this.getResponseHeaders())
+                    .fileName(filename)
+                    .build()
+                    .getResponse();
         }
-        //Get response header
-        String sResponseHeader = getResponseHeader(filename, abFileContent.length, httpStatusCode, ReturnType.FILE);
-        //Convert header to byte array
-        byte[] abResponseHeader = EncodingUtil.convertToByteArray(sResponseHeader);
-        //Concat and return header and file content
-        byte[] abFileHeaderAndContent = ArrayUtil.concat(abResponseHeader, abFileContent);
-        return abFileHeaderAndContent;
     }
 
 
