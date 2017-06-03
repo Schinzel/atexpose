@@ -15,7 +15,7 @@ import java.util.Map;
  * <p>
  * Created by Schinzel on 2017-05-31.
  */
-public class HttpHeader {
+class HttpHeader {
     @Getter
     private final Str header;
 

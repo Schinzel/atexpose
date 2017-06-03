@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * The http statis codes.
+ * The http status codes.
  * <p>
  * Created by Schinzel on 2017-05-31.
  */

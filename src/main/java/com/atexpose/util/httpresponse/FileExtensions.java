@@ -36,7 +36,7 @@ class FileExtensions {
 
 
     /**
-     * Private as should not be initilized
+     * Private as should not be initialized
      */
     private FileExtensions() {
     }
