@@ -11,7 +11,7 @@ import static junit.framework.TestCase.assertEquals;
 public class HttpResponse302Test {
 
     @Test
-    public void HttpResponse302_Default_HeaderShouldContainStatusCode302(){
+    public void HttpResponse302_Default_HeaderShouldContainStatusCode302() {
         String header = HttpResponse302.builder()
                 .location("monkey.html")
                 .build()
