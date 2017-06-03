@@ -5,10 +5,7 @@ import com.atexpose.dispatcher.PropertiesDispatcher;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
-import com.atexpose.util.http.HttpResponse404;
-import com.atexpose.util.http.HttpResponseFile;
-import com.atexpose.util.http.HttpResponseJson;
-import com.atexpose.util.http.HttpResponseString;
+import com.atexpose.util.http.*;
 import com.google.common.base.Joiner;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
@@ -114,9 +111,11 @@ public class WebWrapper implements IWrapper {
 
     @Override
     public String wrapError(String error) {
-        int contentLength = EncodingUtil.convertToByteArray(error).length;
-        String responseHeader = getResponseHeader("", contentLength, HTTPStatusCode.InternalServerError, ReturnType.STRING);
-        return responseHeader + error;
+        return HttpResponse500.builder()
+                .body(error)
+                .customResponseHeaders(this.getResponseHeaders())
+                .build()
+                .getResponse();
     }
 
 
