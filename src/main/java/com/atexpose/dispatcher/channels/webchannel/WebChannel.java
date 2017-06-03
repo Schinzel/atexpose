@@ -157,12 +157,18 @@ public class WebChannel implements IChannel {
      */
     private String getDirectResponse(HttpRequest httpRequest) {
         if (httpRequest.isGhostCall()) {
-            return HttpResponseString.wrap("Hi Ghost!");
+            return HttpResponseString.builder()
+                    .body("Hi Ghost!")
+                    .build()
+                    .getResponse();
         }
         URI uri = httpRequest.getURI();
         if (mRedirects.shouldRedirect(uri)) {
             uri = mRedirects.getNewLocation(uri);
-            return HttpResponse302.wrap(uri.toString());
+            return HttpResponse302.builder()
+                    .location(uri.toString())
+                    .build()
+                    .getResponse();
         }
         //There was no direct response, and thus return empty string.
         return EmptyObjects.EMPTY_STRING;

@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * The purpose of this class is to represent a 302 redirect.
- *
+ * <p>
  * Created by schinzel on 2017-06-03.
  */
 public class HttpResponse302 {
@@ -31,11 +31,4 @@ public class HttpResponse302 {
                 .getString();
     }
 
-
-    public static String wrap(String newLocation) {
-        return HttpResponse302.builder()
-                .location(newLocation)
-                .build()
-                .getResponse();
-    }
 }

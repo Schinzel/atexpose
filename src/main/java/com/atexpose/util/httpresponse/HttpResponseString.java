@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * The purpose of this file is to compile a http string response.
- *
+ * <p>
  * Created by schinzel on 2017-06-03.
  */
 public class HttpResponseString {
@@ -30,12 +30,5 @@ public class HttpResponseString {
                 .getString();
     }
 
-
-    public static String wrap(String body) {
-        return HttpResponseString.builder()
-                .body(body)
-                .build()
-                .getResponse();
-    }
 
 }
