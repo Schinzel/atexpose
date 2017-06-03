@@ -1,5 +1,6 @@
-package com.atexpose.dispatcher.wrapper.webresponse;
+package com.atexpose.dispatcher.wrapper;
 
+import com.atexpose.dispatcher.wrapper.FileUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -27,6 +28,20 @@ public class FileUtilTest {
         assertFalse(FileUtil.isTextFile("file.gif"));
         assertFalse(FileUtil.isTextFile("file.svg"));
         assertFalse(FileUtil.isTextFile("file.map"));
-
     }
+
+    @Test
+    public void testFolderPath() {
+        boolean test1 = FileUtil.isDirPath("somefolder");
+        assertTrue(test1);
+        boolean test2 = FileUtil.isDirPath("/somefolder");
+        assertTrue(test2);
+        boolean test3 = FileUtil.isDirPath("/somefolder/");
+        assertTrue(test3);
+        boolean test4 = FileUtil.isDirPath("somefolder.js");
+        assertFalse(test4);
+        boolean test5 = FileUtil.isDirPath("/somefolder.html");
+        assertFalse(test5);
+    }
+    
 }

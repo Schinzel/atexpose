@@ -9,7 +9,7 @@ import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.urlparser.UrlParser;
 import com.atexpose.dispatcher.parser.urlparser.UrlParserWithGSuiteAuth;
 import com.atexpose.dispatcher.wrapper.IWrapper;
-import com.atexpose.dispatcher.wrapper.webresponse.WebWrapper;
+import com.atexpose.dispatcher.wrapper.WebWrapper;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 

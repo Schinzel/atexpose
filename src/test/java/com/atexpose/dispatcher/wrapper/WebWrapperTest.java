@@ -1,5 +1,6 @@
-package com.atexpose.dispatcher.wrapper.webresponse;
+package com.atexpose.dispatcher.wrapper;
 
+import com.atexpose.dispatcher.wrapper.WebWrapper;
 import com.atexpose.util.EncodingUtil;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.UTF8;
@@ -348,21 +349,6 @@ public class WebWrapperTest {
         webWrapper.wrapFile("somefolder");
         // should return the default file
         assertTrue(webWrapper.getFilesCache().has("testfiles/somefolder/index.html"));
-    }
-
-
-    @Test
-    public void testFolderPath() {
-        boolean test1 = WebWrapper.isFolderPath("somefolder");
-        assertTrue(test1);
-        boolean test2 = WebWrapper.isFolderPath("/somefolder");
-        assertTrue(test2);
-        boolean test3 = WebWrapper.isFolderPath("/somefolder/");
-        assertTrue(test3);
-        boolean test4 = WebWrapper.isFolderPath("somefolder.js");
-        assertFalse(test4);
-        boolean test5 = WebWrapper.isFolderPath("/somefolder.html");
-        assertFalse(test5);
     }
 
 

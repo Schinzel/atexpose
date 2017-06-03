@@ -1,7 +1,6 @@
-package com.atexpose.dispatcher.wrapper.webresponse;
+package com.atexpose.dispatcher.wrapper;
 
 import com.atexpose.MyProperties;
-import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
 import com.atexpose.util.http.*;
@@ -105,6 +104,16 @@ public class WebWrapper implements IWrapper {
         return FileUtil.isTextFile(filename)
                 ? this.getTextFileHeaderAndContent(filename)
                 : this.getStaticFileHeaderAndContent(filename);
+    }
+
+
+    @Override
+    public String wrapJSON(JSONObject response) {
+        return HttpResponseJson.builder()
+                .body(response)
+                .customResponseHeaders(this.getResponseHeaders())
+                .build()
+                .getResponse();
     }
 
 
@@ -219,7 +228,7 @@ public class WebWrapper implements IWrapper {
         if (Checker.isEmpty(requestedFile)) {
             requestedFile = DEFAULT_PAGE;
         } // if the request if a folder path, we return the default file in this folder
-        else if (isFolderPath(requestedFile)) {
+        else if (FileUtil.isDirPath(requestedFile)) {
             // suffix with / if not there
             if (!requestedFile.endsWith("/")) {
                 requestedFile += "/";
@@ -230,16 +239,6 @@ public class WebWrapper implements IWrapper {
         //Prefix with path to directory where files resides
         requestedFile = mWebServerDir + requestedFile;
         return requestedFile;
-    }
-
-
-    @Override
-    public String wrapJSON(JSONObject response) {
-        return HttpResponseJson.builder()
-                .body(response)
-                .customResponseHeaders(this.getResponseHeaders())
-                .build()
-                .getResponse();
     }
     // ------------------------------------
     // - SERVER SIDE INCLUDES
@@ -317,25 +316,8 @@ public class WebWrapper implements IWrapper {
         //Create byte array and return
         return EncodingUtil.convertToByteArray(fileContentReturn.toString());
     }
-    // ------------------------------------
-    // - PRIVATE STATIC UTIL
-    // ------------------------------------
 
 
-    /**
-     * Method to test if request is for a file or folder
-     *
-     * @param requestName
-     * @return
-     */
-    static boolean isFolderPath(String requestName) {
-        int lastSlash = requestName.lastIndexOf('/');
-        int lastDot = requestName.lastIndexOf('.');
-        // if we have not dot, it is a folder
-        // if we have a slash after the last dot, it is a folder
-        // else it is a file
-        return lastDot == -1 || lastSlash > lastDot;
-    }
 
 
     @Override
