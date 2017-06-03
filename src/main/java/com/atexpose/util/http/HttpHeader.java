@@ -20,19 +20,20 @@ public class HttpHeader {
 
 
     @Builder
-    HttpHeader(HttpStatusCode httpStatusCode, Map<String, String> customResponseHeaders, ContentType contentType, int browserCacheMaxAgeInSeconds, int contentLength) {
+    HttpHeader(HttpStatusCode httpStatusCode, Map<String, String> customResponseHeaders,
+               ContentType contentType, int browserCacheMaxAgeInSeconds, int contentLength) {
         header = Str.create()
                 .a("HTTP/1.1 ").acrlf(httpStatusCode.getCode())
                 .a("Server: ").acrlf(PropertiesDispatcher.RESP_HEADER_SERVER_NAME)
                 .a("Content-Type: ").acrlf(contentType.getContentType())
                 .a("Cache-Control: ").a("max-age=").acrlf(String.valueOf(browserCacheMaxAgeInSeconds))
-                .a("Content-Length: ").acrlf(String.valueOf(contentLength));
-        //If there are any response headers to attach
-        if (!Checker.isEmpty(customResponseHeaders)) {
-            //Add the response headers
-            header.acrlf(Joiner.on("\r\n").withKeyValueSeparator(": ").join(customResponseHeaders));
-        }
-        header.acrlf();
+                .a("Content-Length: ").acrlf(String.valueOf(contentLength))
+                //If there are custom response headers
+                .ifTrue(!Checker.isEmpty(customResponseHeaders))
+                //Add the custom response headers
+                .acrlf(Joiner.on("\r\n").withKeyValueSeparator(": ").join(customResponseHeaders))
+                .endIf()
+                .acrlf();
     }
 
 

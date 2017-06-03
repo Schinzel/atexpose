@@ -7,18 +7,17 @@ import lombok.Getter;
 import java.util.Map;
 
 /**
- * Created by schinzel on 2017-06-01.
+ * Created by schinzel on 2017-06-03.
  */
-public class HttpResponse404 {
+class HttpResponseText {
     @Getter
     private final String response;
 
     @Builder
-    HttpResponse404(String filenameMissingFile, Map<String, String> customResponseHeaders) {
-        String message = "File '" + filenameMissingFile + "' not found";
+    HttpResponseText(HttpStatusCode httpStatusCode, String message, Map<String, String> customResponseHeaders) {
         int contentLength = UTF8.getBytes(message).length;
         HttpHeader header = HttpHeader.builder()
-                .httpStatusCode(HttpStatusCode.FILE_NOT_FOUND)
+                .httpStatusCode(httpStatusCode)
                 .customResponseHeaders(customResponseHeaders)
                 .contentType(ContentType.TEXT)
                 .contentLength(contentLength)
