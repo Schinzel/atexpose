@@ -268,11 +268,6 @@ public class WebWrapper implements IWrapper {
                 .customResponseHeaders(this.getResponseHeaders())
                 .build()
                 .getResponse();
-        /*String methodReturn = response.toString();
-        int contentLength = EncodingUtil.convertToByteArray(methodReturn).length;
-        String responseHeader = getResponseHeader("", contentLength, HTTPStatusCode.OK, ReturnType.JSON);
-        //The two extra new-lines needs to be there for Safari to be able to parse the JSON.
-        return (responseHeader + methodReturn + "\n\n");*/
     }
     // ------------------------------------
     // - SERVER SIDE INCLUDES
