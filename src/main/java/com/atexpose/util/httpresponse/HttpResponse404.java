@@ -10,12 +10,13 @@ import java.util.Map;
 
 /**
  * The purpose of this file is to compile a 404 http response.
- *
+ * <p>
  * Created by schinzel on 2017-06-01.
  */
 public class HttpResponse404 {
     @Getter
     private final byte[] response;
+
 
     @Builder
     HttpResponse404(@NonNull String filenameMissingFile, Map<String, String> customHeaders) {

@@ -10,7 +10,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class HttpResponseStringTest {
     @Test
-    public void getResponse_SetBody_HeaderShouldContainStatusCode200()  {
+    public void getResponse_SetBody_HeaderShouldContainStatusCode200() {
         String body = "If I say you have a nice body, would you hold it against me?";
         String httpResponse = HttpResponseString.builder()
                 .body(body)
@@ -24,8 +24,9 @@ public class HttpResponseStringTest {
         assertEquals(expected, actual);
     }
 
+
     @Test
-    public void getResponse_SetBody_BodyShouldBeTheSame()  {
+    public void getResponse_SetBody_BodyShouldBeTheSame() {
         String body = "If I say you have a nice body, would you hold it against me?";
         String httpResponse = HttpResponseString.builder()
                 .body(body)
@@ -40,7 +41,7 @@ public class HttpResponseStringTest {
 
 
     @Test
-    public void getResponse_SetBodyAndCustomHeader_BodyShouldBeTheSame()  {
+    public void getResponse_SetBodyAndCustomHeader_BodyShouldBeTheSame() {
         String body = "If I say you have a nice body, would you hold it against me?";
         Map<String, String> customHeaders = ImmutableMap.<String, String>builder()
                 .put("monkey", "gibbon")
@@ -59,7 +60,7 @@ public class HttpResponseStringTest {
 
 
     @Test
-    public void getResponse_SetBodyAndCustomHeader_HeaderShouldContainCustomHeader()  {
+    public void getResponse_SetBodyAndCustomHeader_HeaderShouldContainCustomHeader() {
         String body = "If I say you have a nice body, would you hold it against me?";
         Map<String, String> customHeaders = ImmutableMap.<String, String>builder()
                 .put("monkey", "gibbon")

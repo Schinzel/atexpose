@@ -9,12 +9,13 @@ import java.util.Map;
 
 /**
  * The purpose of this file is to compile a internal server error response.
- *
+ * <p>
  * Created by schinzel on 2017-06-03.
  */
 public class HttpResponse500 {
     @Getter
     private final String response;
+
 
     @Builder
     HttpResponse500(@NonNull String body, Map<String, String> customHeaders) {

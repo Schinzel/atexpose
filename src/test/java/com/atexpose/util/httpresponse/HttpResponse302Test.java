@@ -24,8 +24,9 @@ public class HttpResponse302Test {
         assertEquals(expected, actual);
     }
 
+
     @Test
-    public void getResponse_SetLocation_HeaderShouldContainLocation(){
+    public void getResponse_SetLocation_HeaderShouldContainLocation() {
         String httpResponse = HttpResponse302.builder()
                 .location("monkey.html")
                 .build()
@@ -38,8 +39,9 @@ public class HttpResponse302Test {
         assertEquals(expected, actual);
     }
 
+
     @Test
-    public void getResponse_SetCustomerHeader_HeaderShouldContainLocation(){
+    public void getResponse_SetCustomerHeader_HeaderShouldContainLocation() {
         Map<String, String> map = ImmutableMap.<String, String>builder()
                 .put("Key", "Val")
                 .build();
@@ -58,7 +60,7 @@ public class HttpResponse302Test {
 
 
     @Test
-    public void getResponse_SetCustomerHeader_HeaderShouldContainCustomHeader(){
+    public void getResponse_SetCustomerHeader_HeaderShouldContainCustomHeader() {
         Map<String, String> map = ImmutableMap.<String, String>builder()
                 .put("Key", "Val")
                 .build();

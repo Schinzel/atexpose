@@ -31,6 +31,4 @@ enum ContentType {
 
     @Getter
     private final String contentType;
-
-
 }

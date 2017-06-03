@@ -10,12 +10,13 @@ import java.util.Map;
 
 /**
  * The purpose of this file is to compile a http json response.
- *
+ * <p>
  * Created by schinzel on 2017-06-03.
  */
 public class HttpResponseJson {
     @Getter
     private final String response;
+
 
     @Builder
     HttpResponseJson(@NonNull JSONObject body, Map<String, String> customHeaders) {

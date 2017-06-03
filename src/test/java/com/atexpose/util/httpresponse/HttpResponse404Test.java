@@ -26,6 +26,7 @@ public class HttpResponse404Test {
         assertEquals(expected, actual);
     }
 
+
     @Test
     public void getResponse_Default_BodyShouldContainFileName() {
         String httpResponse = UTF8.getString(HttpResponse404.builder()
@@ -38,6 +39,7 @@ public class HttpResponse404Test {
         String expected = "File 'monkey.txt' not found";
         assertEquals(expected, actual);
     }
+
 
     @Test
     public void getResponse_CustomHeader_HeaderShouldContainCustomHeader() {

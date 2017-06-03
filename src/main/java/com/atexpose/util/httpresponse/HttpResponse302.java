@@ -19,9 +19,9 @@ public class HttpResponse302 {
 
     @Builder
     HttpResponse302(String location, Map<String, String> customHeaders) {
-        Map<String,String> locationHeader = new HashMap<>();
+        Map<String, String> locationHeader = new HashMap<>();
         locationHeader.put("Location", location);
-        if (Checker.isNotEmpty(customHeaders)){
+        if (Checker.isNotEmpty(customHeaders)) {
             locationHeader.putAll(customHeaders);
         }
         response = HttpHeader.builder()

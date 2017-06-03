@@ -23,7 +23,7 @@ class HttpHeader {
     @Builder
     HttpHeader(HttpStatusCode httpStatusCode, Map<String, String> customHeaders,
                ContentType contentType, int browserCacheMaxAgeInSeconds, int contentLength) {
-        if(customHeaders == null){
+        if (customHeaders == null) {
             customHeaders = EmptyObjects.EMPTY_MAP;
         }
         header = Str.create()
