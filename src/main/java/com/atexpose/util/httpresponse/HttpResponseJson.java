@@ -3,6 +3,7 @@ package com.atexpose.util.httpresponse;
 import io.schinzel.basicutils.UTF8;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -17,7 +18,7 @@ public class HttpResponseJson {
     private final String response;
 
     @Builder
-    HttpResponseJson(JSONObject body, Map<String, String> customHeaders) {
+    HttpResponseJson(@NonNull JSONObject body, Map<String, String> customHeaders) {
         String bodyAsString = body.toString();
         int contentLength = UTF8.getBytes(bodyAsString).length;
         HttpHeader header = HttpHeader.builder()

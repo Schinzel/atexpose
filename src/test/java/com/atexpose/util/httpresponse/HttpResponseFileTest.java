@@ -13,12 +13,12 @@ public class HttpResponseFileTest {
     @Test
     public void getResponse_JsFile_HeaderShouldContainStatusCode200() {
         String fileContent = "This is file content";
-        String header = UTF8.getString(HttpResponseFile.builder()
+        String httpResponse = UTF8.getString(HttpResponseFile.builder()
                 .filename("monkey.js")
                 .body(UTF8.getBytes(fileContent))
                 .build()
                 .getResponse());
-        String actual = SubString.create(header)
+        String actual = SubString.create(httpResponse)
                 .startDelimiter("HTTP/1.1 ")
                 .endDelimiter("\r\n")
                 .toString();
@@ -30,12 +30,12 @@ public class HttpResponseFileTest {
     @Test
     public void getResponse_JsFile_HeaderContentTypeShouldBeJs() {
         String fileContent = "This is file content";
-        String header = UTF8.getString(HttpResponseFile.builder()
+        String httpResponse = UTF8.getString(HttpResponseFile.builder()
                 .filename("monkey.js")
                 .body(UTF8.getBytes(fileContent))
                 .build()
                 .getResponse());
-        String actual = SubString.create(header)
+        String actual = SubString.create(httpResponse)
                 .startDelimiter("Content-Type: ")
                 .endDelimiter("\r\n")
                 .toString();
