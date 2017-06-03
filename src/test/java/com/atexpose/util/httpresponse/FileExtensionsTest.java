@@ -5,9 +5,11 @@ import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
-public class FileExtensionsTest extends FileExtensions{
+public class FileExtensionsTest extends FileExtensions {
     @Rule
     public ExpectedException exception = ExpectedException.none();
+
+
     @Test
     public void getContentType_monkeyDotTxt_ContentTypeTxt() {
         ContentType actual = FileExtensions.getContentType("monkey.txt");
@@ -20,6 +22,6 @@ public class FileExtensionsTest extends FileExtensions{
     public void getContentType_UnknownType_Exception() {
         exception.expect(RuntimeException.class);
         exception.expectMessage("No know content type for file");
-        ContentType actual = FileExtensions.getContentType("monkey.yyy");
+        FileExtensions.getContentType("monkey.yyy");
     }
 }
