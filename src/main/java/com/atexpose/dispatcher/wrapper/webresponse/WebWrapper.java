@@ -7,6 +7,7 @@ import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
 import com.atexpose.util.http.HttpResponse404;
 import com.atexpose.util.http.HttpResponseFile;
+import com.atexpose.util.http.HttpResponseJson;
 import com.google.common.base.Joiner;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
@@ -262,11 +263,16 @@ public class WebWrapper implements IWrapper {
 
     @Override
     public String wrapJSON(JSONObject response) {
-        String methodReturn = response.toString();
+        return HttpResponseJson.builder()
+                .body(response)
+                .customResponseHeaders(this.getResponseHeaders())
+                .build()
+                .getResponse();
+        /*String methodReturn = response.toString();
         int contentLength = EncodingUtil.convertToByteArray(methodReturn).length;
         String responseHeader = getResponseHeader("", contentLength, HTTPStatusCode.OK, ReturnType.JSON);
         //The two extra new-lines needs to be there for Safari to be able to parse the JSON.
-        return (responseHeader + methodReturn + "\n\n");
+        return (responseHeader + methodReturn + "\n\n");*/
     }
     // ------------------------------------
     // - SERVER SIDE INCLUDES

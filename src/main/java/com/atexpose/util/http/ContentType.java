@@ -16,7 +16,7 @@ enum ContentType {
     CSS("text/css"),
     JAVASCRIPT("text/javascript"),
     TEXT_FILE("text/plain"),
-    JSON("application/json"),
+    JSON("application/json; charset=UTF-8"),
     //Other
     MAP("text/plain"),
     PDF("application/pdf"),

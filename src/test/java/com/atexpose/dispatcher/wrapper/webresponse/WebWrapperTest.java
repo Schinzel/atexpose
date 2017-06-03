@@ -118,7 +118,7 @@ public class WebWrapperTest {
         //The value of the server side value should be in the file
         assertThat(fileAsString, containsString("#START#111222333#END#"));
     }
-    
+
 
     @Test
     public void testCache() {
@@ -233,20 +233,20 @@ public class WebWrapperTest {
 
     @Test
     public void testWrapJSON() {
-        JSONObject jo = new JSONObject();
-        jo.put("k1", "v1");
-        jo.put("k2", "v2");
-        WebWrapper webWrapper = WebWrapper.builder()
+        JSONObject json = new JSONObject()
+                .put("k1", "v1")
+                .put("k2", "v2");
+        String result = WebWrapper.builder()
                 .webServerDir("testfiles/")
                 .browserCacheMaxAge(10)
                 .cacheFilesInRam(false)
-                .build();
-        String result = webWrapper.wrapJSON(jo);
+                .build()
+                .wrapJSON(json);
         String expected = "HTTP/1.1 200 OK\r\n"
                 + "Server: @Expose\r\n"
-                + "Content-Length: 21\r\n"
                 + "Content-Type: application/json; charset=UTF-8\r\n"
-                + "Cache-Control: max-age=0\r\n\r\n"
+                + "Cache-Control: max-age=0\r\n"
+                + "Content-Length: 21\r\n\r\n"
                 + "{\"k1\":\"v1\",\"k2\":\"v2\"}\n\n";
         assertEquals(expected, result);
     }
@@ -267,11 +267,11 @@ public class WebWrapperTest {
         String result = webWrapper.wrapJSON(jo);
         String expected = "HTTP/1.1 200 OK\r\n"
                 + "Server: @Expose\r\n"
-                + "Content-Length: 21\r\n"
                 + "Content-Type: application/json; charset=UTF-8\r\n"
+                + "Cache-Control: max-age=0\r\n"
+                + "Content-Length: 21\r\n"
                 + "monkey: gibbon\r\n"
-                + "bear: kodiak\r\n"
-                + "Cache-Control: max-age=0\r\n\r\n"
+                + "bear: kodiak\r\n\r\n"
                 + "{\"k1\":\"v1\",\"k2\":\"v2\"}\n\n";
         assertEquals(expected, result);
     }
@@ -438,7 +438,7 @@ public class WebWrapperTest {
         String fileName = webWrapper.getActualFilename("monkey.jpg");
         byte[] ab = webWrapper.getStaticFileHeaderAndContent(fileName);
         String httpResponse = UTF8.getString(ab);
-        String contentLength= SubString.create(httpResponse)
+        String contentLength = SubString.create(httpResponse)
                 .startDelimiter("Content-Length: ")
                 .endDelimiter("\r\n")
                 .getString();
@@ -456,7 +456,7 @@ public class WebWrapperTest {
         //Read file
         byte[] ab = webWrapper.wrapFile("monkey.jpg");
         String httpResponse = UTF8.getString(ab);
-        String contentLength= SubString.create(httpResponse)
+        String contentLength = SubString.create(httpResponse)
                 .startDelimiter("Content-Length: ")
                 .endDelimiter("\r\n")
                 .getString();

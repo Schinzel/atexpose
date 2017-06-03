@@ -29,7 +29,7 @@ public class HttpHeader {
                 .a("Cache-Control: ").a("max-age=").acrlf(String.valueOf(browserCacheMaxAgeInSeconds))
                 .a("Content-Length: ").acrlf(String.valueOf(contentLength))
                 //If there are custom response headers
-                .ifTrue(!Checker.isEmpty(customResponseHeaders))
+                .ifTrue(Checker.isNotEmpty(customResponseHeaders))
                 //Add the custom response headers
                 .acrlf(Joiner.on("\r\n").withKeyValueSeparator(": ").join(customResponseHeaders))
                 .endIf()
