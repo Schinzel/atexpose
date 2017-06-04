@@ -162,7 +162,7 @@ public class API implements IStateNode {
 
 
     private void expose(Class theClass, Object theObject) {
-        Method[] methods = theClass.getMethods();
+        Method[] methods = theClass.getDeclaredMethods();
         for (Method method : methods) {
             Expose expose = method.getAnnotation(Expose.class);
             if (expose != null) {
