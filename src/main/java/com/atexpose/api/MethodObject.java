@@ -111,7 +111,13 @@ public class MethodObject implements IValueKey, IStateNode {
         try {
             returnObject = mMethod.invoke(mObject, argumentValuesAsObjects);
         } catch (InvocationTargetException ite) {
-            throw new RuntimeError(ite.getCause().getMessage());
+            StackTraceElement ste = ite.getCause().getStackTrace()[0];
+            Str str = Str.create()
+                    .a("Message: ").anl(ite.getCause().getMessage())
+                    .a("Class: ").anl(ste.getClassName())
+                    .a("Method: ").anl(ste.getMethodName())
+                    .a("Line num: ").a(ste.getLineNumber());
+            throw new RuntimeError(str.getString());
         } catch (IllegalAccessException iae) {
             throw new RuntimeError("Access error " + iae.toString());
         }
