@@ -106,10 +106,15 @@ public class MethodObject implements IValueKey, IStateNode {
         this.checkNumberOfArguments(argumentValues);
         this.checkAccessLevel(dispatcherAccessLevel);
         Object[] argumentValuesAsObjects = this.castArgumentValuesToUse(argumentValues, argumentNames);
-        argumentValuesAsObjects = setDefaultArgumentValues(argumentValuesAsObjects, argumentNames);
+        argumentValuesAsObjects = this.setDefaultArgumentValues(argumentValuesAsObjects, argumentNames);
+        return MethodObject.invoke(mMethod, mObject, argumentValuesAsObjects);
+    }
+
+
+    static Object invoke(Method method, Object object, Object[] argumentValuesAsObjects) {
         Object returnObject;
         try {
-            returnObject = mMethod.invoke(mObject, argumentValuesAsObjects);
+            returnObject = method.invoke(object, argumentValuesAsObjects);
         } catch (InvocationTargetException ite) {
             StackTraceElement ste = ite.getCause().getStackTrace()[0];
             Str str = Str.create()
