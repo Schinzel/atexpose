@@ -45,6 +45,9 @@ You want ten different web servers, you got it. You can build you own custom par
 ## Features added for next release
 - Nothing yet
 
+## 0.9.23
+- Removed see-alsos annotation
+
 ## 0.9.22
 - Can now expose package private methods
 
