@@ -39,7 +39,7 @@ You want ten different web servers, you got it. You can build you own custom par
 
 
 
-<a href="https://sites.google.com/schinzel.io/atexpose" target="_blank">Ge here for full documentation</a>
+<a href="https://sites.google.com/schinzel.io/atexpose" target="_blank">Go here for full documentation</a>
 
 # Change Log
 ## Features added for next release
