@@ -33,7 +33,7 @@ public enum LogWriterFactory {
     /**
      * 
      * @param className
-     * @return 
+     * @return The log writer factory for the argument class.
      */
     public static LogWriterFactory get(String className) {
         for (LogWriterFactory logWriter : LogWriterFactory.values()) {
