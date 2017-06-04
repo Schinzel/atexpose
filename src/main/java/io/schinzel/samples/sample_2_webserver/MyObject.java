@@ -8,19 +8,24 @@ import com.atexpose.Expose;
  * Created by Schinzel on 2017-03-06.
  */
 public class MyObject {
-    public String mStr = "bapp";
+    String mStr = "bapp";
 
 
     @Expose(
-            arguments = {"String"}
+            description = "The thing is set to the argument value",
+            arguments = {"String"},
+            theReturn = "The argument string with a prefix"
     )
-    public String setIt(String str) {
+    public String setTheThing(String str) {
         mStr = str;
         return "It was set to '" + str + "'.";
     }
 
-    @Expose
-    public String getIt(){
+
+    @Expose(
+            theReturn = "The value the thing has been set to."
+    )
+    public String getTheThing() {
         return mStr;
     }
 

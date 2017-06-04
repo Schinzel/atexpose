@@ -14,7 +14,8 @@ public class MyClass {
 
 
     @Expose(
-            arguments = {"Int"}
+            arguments = {"Int"},
+            theReturn = "The argument number doubled"
     )
     public static int doubleIt(int i) {
         return i * 2;
@@ -22,7 +23,8 @@ public class MyClass {
 
 
     @Expose(
-            arguments = {"String"}
+            arguments = {"String"},
+            theReturn = "The argument string prefixed with Echo"
     )
     public static String doEcho(String str) {
         return "Echo: " + str;

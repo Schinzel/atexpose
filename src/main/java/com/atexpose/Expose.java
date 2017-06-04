@@ -27,8 +27,5 @@ public @interface Expose {
     String theReturn() default "Result";
 
 
-    String[] seeAlsos() default {};
-
-
     String[] aliases() default {};
 }
