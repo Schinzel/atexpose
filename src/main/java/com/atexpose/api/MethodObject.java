@@ -106,12 +106,23 @@ public class MethodObject implements IValueKey, IStateNode {
         this.checkNumberOfArguments(argumentValues);
         this.checkAccessLevel(dispatcherAccessLevel);
         Object[] argumentValuesAsObjects = this.castArgumentValuesToUse(argumentValues, argumentNames);
-        argumentValuesAsObjects = setDefaultArgumentValues(argumentValuesAsObjects, argumentNames);
+        argumentValuesAsObjects = this.setDefaultArgumentValues(argumentValuesAsObjects, argumentNames);
+        return MethodObject.invoke(mMethod, mObject, argumentValuesAsObjects);
+    }
+
+
+    static Object invoke(Method method, Object object, Object[] argumentValuesAsObjects) {
         Object returnObject;
         try {
-            returnObject = mMethod.invoke(mObject, argumentValuesAsObjects);
+            returnObject = method.invoke(object, argumentValuesAsObjects);
         } catch (InvocationTargetException ite) {
-            throw new RuntimeError(ite.getCause().getMessage());
+            StackTraceElement ste = ite.getCause().getStackTrace()[0];
+            Str str = Str.create()
+                    .a("Message: ").anl(ite.getCause().getMessage())
+                    .a("Class: ").anl(ste.getClassName())
+                    .a("Method: ").anl(ste.getMethodName())
+                    .a("Line num: ").a(ste.getLineNumber());
+            throw new RuntimeError(str.getString());
         } catch (IllegalAccessException iae) {
             throw new RuntimeError("Access error " + iae.toString());
         }
