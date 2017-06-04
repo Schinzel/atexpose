@@ -8,7 +8,7 @@ import com.atexpose.Expose;
 public class MyClass {
 
     @Expose
-    public static String sayIt() {
+    static String sayIt() {
         return "Helloooo world!";
     }
 
