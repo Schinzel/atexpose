@@ -40,3 +40,16 @@ You want ten different web servers, you got it. You can build you own custom par
 
 
 <a href="https://sites.google.com/schinzel.io/atexpose" target="_blank">Ge here for full documentation</a>
+
+# Change Log
+## Features added for next release
+- Nothing yet
+
+## 0.9.22
+- Can now expose package private methods
+
+## 0.9.21
+- More detailed error messages. 
+
+## 0.9.20
+- Refactoring. 
