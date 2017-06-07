@@ -1,9 +1,7 @@
 package com.atexpose.dispatcher.channels;
 
 import com.atexpose.util.ByteStorage;
-import org.hamcrest.Matchers;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -14,7 +12,9 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
+
 
 /**
  * @author Schinzel
@@ -107,7 +107,7 @@ public class ScheduledTaskChannelTest {
         assertEquals(timeOfDay, stc.mTaskTime);
         //Time to fire should be after now
         assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
-        //Time to fire shoulb be within 24 hours
+        //Time to fire should be within 24 hours
         assertTrue(stc.mTimeToFireNext.isBefore(LocalDateTime.now(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS)));
         //
         timeOfDay = "14:55";
@@ -117,7 +117,7 @@ public class ScheduledTaskChannelTest {
         assertEquals(timeOfDay, stc.mTaskTime);
         //Time to fire should be after now
         assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
-        //Time to fire shoulb be within 24 hours
+        //Time to fire should be within 24 hours
         assertTrue(stc.mTimeToFireNext.isBefore(LocalDateTime.now(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS)));
         //
         timeOfDay = "21:00";
@@ -127,7 +127,7 @@ public class ScheduledTaskChannelTest {
         assertEquals(timeOfDay, stc.mTaskTime);
         //Time to fire should be after now
         assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
-        //Time to fire shoulb be within 24 hours
+        //Time to fire should be within 24 hours
         assertTrue(stc.mTimeToFireNext.isBefore(LocalDateTime.now(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS)));
         //
         timeOfDay = "04:06";
@@ -137,7 +137,7 @@ public class ScheduledTaskChannelTest {
         assertEquals(timeOfDay, stc.mTaskTime);
         //Time to fire should be after now
         assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
-        //Time to fire shoulb be within 24 hours
+        //Time to fire should be within 24 hours
         assertTrue(stc.mTimeToFireNext.isBefore(LocalDateTime.now(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS)));
     }
 
@@ -192,8 +192,7 @@ public class ScheduledTaskChannelTest {
         stc.sleep(nanosToSleep);
         //Calc the time to do all iterations
         long executionTimeInMS = (System.nanoTime() - start) / 1000000;
-        Assert.assertThat(executionTimeInMS, Matchers.lessThan(30l));
-        Assert.assertThat(executionTimeInMS, Matchers.greaterThanOrEqualTo(20l));
+        assertThat(executionTimeInMS).isBetween(20L, 30L);
 
     }
 
@@ -294,7 +293,7 @@ public class ScheduledTaskChannelTest {
         thread.start();
         //Interrupt the waiting task but requesting a shutdown
         stc.shutdown(thread);
-        //assert that false is returned as the wake-up was not normal, but a shutwon
+        //assert that false is returned as the wake-up was not normal, but a shutdown
         assertFalse(tr.mWasNormalWakeUp);
     }
 

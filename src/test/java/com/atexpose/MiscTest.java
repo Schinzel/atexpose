@@ -1,8 +1,6 @@
 package com.atexpose;
 
 import com.atexpose.errors.RuntimeError;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -11,6 +9,7 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author schinzel
@@ -54,8 +53,7 @@ public class MiscTest {
         new Misc().snooze(20);
         //Calc the time to do all iterations
         long executionTimeInMS = (System.nanoTime() - start) / 1000000;
-        Assert.assertThat(executionTimeInMS, Matchers.lessThan(30l));
-        Assert.assertThat(executionTimeInMS, Matchers.greaterThanOrEqualTo(20l));
+        assertThat(executionTimeInMS).isBetween(20L, 30L);
     }
 
 
