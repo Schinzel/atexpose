@@ -43,7 +43,7 @@ You want ten different web servers, you got it. You can build you own custom par
 
 # Change Log
 ## Features added for next release
-- Nothing yet
+- Better error messages from exposed code including class, method and line number. 
 
 ## 0.9.23
 - Removed see-alsos annotation
