@@ -3,35 +3,38 @@ package com.atexpose.dispatcher.logging;
 import com.atexpose.dispatcher.channels.TestChannel;
 import com.atexpose.dispatcher.logging.format.JsonFormatter;
 import com.atexpose.dispatcher.logging.writer.TestLogWriter;
-import com.atexpose.dispatcher.parser.ParserTestClass;
 import com.atexpose.dispatcher.parser.Request;
 import io.schinzel.basicutils.EmptyObjects;
+import io.schinzel.basicutils.crypto.cipher.ICipher;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 
 /**
  * @author Schinzel
  */
 public class LoggerTest {
-    static int THREAD_NO = 1234;
+    private static int THREAD_NO = 1234;
     TestLogWriter mLogWriter;
     Logger mLogger;
     TestChannel mChannel;
-    ParserTestClass mRequestParser;
     LogEntry mLogEntry;
 
 
     @Before
     public void before() {
+        ICipher mockCipher = Mockito.mock(ICipher.class);
+        Mockito.when(mockCipher.encrypt(anyString())).thenReturn("EncryptedString");
         mLogWriter = new TestLogWriter();
         mLogger = Logger.builder()
                 .loggerType(LoggerType.EVENT)
                 .logFormatter(new JsonFormatter())
                 .logWriter(mLogWriter)
-                .cipher(new TestCipher())
+                .cipher(mockCipher)
                 .build();
         mChannel = new TestChannel();
         mLogEntry = new LogEntry(THREAD_NO, mChannel);
@@ -120,7 +123,7 @@ public class LoggerTest {
             JSONObject jo = new JSONObject(logEntryAsString);
             assertEquals(i, jo.getInt(LogKey.WRITE_TIME_IN_MS.toString()));
             assertEquals(i * 2, jo.getInt(LogKey.READ_TIME_IN_MS.toString()));
-            assertEquals(TestCipher.ENC_PREFIX + rawIncomingRequest + i, jo.getString(LogKey.REQUEST.toString()));
+            assertEquals("EncryptedString", jo.getString(LogKey.REQUEST.toString()));
             assertEquals(response + i, jo.getString(LogKey.RESPONSE.toString()));
         }
     }
@@ -154,7 +157,7 @@ public class LoggerTest {
         assertEquals("MyMethod", methodNameFromLog);
         //
         String argsFromLog = jo.getString(LogKey.ARGUMENTS.toString());
-        String argsShouldbe = "ArgName1='ENCRYPTED:ArgVal1', ArgName2='ENCRYPTED:ArgVal2'";
+        String argsShouldbe = "ArgName1='EncryptedString', ArgName2='EncryptedString'";
         assertEquals(argsShouldbe, argsFromLog);
         //
         String fileNameFromLog = jo.getString(LogKey.FILENAME.toString());
@@ -168,7 +171,7 @@ public class LoggerTest {
         //
         assertEquals(response, jo.getString(LogKey.RESPONSE.toString()));
         //
-        assertEquals(TestCipher.ENC_PREFIX + rawIncomingRequest, jo.getString(LogKey.REQUEST.toString()));
+        assertEquals("EncryptedString", jo.getString(LogKey.REQUEST.toString()));
     }
 
 }
