@@ -19,10 +19,10 @@ import static org.mockito.ArgumentMatchers.anyString;
  */
 public class LoggerTest {
     private static int THREAD_NO = 1234;
-    TestLogWriter mLogWriter;
-    Logger mLogger;
-    TestChannel mChannel;
-    LogEntry mLogEntry;
+    private TestLogWriter mLogWriter;
+    private Logger mLogger;
+    private TestChannel mChannel;
+    private LogEntry mLogEntry;
 
 
     @Before
