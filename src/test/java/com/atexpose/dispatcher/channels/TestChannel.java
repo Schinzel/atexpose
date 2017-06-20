@@ -31,37 +31,37 @@ public class TestChannel implements IChannel {
 
 
     /*
-     * MEHTODS BELOW HERE NOT IMPLEMENTED
+     * METHODS BELOW HERE NOT IMPLEMENTED
      */
 
 
     @Override
     public boolean getRequest(ByteStorage request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 
     @Override
     public void writeResponse(byte[] response) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 
     @Override
     public void shutdown(Thread thread) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 
     @Override
     public IChannel getClone() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 
     @Override
     public State getState() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

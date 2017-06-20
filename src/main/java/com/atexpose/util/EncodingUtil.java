@@ -1,13 +1,12 @@
 package com.atexpose.util;
 
-import com.atexpose.MyProperties;
 import com.atexpose.errors.RuntimeError;
+import com.google.common.base.Charsets;
+import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.EmptyObjects;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-
-import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.EmptyObjects;
 
 /**
  * Utility class for handling encoding and decoding between strings and byte
@@ -62,7 +61,7 @@ public class EncodingUtil {
         }
         //If encoding-string argument is empty
         if (Checker.isEmpty(sEncoding)) {
-            ab = str.getBytes(Charset.forName(MyProperties.ENCODING));
+            ab = str.getBytes(Charsets.UTF_8);
         }//else, i.e. there was an argument encoding string
         else {
             //If is to add aBOM prefix

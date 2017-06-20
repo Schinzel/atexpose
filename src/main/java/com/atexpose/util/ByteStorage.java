@@ -1,7 +1,5 @@
 package com.atexpose.util;
 
-import com.atexpose.MyProperties;
-
 /**
  * The purpose of this class is to hold an arbitrary amount of bytes.
  * The bytes are stored in a byte array for memory efficiency and for having
@@ -28,11 +26,11 @@ public class ByteStorage {
      * Index of the last byte in the storage array.
      */
     private int mUboundStorage = -1;
-
-
     //------------------------------------------------------------------------
     // MISC
     //------------------------------------------------------------------------
+
+
     /**
      * Clears the storage.
      */
@@ -42,17 +40,16 @@ public class ByteStorage {
 
 
     /**
-     *
      * @return The number of bytes currently stored.
      */
     public int getNoOfBytesStored() {
         return mUboundStorage + 1;
     }
-
-
     //------------------------------------------------------------------------
     // ADD
     //------------------------------------------------------------------------
+
+
     /**
      * Adds a byte to the storage.
      *
@@ -78,8 +75,8 @@ public class ByteStorage {
     /**
      * Appends a number of bytes to this object.
      *
-     * @param ab The source of the bytes.
-     * @param start From where to start retrieving the bytes.
+     * @param ab     The source of the bytes.
+     * @param start  From where to start retrieving the bytes.
      * @param length The number of bytes to retrieve from the argument array.
      */
     public void add(byte[] ab, int start, int length) {
@@ -95,11 +92,11 @@ public class ByteStorage {
             mUboundStorage += length;
         }
     }
-
-
     //------------------------------------------------------------------------
     // GET
     //------------------------------------------------------------------------
+
+
     /**
      * Converts the argument array to a string using the encoding in the BOM.
      * If no BOM is present, then the argument default encoding is used.
@@ -107,28 +104,27 @@ public class ByteStorage {
      * @return The argument byte array converted to String.
      */
     public String getAsString() {
-        return EncodingUtil.convertToString(mStorage, MyProperties.ENCODING, mUboundStorage);
+        return EncodingUtil.convertToString(mStorage, "UTF-8", mUboundStorage);
     }
 
 
     /**
-     *
      * @return Returns the all bytes stored in the array.
      */
     public byte[] getBytes() {
         return this.getBytes(0);
     }
-
-
     //------------------------------------------------------------------------
     // PRIVATE
     //------------------------------------------------------------------------
+
+
     /**
-     *
      * @param noOfBytesToDropFromTheEnd The number of bytes at the end not to
-     * return. For example: If there is a 100
-     * bytes stored in this object and this argument is ten, only the 90 first
-     * bytes will be returned.
+     *                                  return. For example: If there is a 100
+     *                                  bytes stored in this object and this argument is ten, only
+     *                                  the 90 first
+     *                                  bytes will be returned.
      * @return The bytes stored in this object.
      */
     private byte[] getBytes(int noOfBytesToDropFromTheEnd) {
@@ -174,8 +170,7 @@ public class ByteStorage {
     /**
      * Increases the size of the internal storage array.
      *
-     * @param noOfNewBytes
-     * The number of bytes that needs to fit in the array.
+     * @param noOfNewBytes The number of bytes that needs to fit in the array.
      */
     private void increaseSize(final int noOfNewBytes) {
         // Get the new size
@@ -190,7 +185,6 @@ public class ByteStorage {
 
 
     /**
-     *
      * @param noOfNewBytes number of bytes that need to fit in the array.
      * @return Returns the new size.
      */

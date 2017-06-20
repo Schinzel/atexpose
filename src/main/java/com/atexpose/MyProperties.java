@@ -6,15 +6,6 @@ package com.atexpose;
  * @author Schinzel
  */
 public class MyProperties {
-
-    /**
-     * The encoding used.
-     */
-    public static final String ENCODING = "UTF-8";
-    /**
-     * Directory where log files reside.
-     */
-    public static final String LOG_DIRECTORY = "logs";
     /**
      * The line separator of the operating system that this code runs on.
      */
