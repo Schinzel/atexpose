@@ -6,6 +6,7 @@ import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Sandman;
+import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
 
 import java.io.BufferedReader;
@@ -83,7 +84,7 @@ public class CommandLineChannel implements IChannel {
         if (response != null && response.length > 0) {
             try {
                 System.out.write(response);
-                System.out.write(MyProperties.OS_LINE_SEPARATOR.getBytes(Charset.forName(MyProperties.ENCODING)));
+                System.out.write(UTF8.getBytes(MyProperties.OS_LINE_SEPARATOR));
             } catch (IOException e) {
                 throw new RuntimeError("Error while writing to prompt.");
             }

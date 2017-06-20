@@ -6,11 +6,6 @@ package com.atexpose;
  * @author Schinzel
  */
 public class MyProperties {
-
-    /**
-     * The encoding used.
-     */
-    public static final String ENCODING = "UTF-8";
     /**
      * The line separator of the operating system that this code runs on.
      */
