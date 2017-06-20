@@ -1,11 +1,11 @@
 package com.atexpose.dispatcher.logging;
 
-import com.atexpose.dispatcher.logging.crypto.ICrypto;
-import com.atexpose.dispatcher.logging.crypto.NoCrypto;
 import com.atexpose.dispatcher.logging.format.ILogFormatter;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.ILogWriter;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
+import io.schinzel.basicutils.crypto.cipher.ICipher;
+import io.schinzel.basicutils.crypto.cipher.NoCipher;
 import lombok.Builder;
 import lombok.experimental.Accessors;
 
@@ -32,7 +32,7 @@ public class Logger {
     private ILogFormatter mLogFormatter = LogFormatterFactory.JSON.getInstance();
     /** Used to encrypt part of the log data. */
     @Builder.Default
-    private ICrypto mCrypto = new NoCrypto();
+    private ICipher mCipher = new NoCipher();
 
 
     /**
@@ -45,7 +45,7 @@ public class Logger {
         if (mLoggerType == LoggerType.EVENT
                 //OR (this is an error logger AND this is an error)
                 || (this.mLoggerType == LoggerType.ERROR && logEntry.isError())) {
-            Map<LogKey, String> logData = logEntry.getLogData(mCrypto);
+            Map<LogKey, String> logData = logEntry.getLogData(mCipher);
             String logEntryAsString = mLogFormatter.formatLogEntry(logData);
             mLogWriter.log(logEntryAsString);
         }

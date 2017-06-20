@@ -1,10 +1,10 @@
 package com.atexpose.dispatcher.logging;
 
 import com.atexpose.dispatcher.channels.IChannel;
-import com.atexpose.dispatcher.logging.crypto.ICrypto;
 import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.util.DateTimeStrings;
 import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.crypto.cipher.ICipher;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -82,7 +82,7 @@ public class LogEntry {
      * @param crypto Encrypts selected pars of the log data.
      * @return A map with log data.
      */
-    Map<LogKey, String> getLogData(ICrypto crypto) {
+    Map<LogKey, String> getLogData(ICipher crypto) {
         String request = crypto.encrypt(mDecodedIncomingRequest);
         String[] argNames = mRequest.getArgumentNames();
         String[] argValues = mRequest.getArgumentValues();

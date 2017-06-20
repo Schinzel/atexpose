@@ -44,6 +44,7 @@ You want ten different web servers, you got it. You can build you own custom par
 # Change Log
 ## Features added for next release
 - Better error messages from exposed code including class, method and line number. 
+- Logger encryption replaced proprietary with cipher from basic utils.
 
 ## 0.9.23
 - Removed see-alsos annotation
