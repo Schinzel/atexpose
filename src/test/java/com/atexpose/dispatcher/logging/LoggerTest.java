@@ -31,7 +31,7 @@ public class LoggerTest {
                 .loggerType(LoggerType.EVENT)
                 .logFormatter(new JsonFormatter())
                 .logWriter(mLogWriter)
-                .crypto(new TestCrypto())
+                .cipher(new TestCipher())
                 .build();
         mChannel = new TestChannel();
         mLogEntry = new LogEntry(THREAD_NO, mChannel);
@@ -120,7 +120,7 @@ public class LoggerTest {
             JSONObject jo = new JSONObject(logEntryAsString);
             assertEquals(i, jo.getInt(LogKey.WRITE_TIME_IN_MS.toString()));
             assertEquals(i * 2, jo.getInt(LogKey.READ_TIME_IN_MS.toString()));
-            assertEquals(TestCrypto.ENC_PREFIX + rawIncomingRequest + i, jo.getString(LogKey.REQUEST.toString()));
+            assertEquals(TestCipher.ENC_PREFIX + rawIncomingRequest + i, jo.getString(LogKey.REQUEST.toString()));
             assertEquals(response + i, jo.getString(LogKey.RESPONSE.toString()));
         }
     }
@@ -168,7 +168,7 @@ public class LoggerTest {
         //
         assertEquals(response, jo.getString(LogKey.RESPONSE.toString()));
         //
-        assertEquals(TestCrypto.ENC_PREFIX + rawIncomingRequest, jo.getString(LogKey.REQUEST.toString()));
+        assertEquals(TestCipher.ENC_PREFIX + rawIncomingRequest, jo.getString(LogKey.REQUEST.toString()));
     }
 
 }

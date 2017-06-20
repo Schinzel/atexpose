@@ -2,12 +2,12 @@ package com.atexpose;
 
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
-import com.atexpose.dispatcher.logging.crypto.Crypto;
-import com.atexpose.dispatcher.logging.crypto.ICrypto;
-import com.atexpose.dispatcher.logging.crypto.NoCrypto;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.crypto.cipher.Aes256;
+import io.schinzel.basicutils.crypto.cipher.ICipher;
+import io.schinzel.basicutils.crypto.cipher.NoCipher;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -189,14 +189,14 @@ class ExposedAtExpose {
 
 
     String addLogger(String dispatcherName, String logFormatter, String logWriter, String cryptoKey, LoggerType loggerType) {
-        ICrypto crypto = Checker.isEmpty(cryptoKey)
-                ? new NoCrypto()
-                : Crypto.getInstance(cryptoKey);
+        ICipher crypto = Checker.isEmpty(cryptoKey)
+                ? new NoCipher()
+                : new Aes256(cryptoKey);
         Logger logger = Logger.builder()
                 .loggerType(LoggerType.EVENT)
                 .logFormatter(LogFormatterFactory.get(logFormatter).getInstance())
                 .logWriter(LogWriterFactory.get(logWriter).getInstance())
-                .crypto(crypto)
+                .cipher(crypto)
                 .build();
         this.getAtExpose().getDispatchers().get(dispatcherName).addLogger(logger);
         return "Dispatcher " + dispatcherName + " got an " + loggerType.name().toLowerCase() + " logger";

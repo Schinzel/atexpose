@@ -1,12 +1,12 @@
 package com.atexpose.dispatcher.logging;
 
-import com.atexpose.dispatcher.logging.crypto.ICrypto;
+import io.schinzel.basicutils.crypto.cipher.ICipher;
 
 /**
  *
  * @author Schinzel
  */
-public class TestCrypto implements ICrypto {
+public class TestCipher implements ICipher {
     static final String ENC_PREFIX = "ENCRYPTED:";
 
     @Override
