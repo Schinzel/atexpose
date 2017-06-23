@@ -2,17 +2,17 @@ package com.atexpose.util.httpresponse;
 
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.substring.SubString;
-import io.schinzel.json.JsonOrdered;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class HttpResponseJsonTest {
     @Test
     public void getResponse_SetTwoJsonObjects_BodyShouldHaveFirstValue() {
-        JsonOrdered json = new JsonOrdered();
+        JSONObject json = new JSONObject(new LinkedHashMap<>());
         json.put("key1", "val1").put("key2", "val2");
         String response = HttpResponseJson.builder()
                 .body(json)
@@ -27,7 +27,7 @@ public class HttpResponseJsonTest {
 
     @Test
     public void getResponse_SetTwoJsonObjects_BodyShouldHaveSecondValue() {
-        JsonOrdered json = new JsonOrdered();
+        JSONObject json = new JSONObject(new LinkedHashMap<>());
         json.put("key1", "val1").put("key2", "val2");
         String response = HttpResponseJson.builder()
                 .body(json)
@@ -45,7 +45,7 @@ public class HttpResponseJsonTest {
         Map<String, String> customHeaders = ImmutableMap.<String, String>builder()
                 .put("key", "val")
                 .build();
-        JsonOrdered json = new JsonOrdered();
+        JSONObject json = new JSONObject(new LinkedHashMap<>());
         json.put("key1", "val1").put("key2", "val2");
         String response = HttpResponseJson.builder()
                 .body(json)
@@ -64,7 +64,7 @@ public class HttpResponseJsonTest {
         Map<String, String> customHeaders = ImmutableMap.<String, String>builder()
                 .put("key", "val")
                 .build();
-        JsonOrdered json = new JsonOrdered();
+        JSONObject json = new JSONObject(new LinkedHashMap<>());
         json.put("key1", "val1").put("key2", "val2");
         String response = HttpResponseJson.builder()
                 .body(json)
