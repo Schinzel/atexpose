@@ -5,7 +5,6 @@ import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
 import com.atexpose.util.httpresponse.*;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.collections.Cache;
 import io.schinzel.basicutils.state.State;
@@ -15,6 +14,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -68,11 +68,11 @@ public class WebWrapper implements IWrapper {
         mFilesCacheOn = cacheFilesInRam;
         mServerSideVariables = (serverSideVariables != null)
                 ? serverSideVariables
-                : EmptyObjects.EMPTY_MAP;
+                : Collections.emptyMap();
         Thrower.throwIfVarOutsideRange(browserCacheMaxAge, "browserCacheMaxAge", 0, 604800);
         mCustomResponseHeaders = (responseHeaders != null)
                 ? responseHeaders
-                : EmptyObjects.EMPTY_MAP;
+                : Collections.emptyMap();
         mFilesCache = new Cache<>();
     }
 

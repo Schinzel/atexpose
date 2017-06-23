@@ -42,7 +42,7 @@ public class MethodObject implements IValueKey, IStateNode {
     //How many of the arguments are required.
     private final int mNoOfRequiredArguments;
     //Holds the arguments of this object.
-    private List<Argument> mArguments = EmptyObjects.EMPTY_LIST;
+    private List<Argument> mArguments = Collections.emptyList();
     //A list of labels to which this method belongs.
     private List<Label> mLabels;
     private List<Alias> mAliases = new ArrayList<>();

@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -242,7 +243,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
      * @return This for chaining.
      */
     public Dispatcher removeLoggers() {
-        mLoggers = EmptyObjects.EMPTY_LIST;
+        mLoggers = Collections.<Logger>emptyList();
         if (mNextDispatcher != null) {
             mNextDispatcher.removeLoggers();
         }

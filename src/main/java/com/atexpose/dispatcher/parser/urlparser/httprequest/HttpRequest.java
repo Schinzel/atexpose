@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -147,7 +148,7 @@ public class HttpRequest {
      * querystring of this is a GET.
      */
     public Map<String, String> getVariablesAsMap() {
-        Map<String, String> map = EmptyObjects.EMPTY_MAP;
+        Map<String, String> map = Collections.emptyMap();
         String variablesAsString = this.getVariablesAsString();
         if (!Checker.isEmpty(variablesAsString)) {
             map = Splitter.on('&').trimResults().withKeyValueSeparator('=').split(variablesAsString);
