@@ -5,7 +5,7 @@ import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.crypto.cipher.Aes256;
+import io.schinzel.basicutils.crypto.cipher.Aes256Gcm;
 import io.schinzel.basicutils.crypto.cipher.ICipher;
 import io.schinzel.basicutils.crypto.cipher.NoCipher;
 import lombok.AccessLevel;
@@ -191,7 +191,7 @@ class ExposedAtExpose {
     String addLogger(String dispatcherName, String logFormatter, String logWriter, String cryptoKey, LoggerType loggerType) {
         ICipher crypto = Checker.isEmpty(cryptoKey)
                 ? new NoCipher()
-                : new Aes256(cryptoKey);
+                : new Aes256Gcm(cryptoKey);
         Logger logger = Logger.builder()
                 .loggerType(LoggerType.EVENT)
                 .logFormatter(LogFormatterFactory.get(logFormatter).getInstance())

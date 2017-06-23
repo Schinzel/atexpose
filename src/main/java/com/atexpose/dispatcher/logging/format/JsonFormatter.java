@@ -1,11 +1,9 @@
 package com.atexpose.dispatcher.logging.format;
 
 import com.atexpose.dispatcher.logging.LogKey;
+import org.json.JSONObject;
 
 import java.util.Map;
-
-import io.schinzel.json.JsonOrdered;
-import org.json.JSONObject;
 
 /**
  * The purpose of this class is to format log entries to a JSON object.
@@ -20,7 +18,7 @@ public class JsonFormatter implements ILogFormatter {
      */
     @Override
     public String formatLogEntry(Map<LogKey, String> logData) {
-        JSONObject jo = new JsonOrdered((Map) logData);
+        JSONObject jo = new JSONObject((Map) logData);
         return jo.toString();
     }
 
