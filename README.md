@@ -43,6 +43,11 @@ You want ten different web servers, you got it. You can build you own custom par
 
 # Change Log
 ## Features added for next release
+- Nothing yet
+
+## 0.9.25
+_2017-06-23_
+- Removed proprietary JsonOrdered. 
 - Better error messages from exposed code including class, method and line number. 
 - Logger encryption replaced proprietary with cipher from basic utils.
 
