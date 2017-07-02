@@ -43,7 +43,7 @@ You want ten different web servers, you got it. You can build you own custom par
 
 # Change Log
 ## Features added for next release
-- Nothing yet
+- New basic-util version 1.24
 
 ## 0.9.25
 _2017-06-23_
