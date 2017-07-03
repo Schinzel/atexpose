@@ -1,4 +1,4 @@
-package io.schinzel;
+package io.schinzel.samples.sqs;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

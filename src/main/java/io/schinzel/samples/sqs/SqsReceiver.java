@@ -1,4 +1,4 @@
-package io.schinzel;
+package io.schinzel.samples.sqs;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -35,7 +35,7 @@ public class SqsReceiver {
     }
 
 
-    String receive() {
+    public String receive() {
         List<Message> messages;
         do {
             ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest()

@@ -3,6 +3,9 @@ package io.schinzel;
 import com.amazonaws.regions.Regions;
 import io.schinzel.basicutils.configvar.ConfigVar;
 import io.schinzel.basicutils.timekeeper.Timekeeper;
+import io.schinzel.samples.sqs.ISqsSender;
+import io.schinzel.samples.sqs.SqsReceiver;
+import io.schinzel.samples.sqs.SqsStandardQueueSender;
 
 /**
  * Sätta upp pollning

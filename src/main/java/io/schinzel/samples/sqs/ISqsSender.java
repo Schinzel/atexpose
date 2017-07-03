@@ -1,4 +1,4 @@
-package io.schinzel;
+package io.schinzel.samples.sqs;
 
 /**
  * The purpose of this interface is to send messages to a SQS queue.
