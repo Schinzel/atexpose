@@ -1,7 +1,12 @@
 package com.atexpose.util.sqs;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import com.amazonaws.services.sqs.model.CreateQueueRequest;
 import com.google.common.base.Strings;
 import io.schinzel.basicutils.FunnyChars;
 import io.schinzel.basicutils.RandomUtil;
@@ -19,28 +24,35 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 
 public abstract class AbstractSqsTest {
-    final String mAwsAccessKey = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
-    final String mAwsSecretKey = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
-    AmazonSQS mSqs;
-    String mQueueUrl;
+    private final AmazonSQS mSqs;
+    private final String mQueueUrl;
+    private final SqsReceiver mSqsReceiver;
+    private final SqsSender mSqsSender;
 
 
-    static String getDateTime() {
-        DateTimeFormatter dataTimeFormat = DateTimeFormatter.ofPattern("yyyy_MM_dd__HH_mm");
-        return LocalDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).format(dataTimeFormat);
-    }
-
-
-    abstract SqsQueueType getQueueType();
-
-
-    SqsReceiver getReceiver() {
-        return SqsReceiver.builder()
-                .awsAccessKey(mAwsAccessKey)
-                .awsSecretKey(mAwsSecretKey)
+    AbstractSqsTest(SqsQueueType queueType, CreateQueueRequest createRequest) {
+        String awsAccessKey = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
+        String awsSecretKey = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
+        AWSCredentials credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
+        this.mSqs = AmazonSQSClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withRegion(Regions.EU_WEST_1)
+                .build();
+        mQueueUrl = mSqs.createQueue(createRequest).getQueueUrl();
+        mSqsReceiver = SqsReceiver.builder()
+                .awsAccessKey(awsAccessKey)
+                .awsSecretKey(awsSecretKey)
                 .queueUrl(mQueueUrl)
                 .region(Regions.EU_WEST_1)
                 .build();
+        mSqsSender = SqsSender.builder()
+                .awsAccessKey(awsAccessKey)
+                .awsSecretKey(awsSecretKey)
+                .queueUrl(mQueueUrl)
+                .sqsQueueType(queueType)
+                .region(Regions.EU_WEST_1)
+                .build();
+
     }
 
 
@@ -50,22 +62,18 @@ public abstract class AbstractSqsTest {
     }
 
 
-    SqsSender getSender() {
-        return SqsSender.builder()
-                .awsAccessKey(mAwsAccessKey)
-                .awsSecretKey(mAwsSecretKey)
-                .queueUrl(mQueueUrl)
-                .sqsQueueType(this.getQueueType())
-                .region(Regions.EU_WEST_1)
-                .build();
+    static String getTestQueueName() {
+        DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy_MM_dd__HH_mm");
+        String dateTimeString = LocalDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).format(dateTimeFormat);
+        return "test_queue_" + RandomUtil.getRandomString(5) + "_" + dateTimeString;
     }
 
 
     @Test
     public void send_StandardQueueRandomString_ReceivedStringShouldBeSentString() {
         String expected = RandomUtil.getRandomString(20);
-        this.getSender().send(expected);
-        String actual = this.getReceiver().receive();
+        mSqsSender.send(expected);
+        String actual = mSqsReceiver.receive();
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -73,8 +81,8 @@ public abstract class AbstractSqsTest {
     @Test
     public void send_PersianChars_ReceivedStringShouldBeSentString() {
         String expected = FunnyChars.PERSIAN_LETTERS.getString();
-        this.getSender().send(expected);
-        String actual = this.getReceiver().receive();
+        mSqsSender.send(expected);
+        String actual = mSqsReceiver.receive();
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -82,8 +90,8 @@ public abstract class AbstractSqsTest {
     @Test
     public void send_OneChar_ReceivedStringShouldBeSentString() {
         String expected = "1";
-        this.getSender().send(expected);
-        String actual = this.getReceiver().receive();
+        mSqsSender.send(expected);
+        String actual = mSqsReceiver.receive();
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -91,7 +99,7 @@ public abstract class AbstractSqsTest {
     @Test
     public void send_EmptyString_ThrowsException() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                this.getSender().send("")
+                mSqsSender.send("")
         );
     }
 
@@ -99,7 +107,7 @@ public abstract class AbstractSqsTest {
     @Test
     public void send_NullString_ThrowsException() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                this.getSender().send(null)
+                mSqsSender.send(null)
         );
     }
 
@@ -111,8 +119,8 @@ public abstract class AbstractSqsTest {
         //Create a string that is 256KB
         String expected = Strings.repeat("1234567890", kb256 / 10)
                 + Strings.repeat("*", kb256 % 10);
-        this.getSender().send(expected);
-        String actual = this.getReceiver().receive();
+        mSqsSender.send(expected);
+        String actual = mSqsReceiver.receive();
         assertThat(actual).isEqualTo(expected);
 
     }
