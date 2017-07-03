@@ -36,12 +36,15 @@ public class SqsReceiver {
 
 
     String receive() {
-        ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest()
-                .withMaxNumberOfMessages(1)
-                .withQueueUrl(this.getQueueUrl());
-        List<Message> messages = this.getSqsClient()
-                .receiveMessage(receiveMessageRequest).getMessages();
-        System.out.println("Num messages: " + messages.size());
+        List<Message> messages;
+        do {
+            ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest()
+                    .withQueueUrl(this.getQueueUrl())
+                    .withMaxNumberOfMessages(1)
+                    .withWaitTimeSeconds(20);
+            messages = this.getSqsClient().receiveMessage(receiveMessageRequest).getMessages();
+            System.out.println("Num messages: " + messages.size());
+        } while (messages.isEmpty());
         Message message = messages.get(0);
         this.getSqsClient().deleteMessage(this.getQueueUrl(), message.getReceiptHandle());
         return message.getBody();

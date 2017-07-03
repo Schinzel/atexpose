@@ -48,7 +48,7 @@ public class REMOVE_ME {
 
 
     public static void testSend() {
-        ISqsSender sqsSender = SqsFifoQueueSender.builder()
+        ISqsSender sqsSender = SqsStandardQueueSender.builder()
                 .awsAccessKey(AWS_ACCESS_KEY)
                 .awsSecretKey(AWS_SECRET_KEY)
                 .queueUrl(QUEUE_URL)
