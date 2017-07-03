@@ -25,13 +25,7 @@ public class SqsSenderStandardQueueTest extends AbstractSqsSenderTest {
 
 
     @Override
-    SqsSender getSender() {
-        return SqsSender.builder()
-                .awsAccessKey(mAwsAccessKey)
-                .awsSecretKey(mAwsSecretKey)
-                .queueUrl(mQueueUrl)
-                .sqsQueueType(SqsQueueType.STANDARD)
-                .region(Regions.EU_WEST_1)
-                .build();
+    SqsQueueType getQueueType() {
+        return SqsQueueType.STANDARD;
     }
 }

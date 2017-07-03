@@ -31,7 +31,7 @@ public abstract class AbstractSqsSenderTest {
     }
 
 
-    abstract SqsSender getSender();
+    abstract SqsQueueType getQueueType();
 
 
     SqsReceiver getReceiver() {
@@ -47,6 +47,17 @@ public abstract class AbstractSqsSenderTest {
     @After
     public void after() {
         mSqs.deleteQueue(mQueueUrl);
+    }
+
+
+    SqsSender getSender() {
+        return SqsSender.builder()
+                .awsAccessKey(mAwsAccessKey)
+                .awsSecretKey(mAwsSecretKey)
+                .queueUrl(mQueueUrl)
+                .sqsQueueType(this.getQueueType())
+                .region(Regions.EU_WEST_1)
+                .build();
     }
 
 
