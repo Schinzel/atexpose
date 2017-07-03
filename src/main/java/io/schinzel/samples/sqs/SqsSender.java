@@ -13,6 +13,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 /**
+ * The purpose of this class is to send messages to an AWS SQS queue.
+ * <p>
  * Created by schinzel on 2017-07-03.
  */
 public class SqsSender implements ISqsSender {
