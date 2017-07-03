@@ -19,10 +19,10 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 
 public abstract class AbstractSqsSenderTest {
-    static final String AWS_ACCESS_KEY = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
-    static final String AWS_SECRET_KEY = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
-    AmazonSQS sqs;
-    String queueUrl;
+    final String mAwsAccessKey = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
+    final String mAwsSecretKey = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
+    AmazonSQS mSqs;
+    String mQueueUrl;
 
 
     static String getDateTime() {
@@ -36,9 +36,9 @@ public abstract class AbstractSqsSenderTest {
 
     SqsReceiver getReceiver() {
         return SqsReceiver.builder()
-                .awsAccessKey(AWS_ACCESS_KEY)
-                .awsSecretKey(AWS_SECRET_KEY)
-                .queueUrl(queueUrl)
+                .awsAccessKey(mAwsAccessKey)
+                .awsSecretKey(mAwsSecretKey)
+                .queueUrl(mQueueUrl)
                 .region(Regions.EU_WEST_1)
                 .build();
     }
@@ -46,7 +46,7 @@ public abstract class AbstractSqsSenderTest {
 
     @After
     public void after() {
-        sqs.deleteQueue(queueUrl);
+        mSqs.deleteQueue(mQueueUrl);
     }
 
 
