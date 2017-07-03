@@ -3,15 +3,15 @@ package io.schinzel;
 import com.amazonaws.regions.Regions;
 import io.schinzel.basicutils.configvar.ConfigVar;
 import io.schinzel.basicutils.timekeeper.Timekeeper;
-import io.schinzel.samples.sqs.ISqsSender;
-import io.schinzel.samples.sqs.SqsQueueType;
-import io.schinzel.samples.sqs.SqsReceiver;
-import io.schinzel.samples.sqs.SqsSender;
+import com.atexpose.util.sqs.ISqsSender;
+import com.atexpose.util.sqs.SqsQueueType;
+import com.atexpose.util.sqs.SqsReceiver;
+import com.atexpose.util.sqs.SqsSender;
 
 /**
  * <p>
- * Slå ihop senders till en klass, ta bort interface och ha en kö-typ enum som
- * konstruktor argument.
+ * Hur testa?
+ * Skapa köer programatiskt som tar bort i slutet av testen
  * <p>
  * ** Gör en task producer
  * - Incoming: Scheduled task

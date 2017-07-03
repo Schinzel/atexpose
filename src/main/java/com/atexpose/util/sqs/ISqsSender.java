@@ -1,4 +1,4 @@
-package io.schinzel.samples.sqs;
+package com.atexpose.util.sqs;
 
 /**
  * The purpose of this interface is to send messages to an AWS SQS queue.

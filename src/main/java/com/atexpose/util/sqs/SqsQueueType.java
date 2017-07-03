@@ -1,4 +1,4 @@
-package io.schinzel.samples.sqs;
+package com.atexpose.util.sqs;
 
 /**
  * The purpose of this enum is to represent the different AWS SQS queue types.

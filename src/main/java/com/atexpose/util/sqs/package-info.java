@@ -4,4 +4,4 @@
  * <p>
  * Created by schinzel on 2017-07-03.
  */
-package io.schinzel.samples.sqs;
+package com.atexpose.util.sqs;
