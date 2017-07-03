@@ -8,21 +8,6 @@ import com.atexpose.util.sqs.SqsQueueType;
 import com.atexpose.util.sqs.SqsReceiver;
 import com.atexpose.util.sqs.SqsSender;
 
-/**
- * <p>
- * Hur testa?
- * Skapa köer programatiskt som tar bort i slutet av testen
- * <p>
- * ** Gör en task producer
- * - Incoming: Scheduled task
- * - Outgoing: Skriv till kö
- * <p>
- * ** Gör en task consumer
- * En tråd per default
- * - Incoming: Läs från kö
- * - Outgoing: System.out
- */
-
 public class REMOVE_ME {
     static String AWS_ACCESS_KEY = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
     static String AWS_SECRET_KEY = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
