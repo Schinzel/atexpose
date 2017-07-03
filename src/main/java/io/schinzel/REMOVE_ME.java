@@ -8,6 +8,9 @@ import io.schinzel.basicutils.timekeeper.Timekeeper;
  * Sätta upp pollning
  * Flytta in grupp id tills behov upppstår
  * <p>
+ * Slå ihop senders till en klass, ta bort interface och ha en kö-typ enum som
+ * konstruktor argument.
+ * <p>
  * ** Gör en task producer
  * - Incoming: Scheduled task
  * - Outgoing: Skriv till kö
@@ -21,13 +24,13 @@ import io.schinzel.basicutils.timekeeper.Timekeeper;
 public class REMOVE_ME {
     static String AWS_ACCESS_KEY = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
     static String AWS_SECRET_KEY = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
-    static String QUEUE_URL = "https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_queue.fifo";
-    //static String QUEUE_URL = "https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_standard_queue";
+    //static String QUEUE_URL = "https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_queue.fifo";
+    static String QUEUE_URL = "https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_standard_queue";
 
 
     public static void main(String[] args) {
         System.out.println("Started!");
-        testSend();
+        testReceive();
         System.out.println("All done!");
     }
 
