@@ -44,7 +44,6 @@ public class SqsReceiver {
                     .withMaxNumberOfMessages(1)
                     .withWaitTimeSeconds(20);
             messages = this.getSqsClient().receiveMessage(receiveMessageRequest).getMessages();
-            System.out.println("Num messages: " + messages.size());
         } while (messages.isEmpty());
         Message message = messages.get(0);
         this.getSqsClient().deleteMessage(this.getQueueUrl(), message.getReceiptHandle());

@@ -8,6 +8,7 @@ import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import io.schinzel.basicutils.RandomUtil;
+import io.schinzel.basicutils.Thrower;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,6 +40,7 @@ public class SqsSender implements ISqsSender {
 
     @Override
     public ISqsSender send(String message) {
+        Thrower.throwIfVarEmpty(message, "message");
         SendMessageRequest sendMsgRequest = new SendMessageRequest()
                 .withQueueUrl(this.getQueueUrl())
                 .withMessageBody(message);
