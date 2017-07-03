@@ -25,7 +25,7 @@ public class SqsSender implements ISqsSender {
 
 
     @Builder
-    private SqsSender(String awsAccessKey, String awsSecretKey, Regions region, String queueUrl, SqsQueueType sqsQueueType) {
+    SqsSender(String awsAccessKey, String awsSecretKey, Regions region, String queueUrl, SqsQueueType sqsQueueType) {
         AWSCredentials credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
         this.sqsClient = AmazonSQSClientBuilder
                 .standard()

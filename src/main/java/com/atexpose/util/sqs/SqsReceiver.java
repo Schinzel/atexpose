@@ -25,7 +25,7 @@ public class SqsReceiver {
 
 
     @Builder
-    private SqsReceiver(String awsAccessKey, String awsSecretKey, Regions region, String queueUrl) {
+    SqsReceiver(String awsAccessKey, String awsSecretKey, Regions region, String queueUrl) {
         AWSCredentials credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
         this.sqsClient = AmazonSQSClientBuilder
                 .standard()
