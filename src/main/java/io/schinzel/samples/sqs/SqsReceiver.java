@@ -15,7 +15,8 @@ import lombok.Getter;
 import java.util.List;
 
 /**
- * The purpose of this class is to read from an AWS SQS queue.
+ * The purpose of this class is to read messages from an AWS SQS queue.
+ * <p>
  * Created by schinzel on 2017-07-02.
  */
 public class SqsReceiver {
