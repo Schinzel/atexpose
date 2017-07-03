@@ -5,7 +5,8 @@ import io.schinzel.basicutils.configvar.ConfigVar;
 import io.schinzel.basicutils.timekeeper.Timekeeper;
 
 /**
- * Fatta group id
+ * Sätta upp pollning
+ * Flytta in grupp id tills behov upppstår
  * <p>
  * ** Gör en task producer
  * - Incoming: Scheduled task
@@ -18,6 +19,11 @@ import io.schinzel.basicutils.timekeeper.Timekeeper;
  */
 
 public class REMOVE_ME {
+    static String AWS_ACCESS_KEY = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
+    static String AWS_SECRET_KEY = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
+    static String QUEUE_URL = "https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_queue.fifo";
+
+
     public static void main(String[] args) {
         System.out.println("Started!");
         testReceive();
@@ -26,13 +32,10 @@ public class REMOVE_ME {
 
 
     public static void testReceive() {
-        ConfigVar configVar = ConfigVar.create(".env");
-        String awsAccessKey = configVar.getValue("AWS_SQS_ACCESS_KEY");
-        String awsSecretKey = configVar.getValue("AWS_SQS_SECRET_KEY");
         SqsReceiver sqsReceiver = SqsReceiver.builder()
-                .awsAccessKey(awsAccessKey)
-                .awsSecretKey(awsSecretKey)
-                .queueUrl("https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_queue.fifo")
+                .awsAccessKey(AWS_ACCESS_KEY)
+                .awsSecretKey(AWS_SECRET_KEY)
+                .queueUrl(QUEUE_URL)
                 .region(Regions.EU_WEST_1)
                 .build();
         String message = sqsReceiver.receive();
@@ -41,14 +44,11 @@ public class REMOVE_ME {
 
 
     public static void testSend() {
-        ConfigVar configVar = ConfigVar.create(".env");
-        String awsAccessKey = configVar.getValue("AWS_SQS_ACCESS_KEY");
-        String awsSecretKey = configVar.getValue("AWS_SQS_SECRET_KEY");
         SqsSender sqsSender = SqsSender.builder()
-                .awsAccessKey(awsAccessKey)
-                .awsSecretKey(awsSecretKey)
+                .awsAccessKey(AWS_ACCESS_KEY)
+                .awsSecretKey(AWS_SECRET_KEY)
                 .groupId("my_funky_group_id")
-                .queueUrl("https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_queue.fifo")
+                .queueUrl(QUEUE_URL)
                 .region(Regions.EU_WEST_1)
                 .build();
         Timekeeper tk = Timekeeper.create().startLap("s1");
