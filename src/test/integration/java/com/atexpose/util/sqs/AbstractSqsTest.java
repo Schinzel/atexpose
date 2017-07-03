@@ -71,13 +71,11 @@ public abstract class AbstractSqsTest {
 
 
     @Test
-    public void send_FunnyChars_ReceivedStringShouldBeSentString() {
-        for (FunnyChars funnyChars : FunnyChars.values()) {
-            String expected = funnyChars.getString();
-            this.getSender().send(expected);
-            String actual = this.getReceiver().receive();
-            assertThat(actual).isEqualTo(expected);
-        }
+    public void send_ArabicChars_ReceivedStringShouldBeSentString() {
+        String expected = FunnyChars.ARABIC_LETTERS.getString();
+        this.getSender().send(expected);
+        String actual = this.getReceiver().receive();
+        assertThat(actual).isEqualTo(expected);
     }
 
 
