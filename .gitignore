@@ -4,3 +4,6 @@
 # IntelliJ files
 .idea
 *.iml
+
+#Heroku config file
+.env
