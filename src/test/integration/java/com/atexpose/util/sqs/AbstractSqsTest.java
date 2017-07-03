@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 
-public abstract class AbstractSqsSenderTest {
+public abstract class AbstractSqsTest {
     final String mAwsAccessKey = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
     final String mAwsSecretKey = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
     AmazonSQS mSqs;

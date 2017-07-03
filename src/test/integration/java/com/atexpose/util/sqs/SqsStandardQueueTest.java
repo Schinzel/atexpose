@@ -9,7 +9,7 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import io.schinzel.basicutils.RandomUtil;
 import org.junit.Before;
 
-public class SqsSenderStandardQueueTest extends AbstractSqsSenderTest {
+public class SqsStandardQueueTest extends AbstractSqsTest {
 
 
     @Before
