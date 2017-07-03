@@ -22,11 +22,12 @@ public class REMOVE_ME {
     static String AWS_ACCESS_KEY = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
     static String AWS_SECRET_KEY = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
     static String QUEUE_URL = "https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_queue.fifo";
+    //static String QUEUE_URL = "https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_standard_queue";
 
 
     public static void main(String[] args) {
         System.out.println("Started!");
-        testReceive();
+        testSend();
         System.out.println("All done!");
     }
 
@@ -44,10 +45,9 @@ public class REMOVE_ME {
 
 
     public static void testSend() {
-        SqsSender sqsSender = SqsSender.builder()
+        ISqsSender sqsSender = SqsFifoQueueSender.builder()
                 .awsAccessKey(AWS_ACCESS_KEY)
                 .awsSecretKey(AWS_SECRET_KEY)
-                .groupId("my_funky_group_id")
                 .queueUrl(QUEUE_URL)
                 .region(Regions.EU_WEST_1)
                 .build();
