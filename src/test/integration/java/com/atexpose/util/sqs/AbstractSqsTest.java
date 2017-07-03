@@ -71,8 +71,17 @@ public abstract class AbstractSqsTest {
 
 
     @Test
-    public void send_ArabicChars_ReceivedStringShouldBeSentString() {
-        String expected = FunnyChars.ARABIC_LETTERS.getString();
+    public void send_PersianChars_ReceivedStringShouldBeSentString() {
+        String expected = FunnyChars.PERSIAN_LETTERS.getString();
+        this.getSender().send(expected);
+        String actual = this.getReceiver().receive();
+        assertThat(actual).isEqualTo(expected);
+    }
+
+
+    @Test
+    public void send_OneChar_ReceivedStringShouldBeSentString() {
+        String expected = "1";
         this.getSender().send(expected);
         String actual = this.getReceiver().receive();
         assertThat(actual).isEqualTo(expected);
