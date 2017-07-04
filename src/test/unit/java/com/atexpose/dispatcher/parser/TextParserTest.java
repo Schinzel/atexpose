@@ -1,13 +1,16 @@
 package com.atexpose.dispatcher.parser;
 
-import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.FunnyChars;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.assertArrayEquals;
+import java.util.Collections;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+
 
 /**
  * @author Schinzel
@@ -53,73 +56,68 @@ public class TextParserTest {
 
 
     @Test
-    public void getArgumentNames_NoArguments_EmptyArray() {
-        String[] argumentNames = new TextParser()
+    public void getArgumentNames_NoArguments_EmptyList() {
+        List<String> argumentNames = new TextParser()
                 .getRequest("getMonkey")
                 .getArgumentNames();
-        assertArrayEquals(EmptyObjects.EMPTY_STRING_ARRAY, argumentNames);
+        assertThat(argumentNames).isEqualTo(Collections.emptyList());
     }
 
 
     @Test
-    public void getArgumentNames_TwoArguments_EmptyArray() {
-        String[] argumentNames = new TextParser()
+    public void getArgumentNames_TwoArguments_EmptyList() {
+        List<String> argumentNames = new TextParser()
                 .getRequest("getMonkey arg1, arg2")
                 .getArgumentNames();
-        assertArrayEquals(EmptyObjects.EMPTY_STRING_ARRAY, argumentNames);
+        assertThat(argumentNames).isEqualTo(Collections.emptyList());
     }
 
 
     @Test
-    public void getArgumentValues_NoArguments_EmptyArray() {
-        String[] argumentValues = new TextParser()
+    public void getArgumentValues_NoArguments_EmptyList() {
+        List<String> argumentValues = new TextParser()
                 .getRequest("getMonkey")
                 .getArgumentValues();
-        assertEquals(0, argumentValues.length);
+        assertThat(argumentValues).isEmpty();
     }
 
 
     @Test
-    public void getArgumentValues_OneArgument_ArrayOneLongAndArgName() {
-        String[] argumentValues = new TextParser()
+    public void getArgumentValues_OneArgument_ListOneLongAndArgName() {
+        List<String> argumentValues = new TextParser()
                 .getRequest("getMonkey bananas")
                 .getArgumentValues();
-        assertEquals(1, argumentValues.length);
-        assertEquals("bananas", argumentValues[0]);
+        assertThat(argumentValues).containsExactly("bananas");
     }
 
 
     @Test
-    public void getArgumentValues_TwoArguments_ArrayTwoLongAndArgNames() {
-        String[] argumentValues = new TextParser()
+    public void getArgumentValues_TwoArguments_ListTwoLongAndArgNames() {
+        List<String> argumentValues = new TextParser()
                 .getRequest("getMonkey bananas, 44")
                 .getArgumentValues();
-        assertEquals(2, argumentValues.length);
-        assertEquals("bananas", argumentValues[0]);
-        assertEquals("44", argumentValues[1]);
+        assertThat(argumentValues).containsExactly("bananas", "44");
     }
 
 
     @Test
-    public void getArgumentValues_20Arguments_Array20LongAndArgNames() {
-        String[] argumentValues = new TextParser()
+    public void getArgumentValues_20Arguments_List20LongAndArgNames() {
+        List<String> argumentValues = new TextParser()
                 .getRequest("getMonkey  1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20")
                 .getArgumentValues();
-        assertEquals(20, argumentValues.length);
-        assertEquals("1", argumentValues[0]);
-        assertEquals("7", argumentValues[6]);
-        assertEquals("20", argumentValues[19]);
+        assertThat(argumentValues).hasSize(20);
+        assertThat(argumentValues.get(0)).isEqualTo("1");
+        assertThat(argumentValues.get(6)).isEqualTo("7");
+        assertThat(argumentValues.get(19)).isEqualTo("20");
     }
 
 
     @Test
-    public void getArgumentValues_TwoArgumentsWithSpaces_ArrayTwoLongAndArgNames() {
-        String[] argumentValues = new TextParser()
+    public void getArgumentValues_TwoArgumentsWithSpaces_ListTwoLongAndArgNames() {
+        List<String> argumentValues = new TextParser()
                 .getRequest("getMonkey          bananas      ,      44    ")
                 .getArgumentValues();
-        assertEquals(2, argumentValues.length);
-        assertEquals("bananas", argumentValues[0]);
-        assertEquals("44", argumentValues[1]);
+        assertThat(argumentValues).containsExactly("bananas", "44");
     }
 
 

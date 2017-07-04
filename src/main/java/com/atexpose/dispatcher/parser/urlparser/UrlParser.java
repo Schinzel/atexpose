@@ -12,6 +12,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,18 +41,14 @@ public class UrlParser implements IParser {
         if (url.contains(PropertiesDispatcher.COMMAND_REQUEST_MARKER)) {
             mCallType = CallType.COMMAND;
             Map<String, String> map = mHttpRequest.getVariablesAsMap();
-            String[] argValues = new String[map.size()];
-            String[] argNames = new String[map.size()];
-            int index = 0;
+            List<String> argNames = new ArrayList<>();
+            List<String> argValues = new ArrayList<>();
             //Go through all arguments
             for (Map.Entry<String, String> mapEntry : map.entrySet()) {
                 //Put the name in array
-                argNames[index] = mapEntry.getKey();
-                //Put the value in array
-                argValues[index] = mapEntry.getValue();
-                //Decode the value
-                argValues[index] = UrlCoding.decodeURIComponent(argValues[index]);
-                index++;
+                argNames.add(mapEntry.getKey());
+                //Decode and put the value in array
+                argValues.add(UrlCoding.decodeURIComponent(mapEntry.getValue()));
             }
             String methodName = getMethodName(mHttpRequest.getPath());
             return Request.builder()

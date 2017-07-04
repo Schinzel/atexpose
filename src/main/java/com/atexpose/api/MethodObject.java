@@ -102,7 +102,7 @@ public class MethodObject implements IValueKey, IStateNode {
     // ---------------------------------
     // - INVOKING  -
     // ---------------------------------
-    public Object invoke(String[] argumentValues, String[] argumentNames, int dispatcherAccessLevel) {
+    public Object invoke(List<String> argumentValues, List<String> argumentNames, int dispatcherAccessLevel) {
         this.checkNumberOfArguments(argumentValues);
         this.checkAccessLevel(dispatcherAccessLevel);
         Object[] argumentValuesAsObjects = this.castArgumentValuesToUse(argumentValues, argumentNames);
@@ -133,10 +133,10 @@ public class MethodObject implements IValueKey, IStateNode {
     // ---------------------------------
     // - ARGUMENT HANDLING  -
     // ---------------------------------
-    private void checkNumberOfArguments(String[] argumentValues) {
+    private void checkNumberOfArguments(List<String> argumentValues) {
         int noOfArgumentsInCall = 0;
         if (!Checker.isEmpty(argumentValues)) {
-            noOfArgumentsInCall = argumentValues.length;
+            noOfArgumentsInCall = argumentValues.size();
         }
         StringBuilder errorText = new StringBuilder();
         String argumentSingular = "argument";
@@ -167,28 +167,28 @@ public class MethodObject implements IValueKey, IStateNode {
     }
 
 
-    private Object[] castArgumentValuesToUse(String[] argumentValuesAsStrings, String[] argumentNames) {
+    private Object[] castArgumentValuesToUse(List<String> argumentValuesAsStrings, List<String> argumentNames) {
         Object[] argumentValuesAsObjects = null;
-        if (argumentValuesAsStrings != null && argumentValuesAsStrings.length > 0) {
-            argumentValuesAsObjects = new Object[argumentValuesAsStrings.length];
+        if (argumentValuesAsStrings != null && argumentValuesAsStrings.size() > 0) {
+            argumentValuesAsObjects = new Object[argumentValuesAsStrings.size()];
             AbstractDataType dataType;
-            for (int i = 0; i < argumentValuesAsStrings.length; i++) {
-                if (argumentNames == null || argumentNames.length == 0) {
+            for (int i = 0; i < argumentValuesAsStrings.size(); i++) {
+                if (argumentNames == null || argumentNames.size() == 0) {
                     dataType = this.getArgument(i).getDataType();
                 } else {
-                    dataType = this.getArgument(argumentNames[i]).getDataType();
+                    dataType = this.getArgument(argumentNames.get(i)).getDataType();
                     if (dataType == null) {
-                        throw new RuntimeError("Unknown data type '" + argumentNames[i] + "'");
+                        throw new RuntimeError("Unknown data type '" + argumentNames.get(i) + "'");
                     }
                 }
-                argumentValuesAsObjects[i] = dataType.convertFromStringToDataType(argumentValuesAsStrings[i]);
+                argumentValuesAsObjects[i] = dataType.convertFromStringToDataType(argumentValuesAsStrings.get(i));
             }
         }
         return argumentValuesAsObjects;
     }
 
 
-    private Object[] setDefaultArgumentValues(Object[] argumentValues, String[] argumentNames) {
+    private Object[] setDefaultArgumentValues(Object[] argumentValues, List<String> argumentNames) {
         // Get a copy of the argument values
         Object[] argumentDefaultValues = this.getCopyOfArgumentDefaultValues();
         // If no argument names were supplied
@@ -204,7 +204,7 @@ public class MethodObject implements IValueKey, IStateNode {
             Object inputArgumentValue;
             int positionInputArgument;
             // Go through the arguments array as set values
-            for (int i = 0; i < argumentNames.length; i++) {
+            for (int i = 0; i < argumentNames.size(); i++) {
                 positionInputArgument = argumentPositions[i];
                 inputArgumentValue = argumentValues[i];
                 argumentDefaultValues[positionInputArgument] = inputArgumentValue;
@@ -228,10 +228,10 @@ public class MethodObject implements IValueKey, IStateNode {
      * Return the positions of a set of argument names in the method call of the
      * held method.
      */
-    private int[] getArgumentPositions(String[] argumentNames) {
-        int[] argPositions = new int[argumentNames.length];
-        for (int i = 0; i < argumentNames.length; i++) {
-            argPositions[i] = this.getArgumentPosition(argumentNames[i]);
+    private int[] getArgumentPositions(List<String> argumentNames) {
+        int[] argPositions = new int[argumentNames.size()];
+        for (int i = 0; i < argumentNames.size(); i++) {
+            argPositions[i] = this.getArgumentPosition(argumentNames.get(i));
         }
         return argPositions;
     }
