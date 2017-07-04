@@ -9,6 +9,7 @@ import io.schinzel.basicutils.crypto.cipher.ICipher;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -84,12 +85,12 @@ public class LogEntry {
      */
     Map<LogKey, String> getLogData(ICipher crypto) {
         String request = crypto.encrypt(mDecodedIncomingRequest);
-        String[] argNames = mRequest.getArgumentNames();
-        String[] argValues = mRequest.getArgumentValues();
+        List<String> argNames = mRequest.getArgumentNames();
+        List<String> argValues = mRequest.getArgumentValues();
         //Encrypt argument values
         if (!Checker.isEmpty(argValues)) {
-            for (int i = 0; i < argValues.length; i++) {
-                argValues[i] = crypto.encrypt(argValues[i]);
+            for (int i = 0; i < argValues.size(); i++) {
+                argValues.set(i, crypto.encrypt(argValues.get(i)));
             }
         }
         String arguments = argumentsToString(argNames, argValues);
@@ -129,23 +130,23 @@ public class LogEntry {
      * @param argumentValues The values of the arguments
      * @return The argument names and values formatted to a string
      */
-    private static String argumentsToString(String[] argumentNames, String[] argumentValues) {
+    private static String argumentsToString(List<String> argumentNames, List<String> argumentValues) {
         //If there are no arguments
         if (Checker.isEmpty(argumentNames) && Checker.isEmpty(argumentValues)) {
             return "-";
         }
         StringBuilder sb = new StringBuilder();
         //Go through all arguments values
-        for (int i = 0; i < argumentValues.length; i++) {
+        for (int i = 0; i < argumentValues.size(); i++) {
             //If not is first argument
             if (i != 0) {
                 sb.append(", ");
             }
             //If there are argument names
             if (!Checker.isEmpty(argumentNames)) {
-                sb.append(argumentNames[i]).append("=");
+                sb.append(argumentNames.get(i)).append("=");
             }
-            String argumentValue = argumentValues[i];
+            String argumentValue = argumentValues.get(i);
             sb.append("\'").append(argumentValue).append("\'");
         }
         return sb.toString();

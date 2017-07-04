@@ -2,7 +2,11 @@ package com.atexpose.dispatcher.parser.urlparser;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.*;
+
 
 public class UrlParser_FileRequestsTest {
     private static final String HTTP_HEADER_HEROKU_HTTPS = "GET /index.html?xyz=1234 HTTP/1.1\r\n"
@@ -70,15 +74,15 @@ public class UrlParser_FileRequestsTest {
 
     @Test
     public void getArgumentNames_HerokuHttpsGetFileRequestQueryString_EmptyArray() {
-        String[] argumentNames = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTPS).getArgumentNames();
-        assertEquals(0, argumentNames.length);
+        List<String> argumentNames = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTPS).getArgumentNames();
+        assertThat(argumentNames).isEmpty();
     }
 
 
     @Test
     public void getArgumentValues_HerokuHttpsGetFileRequestQueryString_EmptyArray() {
-        String[] argumentValues = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTPS).getArgumentValues();
-        assertEquals(0, argumentValues.length);
+        List<String> argumentValues = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTPS).getArgumentValues();
+        assertThat(argumentValues).isEmpty();
     }
 
 
@@ -91,15 +95,15 @@ public class UrlParser_FileRequestsTest {
 
     @Test
     public void getArgumentNames_HerokuHttpGetFileRequestQueryString_EmptyArray() {
-        String[] argumentNames = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP).getArgumentNames();
-        assertEquals(0, argumentNames.length);
+        List<String> argumentNames = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP).getArgumentNames();
+        assertThat(argumentNames).isEmpty();
     }
 
 
     @Test
     public void getArgumentValues_HerokuHttpGetFileRequestQueryString_EmptyArray() {
-        String[] argumentValues = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP).getArgumentValues();
-        assertEquals(0, argumentValues.length);
+        List<String> argumentValues = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP).getArgumentValues();
+        assertThat(argumentValues).isEmpty();
     }
 
 
@@ -112,14 +116,14 @@ public class UrlParser_FileRequestsTest {
 
     @Test
     public void getArgumentNames_HerokuHttpGetFileRequest_ArgName() {
-        String[] argumentNames = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP_NO_QUERY).getArgumentNames();
-        assertEquals(0, argumentNames.length);
+        List<String> argumentNames = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP_NO_QUERY).getArgumentNames();
+        assertThat(argumentNames).isEmpty();
     }
 
 
     @Test
     public void getArgumentValues_HerokuHttpGetFileRequest_ArgName() {
-        String[] argumentValues = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP_NO_QUERY).getArgumentValues();
-        assertEquals(0, argumentValues.length);
+        List<String> argumentValues = new UrlParser().getRequest(HTTP_HEADER_HEROKU_HTTP_NO_QUERY).getArgumentValues();
+        assertThat(argumentValues).isEmpty();
     }
 }

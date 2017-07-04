@@ -1,10 +1,12 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
-import io.schinzel.basicutils.EmptyObjects;
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+
 
 public class UrlParser_GetRequestsTest {
 
@@ -87,19 +89,15 @@ public class UrlParser_GetRequestsTest {
 
     @Test
     public void getArgumentNames_TwoArguments_ArgNamesLengthAndNames() {
-        String[] argumentNames = new UrlParser().getRequest(GET_REQUEST_NORMAL).getArgumentNames();
-        assertEquals(2, argumentNames.length);
-        assertEquals("SSN", argumentNames[0]);
-        assertEquals("Pin", argumentNames[1]);
+        List<String> argumentNames = new UrlParser().getRequest(GET_REQUEST_NORMAL).getArgumentNames();
+        assertThat(argumentNames).containsExactly("SSN", "Pin");
     }
 
 
     @Test
     public void getArgumentValues_TwoArguments_ArgValuesLengthAndStrings() {
-        String[] argumentValues = new UrlParser().getRequest(GET_REQUEST_NORMAL).getArgumentValues();
-        assertEquals(2, argumentValues.length);
-        assertEquals("197107282222", argumentValues[0]);
-        assertEquals("88889", argumentValues[1]);
+        List<String> argumentValues = new UrlParser().getRequest(GET_REQUEST_NORMAL).getArgumentValues();
+        assertThat(argumentValues).containsExactly("197107282222", "88889");
     }
 
 
@@ -111,16 +109,16 @@ public class UrlParser_GetRequestsTest {
 
 
     @Test
-    public void getArgNames_RequestWithQuestionMarkButNoVariable_EmptyArray() {
-        String[] argumentValues = new UrlParser().getRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getArgumentNames();
-        assertArrayEquals(EmptyObjects.EMPTY_STRING_ARRAY, argumentValues);
+    public void getArgNames_RequestWithQuestionMarkButNoVariable_EmptyList() {
+        List<String> argumentNames = new UrlParser().getRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getArgumentNames();
+        assertThat(argumentNames).isEmpty();
     }
 
 
     @Test
-    public void getArgValues_RequestWithQuestionMarkButNoVariable_EmptyArray() {
-        String[] argumentValues = new UrlParser().getRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getArgumentValues();
-        assertArrayEquals(EmptyObjects.EMPTY_STRING_ARRAY, argumentValues);
+    public void getArgValues_RequestWithQuestionMarkButNoVariable_EmptyList() {
+        List<String> argumentValues = new UrlParser().getRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getArgumentValues();
+        assertThat(argumentValues).isEmpty();
     }
 
 
@@ -133,17 +131,15 @@ public class UrlParser_GetRequestsTest {
 
     @Test
     public void getArgumentNames_OneVariable_OneElement() {
-        String[] argumentNames = new UrlParser().getRequest(GET_REQUEST_ONE_VARIABLE).getArgumentNames();
-        assertEquals(1, argumentNames.length);
-        assertEquals("SSN", argumentNames[0]);
+        List<String> argumentNames = new UrlParser().getRequest(GET_REQUEST_ONE_VARIABLE).getArgumentNames();
+        assertThat(argumentNames).containsExactly("SSN");
     }
 
 
     @Test
     public void getArgumentValues_OneVariable_OneElement() {
-        String[] argumentValues = new UrlParser().getRequest(GET_REQUEST_ONE_VARIABLE).getArgumentValues();
-        assertEquals(1, argumentValues.length);
-        assertEquals("197107282222", argumentValues[0]);
+        List<String> argumentValues = new UrlParser().getRequest(GET_REQUEST_ONE_VARIABLE).getArgumentValues();
+        assertThat(argumentValues).containsExactly("197107282222");
     }
 
 
