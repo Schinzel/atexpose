@@ -3,6 +3,7 @@ package com.atexpose.dispatcher.parser;
 import com.atexpose.errors.RuntimeError;
 import io.schinzel.basicutils.state.State;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +25,7 @@ public class TextParser implements IParser {
             throw new RuntimeError("Request '" + requestAsString + "' is not formed correctly.");
         }
         String methodName = m.group(1);
-        String[] argumentValues = StringSplitter.splitOnComma_DoubleQuoteQualifier(m.group(3));
+        List<String> argumentValues = StringSplitter.splitOnComma_DoubleQuoteQualifier(m.group(3));
         return Request.builder()
                 .methodName(methodName)
                 .argumentValues(argumentValues)

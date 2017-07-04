@@ -4,12 +4,14 @@ import com.atexpose.dispatcher.channels.TestChannel;
 import com.atexpose.dispatcher.logging.format.JsonFormatter;
 import com.atexpose.dispatcher.logging.writer.TestLogWriter;
 import com.atexpose.dispatcher.parser.Request;
-import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.crypto.cipher.ICipher;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -51,8 +53,8 @@ public class LoggerTest {
                 .logWriter(logWriter)
                 .build();
         Request request = Request.builder()
-                .argumentNames(EmptyObjects.EMPTY_STRING_ARRAY)
-                .argumentValues(EmptyObjects.EMPTY_STRING_ARRAY)
+                .argumentNames(Collections.emptyList())
+                .argumentValues(Collections.emptyList())
                 .methodName("")
                 .fileName("")
                 .fileRequest(false)
@@ -80,8 +82,8 @@ public class LoggerTest {
                 .logWriter(logWriter)
                 .build();
         Request request = Request.builder()
-                .argumentNames(EmptyObjects.EMPTY_STRING_ARRAY)
-                .argumentValues(EmptyObjects.EMPTY_STRING_ARRAY)
+                .argumentNames(Collections.emptyList())
+                .argumentValues(Collections.emptyList())
                 .methodName("")
                 .fileName("")
                 .fileRequest(false)
@@ -104,8 +106,8 @@ public class LoggerTest {
         String rawIncomingRequest = "MyRequest";
         String response = "MyResponse";
         Request request = Request.builder()
-                .argumentNames(EmptyObjects.EMPTY_STRING_ARRAY)
-                .argumentValues(EmptyObjects.EMPTY_STRING_ARRAY)
+                .argumentNames(Collections.emptyList())
+                .argumentValues(Collections.emptyList())
                 .methodName("")
                 .fileName("")
                 .fileRequest(false)
@@ -134,8 +136,8 @@ public class LoggerTest {
         String rawIncomingRequest = "MyRequest";
         String response = "MyResponse";
         Request request = Request.builder()
-                .argumentNames(new String[]{"ArgName1", "ArgName2"})
-                .argumentValues(new String[]{"ArgVal1", "ArgVal2"})
+                .argumentNames(Arrays.asList(new String[]{"ArgName1", "ArgName2"}))
+                .argumentValues(Arrays.asList(new String[]{"ArgVal1", "ArgVal2"}))
                 .methodName("MyMethod")
                 .fileName("MyFileName")
                 .fileRequest(false)

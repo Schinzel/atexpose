@@ -2,7 +2,11 @@ package com.atexpose.dispatcher.parser.urlparser;
 
 import org.junit.Test;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+
 
 public class URLParser_PostRequestsTest {
 
@@ -102,35 +106,29 @@ public class URLParser_PostRequestsTest {
 
     @Test
     public void getArgumentNames_ShortArgName_ArgumentName() {
-        String[] argumentNames = new UrlParser().getRequest(POST_REQUEST_ONE_SHORT_VARIABLE).getArgumentNames();
-        assertEquals("a", argumentNames[0]);
-        assertEquals(1, argumentNames.length);
+        List<String> argumentNames = new UrlParser().getRequest(POST_REQUEST_ONE_SHORT_VARIABLE).getArgumentNames();
+        assertThat(argumentNames).containsExactly("a");
     }
 
 
     @Test
     public void getArgumentValues_ShortArgValue_ArgumentValue() {
-        String[] argumentValues = new UrlParser().getRequest(POST_REQUEST_ONE_SHORT_VARIABLE).getArgumentValues();
-        assertEquals("1", argumentValues[0]);
-        assertEquals(1, argumentValues.length);
+        List<String> argumentValues = new UrlParser().getRequest(POST_REQUEST_ONE_SHORT_VARIABLE).getArgumentValues();
+        assertThat(argumentValues).containsExactly("1");
     }
 
 
     @Test
     public void getArgumentNames_TwoArguments_ArgumentName() {
-        String[] argumentNames = new UrlParser().getRequest(POST_REQUEST_SHORT_METHODNAME).getArgumentNames();
-        assertEquals("name", argumentNames[0]);
-        assertEquals("time", argumentNames[1]);
-        assertEquals(2, argumentNames.length);
+        List<String> argumentNames = new UrlParser().getRequest(POST_REQUEST_SHORT_METHODNAME).getArgumentNames();
+        assertThat(argumentNames).containsExactly("name", "time");
     }
 
 
     @Test
     public void getArgumentValues_TwoArguments_ArgumentValue() {
-        String[] argumentValues = new UrlParser().getRequest(POST_REQUEST_SHORT_METHODNAME).getArgumentValues();
-        assertEquals("John", argumentValues[0]);
-        assertEquals("2pm", argumentValues[1]);
-        assertEquals(2, argumentValues.length);
+        List<String> argumentValues = new UrlParser().getRequest(POST_REQUEST_SHORT_METHODNAME).getArgumentValues();
+        assertThat(argumentValues).containsExactly("John", "2pm");
     }
 
 
@@ -142,16 +140,16 @@ public class URLParser_PostRequestsTest {
 
 
     @Test
-    public void getArgumentNames_NoArgs_EmptyArray() {
-        String[] argumentNames = new UrlParser().getRequest(POST_REQUEST_NO_ARGS).getArgumentNames();
-        assertEquals(0, argumentNames.length);
+    public void getArgumentNames_NoArgs_EmptyList() {
+        List<String> argumentNames = new UrlParser().getRequest(POST_REQUEST_NO_ARGS).getArgumentNames();
+        assertThat(argumentNames).isEmpty();
     }
 
 
     @Test
-    public void getArgumentValues_NoArgs_EmptyArray() {
-        String[] argumentValues = new UrlParser().getRequest(POST_REQUEST_NO_ARGS).getArgumentValues();
-        assertEquals(0, argumentValues.length);
+    public void getArgumentValues_NoArgs_EmptyList() {
+        List<String> argumentValues = new UrlParser().getRequest(POST_REQUEST_NO_ARGS).getArgumentValues();
+        assertThat(argumentValues).isEmpty();
     }
 
 
@@ -163,16 +161,16 @@ public class URLParser_PostRequestsTest {
 
 
     @Test
-    public void getArgumentNames_OneLineBreakAfterHeader_EmptyArray() {
-        String[] argumentNames = new UrlParser().getRequest(POST_REQUEST_ONE_LINEBREAK).getArgumentNames();
-        assertEquals(0, argumentNames.length);
+    public void getArgumentNames_OneLineBreakAfterHeader_EmptyList() {
+        List<String> argumentNames = new UrlParser().getRequest(POST_REQUEST_ONE_LINEBREAK).getArgumentNames();
+        assertThat(argumentNames).isEmpty();
     }
 
 
     @Test
-    public void getArgumentValues_OneLineBreakAfterHeader_EmptyArray() {
-        String[] argumentValues = new UrlParser().getRequest(POST_REQUEST_ONE_LINEBREAK).getArgumentValues();
-        assertEquals(0, argumentValues.length);
+    public void getArgumentValues_OneLineBreakAfterHeader_EmptyList() {
+        List<String> argumentValues = new UrlParser().getRequest(POST_REQUEST_ONE_LINEBREAK).getArgumentValues();
+        assertThat(argumentValues).isEmpty();
     }
 
 
@@ -184,16 +182,16 @@ public class URLParser_PostRequestsTest {
 
 
     @Test
-    public void getArgumentNames_NoLineBreakAfterHeader_EmptyArray() {
-        String[] argumentNames = new UrlParser().getRequest(POST_REQUEST_NO_LINEBREAKS).getArgumentNames();
-        assertEquals(0, argumentNames.length);
+    public void getArgumentNames_NoLineBreakAfterHeader_EmptyList() {
+        List<String> argumentNames = new UrlParser().getRequest(POST_REQUEST_NO_LINEBREAKS).getArgumentNames();
+        assertThat(argumentNames).isEmpty();
     }
 
 
     @Test
-    public void getArgumentValues_NoLineBreakAfterHeader_EmptyArray() {
-        String[] argumentValues = new UrlParser().getRequest(POST_REQUEST_NO_LINEBREAKS).getArgumentValues();
-        assertEquals(0, argumentValues.length);
+    public void getArgumentValues_NoLineBreakAfterHeader_EmptyList() {
+        List<String> argumentValues = new UrlParser().getRequest(POST_REQUEST_NO_LINEBREAKS).getArgumentValues();
+        assertThat(argumentValues).isEmpty();
     }
 
 
