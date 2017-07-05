@@ -2,6 +2,7 @@ package com.atexpose.dispatcher.parser;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.util.Collections;
@@ -13,6 +14,7 @@ import java.util.List;
  * Created by schinzel on 2017-04-25.
  */
 @Builder
+@ToString
 @Accessors(prefix = "m")
 public class Request {
     @Getter @Builder.Default private String mMethodName = "";

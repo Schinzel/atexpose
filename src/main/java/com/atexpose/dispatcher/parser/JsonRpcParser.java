@@ -1,38 +1,51 @@
 package com.atexpose.dispatcher.parser;
 
+import com.google.common.collect.Lists;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.State;
 import org.json.JSONObject;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * The purpose of this class is to parse requests frommated as JSON.
+ * The purpose of this class is to parse requests formatted as JSON.
+ * The format is a subset of JSON-RPC
+ * http://www.jsonrpc.org/specification
+ * <p>
  * test cases
- * - incorrect json
- * - inga params
- * - tom params
+ * - att ett full json rpc 2.0 call funar
  * - unnamed params
+ * <p>
+ * - alla möjliga data typer for params
  * <p>
  * <p>
  * Created by schinzel on 2017-07-04.
  */
 public class JsonRpcParser implements IParser {
+
     @Override
     public Request getRequest(String incomingRequest) {
+        Thrower.throwIfVarEmpty(incomingRequest, "incomingRequest");
         JSONObject json = new JSONObject(incomingRequest);
         Thrower.throwIfFalse(json.has("method"), "Incorrect JSON-RPC format. Method missing. Request: '" + json.toString() + "'");
-        //String methodName = json.getString("method");
-        JSONObject params = json.getJSONObject("params");
-        Iterator<String> paramNames = params.keys();
-        String[] argValues = new String[params.length()];
-        String[] argNames = new String[params.length()];
-        while (paramNames.hasNext()) {
-            String paramName = paramNames.next();
-            //argValues = paramName;
-            return null;
+        if (json.has("params")) {
+            JSONObject params = json.getJSONObject("params");
+            List<String> argNames = Lists.newArrayList(params.keys());
+            List<String> argValues = argNames.stream()
+                    .map(v -> String.valueOf(params.get(v)))
+                    .collect(Collectors.toList());
+            return Request.builder()
+                    .methodName(json.getString("method"))
+                    .argumentNames(argNames)
+                    .argumentValues(argValues)
+                    .build();
+        } else {
+            return Request.builder()
+                    .methodName(json.getString("method"))
+                    .build();
         }
-        return null;
     }
 
 
