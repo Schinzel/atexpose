@@ -1,5 +1,6 @@
 package com.atexpose.dispatcher.parser;
 
+import io.schinzel.basicutils.FunnyChars;
 import io.schinzel.basicutils.state.State;
 import org.json.JSONException;
 import org.junit.Test;
@@ -106,5 +107,56 @@ public class JsonRpcParserTest {
                 .isEqualTo("Request(mMethodName=doSomething, mArgumentNames=[para1, para2], mArgumentValues=[23, 42], mFileName=, mFileRequest=false)");
     }
 
+
+    @Test
+    public void getRequest_ArgOfTypeString_StringVersionOfArg() {
+        String requestAsString = "{\"method\": \"doSomething\", \"params\": {\"para1\": \"my_para\"}}";
+        Request request = new JsonRpcParser().getRequest(requestAsString);
+        assertThat(request.getArgumentValues().get(0)).isEqualTo("my_para");
+    }
+
+
+    @Test
+    public void getRequest_ArgOfTypeInteger_StringVersionOfArg() {
+        String requestAsString = "{\"method\": \"doSomething\", \"params\": {\"para1\": 12345}}";
+        Request request = new JsonRpcParser().getRequest(requestAsString);
+        assertThat(request.getArgumentValues().get(0)).isEqualTo("12345");
+    }
+
+
+    @Test
+    public void getRequest_ArgOfTypeFloat_StringVersionOfArg() {
+        String requestAsString = "{\"method\": \"doSomething\", \"params\": {\"para1\": 123.45}}";
+        Request request = new JsonRpcParser().getRequest(requestAsString);
+        assertThat(request.getArgumentValues().get(0)).isEqualTo("123.45");
+    }
+
+
+    @Test
+    public void getRequest_ArgOfTypeBoolean_StringVersionOfArg() {
+        String requestAsString = "{\"method\": \"doSomething\", \"params\": {\"para1\": true}}";
+        Request request = new JsonRpcParser().getRequest(requestAsString);
+        assertThat(request.getArgumentValues().get(0)).isEqualTo("true");
+    }
+
+
+    @Test
+    public void getRequest_ArgFunnyChars_StringVersionOfArg() {
+        for (FunnyChars funnyChars : FunnyChars.values()) {
+            String input = funnyChars.getString();
+            String requestAsString = "{\"method\": \"doSomething\", \"params\": {\"para1\": \"" + input + "\"}}";
+            Request request = new JsonRpcParser().getRequest(requestAsString);
+            assertThat(request.getArgumentValues().get(0)).isEqualTo(input);
+        }
+    }
+
+
+    @Test
+    public void getRequest_UnnamedJsonRpcCall_ThrowException() {
+        String requestAsString = "{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [23, 42], \"id\": 2}";
+        assertThatExceptionOfType(JSONException.class).isThrownBy(() ->
+                new JsonRpcParser().getRequest(requestAsString)
+        );
+    }
 
 }
