@@ -11,7 +11,9 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,34 +21,58 @@ import java.util.List;
  * <p>
  * Created by schinzel on 2017-07-02.
  */
+@Accessors(prefix = "m")
 public class SqsReceiver {
-    @Getter(AccessLevel.PRIVATE) private final String queueUrl;
-    @Getter(AccessLevel.PRIVATE) private final AmazonSQS sqsClient;
+    @Getter(AccessLevel.PRIVATE) private final AmazonSQS mSqsClient;
+    @Getter private final String mQueueUrl;
+    @Getter boolean mInterrupted = false;
+
+
+    SqsReceiver(AmazonSQS sqsClient, String queueUrl) {
+        mSqsClient = sqsClient;
+        mQueueUrl = queueUrl;
+    }
 
 
     @Builder
     SqsReceiver(String awsAccessKey, String awsSecretKey, Regions region, String queueUrl) {
         AWSCredentials credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
-        this.sqsClient = AmazonSQSClientBuilder
+        mSqsClient = AmazonSQSClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(region)
                 .build();
-        this.queueUrl = queueUrl;
+        mQueueUrl = queueUrl;
     }
 
 
     public String receive() {
-        List<Message> messages;
+        List<Message> messages = Collections.emptyList();
         do {
             ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest()
-                    .withQueueUrl(this.getQueueUrl())
+                    .withQueueUrl(mQueueUrl)
                     .withMaxNumberOfMessages(1)
                     .withWaitTimeSeconds(20);
-            messages = this.getSqsClient().receiveMessage(receiveMessageRequest).getMessages();
+            try {
+                messages = mSqsClient.receiveMessage(receiveMessageRequest).getMessages();
+            } catch (IllegalStateException e) {
+                mInterrupted = true;
+                return "";
+            }
         } while (messages.isEmpty());
         Message message = messages.get(0);
-        this.getSqsClient().deleteMessage(this.getQueueUrl(), message.getReceiptHandle());
+        mSqsClient.deleteMessage(this.getQueueUrl(), message.getReceiptHandle());
         return message.getBody();
     }
+
+
+    public void close() {
+        mSqsClient.shutdown();
+    }
+
+
+    public SqsReceiver clone() {
+        return new SqsReceiver(mSqsClient, mQueueUrl);
+    }
+
 }
