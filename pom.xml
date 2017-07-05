@@ -33,6 +33,8 @@
 
 
     <build>
+        <!-- Set dir for unit tests -->
+        <testSourceDirectory>${project.basedir}/src/test/unit/java/</testSourceDirectory>
         <pluginManagement>
             <plugins>
                 <plugin>
