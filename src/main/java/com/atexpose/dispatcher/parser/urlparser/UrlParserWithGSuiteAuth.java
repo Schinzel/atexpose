@@ -17,7 +17,6 @@ import lombok.experimental.Accessors;
  * <p>
  * Created by Schinzel on 2017-03-03.
  */
-@Builder
 @Accessors(prefix = "m")
 public class UrlParserWithGSuiteAuth extends UrlParser {
     /** The name of the cookie that holds the authentication token. */
@@ -29,6 +28,13 @@ public class UrlParserWithGSuiteAuth extends UrlParser {
     /** Authenticates against a GSuite domain. Setter for tests. */
     @Setter(AccessLevel.PACKAGE)
     GSuiteAuth mGSuiteAuth = new GSuiteAuth();
+
+
+    @Builder
+    UrlParserWithGSuiteAuth(String authCookieName, String domain) {
+        mAuthCookieName = authCookieName;
+        mDomain = domain;
+    }
 
 
     @Override
