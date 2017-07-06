@@ -42,6 +42,7 @@ public class CsvWrapper implements IWrapper {
     @Override
     public State getState() {
         return State.getBuilder()
+                .add("Class", this.getClass().getSimpleName())
                 .add("ColumnDelimiter", COL_DELIMITER)
                 .build();
     }

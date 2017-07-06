@@ -48,11 +48,18 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
 
 
     /**
-     *
      * @return A web server builder.
      */
     public WebServerBuilder getWebServerBuilder() {
         return new WebServerBuilder(this.getAPI(), this.getDispatchers());
+    }
+
+
+    /**
+     * @return A SQS consumer builder
+     */
+    public DispatcherBuilder.SqsConsumerBuilder getSqsConsumerBuilder() {
+        return new DispatcherBuilder(this.getAPI(), this.getDispatchers()).sqsConsumerBuilder();
     }
 
 

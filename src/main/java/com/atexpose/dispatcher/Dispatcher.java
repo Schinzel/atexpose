@@ -116,7 +116,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
      *                       dispatcher
      *                       will start a new thread and execute in this.
      */
-    public void commenceMessaging(boolean isSynchronized) {
+    public Dispatcher commenceMessaging(boolean isSynchronized) {
         //If there is a next dispatcher
         if (mNextDispatcher != null) {
             //Tell the next dispatcher to start its messaging.
@@ -133,6 +133,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
             mThread.setName(this.getKey() + ":" + mThreadNumber);
             mThread.start();
         }
+        return this;
     }
 
 
