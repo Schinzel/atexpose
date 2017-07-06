@@ -6,6 +6,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import com.amazonaws.services.sqs.model.AmazonSQSException;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import lombok.AccessLevel;
@@ -25,7 +26,10 @@ import java.util.List;
 public class SqsReceiver {
     @Getter(AccessLevel.PRIVATE) private final AmazonSQS mSqsClient;
     @Getter private final String mQueueUrl;
-    @Getter boolean mInterrupted = false;
+    /** Is set to true if close is invoked */
+    boolean mInterrupted = false;
+    /** Is set to true if such a serious exception occurs that the receiver cannot keep running. */
+    boolean mFatalError = false;
 
 
     SqsReceiver(AmazonSQS sqsClient, String queueUrl) {
@@ -42,7 +46,16 @@ public class SqsReceiver {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(region)
                 .build();
+        //If there are no queue with argument url
+        if (!mSqsClient.listQueues().getQueueUrls().contains(queueUrl)) {
+            throw new RuntimeException("No queue with url '" + queueUrl + "' exists in region " + region.getName());
+        }
         mQueueUrl = queueUrl;
+    }
+
+
+    public boolean allSystemsWorking() {
+        return !(mInterrupted || mFatalError);
     }
 
 
@@ -58,6 +71,12 @@ public class SqsReceiver {
             } catch (IllegalStateException e) {
                 mInterrupted = true;
                 return "";
+            } catch (AmazonSQSException awsException) {
+                //If the queue does not exist anymore
+                if (awsException.getErrorCode().equals("AWS.SimpleQueueService.NonExistentQueue")) {
+                    mFatalError = true;
+                    return "";
+                }
             }
         } while (messages.isEmpty());
         Message message = messages.get(0);

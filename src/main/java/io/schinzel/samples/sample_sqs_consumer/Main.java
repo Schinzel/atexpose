@@ -42,9 +42,9 @@ public class Main {
                 .build();
         sqsSender.send("{\"method\": \"doHeavyBackgroundJob\"}");
         int apa = 44;
-        atExpose.shutdown();
+        //atExpose.shutdown();
         sqsQueue.deleteQueue();
-
+        int apa2 = 55;
     }
 
 
