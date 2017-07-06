@@ -15,36 +15,34 @@ import io.schinzel.basicutils.configvar.ConfigVar;
  * Created by schinzel on 2017-07-06.
  */
 public class Main {
+    static final String QUEUE_URL = "https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_queue.fifo";
+    static final String AWS_ACCESS_KEY = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
+    static final String AWS_SECRET_KEY = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
 
 
     public static void main(String[] args) {
-        String awsAccessKey = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
-        String awsSecretKey = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
-        SqsQueue sqsQueue = new SqsQueue(awsAccessKey, awsSecretKey);
-        String queueUrl = sqsQueue.getQueueUrl();
         AtExpose atExpose = AtExpose.create();
         atExpose.getAPI().expose(new JobClass());
         atExpose.getSqsConsumerBuilder()
-                .awsAccessKey(awsAccessKey)
-                .awsSecretKey(awsSecretKey)
+                .awsAccessKey(AWS_ACCESS_KEY)
+                .awsSecretKey(AWS_SECRET_KEY)
                 .name("MyFirstSqsConsumer")
                 .noOfThreads(1)
                 .accessLevel(1)
                 .region(Regions.EU_WEST_1)
-                .queueUrl(queueUrl)
+                .queueUrl(QUEUE_URL)
                 .start();
         SqsSender sqsSender = SqsSender.builder()
-                .awsAccessKey(awsAccessKey)
-                .awsSecretKey(awsSecretKey)
-                .queueUrl(queueUrl)
+                .awsAccessKey(AWS_ACCESS_KEY)
+                .awsSecretKey(AWS_SECRET_KEY)
+                .queueUrl(QUEUE_URL)
                 .region(Regions.EU_WEST_1)
                 .sqsQueueType(SqsQueueType.FIFO)
                 .build();
-        sqsSender.send("{\"method\": \"doHeavyBackgroundJob\"}");
-        int apa = 44;
+        for (int i = 0; i < 5; i++) {
+            sqsSender.send("{\"method\": \"doHeavyBackgroundJob\", \"params\": {\"Int\": " + i + "}}");
+        }
         //atExpose.shutdown();
-        sqsQueue.deleteQueue();
-        int apa2 = 55;
     }
 
 
