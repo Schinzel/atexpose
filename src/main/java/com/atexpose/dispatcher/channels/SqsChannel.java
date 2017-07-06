@@ -68,6 +68,7 @@ public class SqsChannel implements IChannel {
     @Override
     public State getState() {
         return State.getBuilder()
+                .add("Class", this.getClass().getSimpleName())
                 .add("QueueUrl", mSqsReceiver.getQueueUrl())
                 .build();
     }

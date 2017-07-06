@@ -36,6 +36,8 @@ public class Main {
         AtExpose atExpose = AtExpose.create();
         //Expose a sample class
         atExpose.getAPI().expose(new JobClass());
+        //Start a command line interface
+        atExpose.startCLI();
         //Set up SQS consumer
         atExpose.getSqsConsumerBuilder()
                 .awsAccessKey(AWS_ACCESS_KEY)
