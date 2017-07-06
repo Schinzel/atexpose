@@ -82,5 +82,4 @@ public class SqsReceiver {
     public SqsReceiver clone() {
         return new SqsReceiver(mSqsClient, mQueueUrl);
     }
-
 }

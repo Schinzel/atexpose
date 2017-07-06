@@ -132,12 +132,38 @@ public abstract class AbstractSqsTest {
 
 
     @Test
-    public void allSystemsWorking_InterruptReceive_True() {
-        new Thread(() -> {
+    public void allSystemsWorking_InterruptReceive_True() throws Exception {
+        Thread threadReceive = new Thread(() -> {
             //Start waiting for a message
             mSqsReceiver.receive();
-            assertThat(mSqsReceiver.isAllSystemsWorking()).isFalse();
-        }).start();
-        mSqsReceiver.close();
+        });
+        Thread threadClose = new Thread(() -> {
+            //Close and thus interrupt receive
+            mSqsReceiver.close();
+        });
+        threadReceive.start();
+        threadClose.start();
+        threadReceive.join();
+        assertThat(mSqsReceiver.isAllSystemsWorking()).isFalse();
+    }
+
+
+    @Test
+    public void close_WhileWaitingForMessage_receiveShouldInterruptAndReturn() throws Exception {
+        Thread threadReceive = new Thread(() -> {
+            //Start waiting for a message
+            mSqsReceiver.receive();
+        });
+        Thread threadClose = new Thread(() -> {
+            //Close and thus interrupt receive
+            mSqsReceiver.close();
+        });
+        threadReceive.start();
+        long start = System.nanoTime();
+        threadClose.start();
+        threadReceive.join();
+        long durationMs = (System.nanoTime() - start) / 1_000_000;
+        //Assert that hang time was less than 10 ms
+        assertThat(durationMs).isLessThan(10);
     }
 }
