@@ -163,8 +163,8 @@ public abstract class AbstractSqsTest {
         threadClose.start();
         threadReceive.join();
         long durationMs = (System.nanoTime() - start) / 1_000_000;
-        //Assert that hang time was less than 10 ms
-        assertThat(durationMs).isLessThan(10);
+        //Assert that hang time was less than 50 ms
+        assertThat(durationMs).isLessThan(50);
     }
 
 
