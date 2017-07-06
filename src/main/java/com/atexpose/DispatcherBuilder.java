@@ -7,6 +7,7 @@ import com.atexpose.dispatcher.channels.SqsChannel;
 import com.atexpose.dispatcher.parser.JsonRpcParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import com.atexpose.util.sqs.SqsReceiver;
+import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,14 +20,17 @@ import lombok.experimental.Accessors;
  */
 @Accessors(prefix = "m")
 @AllArgsConstructor
-public class SqsConsumerBuilder {
-    API mAPI;
-    KeyValues<Dispatcher> mDispatchers;
+class DispatcherBuilder {
+    private final API mAPI;
+    private final KeyValues<Dispatcher> mDispatchers;
 
 
-    @Builder(builderMethodName = "sqsConsumerBuilder")
-    public Dispatcher newSqsConsumer(String name, String awsAccessKey, String awsSecretKey, Regions region,
-                                     String queueUrl, int accessLevel, int noOfThreads) {
+    @Builder(builderClassName = "SqsConsumerBuilder", builderMethodName = "sqsConsumerBuilder", buildMethodName = "start")
+    Dispatcher newSqsConsumer(String name, String awsAccessKey, String awsSecretKey, Regions region,
+                              String queueUrl, int accessLevel, int noOfThreads) {
+        if(Checker.isEmpty(name)){
+            name = "SqsConsumer";
+        }
         SqsReceiver sqsReceiver = SqsReceiver.builder()
                 .awsAccessKey(awsAccessKey)
                 .awsSecretKey(awsSecretKey)
