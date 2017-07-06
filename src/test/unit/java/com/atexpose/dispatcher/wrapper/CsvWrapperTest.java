@@ -68,7 +68,7 @@ public class CsvWrapperTest {
         CsvWrapper csvWrapper = new CsvWrapper();
         JSONObject joStatus = csvWrapper.getState().getJson();
         String statusAsString = joStatus.toString();
-        assertEquals("{\"ColumnDelimiter\":\", \"}", statusAsString);
+        assertEquals("{\"ColumnDelimiter\":\", \",\"Class\":\"CsvWrapper\"}", statusAsString);
 
     }
 
