@@ -44,7 +44,8 @@ You want ten different web servers, you got it. You can build you own custom par
 # Change Log
 ## Features added for next release
 - New basic-util version 1.24
-- JSON RPC parser added
+- JSON-RPC parser added
+- SQS consumer channel added - Reads messages from an AWS Simple Queue Service queue.
 
 ## 0.9.25
 _2017-06-23_
