@@ -122,7 +122,22 @@ public abstract class AbstractSqsTest {
         mSqsSender.send(expected);
         String actual = mSqsReceiver.receive();
         assertThat(actual).isEqualTo(expected);
-
     }
 
+
+    @Test
+    public void allSystemsWorking_NewInstance_True() {
+        assertThat(mSqsReceiver.isAllSystemsWorking()).isTrue();
+    }
+
+
+    @Test
+    public void allSystemsWorking_InterruptReceive_True() {
+        new Thread(() -> {
+            //Start waiting for a message
+            mSqsReceiver.receive();
+            assertThat(mSqsReceiver.isAllSystemsWorking()).isFalse();
+        }).start();
+        mSqsReceiver.close();
+    }
 }

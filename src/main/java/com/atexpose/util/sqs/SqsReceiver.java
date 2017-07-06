@@ -26,10 +26,8 @@ import java.util.List;
 public class SqsReceiver {
     @Getter(AccessLevel.PRIVATE) private final AmazonSQS mSqsClient;
     @Getter private final String mQueueUrl;
-    /** Is set to true if close is invoked */
-    boolean mInterrupted = false;
-    /** Is set to true if such a serious exception occurs that the receiver cannot keep running. */
-    boolean mFatalError = false;
+    /** Is set to true if all systems are working */
+    @Getter boolean mAllSystemsWorking = true;
 
 
     SqsReceiver(AmazonSQS sqsClient, String queueUrl) {
@@ -46,16 +44,7 @@ public class SqsReceiver {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(region)
                 .build();
-        //If there are no queue with argument url
-        if (!mSqsClient.listQueues().getQueueUrls().contains(queueUrl)) {
-            throw new RuntimeException("No queue with url '" + queueUrl + "' exists in region " + region.getName());
-        }
         mQueueUrl = queueUrl;
-    }
-
-
-    public boolean allSystemsWorking() {
-        return !(mInterrupted || mFatalError);
     }
 
 
@@ -69,12 +58,12 @@ public class SqsReceiver {
             try {
                 messages = mSqsClient.receiveMessage(receiveMessageRequest).getMessages();
             } catch (IllegalStateException e) {
-                mInterrupted = true;
+                mAllSystemsWorking = false;
                 return "";
             } catch (AmazonSQSException awsException) {
                 //If the queue does not exist anymore
                 if (awsException.getErrorCode().equals("AWS.SimpleQueueService.NonExistentQueue")) {
-                    mFatalError = true;
+                    mAllSystemsWorking = false;
                     return "";
                 }
             }

@@ -25,7 +25,7 @@ public class SqsChannel implements IChannel {
     public boolean getRequest(ByteStorage request) {
         String message = this.getSqsReceiver().receive();
         request.add(UTF8.getBytes(message));
-        return mSqsReceiver.allSystemsWorking();
+        return mSqsReceiver.isAllSystemsWorking();
     }
 
 
