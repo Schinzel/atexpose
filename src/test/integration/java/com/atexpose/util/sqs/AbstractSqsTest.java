@@ -166,4 +166,19 @@ public abstract class AbstractSqsTest {
         //Assert that hang time was less than 10 ms
         assertThat(durationMs).isLessThan(10);
     }
+
+
+    @Test
+    public void cloneReceiver_SendMessages_BothCloneAndOriginalShouldBeAbleToReceive() {
+        String message1 = "this_is_a_message_1";
+        mSqsSender.send(message1);
+        String actual1 = mSqsReceiver.clone().receive();
+        assertThat(actual1).isEqualTo(message1);
+        String message2 = "this_is_a_message_2";
+        mSqsSender.send(message2);
+        String actual2 = mSqsReceiver.receive();
+        assertThat(actual2).isEqualTo(message2);
+
+
+    }
 }
