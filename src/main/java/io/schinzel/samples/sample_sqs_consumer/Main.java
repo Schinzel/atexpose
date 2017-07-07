@@ -3,7 +3,7 @@ package io.schinzel.samples.sample_sqs_consumer;
 import com.amazonaws.regions.Regions;
 import com.atexpose.AtExpose;
 import com.atexpose.util.sqs.SqsQueueType;
-import com.atexpose.util.sqs.SqsSender;
+import com.atexpose.util.sqs.SqsProducer;
 import io.schinzel.basicutils.configvar.ConfigVar;
 
 /**
@@ -56,7 +56,7 @@ public class Main {
      */
     static void sampleCode() {
         //Create object that can send messages to SQS.
-        SqsSender sqsSender = SqsSender.builder()
+        SqsProducer sqsSender = SqsProducer.builder()
                 .awsAccessKey(AWS_ACCESS_KEY)
                 .awsSecretKey(AWS_SECRET_KEY)
                 .queueUrl(QUEUE_URL)

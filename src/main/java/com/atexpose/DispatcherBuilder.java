@@ -6,7 +6,7 @@ import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.SqsChannel;
 import com.atexpose.dispatcher.parser.JsonRpcParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
-import com.atexpose.util.sqs.SqsReceiver;
+import com.atexpose.util.sqs.SqsConsumer;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 import lombok.AllArgsConstructor;
@@ -31,7 +31,7 @@ class DispatcherBuilder {
         if(Checker.isEmpty(name)){
             name = "SqsConsumer";
         }
-        SqsReceiver sqsReceiver = SqsReceiver.builder()
+        SqsConsumer sqsReceiver = SqsConsumer.builder()
                 .awsAccessKey(awsAccessKey)
                 .awsSecretKey(awsSecretKey)
                 .region(region)

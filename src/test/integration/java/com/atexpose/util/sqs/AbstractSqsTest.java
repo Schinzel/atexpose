@@ -26,8 +26,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 public abstract class AbstractSqsTest {
     private final AmazonSQS mSqs;
     private final String mQueueUrl;
-    private final SqsReceiver mSqsReceiver;
-    private final SqsSender mSqsSender;
+    private final SqsConsumer mSqsReceiver;
+    private final SqsProducer mSqsSender;
 
 
     AbstractSqsTest(SqsQueueType queueType, CreateQueueRequest createRequest) {
@@ -39,14 +39,13 @@ public abstract class AbstractSqsTest {
                 .withRegion(Regions.EU_WEST_1)
                 .build();
         mQueueUrl = mSqs.createQueue(createRequest).getQueueUrl();
-        mSqsReceiver = SqsReceiver.builder()
+        mSqsReceiver = SqsConsumer.builder()
                 .awsAccessKey(awsAccessKey)
                 .awsSecretKey(awsSecretKey)
                 .queueUrl(mQueueUrl)
                 .region(Regions.EU_WEST_1)
                 .build();
-        mSqsSender = SqsSender.builder()
-                .senderName("MyName")
+        mSqsSender = SqsProducer.builder()
                 .awsAccessKey(awsAccessKey)
                 .awsSecretKey(awsSecretKey)
                 .queueUrl(mQueueUrl)

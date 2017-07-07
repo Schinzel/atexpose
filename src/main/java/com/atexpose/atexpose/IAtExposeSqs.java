@@ -1,6 +1,6 @@
 package com.atexpose.atexpose;
 
-import com.atexpose.util.sqs.ISqsSender;
+import com.atexpose.util.sqs.IQueueProducer;
 import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 
 /**
@@ -13,28 +13,32 @@ public interface IAtExposeSqs<T extends IAtExpose<T>> extends IAtExpose<T> {
     /**
      * @return The collection of AWS SQS senders.
      */
-    KeyValues<ISqsSender> getSqsSenders();
+    KeyValues<AtexposeQueueProducer> getQueueProducers();
 
 
     /**
-     * Adds the argument AWS SQS sender to the internal collection under the argument name.
+     * Adds the argument queue producer to the internal collection.
      *
-     * @param sqsSender The SQS sender to store.
+     * @param queueProducer The queue producer to store.
      * @return This for chaining.
      */
-    default T addSqsSender(ISqsSender sqsSender) {
-        this.getSqsSenders().add(sqsSender);
+    default T addQueueProducer(String queueProducerName, IQueueProducer queueProducer) {
+        AtexposeQueueProducer atexposeQueueProducer = AtexposeQueueProducer.builder()
+                .queueProducer(queueProducer)
+                .queueProducerName(queueProducerName)
+                .build();
+        this.getQueueProducers().add(atexposeQueueProducer);
         return this.getThis();
     }
 
 
     /**
-     * @param sqsSenderName The name of the SQS sender.
-     * @param message       The message to send to SQS.
+     * @param queueProducerName The name of the queue producer.
+     * @param message           The message to send.
      * @return This for chaining.
      */
-    default T sendToSqs(String sqsSenderName, String message) {
-        this.getSqsSenders().get(sqsSenderName).send(message);
+    default T sendToSqs(String queueProducerName, String message) {
+        this.getQueueProducers().get(queueProducerName).send(message);
         return this.getThis();
     }
 

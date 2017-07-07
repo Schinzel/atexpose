@@ -9,27 +9,28 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import io.schinzel.basicutils.RandomUtil;
 import io.schinzel.basicutils.Thrower;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 /**
  * The purpose of this class is to send messages to an AWS SQS queue.
  * <p>
  * Created by schinzel on 2017-07-03.
  */
-public class SqsSender implements ISqsSender {
+@Accessors(prefix = "m")
+public class SqsProducer implements IQueueProducer {
     private static final String GROUP_ID = "my_group_id";
-    private final String mSenderName;
-    private final String mQueueUrl;
+    @Getter(AccessLevel.PROTECTED) private final String mQueueUrl;
     private final AmazonSQS mSqsClient;
     private final SqsQueueType mSqsQueueType;
 
 
     @Builder
-    SqsSender(String senderName, String awsAccessKey, String awsSecretKey, Regions region, String queueUrl, SqsQueueType sqsQueueType) {
-        Thrower.throwIfVarEmpty(senderName, "senderName");
+    SqsProducer(String awsAccessKey, String awsSecretKey, Regions region, String queueUrl, SqsQueueType sqsQueueType) {
         Thrower.throwIfVarEmpty(queueUrl, "queueUrl");
         Thrower.throwIfVarNull(sqsQueueType, "sqsQueueType");
-        mSenderName = senderName;
         AWSCredentials credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
         mSqsClient = AmazonSQSClientBuilder
                 .standard()
@@ -41,29 +42,29 @@ public class SqsSender implements ISqsSender {
     }
 
 
-    @Override
-    public ISqsSender send(String message) {
+    public IQueueProducer send(String message) {
         Thrower.throwIfVarEmpty(message, "message");
         SendMessageRequest sendMsgRequest = new SendMessageRequest()
                 .withQueueUrl(mQueueUrl)
                 .withMessageBody(message);
         if (mSqsQueueType == SqsQueueType.FIFO) {
             sendMsgRequest
+                    //Set a group id. As this is not used currently, it is set to a hard coded value
                     .withMessageGroupId(GROUP_ID)
-                    .withMessageDeduplicationId(getDeduplicationId());
+                    //Add a unique if to the message which is used to prevent that the message is duplicated
+                    .withMessageDeduplicationId(getUniqueId());
         }
         mSqsClient.sendMessage(sendMsgRequest);
         return this;
     }
 
 
-    static String getDeduplicationId() {
+    /**
+     * @return A unique id.
+     */
+    static String getUniqueId() {
         return String.valueOf(System.nanoTime()) + "_" + RandomUtil.getRandomString(10);
     }
 
 
-    @Override
-    public String getKey() {
-        return mSenderName;
-    }
 }

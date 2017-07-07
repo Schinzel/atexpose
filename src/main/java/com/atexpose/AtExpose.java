@@ -5,7 +5,6 @@ import com.atexpose.atexpose.*;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.mail.IEmailSender;
-import com.atexpose.util.sqs.ISqsSender;
 import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
@@ -33,7 +32,7 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
     /** Holds the running dispatchers */
     @Getter KeyValues<Dispatcher> mDispatchers = KeyValues.create("Dispatchers");
     /** Hold the SQS senders added to this instance. */
-    @Getter KeyValues<ISqsSender> mSqsSenders = KeyValues.create("SqsSenders");
+    @Getter KeyValues<AtexposeQueueProducer> mQueueProducers = KeyValues.create("QueueProducers");
 
 
     /**
@@ -101,6 +100,7 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
                 .add("StartTime", mInstanceStartTime)
                 .addChild("EmailSender", this.getMailSender())
                 .addChildren("Dispatchers", this.getDispatchers())
+                .addChildren("QueueProducers", this.getQueueProducers())
                 .build();
     }
 

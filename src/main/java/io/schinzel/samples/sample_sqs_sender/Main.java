@@ -2,9 +2,9 @@ package io.schinzel.samples.sample_sqs_sender;
 
 import com.amazonaws.regions.Regions;
 import com.atexpose.AtExpose;
-import com.atexpose.util.sqs.ISqsSender;
+import com.atexpose.util.sqs.IQueueProducer;
 import com.atexpose.util.sqs.SqsQueueType;
-import com.atexpose.util.sqs.SqsSender;
+import com.atexpose.util.sqs.SqsProducer;
 import io.schinzel.basicutils.configvar.ConfigVar;
 
 /**
@@ -28,8 +28,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        ISqsSender sqsSender = SqsSender.builder()
-                .senderName("MyFirstSqsSender")
+        IQueueProducer sqsSender = SqsProducer.builder()
                 .awsAccessKey(AWS_ACCESS_KEY)
                 .awsSecretKey(AWS_SECRET_KEY)
                 .region(Regions.EU_WEST_1)
@@ -40,7 +39,7 @@ public class Main {
                 //Start a command line interface
                 .startCLI()
                 //Add the SQS sender to @Expose
-                .addSqsSender(sqsSender);
+                .addQueueProducer("MyFirstSqsSender", sqsSender);
     }
 
 }

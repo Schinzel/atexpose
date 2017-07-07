@@ -1,7 +1,7 @@
 package com.atexpose.dispatcher.channels;
 
 import com.atexpose.util.ByteStorage;
-import com.atexpose.util.sqs.SqsReceiver;
+import com.atexpose.util.sqs.SqsConsumer;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @Accessors(prefix = "m")
 public class SqsChannel implements IChannel {
     @Getter(AccessLevel.PACKAGE)
-    SqsReceiver mSqsReceiver;
+    SqsConsumer mSqsReceiver;
 
 
     @Override
