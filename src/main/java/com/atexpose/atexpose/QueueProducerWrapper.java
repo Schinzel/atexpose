@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.experimental.Accessors;
 
 /**
- * Extends the SqsProducer and adds:
+ * The purpose of this class is to wrap a QueueProducerand add:
  * 1) IStateNode so that the state can easily compiled
  * 2) IValueKey so that these can be added to a KeyValue collection.
  * <p>
@@ -21,6 +21,12 @@ public class QueueProducerWrapper implements IStateNode, IValueKey {
     IQueueProducer mQueueProducer;
 
 
+    /**
+     * Sens the argument message to a queue.
+     *
+     * @param message The message to send.
+     * @return This for chaining.
+     */
     public QueueProducerWrapper send(String message) {
         mQueueProducer.send(message);
         return this;
@@ -37,7 +43,7 @@ public class QueueProducerWrapper implements IStateNode, IValueKey {
     public State getState() {
         return State.getBuilder()
                 .add("Name", mQueueProducerName)
-                .add("Type", mQueueProducer.getClass().getSimpleName())
+                .add("Class", mQueueProducer.getClass().getSimpleName())
                 .build();
     }
 

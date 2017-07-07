@@ -17,7 +17,7 @@ import io.schinzel.basicutils.configvar.ConfigVar;
  * - Set access key, secret key and the queue url below
  * - Run main
  * - Type the following in CLI: sendToSqs MyFirstSqsSender, "a fine message indeed!"
- * - Terminate sample with "close" in CLI.
+ * - Terminate with "close" in CLI.
  * <p>
  * Created by schinzel on 2017-07-07.
  */
