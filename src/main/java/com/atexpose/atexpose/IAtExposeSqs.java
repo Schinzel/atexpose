@@ -1,10 +1,7 @@
 package com.atexpose.atexpose;
 
 import com.atexpose.util.sqs.ISqsSender;
-import io.schinzel.basicutils.Thrower;
-import lombok.NonNull;
-
-import java.util.Map;
+import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 
 /**
  * The purpose of this interface is to send messages to AWS SQS queues.
@@ -13,20 +10,20 @@ import java.util.Map;
  */
 public interface IAtExposeSqs<T extends IAtExpose<T>> extends IAtExpose<T> {
 
-    Map<String, ISqsSender> getSqsSenderCollection();
+    /**
+     * @return The collection of AWS SQS senders.
+     */
+    KeyValues<ISqsSender> getSqsSenders();
 
 
     /**
      * Adds the argument AWS SQS sender to the internal collection under the argument name.
      *
-     * @param sqsSenderName The name of the SQS sender.
-     * @param sqsSender     The SQS sender to store.
+     * @param sqsSender The SQS sender to store.
      * @return This for chaining.
      */
-    default T addSqsSender(@NonNull String sqsSenderName, @NonNull ISqsSender sqsSender) {
-        Thrower.throwIfTrue(this.getSqsSenderCollection().containsKey(sqsSenderName))
-                .message("Cannot add SQS sender. There already exists a SQS sender with name '" + sqsSenderName + "'");
-        getSqsSenderCollection().put(sqsSenderName, sqsSender);
+    default T addSqsSender(ISqsSender sqsSender) {
+        this.getSqsSenders().add(sqsSender);
         return this.getThis();
     }
 
@@ -36,10 +33,8 @@ public interface IAtExposeSqs<T extends IAtExpose<T>> extends IAtExpose<T> {
      * @param message       The message to send to SQS.
      * @return This for chaining.
      */
-    default T sendToSqs(@NonNull String sqsSenderName, @NonNull String message) {
-        Thrower.throwIfFalse(this.getSqsSenderCollection().containsKey(sqsSenderName))
-                .message("Cannot send message to SQS. No SQS sender with name '" + sqsSenderName + "'");
-        this.getSqsSenderCollection().get(sqsSenderName).send(message);
+    default T sendToSqs(String sqsSenderName, String message) {
+        this.getSqsSenders().get(sqsSenderName).send(message);
         return this.getThis();
     }
 

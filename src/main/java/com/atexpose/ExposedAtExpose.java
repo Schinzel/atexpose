@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 /**
@@ -229,7 +230,7 @@ class ExposedAtExpose {
             arguments = {"DispatcherName"},
             requiredAccessLevel = 3,
             description = "Closes the argument dispatcher.",
-            labels = {"@Expose", "AtExpose"}
+            labels = {"@Expose"}
     )
     public String closeDispatcher(String name) {
         this.getAtExpose().closeDispatcher(name);
@@ -255,5 +256,19 @@ class ExposedAtExpose {
     public JSONObject status() {
         return this.getAtExpose().getState().getJson();
     }
+
+
+    @Expose(
+            arguments = {"SqsSenderName", "Message"},
+            requiredAccessLevel = 3,
+            description = "Sends the argument message to an AWS SQS queue.",
+            labels = {"@Expose"}
+    )
+    public String sendToSqs(String sqsSenderName, String message) {
+        this.getAtExpose().sendToSqs(sqsSenderName, message);
+        return "Message sent. SqsSender: '" + sqsSenderName + ". Message: '"
+                + StringUtils.abbreviate(message, 50) + "'";
+    }
+
 
 }

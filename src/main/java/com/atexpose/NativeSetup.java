@@ -176,8 +176,13 @@ class NativeSetup {
                         .build())
                 .addArgument(Argument.builder()
                         .name("SqsSenderName")
+                        .dataType(DataType.ALPHNUMSTRING)
+                        .description("The name of an SQS sender.")
+                        .build())
+                .addArgument(Argument.builder()
+                        .name("Message")
                         .dataType(DataType.STRING)
-                        .description(" The name of an SQS sender.")
+                        .description("The name of an SQS sender.")
                         .build());
     }
 

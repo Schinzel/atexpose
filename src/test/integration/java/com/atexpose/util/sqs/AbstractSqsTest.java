@@ -46,6 +46,7 @@ public abstract class AbstractSqsTest {
                 .region(Regions.EU_WEST_1)
                 .build();
         mSqsSender = SqsSender.builder()
+                .senderName("MyName")
                 .awsAccessKey(awsAccessKey)
                 .awsSecretKey(awsSecretKey)
                 .queueUrl(mQueueUrl)

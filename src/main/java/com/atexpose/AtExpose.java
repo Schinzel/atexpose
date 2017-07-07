@@ -5,6 +5,7 @@ import com.atexpose.atexpose.*;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.mail.IEmailSender;
+import com.atexpose.util.sqs.ISqsSender;
 import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
@@ -21,7 +22,8 @@ import lombok.experimental.Accessors;
 @SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue", "UnusedReturnValue"})
 @Accessors(prefix = "m")
 public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeReports<AtExpose>,
-        IAtExposeScriptFile<AtExpose>, IAtExposeTasks<AtExpose>, IAtExposeLog<AtExpose> {
+        IAtExposeScriptFile<AtExpose>, IAtExposeTasks<AtExpose>, IAtExposeLog<AtExpose>,
+        IAtExposeSqs<AtExpose> {
     /** Instance creation time. For status and debug purposes. */
     private final String mInstanceStartTime = DateTimeStrings.getDateTimeUTC();
     /** Reference to the API. */
@@ -30,6 +32,8 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
     @Getter private IEmailSender mMailSender;
     /** Holds the running dispatchers */
     @Getter KeyValues<Dispatcher> mDispatchers = KeyValues.create("Dispatchers");
+    /** Hold the SQS senders added to this instance. */
+    @Getter KeyValues<ISqsSender> mSqsSenders = KeyValues.create("SqsSenders");
 
 
     /**
@@ -99,4 +103,6 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
                 .addChildren("Dispatchers", this.getDispatchers())
                 .build();
     }
+
+
 }

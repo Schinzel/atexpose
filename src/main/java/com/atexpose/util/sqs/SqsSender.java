@@ -18,13 +18,18 @@ import lombok.Builder;
  */
 public class SqsSender implements ISqsSender {
     private static final String GROUP_ID = "my_group_id";
+    private final String mSenderName;
     private final String mQueueUrl;
     private final AmazonSQS mSqsClient;
     private final SqsQueueType mSqsQueueType;
 
 
     @Builder
-    SqsSender(String awsAccessKey, String awsSecretKey, Regions region, String queueUrl, SqsQueueType sqsQueueType) {
+    SqsSender(String senderName, String awsAccessKey, String awsSecretKey, Regions region, String queueUrl, SqsQueueType sqsQueueType) {
+        Thrower.throwIfVarEmpty(senderName, "senderName");
+        Thrower.throwIfVarEmpty(queueUrl, "queueUrl");
+        Thrower.throwIfVarNull(sqsQueueType, "sqsQueueType");
+        mSenderName = senderName;
         AWSCredentials credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
         mSqsClient = AmazonSQSClientBuilder
                 .standard()
@@ -54,5 +59,11 @@ public class SqsSender implements ISqsSender {
 
     static String getDeduplicationId() {
         return String.valueOf(System.nanoTime()) + "_" + RandomUtil.getRandomString(10);
+    }
+
+
+    @Override
+    public String getKey() {
+        return mSenderName;
     }
 }
