@@ -9,9 +9,7 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import io.schinzel.basicutils.RandomUtil;
 import io.schinzel.basicutils.Thrower;
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
 
 /**
  * The purpose of this class is to send messages to an AWS SQS queue.
@@ -19,22 +17,22 @@ import lombok.Getter;
  * Created by schinzel on 2017-07-03.
  */
 public class SqsSender implements ISqsSender {
-    @Getter(AccessLevel.PRIVATE) private final String groupId = "my_group_id";
-    @Getter(AccessLevel.PRIVATE) private final String queueUrl;
-    @Getter(AccessLevel.PRIVATE) private final AmazonSQS sqsClient;
-    @Getter(AccessLevel.PRIVATE) private final SqsQueueType sqsQueueType;
+    private static final String GROUP_ID = "my_group_id";
+    private final String mQueueUrl;
+    private final AmazonSQS mSqsClient;
+    private final SqsQueueType mSqsQueueType;
 
 
     @Builder
     SqsSender(String awsAccessKey, String awsSecretKey, Regions region, String queueUrl, SqsQueueType sqsQueueType) {
         AWSCredentials credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
-        this.sqsClient = AmazonSQSClientBuilder
+        mSqsClient = AmazonSQSClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(region)
                 .build();
-        this.queueUrl = queueUrl;
-        this.sqsQueueType = sqsQueueType;
+        mQueueUrl = queueUrl;
+        mSqsQueueType = sqsQueueType;
     }
 
 
@@ -42,14 +40,14 @@ public class SqsSender implements ISqsSender {
     public ISqsSender send(String message) {
         Thrower.throwIfVarEmpty(message, "message");
         SendMessageRequest sendMsgRequest = new SendMessageRequest()
-                .withQueueUrl(this.getQueueUrl())
+                .withQueueUrl(mQueueUrl)
                 .withMessageBody(message);
-        if (this.getSqsQueueType() == SqsQueueType.FIFO) {
+        if (mSqsQueueType == SqsQueueType.FIFO) {
             sendMsgRequest
-                    .withMessageGroupId(this.getGroupId())
+                    .withMessageGroupId(GROUP_ID)
                     .withMessageDeduplicationId(getDeduplicationId());
         }
-        this.getSqsClient().sendMessage(sendMsgRequest);
+        mSqsClient.sendMessage(sendMsgRequest);
         return this;
     }
 
