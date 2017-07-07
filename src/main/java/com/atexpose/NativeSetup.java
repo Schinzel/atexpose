@@ -173,6 +173,11 @@ class NativeSetup {
                         .name("Password")
                         .dataType(DataType.STRING)
                         .description("A password.")
+                        .build())
+                .addArgument(Argument.builder()
+                        .name("SqsSenderName")
+                        .dataType(DataType.STRING)
+                        .description(" The name of an SQS sender.")
                         .build());
     }
 
