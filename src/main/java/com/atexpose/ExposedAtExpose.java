@@ -9,6 +9,7 @@ import io.schinzel.basicutils.crypto.cipher.Aes256Gcm;
 import io.schinzel.basicutils.crypto.cipher.ICipher;
 import io.schinzel.basicutils.crypto.cipher.NoCipher;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.json.JSONObject;
@@ -22,14 +23,10 @@ import org.json.JSONObject;
  */
 @SuppressWarnings("unused")
 @Accessors(prefix = "m")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 class ExposedAtExpose {
     @Getter(AccessLevel.PACKAGE)
     private final AtExpose mAtExpose;
-
-
-    private ExposedAtExpose(AtExpose atExpose) {
-        mAtExpose = atExpose;
-    }
 
 
     static ExposedAtExpose create(AtExpose atExpose) {
