@@ -16,7 +16,7 @@ class NativeSetup {
 
     static void setUp(API api) {
         NativeSetup.setUpLabels(api);
-        NativeSetup.setArguments(api);
+        NativeSetup.setUpArguments(api);
         NativeSetup.setUpMethods(api);
     }
 
@@ -31,7 +31,7 @@ class NativeSetup {
     }
 
 
-    private static void setArguments(API api) {
+    private static void setUpArguments(API api) {
         api
                 .addArgument(Argument.builder()
                         .name("FileName")
