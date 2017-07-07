@@ -11,7 +11,7 @@ import io.schinzel.basicutils.collections.keyvalues.KeyValues;
 public interface IAtExposeSqs<T extends IAtExpose<T>> extends IAtExpose<T> {
 
     /**
-     * @return The collection of AWS SQS senders.
+     * @return The collection of queue producers.
      */
     KeyValues<QueueProducerWrapper> getQueueProducers();
 

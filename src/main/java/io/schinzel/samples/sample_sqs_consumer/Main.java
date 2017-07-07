@@ -33,13 +33,13 @@ public class Main {
      * Typical code to set up a SQS.
      */
     static void typicalSetUp() {
-        AtExpose atExpose = AtExpose.create();
-        //Expose a sample class
-        atExpose.getAPI().expose(new JobClass());
-        //Start a command line interface
-        atExpose.startCLI();
-        //Set up SQS consumer
-        atExpose.getSqsConsumerBuilder()
+        AtExpose.create()
+                //Expose a sample class
+                .expose(new JobClass())
+                //Start a command line interface
+                .startCLI()
+                //Set up SQS consumer
+                .getSqsConsumerBuilder()
                 .awsAccessKey(AWS_ACCESS_KEY)
                 .awsSecretKey(AWS_SECRET_KEY)
                 .queueUrl(QUEUE_URL)
@@ -56,7 +56,7 @@ public class Main {
      */
     static void sampleCode() {
         //Create object that can send messages to SQS.
-        SqsProducer sqsSender = SqsProducer.builder()
+        SqsProducer sqsProducer = SqsProducer.builder()
                 .awsAccessKey(AWS_ACCESS_KEY)
                 .awsSecretKey(AWS_SECRET_KEY)
                 .queueUrl(QUEUE_URL)
@@ -65,7 +65,7 @@ public class Main {
                 .build();
         //Send 5 message to the SQS.
         for (int i = 0; i < 5; i++) {
-            sqsSender.send("{\"method\": \"doHeavyBackgroundJob\", \"params\": {\"Int\": " + (i + 1) + "}}");
+            sqsProducer.send("{\"method\": \"doHeavyBackgroundJob\", \"params\": {\"Int\": " + (i + 1) + "}}");
         }
     }
 

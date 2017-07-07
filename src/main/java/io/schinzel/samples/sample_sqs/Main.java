@@ -1,24 +1,13 @@
-package io.schinzel.samples.sample_sqs_sender;
+package io.schinzel.samples.sample_sqs;
 
 import com.amazonaws.regions.Regions;
 import com.atexpose.AtExpose;
 import com.atexpose.util.sqs.IQueueProducer;
-import com.atexpose.util.sqs.SqsQueueType;
 import com.atexpose.util.sqs.SqsProducer;
+import com.atexpose.util.sqs.SqsQueueType;
 import io.schinzel.basicutils.configvar.ConfigVar;
 
 /**
- * This sample sends message from a AWS SQS.
- * Requirements:
- * - AWS credentials that can receive, send and delete messages.
- * - A fifo queue.
- * <p>
- * Instructions:
- * - Set access key, secret key and the queue url below
- * - Run main
- * - Type the following in CLI: sendToSqs MyFirstSqsSender, "a fine message indeed!"
- * - Terminate with "close" in CLI.
- * <p>
  * Created by schinzel on 2017-07-07.
  */
 public class Main {
@@ -28,7 +17,30 @@ public class Main {
 
 
     public static void main(String[] args) {
-        IQueueProducer sqsSender = SqsProducer.builder()
+        setUpConsumer();
+
+    }
+
+
+    static void setUpConsumer() {
+        AtExpose.create()
+                //Expose sample class
+                .expose(new JobClass())
+                //Set up SQS consumer
+                .getSqsConsumerBuilder()
+                .awsAccessKey(AWS_ACCESS_KEY)
+                .awsSecretKey(AWS_SECRET_KEY)
+                .queueUrl(QUEUE_URL)
+                .region(Regions.EU_WEST_1)
+                .name("MyFirstSqsConsumer")
+                .noOfThreads(2)
+                .accessLevel(1)
+                .start();
+    }
+
+
+    static void setUpProducer() {
+        IQueueProducer sqsProducer = SqsProducer.builder()
                 .awsAccessKey(AWS_ACCESS_KEY)
                 .awsSecretKey(AWS_SECRET_KEY)
                 .region(Regions.EU_WEST_1)
@@ -38,8 +50,7 @@ public class Main {
         AtExpose.create()
                 //Start a command line interface
                 .startCLI()
-                //Add the SQS sender to @Expose
-                .addQueueProducer("MyFirstSqsSender", sqsSender);
+                //Add the queue producer to @Expose
+                .addQueueProducer("MyFirstSqsProducer", sqsProducer);
     }
-
 }

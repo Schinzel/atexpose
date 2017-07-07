@@ -50,6 +50,18 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
     }
 
 
+    public AtExpose expose(Object object) {
+        mAPI.expose(object);
+        return this;
+    }
+
+
+    public AtExpose expose(Class clazz) {
+        mAPI.expose(clazz);
+        return this;
+    }
+
+
     /**
      * @return A web server builder.
      */
