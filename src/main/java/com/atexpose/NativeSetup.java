@@ -177,12 +177,12 @@ class NativeSetup {
                 .addArgument(Argument.builder()
                         .name("QueueProducerName")
                         .dataType(DataType.ALPHNUMSTRING)
-                        .description("The name of an SQS sender.")
+                        .description("Name of a queue producer, which sends messages to a queue such as AWS SQS.")
                         .build())
                 .addArgument(Argument.builder()
                         .name("Message")
                         .dataType(DataType.STRING)
-                        .description("The name of an SQS sender.")
+                        .description("A message.")
                         .build());
     }
 
