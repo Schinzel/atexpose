@@ -259,14 +259,14 @@ class ExposedAtExpose {
 
 
     @Expose(
-            arguments = {"SqsSenderName", "Message"},
+            arguments = {"QueueProducerName", "Message"},
             requiredAccessLevel = 3,
-            description = "Sends the argument message to an AWS SQS queue.",
+            description = "Sends the argument message to a queue, e.g. AWS SQS.",
             labels = {"@Expose"}
     )
-    public String sendToSqs(String sqsSenderName, String message) {
-        this.getAtExpose().sendToSqs(sqsSenderName, message);
-        return "Message sent. SqsSender: '" + sqsSenderName + ". Message: '"
+    public String sendToQueue(String queueProducerName, String message) {
+        this.getAtExpose().sendToQueue(queueProducerName, message);
+        return "Message sent. SqsSender: '" + queueProducerName + ". Message: '"
                 + StringUtils.abbreviate(message, 50) + "'";
     }
 

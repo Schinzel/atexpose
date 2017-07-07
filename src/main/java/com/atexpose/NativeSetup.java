@@ -175,7 +175,7 @@ class NativeSetup {
                         .description("A password.")
                         .build())
                 .addArgument(Argument.builder()
-                        .name("SqsSenderName")
+                        .name("QueueProducerName")
                         .dataType(DataType.ALPHNUMSTRING)
                         .description("The name of an SQS sender.")
                         .build())

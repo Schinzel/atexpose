@@ -37,7 +37,7 @@ public interface IAtExposeSqs<T extends IAtExpose<T>> extends IAtExpose<T> {
      * @param message           The message to send.
      * @return This for chaining.
      */
-    default T sendToSqs(String queueProducerName, String message) {
+    default T sendToQueue(String queueProducerName, String message) {
         this.getQueueProducers().get(queueProducerName).send(message);
         return this.getThis();
     }
