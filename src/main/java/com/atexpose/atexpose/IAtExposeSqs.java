@@ -13,7 +13,7 @@ public interface IAtExposeSqs<T extends IAtExpose<T>> extends IAtExpose<T> {
     /**
      * @return The collection of AWS SQS senders.
      */
-    KeyValues<AtexposeQueueProducer> getQueueProducers();
+    KeyValues<QueueProducerWrapper> getQueueProducers();
 
 
     /**
@@ -23,7 +23,7 @@ public interface IAtExposeSqs<T extends IAtExpose<T>> extends IAtExpose<T> {
      * @return This for chaining.
      */
     default T addQueueProducer(String queueProducerName, IQueueProducer queueProducer) {
-        AtexposeQueueProducer atexposeQueueProducer = AtexposeQueueProducer.builder()
+        QueueProducerWrapper atexposeQueueProducer = QueueProducerWrapper.builder()
                 .queueProducer(queueProducer)
                 .queueProducerName(queueProducerName)
                 .build();

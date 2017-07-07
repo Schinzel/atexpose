@@ -32,7 +32,7 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
     /** Holds the running dispatchers */
     @Getter KeyValues<Dispatcher> mDispatchers = KeyValues.create("Dispatchers");
     /** Hold the SQS senders added to this instance. */
-    @Getter KeyValues<AtexposeQueueProducer> mQueueProducers = KeyValues.create("QueueProducers");
+    @Getter KeyValues<QueueProducerWrapper> mQueueProducers = KeyValues.create("QueueProducers");
 
 
     /**

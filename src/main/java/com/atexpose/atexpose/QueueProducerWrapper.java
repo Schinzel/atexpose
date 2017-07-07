@@ -16,12 +16,12 @@ import lombok.experimental.Accessors;
  */
 @Builder
 @Accessors(prefix = "m")
-public class AtexposeQueueProducer implements IStateNode, IValueKey {
+public class QueueProducerWrapper implements IStateNode, IValueKey {
     String mQueueProducerName;
     IQueueProducer mQueueProducer;
 
 
-    public AtexposeQueueProducer send(String message) {
+    public QueueProducerWrapper send(String message) {
         mQueueProducer.send(message);
         return this;
     }
