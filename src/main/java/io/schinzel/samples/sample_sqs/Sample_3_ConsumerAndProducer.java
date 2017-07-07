@@ -5,19 +5,22 @@ import com.atexpose.AtExpose;
 import com.atexpose.util.sqs.IQueueProducer;
 import com.atexpose.util.sqs.SqsProducer;
 import com.atexpose.util.sqs.SqsQueueType;
-import io.schinzel.basicutils.configvar.ConfigVar;
 
 /**
- * '
- * Type the following in CLI:
- * sendToQueue MyFirstSqsProducer, '{"method": "doHeavyBackgroundJob", "params": {"Int": 123}}'
- *
+ * The sample sets up a consumer and a producer. A message is put in an AWS SQS queue using the
+ * CLI. The message is the consumed by the consumer and the request executed.
+ * <p>
+ * Instructions:
+ * - Set access key, secret key and the queue url in class AWS.
+ * - Run main
+ * - Type the following in CLI: sendToQueue MyFirstSqsProducer, '{"method": "doHeavyBackgroundJob",
+ * "params": {"Int": 123}}'
+ * - Type close in CLI to quit.
+ * <p>
+ * <p>
  * Created by schinzel on 2017-07-07.
  */
-public class Main {
-    static final String AWS_ACCESS_KEY = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
-    static final String AWS_SECRET_KEY = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
-    static final String QUEUE_URL = "https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_queue.fifo";
+public class Sample_3_ConsumerAndProducer {
 
 
     public static void main(String[] args) {
@@ -33,9 +36,9 @@ public class Main {
                 .expose(new JobClass())
                 //Set up SQS consumer
                 .getSqsConsumerBuilder()
-                .awsAccessKey(AWS_ACCESS_KEY)
-                .awsSecretKey(AWS_SECRET_KEY)
-                .queueUrl(QUEUE_URL)
+                .awsAccessKey(AWS.ACCESS_KEY)
+                .awsSecretKey(AWS.SECRET_KEY)
+                .queueUrl(AWS.QUEUE_URL)
                 .region(Regions.EU_WEST_1)
                 .name("MyFirstSqsConsumer")
                 .noOfThreads(2)
@@ -45,11 +48,12 @@ public class Main {
 
 
     static void setUpProducer() {
+        //Create a SqsProducer that can put messages on an AWS SQS queue.
         IQueueProducer sqsProducer = SqsProducer.builder()
-                .awsAccessKey(AWS_ACCESS_KEY)
-                .awsSecretKey(AWS_SECRET_KEY)
+                .awsAccessKey(AWS.ACCESS_KEY)
+                .awsSecretKey(AWS.SECRET_KEY)
                 .region(Regions.EU_WEST_1)
-                .queueUrl(QUEUE_URL)
+                .queueUrl(AWS.QUEUE_URL)
                 .sqsQueueType(SqsQueueType.FIFO)
                 .build();
         AtExpose.create()

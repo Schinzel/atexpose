@@ -1,38 +1,36 @@
-package io.schinzel.samples.sample_sqs_producer;
+package io.schinzel.samples.sample_sqs;
 
 import com.amazonaws.regions.Regions;
 import com.atexpose.AtExpose;
 import com.atexpose.util.sqs.IQueueProducer;
-import com.atexpose.util.sqs.SqsQueueType;
 import com.atexpose.util.sqs.SqsProducer;
-import io.schinzel.basicutils.configvar.ConfigVar;
+import com.atexpose.util.sqs.SqsQueueType;
 
 /**
- * This sample sends message from a AWS SQS.
+ * Sample shows how to add a QueueProducer to @Expose and use the producer to put a
+ * message on an AWS SQS queue.
+ * <p>
  * Requirements:
  * - AWS credentials that can receive, send and delete messages.
  * - A fifo queue.
  * <p>
  * Instructions:
- * - Set access key, secret key and the queue url below
+ * - Set access key, secret key and the queue in class AWS.
  * - Run main
- * - Type the following in CLI: sendToQueue MyFirstSqsProducer, "a fine message indeed!"
+ * - Type the following in CLI: sendToQueue MyFirstSqsProducer, 'a fine message indeed!'
+ * - There should now be message on the SQS queue.
  * - Terminate with "close" in CLI.
  * <p>
  * Created by schinzel on 2017-07-07.
  */
-public class Main {
-    static final String AWS_ACCESS_KEY = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
-    static final String AWS_SECRET_KEY = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
-    static final String QUEUE_URL = "https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_queue.fifo";
-
+public class Sample_2_Producer {
 
     public static void main(String[] args) {
         IQueueProducer sqsProducer = SqsProducer.builder()
-                .awsAccessKey(AWS_ACCESS_KEY)
-                .awsSecretKey(AWS_SECRET_KEY)
+                .awsAccessKey(AWS.ACCESS_KEY)
+                .awsSecretKey(AWS.SECRET_KEY)
                 .region(Regions.EU_WEST_1)
-                .queueUrl(QUEUE_URL)
+                .queueUrl(AWS.QUEUE_URL)
                 .sqsQueueType(SqsQueueType.FIFO)
                 .build();
         AtExpose.create()
