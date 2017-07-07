@@ -25,7 +25,7 @@ public class TextParser implements IParser {
             throw new RuntimeError("Request '" + requestAsString + "' is not formed correctly.");
         }
         String methodName = m.group(1);
-        List<String> argumentValues = StringSplitter.splitOnComma_DoubleQuoteQualifier(m.group(3));
+        List<String> argumentValues = StringSplitter.splitOnComma_SingleQuoteQualifier(m.group(3));
         return Request.builder()
                 .methodName(methodName)
                 .argumentValues(argumentValues)

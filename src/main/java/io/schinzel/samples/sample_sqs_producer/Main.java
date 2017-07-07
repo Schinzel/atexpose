@@ -16,7 +16,7 @@ import io.schinzel.basicutils.configvar.ConfigVar;
  * Instructions:
  * - Set access key, secret key and the queue url below
  * - Run main
- * - Type the following in CLI: sendToSqs MyFirstSqsProducer, "a fine message indeed!"
+ * - Type the following in CLI: sendToQueue MyFirstSqsProducer, "a fine message indeed!"
  * - Terminate with "close" in CLI.
  * <p>
  * Created by schinzel on 2017-07-07.

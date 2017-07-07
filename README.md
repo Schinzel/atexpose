@@ -46,6 +46,7 @@ You want ten different web servers, you got it. You can build you own custom par
 - New basic-util version 1.24
 - JSON-RPC parser added
 - SQS consumer channel added - Reads messages from an AWS Simple Queue Service queue.
+- Text parser: text qualifier is now single quote instead of double quote
 
 ## 0.9.25
 _2017-06-23_

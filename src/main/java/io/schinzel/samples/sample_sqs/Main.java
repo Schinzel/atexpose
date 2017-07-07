@@ -8,6 +8,10 @@ import com.atexpose.util.sqs.SqsQueueType;
 import io.schinzel.basicutils.configvar.ConfigVar;
 
 /**
+ * '
+ * Type the following in CLI:
+ * sendToQueue MyFirstSqsProducer, '{"method": "doHeavyBackgroundJob", "params": {"Int": 123}}'
+ *
  * Created by schinzel on 2017-07-07.
  */
 public class Main {
@@ -18,6 +22,7 @@ public class Main {
 
     public static void main(String[] args) {
         setUpConsumer();
+        setUpProducer();
 
     }
 
