@@ -4,9 +4,7 @@ import com.atexpose.util.ByteStorage;
 import com.atexpose.util.sqs.SqsConsumer;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
@@ -17,13 +15,12 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(prefix = "m")
 public class SqsChannel implements IChannel {
-    @Getter(AccessLevel.PACKAGE)
     SqsConsumer mSqsReceiver;
 
 
     @Override
     public boolean getRequest(ByteStorage request) {
-        String message = this.getSqsReceiver().receive();
+        String message = mSqsReceiver.receive();
         request.add(UTF8.getBytes(message));
         return mSqsReceiver.isAllSystemsWorking();
     }
