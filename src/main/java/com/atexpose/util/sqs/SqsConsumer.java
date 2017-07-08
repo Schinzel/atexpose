@@ -9,7 +9,6 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.AmazonSQSException;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -23,21 +22,21 @@ import java.util.List;
  * Created by schinzel on 2017-07-02.
  */
 @Accessors(prefix = "m")
-public class SqsReceiver {
-    @Getter(AccessLevel.PRIVATE) private final AmazonSQS mSqsClient;
+public class SqsConsumer {
+    private final AmazonSQS mSqsClient;
     @Getter private final String mQueueUrl;
     /** Is set to true if all systems are working */
     @Getter boolean mAllSystemsWorking = true;
 
 
-    SqsReceiver(AmazonSQS sqsClient, String queueUrl) {
+    SqsConsumer(AmazonSQS sqsClient, String queueUrl) {
         mSqsClient = sqsClient;
         mQueueUrl = queueUrl;
     }
 
 
     @Builder
-    SqsReceiver(String awsAccessKey, String awsSecretKey, Regions region, String queueUrl) {
+    SqsConsumer(String awsAccessKey, String awsSecretKey, Regions region, String queueUrl) {
         AWSCredentials credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
         mSqsClient = AmazonSQSClientBuilder
                 .standard()
@@ -79,7 +78,7 @@ public class SqsReceiver {
     }
 
 
-    public SqsReceiver clone() {
-        return new SqsReceiver(mSqsClient, mQueueUrl);
+    public SqsConsumer clone() {
+        return new SqsConsumer(mSqsClient, mQueueUrl);
     }
 }

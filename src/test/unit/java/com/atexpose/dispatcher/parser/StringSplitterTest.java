@@ -24,18 +24,15 @@ public class StringSplitterTest extends StringSplitter {
         //
         str = "1,2,3,4,5";
         actual = StringSplitter.splitOnComma_DoubleQuoteQualifier(str);
-        assertThat(actual).hasSize(5);
-        assertThat(actual).containsSequence("1", "2", "3", "4", "5");
+        assertThat(actual).containsExactly("1", "2", "3", "4", "5");
         //
         str = "1";
         actual = StringSplitter.splitOnComma_DoubleQuoteQualifier(str);
-        assertThat(actual).hasSize(1);
-        assertThat(actual).containsSequence("1");
+        assertThat(actual).containsExactly("1");
         //
         str = "1,2";
         actual = StringSplitter.splitOnComma_DoubleQuoteQualifier(str);
-        assertThat(actual).hasSize(2);
-        assertThat(actual).containsSequence("1", "2");
+        assertThat(actual).containsExactly("1", "2");
         //
         str = "";
         actual = StringSplitter.splitOnComma_DoubleQuoteQualifier(str);
@@ -51,13 +48,11 @@ public class StringSplitterTest extends StringSplitter {
         //
         str = "0123456789_0123456789_0123456789_0123456789_0123456789";
         actual = StringSplitter.splitOnComma_DoubleQuoteQualifier(str);
-        assertThat(actual).hasSize(1);
-        assertThat(actual).containsSequence("0123456789_0123456789_0123456789_0123456789_0123456789");
+        assertThat(actual).containsExactly("0123456789_0123456789_0123456789_0123456789_0123456789");
         //
         str = "0123456789_0123456789_0123456789_0123456789_0123456789,0123456789_0123456789_0123456789_0123456789_0123456789";
         actual = StringSplitter.splitOnComma_DoubleQuoteQualifier(str);
-        assertThat(actual).hasSize(2);
-        assertThat(actual).containsSequence("0123456789_0123456789_0123456789_0123456789_0123456789", "0123456789_0123456789_0123456789_0123456789_0123456789");
+        assertThat(actual).containsExactly("0123456789_0123456789_0123456789_0123456789_0123456789", "0123456789_0123456789_0123456789_0123456789_0123456789");
     }
 
 
@@ -68,33 +63,57 @@ public class StringSplitterTest extends StringSplitter {
         //
         str = "1,\"2,3,4,5\"";
         actual = StringSplitter.splitOnComma_DoubleQuoteQualifier(str);
-        assertThat(actual).hasSize(2);
-        assertThat(actual).containsSequence("1", "2,3,4,5");
+        assertThat(actual).containsExactly("1", "2,3,4,5");
         //
         str = "\"1,2,3,4,5\"";
         actual = StringSplitter.splitOnComma_DoubleQuoteQualifier(str);
-        assertThat(actual).hasSize(1);
-        assertThat(actual).containsSequence("1,2,3,4,5");
+        assertThat(actual).containsExactly("1,2,3,4,5");
         //
         str = "\"1,,,2,,,3,,,4,,,5\"";
         actual = StringSplitter.splitOnComma_DoubleQuoteQualifier(str);
-        assertThat(actual).hasSize(1);
-        assertThat(actual).containsSequence("1,,,2,,,3,,,4,,,5");
+        assertThat(actual).containsExactly("1,,,2,,,3,,,4,,,5");
         //
         str = "\"2,3,4,5\",6,7,8";
         actual = StringSplitter.splitOnComma_DoubleQuoteQualifier(str);
-        assertThat(actual).hasSize(4);
-        assertThat(actual).containsSequence("2,3,4,5", "6", "7", "8");
+        assertThat(actual).containsExactly("2,3,4,5", "6", "7", "8");
         //
         str = "\"2,3,4,5\",6,7,8,\"9,10\"";
         actual = StringSplitter.splitOnComma_DoubleQuoteQualifier(str);
-        assertThat(actual).hasSize(5);
-        assertThat(actual).containsSequence("2,3,4,5", "6", "7", "8", "9,10");
+        assertThat(actual).containsExactly("2,3,4,5", "6", "7", "8", "9,10");
         //
         str = "1,\'2,\"3,4\",5\'";
         actual = StringSplitter.splitOnComma_DoubleQuoteQualifier(str);
-        assertThat(actual).hasSize(4);
-        assertThat(actual).containsSequence("1", "'2", "3,4", "5'");
+        assertThat(actual).containsExactly("1", "'2", "3,4", "5'");
     }
 
+
+    @Test
+    public void testSplitOnComma_SingleQuoteQualifer() {
+        String str;
+        List<String> result;
+        //
+        str = "1,\'2,3,4,5\'";
+        result = StringSplitter.splitOnComma_SingleQuoteQualifier(str);
+        assertThat(result).containsExactly("1", "2,3,4,5");
+        //
+        str = "\'1,2,3,4,5\'";
+        result = StringSplitter.splitOnComma_SingleQuoteQualifier(str);
+        assertThat(result).containsExactly("1,2,3,4,5");
+        //
+        str = "\'1,,,2,,,3,,,4,,,5\'";
+        result = StringSplitter.splitOnComma_SingleQuoteQualifier(str);
+        assertThat(result).containsExactly("1,,,2,,,3,,,4,,,5");
+        //
+        str = "\'2,3,4,5\',6,7,8";
+        result = StringSplitter.splitOnComma_SingleQuoteQualifier(str);
+        assertThat(result).containsExactly("2,3,4,5", "6", "7", "8");
+        //
+        str = "\'2,3,4,5\',6,7,8,\'9,10\'";
+        result = StringSplitter.splitOnComma_SingleQuoteQualifier(str);
+        assertThat(result).containsExactly("2,3,4,5", "6", "7", "8", "9,10");
+        //
+        str = "1,\"2,\'3,4\',5\"";
+        result = StringSplitter.splitOnComma_SingleQuoteQualifier(str);
+        assertThat(result).containsExactly("1", "\"2", "3,4", "5\"");
+    }
 }

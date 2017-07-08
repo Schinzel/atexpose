@@ -1,4 +1,4 @@
-package io.schinzel.samples.sample_sqs_consumer;
+package io.schinzel.samples.sample_sqs;
 
 import com.atexpose.Expose;
 import io.schinzel.basicutils.Sandman;

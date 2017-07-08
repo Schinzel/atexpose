@@ -1,4 +1,4 @@
-package io.schinzel.samples.sample_1;
+package io.schinzel.samples.sample_1_expose;
 
 import com.atexpose.Expose;
 

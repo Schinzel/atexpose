@@ -9,8 +9,10 @@ import io.schinzel.basicutils.crypto.cipher.Aes256Gcm;
 import io.schinzel.basicutils.crypto.cipher.ICipher;
 import io.schinzel.basicutils.crypto.cipher.NoCipher;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 /**
@@ -22,14 +24,10 @@ import org.json.JSONObject;
  */
 @SuppressWarnings("unused")
 @Accessors(prefix = "m")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 class ExposedAtExpose {
     @Getter(AccessLevel.PACKAGE)
     private final AtExpose mAtExpose;
-
-
-    private ExposedAtExpose(AtExpose atExpose) {
-        mAtExpose = atExpose;
-    }
 
 
     static ExposedAtExpose create(AtExpose atExpose) {
@@ -232,7 +230,7 @@ class ExposedAtExpose {
             arguments = {"DispatcherName"},
             requiredAccessLevel = 3,
             description = "Closes the argument dispatcher.",
-            labels = {"@Expose", "AtExpose"}
+            labels = {"@Expose"}
     )
     public String closeDispatcher(String name) {
         this.getAtExpose().closeDispatcher(name);
@@ -258,5 +256,20 @@ class ExposedAtExpose {
     public JSONObject status() {
         return this.getAtExpose().getState().getJson();
     }
+
+
+    @Expose(
+            arguments = {"QueueProducerName", "Message"},
+            requiredAccessLevel = 3,
+            description = "Sends the argument message to a queue, e.g. AWS SQS. using the argument queue producer. "
+                    + "The producer has to have been added to @Expose using method addQueueProducer.",
+            labels = {"@Expose"}
+    )
+    public String sendToQueue(String queueProducerName, String message) {
+        this.getAtExpose().sendToQueue(queueProducerName, message);
+        return "Message sent. SqsSender: '" + queueProducerName + ". Message: '"
+                + StringUtils.abbreviate(message, 50) + "'";
+    }
+
 
 }

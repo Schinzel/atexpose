@@ -44,8 +44,13 @@ You want ten different web servers, you got it. You can build you own custom par
 # Change Log
 ## Features added for next release
 - New basic-util version 1.24
-- JSON-RPC parser added
-- SQS consumer channel added - Reads messages from an AWS Simple Queue Service queue.
+- Text parser: text qualifier is now single quote instead of double quote
+- `AtExpose.expose` added for conciser set ups. 
+- AWS Simple Queue Service supported
+    - `JsonRpcParser` added - Parses [JSON-RPC 2.0](http://www.jsonrpc.org/specification) messages. 
+    - `SqsChannel` added - Reads messages from an SQS queue.
+    - Added exposed method `sendToQueue(String queueProducerName, String message)` that sends a message to a queue. 
+    - Added `AtExpose.addQueueProducer(String queueProducerName, IQueueProducer queueProducer)` that adds queue producers to a collection.
 
 ## 0.9.25
 _2017-06-23_

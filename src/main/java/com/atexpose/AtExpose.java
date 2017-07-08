@@ -21,7 +21,8 @@ import lombok.experimental.Accessors;
 @SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue", "UnusedReturnValue"})
 @Accessors(prefix = "m")
 public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeReports<AtExpose>,
-        IAtExposeScriptFile<AtExpose>, IAtExposeTasks<AtExpose>, IAtExposeLog<AtExpose> {
+        IAtExposeScriptFile<AtExpose>, IAtExposeTasks<AtExpose>, IAtExposeLog<AtExpose>,
+        IAtExposeSqs<AtExpose> {
     /** Instance creation time. For status and debug purposes. */
     private final String mInstanceStartTime = DateTimeStrings.getDateTimeUTC();
     /** Reference to the API. */
@@ -30,6 +31,8 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
     @Getter private IEmailSender mMailSender;
     /** Holds the running dispatchers */
     @Getter KeyValues<Dispatcher> mDispatchers = KeyValues.create("Dispatchers");
+    /** Hold the SQS senders added to this instance. */
+    @Getter KeyValues<QueueProducerWrapper> mQueueProducers = KeyValues.create("QueueProducers");
 
 
     /**
@@ -44,6 +47,18 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
         mAPI = new API();
         NativeSetup.setUp(this.getAPI());
         this.getAPI().expose(ExposedAtExpose.create(this));
+    }
+
+
+    public AtExpose expose(Object object) {
+        mAPI.expose(object);
+        return this;
+    }
+
+
+    public AtExpose expose(Class clazz) {
+        mAPI.expose(clazz);
+        return this;
     }
 
 
@@ -97,6 +112,9 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
                 .add("StartTime", mInstanceStartTime)
                 .addChild("EmailSender", this.getMailSender())
                 .addChildren("Dispatchers", this.getDispatchers())
+                .addChildren("QueueProducers", this.getQueueProducers())
                 .build();
     }
+
+
 }

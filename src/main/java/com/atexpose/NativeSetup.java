@@ -16,7 +16,7 @@ class NativeSetup {
 
     static void setUp(API api) {
         NativeSetup.setUpLabels(api);
-        NativeSetup.setArguments(api);
+        NativeSetup.setUpArguments(api);
         NativeSetup.setUpMethods(api);
     }
 
@@ -31,7 +31,7 @@ class NativeSetup {
     }
 
 
-    private static void setArguments(API api) {
+    private static void setUpArguments(API api) {
         api
                 .addArgument(Argument.builder()
                         .name("FileName")
@@ -173,6 +173,16 @@ class NativeSetup {
                         .name("Password")
                         .dataType(DataType.STRING)
                         .description("A password.")
+                        .build())
+                .addArgument(Argument.builder()
+                        .name("QueueProducerName")
+                        .dataType(DataType.ALPHNUMSTRING)
+                        .description("Name of a queue producer, which sends messages to a queue such as AWS SQS.")
+                        .build())
+                .addArgument(Argument.builder()
+                        .name("Message")
+                        .dataType(DataType.STRING)
+                        .description("A message.")
                         .build());
     }
 

@@ -1,12 +1,10 @@
 package com.atexpose.dispatcher.channels;
 
 import com.atexpose.util.ByteStorage;
-import com.atexpose.util.sqs.SqsReceiver;
+import com.atexpose.util.sqs.SqsConsumer;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
@@ -17,15 +15,14 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(prefix = "m")
 public class SqsChannel implements IChannel {
-    @Getter(AccessLevel.PACKAGE)
-    SqsReceiver mSqsReceiver;
+    private SqsConsumer mSqsConsumer;
 
 
     @Override
     public boolean getRequest(ByteStorage request) {
-        String message = this.getSqsReceiver().receive();
+        String message = mSqsConsumer.receive();
         request.add(UTF8.getBytes(message));
-        return mSqsReceiver.isAllSystemsWorking();
+        return mSqsConsumer.isAllSystemsWorking();
     }
 
 
@@ -43,13 +40,13 @@ public class SqsChannel implements IChannel {
 
     @Override
     public void shutdown(Thread thread) {
-        mSqsReceiver.close();
+        mSqsConsumer.close();
     }
 
 
     @Override
     public IChannel getClone() {
-        return new SqsChannel(mSqsReceiver.clone());
+        return new SqsChannel(mSqsConsumer.clone());
     }
 
 
@@ -61,7 +58,7 @@ public class SqsChannel implements IChannel {
 
     @Override
     public String senderInfo() {
-        return mSqsReceiver.getQueueUrl();
+        return mSqsConsumer.getQueueUrl();
     }
 
 
@@ -69,7 +66,7 @@ public class SqsChannel implements IChannel {
     public State getState() {
         return State.getBuilder()
                 .add("Class", this.getClass().getSimpleName())
-                .add("QueueUrl", mSqsReceiver.getQueueUrl())
+                .add("QueueUrl", mSqsConsumer.getQueueUrl())
                 .build();
     }
 
