@@ -26,8 +26,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 public abstract class AbstractSqsTest {
     private final AmazonSQS mSqs;
     private final String mQueueUrl;
-    private final SqsConsumer mSqsReceiver;
-    private final SqsProducer mSqsSender;
+    private final SqsConsumer mSqsConsumer;
+    private final SqsProducer mSqsProducer;
 
 
     AbstractSqsTest(SqsQueueType queueType, CreateQueueRequest createRequest) {
@@ -39,20 +39,19 @@ public abstract class AbstractSqsTest {
                 .withRegion(Regions.EU_WEST_1)
                 .build();
         mQueueUrl = mSqs.createQueue(createRequest).getQueueUrl();
-        mSqsReceiver = SqsConsumer.builder()
+        mSqsConsumer = SqsConsumer.builder()
                 .awsAccessKey(awsAccessKey)
                 .awsSecretKey(awsSecretKey)
                 .queueUrl(mQueueUrl)
                 .region(Regions.EU_WEST_1)
                 .build();
-        mSqsSender = SqsProducer.builder()
+        mSqsProducer = SqsProducer.builder()
                 .awsAccessKey(awsAccessKey)
                 .awsSecretKey(awsSecretKey)
                 .queueUrl(mQueueUrl)
                 .sqsQueueType(queueType)
                 .region(Regions.EU_WEST_1)
                 .build();
-
     }
 
 
@@ -76,8 +75,8 @@ public abstract class AbstractSqsTest {
     @Test
     public void send_StandardQueueRandomString_ReceivedStringShouldBeSentString() {
         String expected = RandomUtil.getRandomString(20);
-        mSqsSender.send(expected);
-        String actual = mSqsReceiver.receive();
+        mSqsProducer.send(expected);
+        String actual = mSqsConsumer.receive();
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -85,8 +84,8 @@ public abstract class AbstractSqsTest {
     @Test
     public void send_PersianChars_ReceivedStringShouldBeSentString() {
         String expected = FunnyChars.PERSIAN_LETTERS.getString();
-        mSqsSender.send(expected);
-        String actual = mSqsReceiver.receive();
+        mSqsProducer.send(expected);
+        String actual = mSqsConsumer.receive();
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -94,8 +93,8 @@ public abstract class AbstractSqsTest {
     @Test
     public void send_OneChar_ReceivedStringShouldBeSentString() {
         String expected = "1";
-        mSqsSender.send(expected);
-        String actual = mSqsReceiver.receive();
+        mSqsProducer.send(expected);
+        String actual = mSqsConsumer.receive();
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -103,7 +102,7 @@ public abstract class AbstractSqsTest {
     @Test
     public void send_EmptyString_ThrowsException() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                mSqsSender.send("")
+                mSqsProducer.send("")
         );
     }
 
@@ -111,7 +110,7 @@ public abstract class AbstractSqsTest {
     @Test
     public void send_NullString_ThrowsException() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                mSqsSender.send(null)
+                mSqsProducer.send(null)
         );
     }
 
@@ -123,15 +122,15 @@ public abstract class AbstractSqsTest {
         //Create a string that is 256KB
         String expected = Strings.repeat("1234567890", kb256 / 10)
                 + Strings.repeat("*", kb256 % 10);
-        mSqsSender.send(expected);
-        String actual = mSqsReceiver.receive();
+        mSqsProducer.send(expected);
+        String actual = mSqsConsumer.receive();
         assertThat(actual).isEqualTo(expected);
     }
 
 
     @Test
     public void allSystemsWorking_NewInstance_True() {
-        assertThat(mSqsReceiver.isAllSystemsWorking()).isTrue();
+        assertThat(mSqsConsumer.isAllSystemsWorking()).isTrue();
     }
 
 
@@ -139,16 +138,16 @@ public abstract class AbstractSqsTest {
     public void allSystemsWorking_InterruptReceive_True() throws Exception {
         Thread threadReceive = new Thread(() -> {
             //Start waiting for a message
-            mSqsReceiver.receive();
+            mSqsConsumer.receive();
         });
         Thread threadClose = new Thread(() -> {
             //Close and thus interrupt receive
-            mSqsReceiver.close();
+            mSqsConsumer.close();
         });
         threadReceive.start();
         threadClose.start();
         threadReceive.join();
-        assertThat(mSqsReceiver.isAllSystemsWorking()).isFalse();
+        assertThat(mSqsConsumer.isAllSystemsWorking()).isFalse();
     }
 
 
@@ -156,11 +155,11 @@ public abstract class AbstractSqsTest {
     public void close_WhileWaitingForMessage_receiveShouldInterruptAndReturn() throws Exception {
         Thread threadReceive = new Thread(() -> {
             //Start waiting for a message
-            mSqsReceiver.receive();
+            mSqsConsumer.receive();
         });
         Thread threadClose = new Thread(() -> {
             //Close and thus interrupt receive
-            mSqsReceiver.close();
+            mSqsConsumer.close();
         });
         threadReceive.start();
         long start = System.nanoTime();
@@ -175,12 +174,12 @@ public abstract class AbstractSqsTest {
     @Test
     public void cloneReceiver_SendMessages_BothCloneAndOriginalShouldBeAbleToReceive() {
         String message1 = "this_is_a_message_1";
-        mSqsSender.send(message1);
-        String actual1 = mSqsReceiver.clone().receive();
+        mSqsProducer.send(message1);
+        String actual1 = mSqsConsumer.clone().receive();
         assertThat(actual1).isEqualTo(message1);
         String message2 = "this_is_a_message_2";
-        mSqsSender.send(message2);
-        String actual2 = mSqsReceiver.receive();
+        mSqsProducer.send(message2);
+        String actual2 = mSqsConsumer.receive();
         assertThat(actual2).isEqualTo(message2);
     }
 
@@ -189,7 +188,7 @@ public abstract class AbstractSqsTest {
     public void receive_QueueDeletedWhileReceiving_ThrowsException() throws Exception {
         Thread threadReceive = new Thread(() -> {
             //Start waiting for a message
-            mSqsReceiver.receive();
+            mSqsConsumer.receive();
         });
         Thread threadDeleteQueue = new Thread(() -> {
             mSqs.deleteQueue(mQueueUrl);
@@ -197,16 +196,16 @@ public abstract class AbstractSqsTest {
         threadReceive.start();
         threadDeleteQueue.start();
         threadReceive.join();
-        assertThat(mSqsReceiver.isAllSystemsWorking()).isFalse();
+        assertThat(mSqsConsumer.isAllSystemsWorking()).isFalse();
     }
 
 
     @Test
     public void receive_NonExistingQueue_ThrowsException() throws Exception {
         mSqs.deleteQueue(mQueueUrl);
-        String message = mSqsReceiver.receive();
+        String message = mSqsConsumer.receive();
         assertThat(message).isEmpty();
-        assertThat(mSqsReceiver.isAllSystemsWorking()).isFalse();
+        assertThat(mSqsConsumer.isAllSystemsWorking()).isFalse();
     }
 
 }
