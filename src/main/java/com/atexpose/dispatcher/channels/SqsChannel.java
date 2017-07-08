@@ -15,14 +15,14 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(prefix = "m")
 public class SqsChannel implements IChannel {
-    SqsConsumer mSqsReceiver;
+    private SqsConsumer mSqsConsumer;
 
 
     @Override
     public boolean getRequest(ByteStorage request) {
-        String message = mSqsReceiver.receive();
+        String message = mSqsConsumer.receive();
         request.add(UTF8.getBytes(message));
-        return mSqsReceiver.isAllSystemsWorking();
+        return mSqsConsumer.isAllSystemsWorking();
     }
 
 
@@ -40,13 +40,13 @@ public class SqsChannel implements IChannel {
 
     @Override
     public void shutdown(Thread thread) {
-        mSqsReceiver.close();
+        mSqsConsumer.close();
     }
 
 
     @Override
     public IChannel getClone() {
-        return new SqsChannel(mSqsReceiver.clone());
+        return new SqsChannel(mSqsConsumer.clone());
     }
 
 
@@ -58,7 +58,7 @@ public class SqsChannel implements IChannel {
 
     @Override
     public String senderInfo() {
-        return mSqsReceiver.getQueueUrl();
+        return mSqsConsumer.getQueueUrl();
     }
 
 
@@ -66,7 +66,7 @@ public class SqsChannel implements IChannel {
     public State getState() {
         return State.getBuilder()
                 .add("Class", this.getClass().getSimpleName())
-                .add("QueueUrl", mSqsReceiver.getQueueUrl())
+                .add("QueueUrl", mSqsConsumer.getQueueUrl())
                 .build();
     }
 
