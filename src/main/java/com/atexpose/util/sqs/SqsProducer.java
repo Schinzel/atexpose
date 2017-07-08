@@ -9,9 +9,7 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import io.schinzel.basicutils.RandomUtil;
 import io.schinzel.basicutils.Thrower;
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
@@ -22,7 +20,7 @@ import lombok.experimental.Accessors;
 @Accessors(prefix = "m")
 public class SqsProducer implements IQueueProducer {
     private static final String GROUP_ID = "my_group_id";
-    @Getter(AccessLevel.PROTECTED) private final String mQueueUrl;
+    private final String mQueueUrl;
     private final AmazonSQS mSqsClient;
     private final SqsQueueType mSqsQueueType;
 
