@@ -9,7 +9,6 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.AmazonSQSException;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -24,7 +23,7 @@ import java.util.List;
  */
 @Accessors(prefix = "m")
 public class SqsConsumer {
-    @Getter(AccessLevel.PRIVATE) private final AmazonSQS mSqsClient;
+    private final AmazonSQS mSqsClient;
     @Getter private final String mQueueUrl;
     /** Is set to true if all systems are working */
     @Getter boolean mAllSystemsWorking = true;

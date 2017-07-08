@@ -17,7 +17,7 @@ public interface IAtExposeSqs<T extends IAtExpose<T>> extends IAtExpose<T> {
 
 
     /**
-     * Adds the argument queue producer to the internal collection.
+     * Adds the argument queue producer to the internal collection of queue producers.
      *
      * @param queueProducer The queue producer to store.
      * @return This for chaining.
@@ -33,7 +33,8 @@ public interface IAtExposeSqs<T extends IAtExpose<T>> extends IAtExpose<T> {
 
 
     /**
-     * @param queueProducerName The name of the queue producer.
+     * @param queueProducerName The name of the queue producer. The producer has to have been added
+     *                          to @Expose using method addQueueProducer.
      * @param message           The message to send.
      * @return This for chaining.
      */

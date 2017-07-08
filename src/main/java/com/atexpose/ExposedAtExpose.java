@@ -261,7 +261,8 @@ class ExposedAtExpose {
     @Expose(
             arguments = {"QueueProducerName", "Message"},
             requiredAccessLevel = 3,
-            description = "Sends the argument message to a queue, e.g. AWS SQS.",
+            description = "Sends the argument message to a queue, e.g. AWS SQS. using the argument queue producer. "
+                    + "The producer has to have been added to @Expose using method addQueueProducer.",
             labels = {"@Expose"}
     )
     public String sendToQueue(String queueProducerName, String message) {
