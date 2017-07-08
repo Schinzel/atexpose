@@ -58,7 +58,11 @@ public abstract class AbstractSqsTest {
 
     @After
     public void after() {
-        mSqs.deleteQueue(mQueueUrl);
+        try {
+            mSqs.deleteQueue(mQueueUrl);
+        } catch (Exception e) {
+            //Ignore
+        }
     }
 
 
@@ -178,7 +182,31 @@ public abstract class AbstractSqsTest {
         mSqsSender.send(message2);
         String actual2 = mSqsReceiver.receive();
         assertThat(actual2).isEqualTo(message2);
-
-
     }
+
+
+    @Test
+    public void receive_QueueDeletedWhileReceiving_ThrowsException() throws Exception {
+        Thread threadReceive = new Thread(() -> {
+            //Start waiting for a message
+            mSqsReceiver.receive();
+        });
+        Thread threadDeleteQueue = new Thread(() -> {
+            mSqs.deleteQueue(mQueueUrl);
+        });
+        threadReceive.start();
+        threadDeleteQueue.start();
+        threadReceive.join();
+        assertThat(mSqsReceiver.isAllSystemsWorking()).isFalse();
+    }
+
+
+    @Test
+    public void receive_NonExistingQueue_ThrowsException() throws Exception {
+        mSqs.deleteQueue(mQueueUrl);
+        String message = mSqsReceiver.receive();
+        assertThat(message).isEmpty();
+        assertThat(mSqsReceiver.isAllSystemsWorking()).isFalse();
+    }
+
 }
