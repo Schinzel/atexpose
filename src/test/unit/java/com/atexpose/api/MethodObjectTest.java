@@ -1,9 +1,7 @@
 package com.atexpose.api;
 
 import com.atexpose.errors.ExposedInvocationException;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.lang.reflect.Method;
 
@@ -11,8 +9,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 
 public class MethodObjectTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
 
     @Test
