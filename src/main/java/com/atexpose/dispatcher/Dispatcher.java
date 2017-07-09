@@ -200,7 +200,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
                 wrappedResponse = mWrapper.wrapError(e.getProperties());
                 wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
             } catch (Exception e) {
-                wrappedResponse = mWrapper.wrapError(Collections.singletonMap("message", e.getMessage()));
+                wrappedResponse = mWrapper.wrapError(Collections.singletonMap("error_message", e.getMessage()));
                 wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
             } finally {
                 logEntry.setTimeOfIncomingCall();
