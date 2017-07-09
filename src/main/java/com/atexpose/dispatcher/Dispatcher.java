@@ -161,7 +161,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
         String decodedIncomingRequest;
         Object responseAsObjects;
         Object responseAsStrings;
-        String wrappedResponse;
+        String wrappedResponse = "";
         byte[] wrappedResponseAsUtf8ByteArray;
         Request request = null;
         LogEntry logEntry = new LogEntry(mThreadNumber, mChannel);
@@ -197,12 +197,16 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
                     wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
                 }
             } catch (ExposedInvocationException e) {
+                wrappedResponse = mWrapper.wrapError(e.getProperties());
+                wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
+            } catch (Exception e) {
+                wrappedResponse = mWrapper.wrapError(Collections.singletonMap("message", e.getMessage()));
+                wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
+            } finally {
                 logEntry.setTimeOfIncomingCall();
                 logEntry.setIsError();
                 // Get incoming request as string.
                 decodedIncomingRequest = incomingRequest.getAsString();
-                wrappedResponse = mWrapper.wrapError(e.getProperties());
-                wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
             }
             mChannel.writeResponse(wrappedResponseAsUtf8ByteArray);
             logEntry.setLogData(decodedIncomingRequest, wrappedResponse, request);

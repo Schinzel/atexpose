@@ -1,5 +1,6 @@
 package com.atexpose.errors;
 
+import com.google.common.base.Joiner;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,6 +17,11 @@ import java.util.Map;
 public class ExposedInvocationException extends Exception {
     /** A set of properties for the error. E.g. name of class where exception occurred. */
     @Getter private final Map<String, String> properties;
+
+
+    public String getMessage() {
+        return Joiner.on("\n").withKeyValueSeparator(":").join(this.getProperties());
+    }
 
 
 }
