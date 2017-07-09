@@ -1,7 +1,9 @@
 package com.atexpose.api;
 
 import com.atexpose.api.datatypes.AbstractDataType;
+import com.atexpose.errors.ExposedInvocationException;
 import com.atexpose.errors.RuntimeError;
+import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
@@ -15,10 +17,7 @@ import lombok.experimental.Accessors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * The definition of a method. Used to invoke methods. This object can be seen
@@ -102,7 +101,7 @@ public class MethodObject implements IValueKey, IStateNode {
     // ---------------------------------
     // - INVOKING  -
     // ---------------------------------
-    public Object invoke(List<String> argumentValues, List<String> argumentNames, int dispatcherAccessLevel) {
+    public Object invoke(List<String> argumentValues, List<String> argumentNames, int dispatcherAccessLevel) throws ExposedInvocationException {
         this.checkNumberOfArguments(argumentValues);
         this.checkAccessLevel(dispatcherAccessLevel);
         Object[] argumentValuesAsObjects = this.castArgumentValuesToUse(argumentValues, argumentNames);
@@ -111,22 +110,21 @@ public class MethodObject implements IValueKey, IStateNode {
     }
 
 
-    static Object invoke(Method method, Object object, Object[] argumentValuesAsObjects) {
-        Object returnObject;
+    static Object invoke(Method method, Object object, Object[] argumentValuesAsObjects) throws ExposedInvocationException {
         try {
-            returnObject = method.invoke(object, argumentValuesAsObjects);
+            return method.invoke(object, argumentValuesAsObjects);
         } catch (InvocationTargetException ite) {
             StackTraceElement ste = ite.getCause().getStackTrace()[0];
-            Str str = Str.create()
-                    .a("Message: ").anl(ite.getCause().getMessage())
-                    .a("Class: ").anl(ste.getClassName())
-                    .a("Method: ").anl(ste.getMethodName())
-                    .a("Line num: ").a(ste.getLineNumber());
-            throw new RuntimeError(str.getString());
+            Map<String, String> properties = ImmutableMap.<String, String>builder()
+                    .put("error_message", ite.getCause().getMessage())
+                    .put("class", ste.getClassName())
+                    .put("method", ste.getMethodName())
+                    .put("line_number", String.valueOf(ste.getLineNumber()))
+                    .build();
+            throw new ExposedInvocationException(properties);
         } catch (IllegalAccessException iae) {
             throw new RuntimeError("Access error " + iae.toString());
         }
-        return returnObject;
     }
 
 

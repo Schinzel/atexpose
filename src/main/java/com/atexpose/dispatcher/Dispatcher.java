@@ -8,6 +8,7 @@ import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.dispatcher.wrapper.IWrapper;
+import com.atexpose.errors.ExposedInvocationException;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.EmptyObjects;
@@ -195,12 +196,12 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
                     }
                     wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
                 }
-            } catch (Exception e) {
+            } catch (ExposedInvocationException e) {
                 logEntry.setTimeOfIncomingCall();
                 logEntry.setIsError();
                 // Get incoming request as string.
                 decodedIncomingRequest = incomingRequest.getAsString();
-                wrappedResponse = mWrapper.wrapError(e.getMessage());
+                wrappedResponse = mWrapper.wrapError(e.getProperties());
                 wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
             }
             mChannel.writeResponse(wrappedResponseAsUtf8ByteArray);

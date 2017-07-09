@@ -1,8 +1,11 @@
 package com.atexpose.dispatcher.wrapper;
 
+import com.google.common.base.Joiner;
 import io.schinzel.basicutils.state.State;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * @author Schinzel
@@ -18,13 +21,13 @@ public class CsvWrapper implements IWrapper {
 
 
     @Override
-    public String wrapError(String sError) {
-        return "Error: " + sError;
+    public String wrapError(Map<String, String> properties) {
+        return "Error:\n" + Joiner.on("\n").withKeyValueSeparator(": ").join(properties);
     }
 
 
     @Override
-    public byte[] wrapFile(String FileName) {
+    public byte[] wrapFile(String fileName) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
