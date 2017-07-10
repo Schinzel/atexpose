@@ -43,6 +43,10 @@ You want ten different web servers, you got it. You can build you own custom par
 
 # Change Log
 ## Features added for next release
+Nothing yet
+
+## 0.9.26
+_2017-07-10_
 - New basic-util version 1.24
 - Text parser: text qualifier is now single quote instead of double quote
 - `AtExpose.expose` added for conciser set ups. 
