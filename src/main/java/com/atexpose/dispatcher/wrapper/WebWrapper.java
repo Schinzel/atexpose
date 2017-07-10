@@ -88,9 +88,9 @@ public class WebWrapper implements IWrapper {
 
 
     @Override
-    public String wrapError(String error) {
+    public String wrapError(Map<String, String> properties) {
         return HttpResponse500.builder()
-                .body(error)
+                .body(new JSONObject(properties))
                 .customHeaders(this.getCustomResponseHeaders())
                 .build()
                 .getResponse();

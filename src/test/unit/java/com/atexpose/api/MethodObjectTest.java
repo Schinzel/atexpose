@@ -1,20 +1,14 @@
 package com.atexpose.api;
 
-import io.schinzel.basicutils.substring.SubString;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-import org.junit.Rule;
+import com.atexpose.errors.ExposedInvocationException;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
 
 public class MethodObjectTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
 
     @Test
@@ -22,11 +16,9 @@ public class MethodObjectTest {
         Method method = ExposedClassUtil.class.getMethod("doIt");
         Object object = new ExposedClassUtil();
         Object[] argumentValuesAsObjects = new Object[]{};
-        try {
-            MethodObject.invoke(method, object, argumentValuesAsObjects);
-            fail("Expected exception did not occur.");
-        } catch (RuntimeException e) {
-        }
+        assertThatExceptionOfType(ExposedInvocationException.class).isThrownBy(() ->
+                MethodObject.invoke(method, object, argumentValuesAsObjects)
+        );
     }
 
 
@@ -35,14 +27,9 @@ public class MethodObjectTest {
         Method method = ExposedClassUtil.class.getMethod("doIt");
         Object object = new ExposedClassUtil();
         Object[] argumentValuesAsObjects = new Object[]{};
-        try {
+        assertThatExceptionOfType(ExposedInvocationException.class).isThrownBy(() -> {
             MethodObject.invoke(method, object, argumentValuesAsObjects);
-            fail("Expected exception did not occur.");
-        } catch (RuntimeException e) {
-            String message = e.getMessage();
-            String methodName = SubString.create(message).startDelimiter("Method: ").endDelimiter("\n").getString();
-            assertEquals("doAnOperation", methodName);
-        }
+        }).withMessageContaining("method:doAnOperation");
     }
 
 
@@ -51,14 +38,9 @@ public class MethodObjectTest {
         Method method = ExposedClassUtil.class.getMethod("doIt");
         Object object = new ExposedClassUtil();
         Object[] argumentValuesAsObjects = new Object[]{};
-        try {
+        assertThatExceptionOfType(ExposedInvocationException.class).isThrownBy(() -> {
             MethodObject.invoke(method, object, argumentValuesAsObjects);
-            fail("Expected exception did not occur.");
-        } catch (RuntimeException e) {
-            String message = e.getMessage();
-            String lineNumber = SubString.create(message).startDelimiter("Line num: ").endDelimiter("\n").getString();
-            Assert.assertTrue("Line number should be numeric", StringUtils.isNumeric(lineNumber));
-        }
+        }).withMessageContaining("line_number:");
     }
 
 
@@ -67,14 +49,9 @@ public class MethodObjectTest {
         Method method = ExposedClassUtil.class.getMethod("doIt");
         Object object = new ExposedClassUtil();
         Object[] argumentValuesAsObjects = new Object[]{};
-        try {
+        assertThatExceptionOfType(ExposedInvocationException.class).isThrownBy(() -> {
             MethodObject.invoke(method, object, argumentValuesAsObjects);
-            fail("Expected exception did not occur.");
-        } catch (RuntimeException e) {
-            String message = e.getMessage();
-            String errorMessage = SubString.create(message).startDelimiter("Message: ").endDelimiter("\n").getString();
-            assertEquals("Something went wrong!", errorMessage);
-        }
+        }).withMessageContaining("error_message:Something went wrong!");
     }
 
 }

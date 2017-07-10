@@ -1,6 +1,7 @@
 package com.atexpose.util.httpresponse;
 
 import io.schinzel.basicutils.substring.SubString;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -8,8 +9,9 @@ import static junit.framework.TestCase.assertEquals;
 public class HttpResponse500Test {
     @Test
     public void getResponse_Default_HeaderShouldContainStatusCode500() {
+        JSONObject exceptionProperties = new JSONObject().put("message", "Something is rotten in the state of Denmark");
         String httpResponse = HttpResponse500.builder()
-                .body("Something is rotten in the state of Denmark")
+                .body(exceptionProperties)
                 .build()
                 .getResponse();
         String actual = SubString.create(httpResponse)
@@ -23,15 +25,14 @@ public class HttpResponse500Test {
 
     @Test
     public void getResponse_SetMessage_BodyShouldBeMessage() {
-        String message = "Something is rotten in the state of Denmark";
+        JSONObject exceptionProperties = new JSONObject().put("message", "Something is rotten in the state of Denmark");
         String httpResponse = HttpResponse500.builder()
-                .body(message)
+                .body(exceptionProperties)
                 .build()
                 .getResponse();
         String actual = SubString.create(httpResponse)
                 .startDelimiter("\r\n\r\n")
                 .toString();
-        String expected = message;
-        assertEquals(expected, actual);
+        assertEquals(exceptionProperties.toString() + "\n\n", actual);
     }
 }

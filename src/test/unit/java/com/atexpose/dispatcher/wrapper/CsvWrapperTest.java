@@ -7,6 +7,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Collections;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -33,8 +36,9 @@ public class CsvWrapperTest {
         CsvWrapper csvWrapper = new CsvWrapper();
         String result;
         for (FunnyChars funnyString : FunnyChars.values()) {
-            result = csvWrapper.wrapError(funnyString.getString());
-            assertEquals("Error: " + funnyString.getString(), result);
+            Map<String, String> map = Collections.singletonMap("message", funnyString.getString());
+            result = csvWrapper.wrapError(map);
+            assertEquals("Error:\nmessage: " + funnyString.getString(), result);
         }
     }
 
