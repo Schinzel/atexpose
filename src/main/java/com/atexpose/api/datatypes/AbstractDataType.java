@@ -13,7 +13,7 @@ import lombok.NonNull;
  */
 @AllArgsConstructor
 public abstract class AbstractDataType implements INamedValue, IStateNode {
-    @Getter @NonNull final String key;
+    @Getter @NonNull final String name;
     @Getter @NonNull final String allowedValueDesc;
     // ----------------------------------------------------------------
     // ABSTRACT METHODS
@@ -54,7 +54,7 @@ public abstract class AbstractDataType implements INamedValue, IStateNode {
     public Object convertFromStringToDataType(String value) {
         //If the argument string representation is not correct
         if (!this.verifyValue(value)) {
-            throw new RuntimeError("Error when converting '" + value + "' to " + this.getKey() + ". " + this.getAllowedValueDesc());
+            throw new RuntimeError("Error when converting '" + value + "' to " + this.getName() + ". " + this.getAllowedValueDesc());
         }
         //Convert the string to the data type and return it.
         return this.castToDataType(value);
@@ -75,7 +75,7 @@ public abstract class AbstractDataType implements INamedValue, IStateNode {
 
     public State getState() {
         return State.getBuilder()
-                .add("Name", this.getKey())
+                .add("Name", this.getName())
                 .add("AllowedValues", this.getAllowedValueDesc())
                 .build();
     }

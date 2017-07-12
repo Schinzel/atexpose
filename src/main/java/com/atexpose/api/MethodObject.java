@@ -287,7 +287,7 @@ public class MethodObject implements INamedValue, IStateNode {
      * @return The syntax of the method
      */
     String getSyntax() {
-        Str str = Str.create().asp(mReturnDataType.getKey())
+        Str str = Str.create().asp(mReturnDataType.getName())
                 .a(this.getName()).a("(");
         for (int i = 0; i < mArguments.size(); i++) {
             if (i > 0) {
@@ -296,7 +296,7 @@ public class MethodObject implements INamedValue, IStateNode {
             if (i >= this.mNoOfRequiredArguments) {
                 str.a('[');
             }
-            str.asp(mArguments.get(i).getDataType().getKey());
+            str.asp(mArguments.get(i).getDataType().getName());
             str.a(mArguments.get(i).getName());
             if (i >= this.mNoOfRequiredArguments) {
                 str.a(']');
@@ -311,7 +311,7 @@ public class MethodObject implements INamedValue, IStateNode {
     public State getState() {
         return State.getBuilder()
                 .add("Name", this.getName())
-                .add("Return", mReturnDataType.getKey())
+                .add("Return", mReturnDataType.getName())
                 .add("Description", mDescription)
                 .add("AccessLevelRequired", this.getAccessLevelRequiredToUseThisMethod())
                 .add("RequiredArgumentsCount", mNoOfRequiredArguments)

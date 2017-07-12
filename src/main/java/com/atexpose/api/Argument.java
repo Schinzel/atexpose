@@ -51,7 +51,7 @@ public class Argument implements INamedValue, IStateNode {
     public State getState() {
         return State.getBuilder()
                 .add("Name", this.getName())
-                .add("DataType", this.getDataType().getKey())
+                .add("DataType", this.getDataType().getName())
                 .add("Description", this.getDescription())
                 .add("DefaultValue", this.getDefaultValueAsString())
                 .build();
