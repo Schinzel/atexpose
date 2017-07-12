@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by schinzel on 2017-07-09.
  */
 @AllArgsConstructor
-public class ExposedInvocationException extends Exception {
+public class ExposedInvocationException extends Exception implements IExceptionProperties {
     /** A set of properties for the error. E.g. name of class where exception occurred. */
     @Getter private final Map<String, String> properties;
 

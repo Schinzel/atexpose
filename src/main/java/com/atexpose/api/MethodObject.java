@@ -2,6 +2,7 @@ package com.atexpose.api;
 
 import com.atexpose.api.datatypes.AbstractDataType;
 import com.atexpose.errors.ExposedInvocationException;
+import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.errors.RuntimeError;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.Checker;
@@ -114,13 +115,20 @@ public class MethodObject implements IValueKey, IStateNode {
         try {
             return method.invoke(object, argumentValuesAsObjects);
         } catch (InvocationTargetException ite) {
-            StackTraceElement ste = ite.getCause().getStackTrace()[0];
+            Throwable cause = ite.getCause();
+            StackTraceElement ste = cause.getStackTrace()[0];
             Map<String, String> properties = ImmutableMap.<String, String>builder()
-                    .put("error_message", ite.getCause().getMessage())
-                    .put("class", ste.getClassName())
-                    .put("method", ste.getMethodName())
-                    .put("line_number", String.valueOf(ste.getLineNumber()))
+                    .put("ErrorMessage", cause.getMessage())
+                    .put("Method", ste.getMethodName())
+                    .put("Class", ste.getClassName())
+                    .put("LineNumber", String.valueOf(ste.getLineNumber()))
                     .build();
+            if (ite.getCause() instanceof IExceptionProperties) {
+                properties = ImmutableMap.<String, String>builder()
+                        .putAll(properties)
+                        .putAll(((IExceptionProperties) cause).getProperties())
+                        .build();
+            }
             throw new ExposedInvocationException(properties);
         } catch (IllegalAccessException iae) {
             throw new RuntimeError("Access error " + iae.toString());

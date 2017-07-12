@@ -8,7 +8,7 @@ import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.dispatcher.wrapper.IWrapper;
-import com.atexpose.errors.ExposedInvocationException;
+import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.EmptyObjects;
@@ -196,11 +196,11 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
                     }
                     wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
                 }
-            } catch (ExposedInvocationException e) {
-                wrappedResponse = mWrapper.wrapError(e.getProperties());
-                wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
             } catch (Exception e) {
-                wrappedResponse = mWrapper.wrapError(Collections.singletonMap("error_message", e.getMessage()));
+                //If the exception has properties
+                wrappedResponse = (e instanceof IExceptionProperties)
+                        ? mWrapper.wrapError(((IExceptionProperties) e).getProperties())
+                        : mWrapper.wrapError(Collections.singletonMap("error_message", e.getMessage()));
                 wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
             } finally {
                 logEntry.setTimeOfIncomingCall();
