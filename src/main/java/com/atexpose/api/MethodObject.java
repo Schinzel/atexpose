@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
-import io.schinzel.basicutils.collections.keyvalues.IValueKey;
+import io.schinzel.basicutils.collections.namedvalues.INamedValue;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import io.schinzel.basicutils.str.Str;
@@ -27,8 +27,8 @@ import java.util.*;
  * meta-data.
  */
 @Accessors(prefix = "m")
-public class MethodObject implements IValueKey, IStateNode {
-    @Getter final String mKey;
+public class MethodObject implements INamedValue, IStateNode {
+    @Getter final String mName;
     //The type of the return of the method as defined by the static variables.
     @Getter private final AbstractDataType mReturnDataType;
     //The access level required to use this method.
@@ -60,7 +60,7 @@ public class MethodObject implements IValueKey, IStateNode {
                          List<Argument> arguments, int accessLevel, List<Label> labels,
                          AbstractDataType returnDataType, List<Alias> aliases, boolean requireAuthentication) {
         String methodName = method.getName();
-        this.mKey = methodName;
+        this.mName = methodName;
         mObject = theObject;
         mMethod = method;
         Thrower.throwIfVarNull(mMethod, "Error in setting up method '" + theObject.getClass().getName() + "." + methodName + "'. Class not found.");
@@ -74,7 +74,7 @@ public class MethodObject implements IValueKey, IStateNode {
         //Put arguments and its aliases in a hash map for quick up look of argument position
         int argumentPosition = 0;
         for (Argument argument : mArguments) {
-            mArgumentPositions.put(argument.getKey(), argumentPosition);
+            mArgumentPositions.put(argument.getName(), argumentPosition);
             if (!Checker.isEmpty(mAliases)) {
                 for (String alias : argument.getAliases()) {
                     mArgumentPositions.put(alias, argumentPosition);
@@ -149,7 +149,7 @@ public class MethodObject implements IValueKey, IStateNode {
         String argumentPlural = "arguments";
         if (noOfArgumentsInCall < this.mNoOfRequiredArguments) {
             errorText.append("Too few arguments. Was ").append(noOfArgumentsInCall).append(" and method ")
-                    .append(this.getKey()).append(" requires a minimum of ").append(this.mNoOfRequiredArguments).append(" ");
+                    .append(this.getName()).append(" requires a minimum of ").append(this.mNoOfRequiredArguments).append(" ");
             if (this.mNoOfRequiredArguments == 1) {
                 errorText.append(argumentSingular);
             } else {
@@ -159,7 +159,7 @@ public class MethodObject implements IValueKey, IStateNode {
         }
         if (noOfArgumentsInCall > this.mArguments.size()) {
             errorText.append("Too many arguments. Was ").append(noOfArgumentsInCall).append(" and method ")
-                    .append(this.getKey()).append(" takes a maximum of ").append(this.mArguments.size()).append(" ");
+                    .append(this.getName()).append(" takes a maximum of ").append(this.mArguments.size()).append(" ");
             if (this.mArguments.size() == 1) {
                 errorText.append(argumentSingular);
             } else {
@@ -247,7 +247,7 @@ public class MethodObject implements IValueKey, IStateNode {
      * Return the position of a single argument name.
      */
     private int getArgumentPosition(String argumentName) {
-        Thrower.throwIfFalse(mArgumentPositions.containsKey(argumentName), "No such argument named '" + argumentName + "' in method " + this.getKey());
+        Thrower.throwIfFalse(mArgumentPositions.containsKey(argumentName), "No such argument named '" + argumentName + "' in method " + this.getName());
         return mArgumentPositions.get(argumentName);
     }
 
@@ -272,7 +272,7 @@ public class MethodObject implements IValueKey, IStateNode {
 
     private void checkAccessLevel(int accessLevelOfDispatcher) {
         if (accessLevelOfDispatcher < this.mAccessLevelRequiredToUseThisMethod) {
-            throw new RuntimeException("The method '" + this.getKey()
+            throw new RuntimeException("The method '" + this.getName()
                     + "' has access level " + this.mAccessLevelRequiredToUseThisMethod
                     + ". The Dispatcher used only has access to level " + accessLevelOfDispatcher
                     + " methods and below.");
@@ -288,7 +288,7 @@ public class MethodObject implements IValueKey, IStateNode {
      */
     String getSyntax() {
         Str str = Str.create().asp(mReturnDataType.getKey())
-                .a(this.getKey()).a("(");
+                .a(this.getName()).a("(");
         for (int i = 0; i < mArguments.size(); i++) {
             if (i > 0) {
                 str.a(", ");
@@ -297,7 +297,7 @@ public class MethodObject implements IValueKey, IStateNode {
                 str.a('[');
             }
             str.asp(mArguments.get(i).getDataType().getKey());
-            str.a(mArguments.get(i).getKey());
+            str.a(mArguments.get(i).getName());
             if (i >= this.mNoOfRequiredArguments) {
                 str.a(']');
             }
@@ -310,7 +310,7 @@ public class MethodObject implements IValueKey, IStateNode {
     @Override
     public State getState() {
         return State.getBuilder()
-                .add("Name", this.getKey())
+                .add("Name", this.getName())
                 .add("Return", mReturnDataType.getKey())
                 .add("Description", mDescription)
                 .add("AccessLevelRequired", this.getAccessLevelRequiredToUseThisMethod())

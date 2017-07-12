@@ -13,7 +13,7 @@ import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
-import io.schinzel.basicutils.collections.keyvalues.IValueKey;
+import io.schinzel.basicutils.collections.namedvalues.INamedValue;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
@@ -39,9 +39,9 @@ import java.util.List;
  * @author Schinzel
  */
 @Accessors(prefix = "m")
-public class Dispatcher implements Runnable, IValueKey, IStateNode {
-    /** The key as part of the IStateNode interface. Is the name of the Dispatchers. */
-    @Getter final String mKey;
+public class Dispatcher implements Runnable, INamedValue, IStateNode {
+    /** The name as part of the INamedValue interface. Is the name of the Dispatchers. */
+    @Getter final String mName;
     /** The API that is exposed. */
     private final API mAPI;
     /** Receives incoming messages and sends wrapped responses. */
@@ -78,7 +78,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
      */
     @Builder
     private Dispatcher(String name, int noOfThreads, int accessLevel, IChannel channel, IParser parser, IWrapper wrapper, API api) {
-        mKey = name;
+        mName = name;
         Thrower.throwIfVarTooSmall(noOfThreads, "noOfThreads", 1);
         Thrower.throwIfVarEmpty(name, "name");
         Thrower.throwIfVarOutsideRange(accessLevel, "accessLevel", 1, 3);
@@ -92,7 +92,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
         if (mThreadNumber > 1) {
             //Set up the next dispatcher
             mNextDispatcher = Dispatcher.builder()
-                    .name(this.getKey())
+                    .name(this.getName())
                     .accessLevel(mAccessLevel)
                     .channel(mChannel.getClone())
                     .parser(mParser.getClone())
@@ -131,7 +131,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
         else {
             //Start a new thread and let this dispatcher execute in this thread.
             mThread = new Thread(this);
-            mThread.setName(this.getKey() + ":" + mThreadNumber);
+            mThread.setName(this.getName() + ":" + mThreadNumber);
             mThread.start();
         }
         return this;
@@ -276,7 +276,7 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
 
     public State getState() {
         return State.getBuilder()
-                .add("Name", this.getKey())
+                .add("Name", this.getName())
                 .add("AccessLevel", mAccessLevel)
                 .add("Threads", this.mThreadNumber)
                 .addChild("Parser", mParser)

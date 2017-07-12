@@ -1,7 +1,7 @@
 package com.atexpose.atexpose;
 
 import com.atexpose.util.sqs.IQueueProducer;
-import io.schinzel.basicutils.collections.keyvalues.IValueKey;
+import io.schinzel.basicutils.collections.namedvalues.INamedValue;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
  */
 @Builder
 @Accessors(prefix = "m")
-public class QueueProducerWrapper implements IStateNode, IValueKey {
+public class QueueProducerWrapper implements IStateNode, INamedValue {
     String mQueueProducerName;
     IQueueProducer mQueueProducer;
 
@@ -34,7 +34,7 @@ public class QueueProducerWrapper implements IStateNode, IValueKey {
 
 
     @Override
-    public String getKey() {
+    public String getName() {
         return mQueueProducerName;
     }
 

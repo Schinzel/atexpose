@@ -1,7 +1,7 @@
 package com.atexpose.api.datatypes;
 
 import com.atexpose.errors.RuntimeError;
-import io.schinzel.basicutils.collections.keyvalues.IValueKey;
+import io.schinzel.basicutils.collections.namedvalues.INamedValue;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.NonNull;
  * @author Schinzel
  */
 @AllArgsConstructor
-public abstract class AbstractDataType implements IValueKey, IStateNode {
+public abstract class AbstractDataType implements INamedValue, IStateNode {
     @Getter @NonNull final String key;
     @Getter @NonNull final String allowedValueDesc;
     // ----------------------------------------------------------------

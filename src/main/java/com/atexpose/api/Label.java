@@ -1,15 +1,15 @@
 package com.atexpose.api;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import io.schinzel.basicutils.collections.keyvalues.IValueKey;
+import io.schinzel.basicutils.collections.namedvalues.INamedValue;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Schinzel
@@ -18,8 +18,8 @@ import lombok.experimental.Accessors;
 
 @Accessors(prefix = "m")
 @RequiredArgsConstructor
-public class Label implements IValueKey, IStateNode {
-    @Getter private final String mKey;
+public class Label implements INamedValue, IStateNode {
+    @Getter private final String mName;
     private final String mDescription;
     @Getter private List<MethodObject> mMethods = new ArrayList<>(100);
 
@@ -33,7 +33,7 @@ public class Label implements IValueKey, IStateNode {
     @Override
     public State getState() {
         return State.getBuilder()
-                .add("Name", getKey())
+                .add("Name", mName)
                 .add("Description", mDescription)
                 .build();
     }
