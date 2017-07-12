@@ -3,7 +3,7 @@ package com.atexpose.atexpose;
 import com.atexpose.api.API;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.util.sqs.IQueueProducer;
-import io.schinzel.basicutils.collections.keyvalues.KeyValues;
+import io.schinzel.basicutils.collections.namedvalues.NamedValues;
 import lombok.Getter;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -12,15 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class IAtExposeSqsTest {
 
     private class AtExposeSqs implements IAtExposeSqs<AtExposeSqs> {
-        @Getter KeyValues<QueueProducerWrapper> queueProducers = KeyValues.create("QueueProducers");
-        @Getter KeyValues<Dispatcher> dispatchers;
+        @Getter NamedValues<QueueProducerWrapper> queueProducers = NamedValues.create("QueueProducers");
+        @Getter NamedValues<Dispatcher> dispatchers;
         @Getter API API;
 
 
@@ -45,7 +43,7 @@ public class IAtExposeSqsTest {
 
     @Test
     public void getQueueProducers_AddThreeProducers_SizeShouldBeThree() {
-        KeyValues<QueueProducerWrapper> queueProducers = new AtExposeSqs()
+        NamedValues<QueueProducerWrapper> queueProducers = new AtExposeSqs()
                 .addQueueProducer("name1", mock(IQueueProducer.class))
                 .addQueueProducer("name2", mock(IQueueProducer.class))
                 .addQueueProducer("name3", mock(IQueueProducer.class))

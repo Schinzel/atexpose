@@ -2,7 +2,7 @@ package com.atexpose.atexpose;
 
 import com.atexpose.api.API;
 import com.atexpose.dispatcher.Dispatcher;
-import io.schinzel.basicutils.collections.keyvalues.KeyValues;
+import io.schinzel.basicutils.collections.namedvalues.NamedValues;
 
 /**
  * This is the base interface.
@@ -26,7 +26,7 @@ interface IAtExpose<T extends IAtExpose<T>> {
      *
      * @return The collection with all dispatchers.
      */
-    KeyValues<Dispatcher> getDispatchers();
+    NamedValues<Dispatcher> getDispatchers();
 
 
     /**

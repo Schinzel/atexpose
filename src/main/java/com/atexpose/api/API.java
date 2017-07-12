@@ -5,7 +5,7 @@ import com.atexpose.api.datatypes.AbstractDataType;
 import com.atexpose.api.datatypes.DataType;
 import com.atexpose.errors.SetUpError;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.collections.keyvalues.KeyValues;
+import io.schinzel.basicutils.collections.namedvalues.NamedValues;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
@@ -23,11 +23,11 @@ import java.util.List;
 @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
 @Accessors(prefix = "m")
 public class API implements IStateNode {
-    @Getter private final KeyValues<MethodObject> mMethods = KeyValues.create("Method");
-    @Getter private final KeyValues<Argument> mArguments = KeyValues.create("Argument");
-    @Getter(AccessLevel.PACKAGE) final KeyValues<Label> mLabels = KeyValues.create("Label");
-    @Getter(AccessLevel.PACKAGE) private final KeyValues<Alias> mAliases = KeyValues.create("Alias");
-    private final KeyValues<AbstractDataType> mDataTypes = KeyValues.create("DataType");
+    @Getter private final NamedValues<MethodObject> mMethods = NamedValues.create("Method");
+    @Getter private final NamedValues<Argument> mArguments = NamedValues.create("Argument");
+    @Getter(AccessLevel.PACKAGE) final NamedValues<Label> mLabels = NamedValues.create("Label");
+    @Getter(AccessLevel.PACKAGE) private final NamedValues<Alias> mAliases = NamedValues.create("Alias");
+    private final NamedValues<AbstractDataType> mDataTypes = NamedValues.create("DataType");
 
 
     public API() {
