@@ -43,7 +43,7 @@ You want ten different web servers, you got it. You can build you own custom par
 
 # Change Log
 ## Features added for next release
-Nothing yet
+- Can now attach properties with thrown exceptions.
 
 ## 0.9.26
 _2017-07-10_
