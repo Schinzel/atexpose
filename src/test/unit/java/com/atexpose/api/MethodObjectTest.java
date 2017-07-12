@@ -29,7 +29,7 @@ public class MethodObjectTest {
         Object[] argumentValuesAsObjects = new Object[]{};
         assertThatExceptionOfType(ExposedInvocationException.class).isThrownBy(() -> {
             MethodObject.invoke(method, object, argumentValuesAsObjects);
-        }).withMessageContaining("method:doAnOperation");
+        }).withMessageContaining("Method:doAnOperation");
     }
 
 
@@ -40,7 +40,7 @@ public class MethodObjectTest {
         Object[] argumentValuesAsObjects = new Object[]{};
         assertThatExceptionOfType(ExposedInvocationException.class).isThrownBy(() -> {
             MethodObject.invoke(method, object, argumentValuesAsObjects);
-        }).withMessageContaining("line_number:");
+        }).withMessageContaining("LineNumber:");
     }
 
 
@@ -51,7 +51,7 @@ public class MethodObjectTest {
         Object[] argumentValuesAsObjects = new Object[]{};
         assertThatExceptionOfType(ExposedInvocationException.class).isThrownBy(() -> {
             MethodObject.invoke(method, object, argumentValuesAsObjects);
-        }).withMessageContaining("error_message:Something went wrong!");
+        }).withMessageContaining("ErrorMessage:Something went wrong!");
     }
 
 }

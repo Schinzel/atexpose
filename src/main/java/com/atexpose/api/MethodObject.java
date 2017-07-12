@@ -118,10 +118,10 @@ public class MethodObject implements IValueKey, IStateNode {
             Throwable cause = ite.getCause();
             StackTraceElement ste = cause.getStackTrace()[0];
             Map<String, String> properties = ImmutableMap.<String, String>builder()
-                    .put("error_message", cause.getMessage())
-                    .put("method", ste.getMethodName())
-                    .put("class", ste.getClassName())
-                    .put("line_number", String.valueOf(ste.getLineNumber()))
+                    .put("ErrorMessage", cause.getMessage())
+                    .put("Method", ste.getMethodName())
+                    .put("Class", ste.getClassName())
+                    .put("LineNumber", String.valueOf(ste.getLineNumber()))
                     .build();
             if (ite.getCause() instanceof IExceptionProperties) {
                 properties = ImmutableMap.<String, String>builder()
