@@ -1,16 +1,12 @@
 package io.schinzel.samples.sample_exception;
 
-import com.atexpose.errors.IProperties;
+import com.atexpose.errors.IExceptionProperties;
 
 import java.util.Map;
 
-/**
- * Created by schinzel on 2017-07-11.
- */
-public class MyException extends RuntimeException implements IProperties {
+public class MyException extends RuntimeException implements IExceptionProperties {
 
     private final Map<String, String> mProperties;
-
 
     public MyException(String message, Map<String, String> properties) {
         super(message);

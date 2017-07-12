@@ -8,7 +8,7 @@ import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.dispatcher.wrapper.IWrapper;
-import com.atexpose.errors.IProperties;
+import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.EmptyObjects;
@@ -198,8 +198,8 @@ public class Dispatcher implements Runnable, IValueKey, IStateNode {
                 }
             } catch (Exception e) {
                 //If the exception has properties
-                wrappedResponse = (e instanceof IProperties)
-                        ? mWrapper.wrapError(((IProperties) e).getProperties())
+                wrappedResponse = (e instanceof IExceptionProperties)
+                        ? mWrapper.wrapError(((IExceptionProperties) e).getProperties())
                         : mWrapper.wrapError(Collections.singletonMap("error_message", e.getMessage()));
                 wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
             } finally {

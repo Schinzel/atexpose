@@ -2,7 +2,7 @@ package com.atexpose.api;
 
 import com.atexpose.api.datatypes.AbstractDataType;
 import com.atexpose.errors.ExposedInvocationException;
-import com.atexpose.errors.IProperties;
+import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.errors.RuntimeError;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.Checker;
@@ -123,10 +123,10 @@ public class MethodObject implements IValueKey, IStateNode {
                     .put("class", ste.getClassName())
                     .put("line_number", String.valueOf(ste.getLineNumber()))
                     .build();
-            if (ite.getCause() instanceof IProperties) {
+            if (ite.getCause() instanceof IExceptionProperties) {
                 properties = ImmutableMap.<String, String>builder()
                         .putAll(properties)
-                        .putAll(((IProperties) cause).getProperties())
+                        .putAll(((IExceptionProperties) cause).getProperties())
                         .build();
             }
             throw new ExposedInvocationException(properties);

@@ -7,7 +7,8 @@ import java.util.Map;
  * <p>
  * Created by schinzel on 2017-07-11.
  */
-public interface IProperties {
+public interface IExceptionProperties {
+
 
     Map<String, String> getProperties();
 }
