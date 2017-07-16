@@ -12,22 +12,13 @@ import io.schinzel.basicutils.UTF8;
  * @author Schinzel
  */
 public class ByteStorage {
-    /**
-     * The default max storage capacity.
-     */
+    /** The default max storage capacity. */
     private static final int DEFAULT_SIZE = 512;
-    /**
-     * The default increment of storage capacity.
-     */
+    /** The default increment of storage capacity. */
     private static final int DEFAULT_INCREMENT = 512;
-    //
-    /**
-     * Holds the data stored.
-     */
+    /** Holds the data stored. */
     private byte[] mStorage = new byte[DEFAULT_SIZE];
-    /**
-     * Index of the last byte in the storage array.
-     */
+    /** Index of the last byte in the storage array. */
     private int mUboundStorage = -1;
     //------------------------------------------------------------------------
     // MISC
