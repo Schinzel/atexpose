@@ -4,12 +4,12 @@ import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.dispatcher.channels.webchannel.redirect.Redirects;
 import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import com.atexpose.util.ByteStorage;
-import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.httpresponse.HttpResponse302;
 import com.atexpose.util.httpresponse.HttpResponseString;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 import lombok.experimental.Accessors;
@@ -119,7 +119,7 @@ public class WebChannel implements IChannel {
                 String directResponse = this.getDirectResponse(httpRequest);
                 //If there was no direct response
                 if (!Checker.isEmpty(directResponse)) {
-                    byte[] redirectAsByteArr = EncodingUtil.convertToByteArray(directResponse);
+                    byte[] redirectAsByteArr = UTF8.getBytes(directResponse);
                     //Send the redirect instruction to client
                     this.writeResponse(redirectAsByteArr);
                     //Clear the incoming request.

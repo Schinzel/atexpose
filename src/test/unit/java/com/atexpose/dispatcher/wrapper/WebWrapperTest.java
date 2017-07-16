@@ -1,7 +1,5 @@
 package com.atexpose.dispatcher.wrapper;
 
-import com.atexpose.dispatcher.wrapper.WebWrapper;
-import com.atexpose.util.EncodingUtil;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.collections.Cache;
@@ -26,13 +24,13 @@ public class WebWrapperTest {
     public void testSetServerSideVariables() {
         String htmlPage = "<html><head><!--#echo var=\"VaRiAbLe\" --></head><body><!--#echo var=\"variable\" --><br><!--#echo var=\"VARIABLE\" --></body></html>";
         String expected = "<html><head>var1</head><body>var2<br>var3</body></html>";
-        byte[] htmlPageAsByteArr = EncodingUtil.convertToByteArray(htmlPage);
+        byte[] htmlPageAsByteArr = UTF8.getBytes(htmlPage);
         Map<String, String> ssv = new HashMap<>();
         ssv.put("VaRiAbLe", "var1");
         ssv.put("variable", "var2");
         ssv.put("VARIABLE", "var3");
         byte[] resultAsByteArr = WebWrapper.setServerSideVariables(htmlPageAsByteArr, ssv);
-        String result = EncodingUtil.convertToString(resultAsByteArr);
+        String result = UTF8.getString(resultAsByteArr);
         assertEquals(expected, result);
     }
 
@@ -41,13 +39,13 @@ public class WebWrapperTest {
     public void testSetServerSideVariables2() {
         String htmlPage = "<!--#echo var=\"first\" --><html><head></head><body><!--#echo var=\"middle\" --></body></html><!--#echo var=\"last\" -->";
         String expected = "var1<html><head></head><body>var3</body></html>var2";
-        byte[] htmlPageAsByteArr = EncodingUtil.convertToByteArray(htmlPage);
+        byte[] htmlPageAsByteArr = UTF8.getBytes(htmlPage);
         Map<String, String> ssv = new HashMap<>();
         ssv.put("first", "var1");
         ssv.put("last", "var2");
         ssv.put("middle", "var3");
         byte[] resultAsByteArr = WebWrapper.setServerSideVariables(htmlPageAsByteArr, ssv);
-        String result = EncodingUtil.convertToString(resultAsByteArr);
+        String result = UTF8.getString(resultAsByteArr);
         assertEquals(expected, result);
     }
 
@@ -56,9 +54,9 @@ public class WebWrapperTest {
     public void setServerIncludeFiles() {
         String htmlPage = "<html><head><!--#include file=\"inc1.inc\" --></head><body><!--#include file=\"inc2.inc\" --><br></body></html>";
         String expected = "<html><head>ThisIsIncludeFile1</head><body>ThisIsIncludeFile2<br></body></html>";
-        byte[] htmlPageAsByteArr = EncodingUtil.convertToByteArray(htmlPage);
+        byte[] htmlPageAsByteArr = UTF8.getBytes(htmlPage);
         byte[] resultAsByteArr = WebWrapper.setServerIncludeFiles(htmlPageAsByteArr, "includefiles/");
-        String result = EncodingUtil.convertToString(resultAsByteArr);
+        String result = UTF8.getString(resultAsByteArr);
         assertEquals(expected, result);
     }
 
@@ -71,7 +69,7 @@ public class WebWrapperTest {
                 .cacheFilesInRam(false)
                 .build();
         byte[] file = webWrapper.wrapFile("with_include_file.html");
-        String fileAsString = EncodingUtil.convertToString(file);
+        String fileAsString = UTF8.getString(file);
         //The include file command should not be in read file
         assertThat(fileAsString, not(containsString("<!--#include file=\"inc_file.inc\" -->")));
         //The content of the include file should be in the read file
@@ -91,7 +89,7 @@ public class WebWrapperTest {
                 .cacheFilesInRam(false)
                 .build();
         byte[] file = webWrapper.wrapFile("with_server_side_var.html");
-        String fileAsString = EncodingUtil.convertToString(file);
+        String fileAsString = UTF8.getString(file);
         //The server side variable reference should not be inte the file
         assertThat(fileAsString, not(containsString("MY_VAR")));
         //The value of the server side value should be in the file
@@ -113,7 +111,7 @@ public class WebWrapperTest {
                 .cacheFilesInRam(false)
                 .build();
         byte[] file = webWrapper.wrapFile("with_inc_file_which_has_vars.html");
-        String fileAsString = EncodingUtil.convertToString(file);
+        String fileAsString = UTF8.getString(file);
         //The server side variable reference should not be inte the file
         assertThat(fileAsString, not(containsString("<!--#include file=\"inc_with_include_vars.inc\" -->")));
         //The value of the server side value should be in the file
@@ -143,8 +141,8 @@ public class WebWrapperTest {
         byte[] file4 = webWrapper.wrapFile("read_another_cached.html");
         assertEquals(2, filesCache.cacheHits());
         assertEquals(2, filesCache.cacheSize());
-        String str2 = EncodingUtil.convertToString(file2);
-        String str4 = EncodingUtil.convertToString(file4);
+        String str2 = UTF8.getString(file2);
+        String str4 = UTF8.getString(file4);
         assertTrue(str2.contains("<div>Hello</div>"));
         assertTrue(str4.contains("<div>Hello</div>"));
         Assert.assertArrayEquals(file1, file2);
@@ -360,7 +358,7 @@ public class WebWrapperTest {
                 .cacheFilesInRam(false)
                 .build();
         byte[] ab = webWrapper.getTextFileHeaderAndContent("nonexistingfile.html");
-        String str = EncodingUtil.convertToString(ab);
+        String str = UTF8.getString(ab);
         assertTrue(str.contains("File 'nonexistingfile.html' not found"));
     }
 
@@ -385,7 +383,7 @@ public class WebWrapperTest {
                 .cacheFilesInRam(false)
                 .build();
         byte[] ab = webWrapper.getStaticFileHeaderAndContent("nonexistingfile.jpg");
-        String str = EncodingUtil.convertToString(ab);
+        String str = UTF8.getString(ab);
         assertTrue(str.contains("File 'nonexistingfile.jpg' not found"));
     }
 

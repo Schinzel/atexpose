@@ -1,5 +1,8 @@
 package com.atexpose.util;
 
+import com.google.common.base.Charsets;
+import io.schinzel.basicutils.UTF8;
+
 /**
  * The purpose of this class is to hold an arbitrary amount of bytes.
  * The bytes are stored in a byte array for memory efficiency and for having
@@ -73,6 +76,14 @@ public class ByteStorage {
 
 
     /**
+     * @param s A string to add to this storage as UTF8 bytes.
+     */
+    public void add(String s) {
+        this.add(UTF8.getBytes(s));
+    }
+
+
+    /**
      * Appends a number of bytes to this object.
      *
      * @param ab     The source of the bytes.
@@ -104,7 +115,7 @@ public class ByteStorage {
      * @return The argument byte array converted to String.
      */
     public String getAsString() {
-        return EncodingUtil.convertToString(mStorage, "UTF-8", mUboundStorage);
+        return new String(mStorage, 0, mUboundStorage + 1, Charsets.UTF_8);
     }
 
 
