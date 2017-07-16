@@ -1,25 +1,23 @@
 package com.atexpose.dispatcher.channels;
 
-import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.mail.GmailEmailSender;
+import com.atexpose.util.mail.IEmailSender;
 import com.icegreen.greenmail.util.DummySSLSocketFactory;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
-
-import java.security.Security;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
+import io.schinzel.basicutils.UTF8;
 import org.json.JSONObject;
-
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import com.atexpose.util.mail.IEmailSender;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.security.Security;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Schinzel
@@ -55,7 +53,7 @@ public class ScheduledReportChannelTest {
                 .fromName("Skynet")
                 .build();
         String sResponse = "The response";
-        byte[] abResponse = EncodingUtil.convertToByteArray(sResponse);
+        byte[] abResponse = UTF8.getBytes(sResponse);
         src.writeResponse(abResponse);
         //
         //Get message 

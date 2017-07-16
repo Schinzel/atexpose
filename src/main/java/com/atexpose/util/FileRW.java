@@ -1,9 +1,11 @@
 package com.atexpose.util;
 
+import io.schinzel.basicutils.UTF8;
+import org.apache.commons.io.IOUtils;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import org.apache.commons.io.IOUtils;
 
 /**
  *
@@ -31,7 +33,7 @@ public class FileRW {
     public static String readFileAsString(String fileName) {
         byte[] fileAsByteArray = FileRW.readFileAsByteArray(fileName);
         //Convert the file to a string
-        return EncodingUtil.convertToString(fileAsByteArray);
+        return UTF8.getString(fileAsByteArray);
     }
 
 

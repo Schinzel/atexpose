@@ -3,7 +3,6 @@ package com.atexpose.dispatcher.channels;
 import com.atexpose.MyProperties;
 import com.atexpose.errors.RuntimeError;
 import com.atexpose.util.ByteStorage;
-import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Sandman;
 import io.schinzel.basicutils.UTF8;
@@ -69,7 +68,7 @@ public class CommandLineChannel implements IChannel {
                 }
                 input = reader.readLine();
                 //convert the read line to bytes and add to request
-                request.add(EncodingUtil.convertToByteArray(input));
+                request.add(UTF8.getBytes(input));
             }//Loop while the input is empty 
             while (Checker.isEmpty(input));
         } catch (IOException ex) {

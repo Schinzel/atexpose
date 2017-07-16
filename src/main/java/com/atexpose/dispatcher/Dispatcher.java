@@ -10,9 +10,9 @@ import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.util.ByteStorage;
-import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.collections.namedvalues.INamedValue;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
@@ -194,14 +194,14 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
                         responseAsStrings = methodObject.getReturnDataType().convertFromDataTypeToString(responseAsObjects);
                         wrappedResponse = mWrapper.wrapResponse((String) responseAsStrings);
                     }
-                    wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
+                    wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
                 }
             } catch (Exception e) {
                 //If the exception has properties
                 wrappedResponse = (e instanceof IExceptionProperties)
                         ? mWrapper.wrapError(((IExceptionProperties) e).getProperties())
                         : mWrapper.wrapError(Collections.singletonMap("error_message", e.getMessage()));
-                wrappedResponseAsUtf8ByteArray = EncodingUtil.convertToByteArray(wrappedResponse);
+                wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
             } finally {
                 logEntry.setTimeOfIncomingCall();
                 logEntry.setIsError();

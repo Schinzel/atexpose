@@ -2,7 +2,6 @@ package com.atexpose.dispatcher.channels;
 
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.DateTimeStrings;
-import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.State;
 import io.schinzel.basicutils.state.StateBuilder;
@@ -153,7 +152,7 @@ public class ScheduledTaskChannel implements IChannel {
     @Override
     public boolean getRequest(ByteStorage request) {
         //Convert request to byte array and add to request argument.
-        request.add(EncodingUtil.convertToByteArray(mRequest));
+        request.add(mRequest);
         //Get the number of nanoseconds the executing thread should sleep. 
         long nanosToSleep = this.getNanosUntilNextTask();
         //Put executing thread to sleep. 

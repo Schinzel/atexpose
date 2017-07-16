@@ -3,7 +3,6 @@ package com.atexpose.dispatcher.channels;
 import com.atexpose.MyProperties;
 import com.atexpose.errors.RuntimeError;
 import com.atexpose.util.ByteStorage;
-import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
 import com.google.common.base.Charsets;
 import io.schinzel.basicutils.Checker;
@@ -90,7 +89,7 @@ public class ScriptFileChannel implements IChannel {
         } catch (IOException ioe) {
             throw new RuntimeException("Error while reading script file " + ioe.toString());
         }
-        request.add(EncodingUtil.convertToByteArray(line));
+        request.add(line);
         mLineReadTime = System.currentTimeMillis() - mLineReadTime;
         return true;
     }

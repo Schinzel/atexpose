@@ -1,7 +1,7 @@
 package com.atexpose.dispatcher.channels;
 
-import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.mail.IEmailSender;
+import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 import lombok.NonNull;
@@ -33,7 +33,7 @@ public class ScheduledReportChannel extends ScheduledTaskChannel {
 
     @Override
     public void writeResponse(byte[] response) {
-        String responseAsString = EncodingUtil.convertToString(response);
+        String responseAsString = UTF8.getString(response);
         String subject = "Scheduled Report " + this.mTaskName;
         mEmailSender.send(mRecipient, subject, responseAsString, mFromName);
     }

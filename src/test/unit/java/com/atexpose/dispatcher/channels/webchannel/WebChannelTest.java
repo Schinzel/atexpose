@@ -3,8 +3,8 @@ package com.atexpose.dispatcher.channels.webchannel;
 import com.atexpose.dispatcher.channels.webchannel.redirect.Redirects;
 import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import com.atexpose.util.ByteStorage;
-import com.atexpose.util.EncodingUtil;
 import io.schinzel.basicutils.Sandman;
+import io.schinzel.basicutils.UTF8;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.Assert;
@@ -83,7 +83,7 @@ public class WebChannelTest {
                 "Via: 1.1 vegur\r\n" +
                 "\r\n"
                 + "pong";
-        webChannel.writeResponse(EncodingUtil.convertToByteArray(httpResponse));
+        webChannel.writeResponse(UTF8.getBytes(httpResponse));
         URI uri = new HttpRequest(byteStorage.getAsString()).getURI();
         Assert.assertEquals("http://127.0.0.1:5555/call/ping", uri.toString());
         webChannel.shutdown(Thread.currentThread());

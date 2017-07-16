@@ -1,11 +1,11 @@
 package com.atexpose.dispatcher.wrapper;
 
 import com.atexpose.MyProperties;
-import com.atexpose.util.EncodingUtil;
 import com.atexpose.util.FileRW;
 import com.atexpose.util.httpresponse.*;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.collections.Cache;
 import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
@@ -256,7 +256,7 @@ public class WebWrapper implements IWrapper {
      */
     static byte[] setServerSideVariables(byte[] fileContent, Map<String, String> serverSideVariables) {
         //Create a string from the file content
-        String mainFileContent = EncodingUtil.convertToString(fileContent);
+        String mainFileContent = UTF8.getString(fileContent);
         //Create holder of return string
         StringBuffer fileContentReturn = new StringBuffer();
         //Create a matcher for the placeholders for variables on the file content
@@ -276,7 +276,7 @@ public class WebWrapper implements IWrapper {
         //Add the end of the file to return string
         placeHolderMatcher.appendTail(fileContentReturn);
         //Create byte array and return
-        return EncodingUtil.convertToByteArray(fileContentReturn.toString());
+        return UTF8.getBytes(fileContentReturn.toString());
     }
 
 
@@ -291,7 +291,7 @@ public class WebWrapper implements IWrapper {
      */
     static byte[] setServerIncludeFiles(byte[] fileContent, String directory) {
         //Create a string from the file content
-        String mainFileContent = EncodingUtil.convertToString(fileContent);
+        String mainFileContent = UTF8.getString(fileContent);
         //Create holder of return string
         StringBuffer fileContentReturn = new StringBuffer();
         ///Create a matcher for the include file tags on the file content
@@ -317,7 +317,7 @@ public class WebWrapper implements IWrapper {
         //Add the end of the file to return string
         includeFileMatcher.appendTail(fileContentReturn);
         //Create byte array and return
-        return EncodingUtil.convertToByteArray(fileContentReturn.toString());
+        return UTF8.getBytes(fileContentReturn.toString());
     }
 
 

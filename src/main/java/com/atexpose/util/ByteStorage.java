@@ -1,5 +1,10 @@
 package com.atexpose.util;
 
+import com.google.common.base.Charsets;
+import io.schinzel.basicutils.UTF8;
+
+import java.util.Arrays;
+
 /**
  * The purpose of this class is to hold an arbitrary amount of bytes.
  * The bytes are stored in a byte array for memory efficiency and for having
@@ -9,22 +14,13 @@ package com.atexpose.util;
  * @author Schinzel
  */
 public class ByteStorage {
-    /**
-     * The default max storage capacity.
-     */
+    /** The default max storage capacity. */
     private static final int DEFAULT_SIZE = 512;
-    /**
-     * The default increment of storage capacity.
-     */
+    /** The default increment of storage capacity. */
     private static final int DEFAULT_INCREMENT = 512;
-    //
-    /**
-     * Holds the data stored.
-     */
+    /** Holds the data stored. */
     private byte[] mStorage = new byte[DEFAULT_SIZE];
-    /**
-     * Index of the last byte in the storage array.
-     */
+    /** Index of the last byte in the storage array. */
     private int mUboundStorage = -1;
     //------------------------------------------------------------------------
     // MISC
@@ -73,6 +69,14 @@ public class ByteStorage {
 
 
     /**
+     * @param s A string to add to this storage as UTF8 bytes.
+     */
+    public void add(String s) {
+        this.add(UTF8.getBytes(s));
+    }
+
+
+    /**
      * Appends a number of bytes to this object.
      *
      * @param ab     The source of the bytes.
@@ -104,7 +108,7 @@ public class ByteStorage {
      * @return The argument byte array converted to String.
      */
     public String getAsString() {
-        return EncodingUtil.convertToString(mStorage, "UTF-8", mUboundStorage);
+        return new String(mStorage, 0, mUboundStorage + 1, Charsets.UTF_8);
     }
 
 
@@ -112,36 +116,13 @@ public class ByteStorage {
      * @return Returns the all bytes stored in the array.
      */
     public byte[] getBytes() {
-        return this.getBytes(0);
+        return Arrays.copyOf(mStorage, mUboundStorage + 1);
     }
     //------------------------------------------------------------------------
     // PRIVATE
     //------------------------------------------------------------------------
 
-
-    /**
-     * @param noOfBytesToDropFromTheEnd The number of bytes at the end not to
-     *                                  return. For example: If there is a 100
-     *                                  bytes stored in this object and this argument is ten, only
-     *                                  the 90 first
-     *                                  bytes will be returned.
-     * @return The bytes stored in this object.
-     */
-    private byte[] getBytes(int noOfBytesToDropFromTheEnd) {
-        int noOfBytesToReturn = mUboundStorage + 1 - noOfBytesToDropFromTheEnd;
-        if (noOfBytesToReturn < 0) {
-            noOfBytesToReturn = 0;
-        }
-        // Create a return array with the number of bytes of the pos in the
-        // storage array
-        byte[] abReturn = new byte[noOfBytesToReturn];
-        // Copy the byte from storage array to return array
-        System.arraycopy(mStorage, 0, abReturn, 0, abReturn.length);
-        // Return the return array
-        return abReturn;
-    }
-
-
+    
     /**
      * @return Returns true if the argument number of byte will fit into the
      * current array, else false.
