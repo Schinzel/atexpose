@@ -114,13 +114,11 @@ public class ScheduledTaskChannel implements IChannel {
      */
     private ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount, String timeOfDay, int dayOfMonth) {
         //Check that the argument task time is valid
-        if (!ScheduledTaskChannel.isValidTime(timeOfDay)) {
-            throw new RuntimeException("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
-        }
+        Thrower.throwIfFalse(ScheduledTaskChannel.isValidTime(timeOfDay))
+                .message("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
         //Check that the argument task time is valid
-        if (!ScheduledTaskChannel.isValidDayOfMonth(dayOfMonth)) {
-            throw new RuntimeException("Incorrect day of month: '" + dayOfMonth + "'. Needs to be min 1 or max 28.");
-        }
+        Thrower.throwIfFalse(ScheduledTaskChannel.isValidDayOfMonth(dayOfMonth))
+                .message("Incorrect day of month: '" + dayOfMonth + "'. Needs to be min 1 or max 28.");
         mTaskName = taskName;
         mRequest = request;
         mIntervalUnit = intervalUnit;

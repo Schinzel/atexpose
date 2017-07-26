@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.*;
 
 
@@ -62,9 +63,9 @@ public class ScheduledTaskChannelTest {
         String request = "request";
         String timeOfDay = "23:55";
         int dayOfMonth = 0;
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Incorrect day of month");
-        new ScheduledTaskChannel(taskName, request, timeOfDay, dayOfMonth);
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> new ScheduledTaskChannel(taskName, request, timeOfDay, dayOfMonth))
+                .withMessageStartingWith("Incorrect day of month: '0'. Needs to be min 1 or max 28.");
     }
 
 
@@ -74,9 +75,9 @@ public class ScheduledTaskChannelTest {
         String request = "request";
         String timeOfDay = "23:55";
         int dayOfMonth = 29;
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Incorrect day of month");
-        new ScheduledTaskChannel(taskName, request, timeOfDay, dayOfMonth);
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> new ScheduledTaskChannel(taskName, request, timeOfDay, dayOfMonth))
+                .withMessageStartingWith("Incorrect day of month: '29'. Needs to be min 1 or max 28.");
     }
 
 
@@ -175,8 +176,7 @@ public class ScheduledTaskChannelTest {
         String request = "request";
         int interval = 15;
         ScheduledTaskChannel stc = new ScheduledTaskChannel(taskName, request, interval);
-        exception.expect(UnsupportedOperationException.class);
-        stc.getClone();
+        assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(stc::getClone);
     }
 
 
