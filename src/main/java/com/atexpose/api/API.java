@@ -194,10 +194,10 @@ public class API implements IStateNode {
     @Override
     public State getState() {
         return State.getBuilder()
-                .addChildren("DataTypes", mDataTypes)
-                .addChildren("Arguments", mArguments)
-                .addChildren("Labels", mLabels)
-                .addChildren("Methods", mMethods)
+                .addChildren(mDataTypes)
+                .addChildren(mArguments)
+                .addChildren(mLabels)
+                .addChildren(mMethods)
                 .build();
     }
 

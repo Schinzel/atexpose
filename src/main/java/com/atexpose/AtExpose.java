@@ -111,8 +111,8 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
                 .add("TimeNow", DateTimeStrings.getDateTimeUTC())
                 .add("StartTime", mInstanceStartTime)
                 .addChild("EmailSender", this.getMailSender())
-                .addChildren("Dispatchers", this.getDispatchers())
-                .addChildren("QueueProducers", this.getQueueProducers())
+                .addChildren(this.getDispatchers())
+                .addChildren(this.getQueueProducers())
                 .build();
     }
 
