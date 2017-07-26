@@ -177,7 +177,7 @@ public class ScheduledTaskChannel implements IChannel {
             //Good morning! If got here, hopefully shutdown was invoked. If so the shutdown variable should be true
             if (mShutdownWasInvoked) {
                 return false;
-            } //Interuption was caused by something else than shutdown being invoked. Which is not right.  
+            } //Interruption was caused by something else than shutdown being invoked. Which is not right.
             else {
                 throw new RuntimeException("Invocation error in scheduled task. " + ex.getMessage());
             }
