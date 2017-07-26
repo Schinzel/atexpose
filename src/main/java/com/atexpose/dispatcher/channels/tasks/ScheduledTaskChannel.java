@@ -1,5 +1,6 @@
-package com.atexpose.dispatcher.channels;
+package com.atexpose.dispatcher.channels.tasks;
 
+import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.DateTimeStrings;
 import io.schinzel.basicutils.Thrower;
@@ -34,7 +35,7 @@ public class ScheduledTaskChannel implements IChannel {
     final String mRequest;
     /** The time of day to run the task. Format HH:mm. E.g. 15:30 */
     final String mTaskTime;
-    /** The day of month to fire the task. */
+    /** The day of month to fire the task. Min 1, max 28. */
     private final int mDayOfMonth;
     /**
      * The size of the interval. For daily tasks this is 1. For minute tasks
@@ -76,8 +77,7 @@ public class ScheduledTaskChannel implements IChannel {
      */
     public ScheduledTaskChannel(String taskName, String request, String timeOfDay) {
         this(taskName, request, ChronoUnit.DAYS, 1, timeOfDay, DAY_OF_MONTH_NOT_SET);
-        mTimeToFireNext = LocalTime.parse(mTaskTime)
-                .atDate(LocalDate.now(ZoneOffset.UTC));
+        mTimeToFireNext = LocalTime.parse(mTaskTime).atDate(LocalDate.now(ZoneOffset.UTC));
         //Call this so that mTimeToFireNext is set to next day if fire time already passed today
         this.getNanosUntilNextTask();
     }

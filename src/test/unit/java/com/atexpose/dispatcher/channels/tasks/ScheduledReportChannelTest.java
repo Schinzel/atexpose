@@ -1,4 +1,4 @@
-package com.atexpose.dispatcher.channels;
+package com.atexpose.dispatcher.channels.tasks;
 
 import com.atexpose.util.mail.GmailEmailSender;
 import com.atexpose.util.mail.IEmailSender;

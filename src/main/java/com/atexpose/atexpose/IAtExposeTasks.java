@@ -1,7 +1,7 @@
 package com.atexpose.atexpose;
 
 import com.atexpose.dispatcher.Dispatcher;
-import com.atexpose.dispatcher.channels.ScheduledTaskChannel;
+import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannel;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;

@@ -1,4 +1,4 @@
-package com.atexpose.dispatcher.channels;
+package com.atexpose.dispatcher.channels.tasks;
 
 import com.atexpose.util.mail.IEmailSender;
 import io.schinzel.basicutils.UTF8;
