@@ -3,7 +3,6 @@ package com.atexpose.api;
 import com.atexpose.api.datatypes.AbstractDataType;
 import com.atexpose.api.datatypes.DataType;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.collections.namedvalues.INamedValue;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
@@ -39,7 +38,7 @@ public class Argument implements INamedValue, IStateNode {
             Collections.sort(mAliases);
         }
         if (defaultValue == null) {
-            mDefaultValueAsString = EmptyObjects.EMPTY_STRING;
+            mDefaultValueAsString = "";
         } else {
             mDefaultValueAsString = defaultValue;
             mDefaultValue = mDataType.convertFromStringToDataType(defaultValue);

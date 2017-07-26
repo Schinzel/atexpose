@@ -3,7 +3,6 @@ package com.atexpose.dispatcher.parser.urlparser.httprequest;
 import com.atexpose.errors.RuntimeError;
 import com.google.common.base.Splitter;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.substring.SubString;
 import io.schinzel.basicutils.Thrower;
 import lombok.Getter;
@@ -162,7 +161,7 @@ public class HttpRequest {
      */
     String getQueryString() {
         String url = this.getURL();
-        String returnString = EmptyObjects.EMPTY_STRING;
+        String returnString = "";
         int start = url.indexOf('?');
         //If there was a question mark
         if (start != -1) {
@@ -176,7 +175,7 @@ public class HttpRequest {
      * @return The body of the reqeust
      */
     public String getBody() {
-        String returnString = EmptyObjects.EMPTY_STRING;
+        String returnString = "";
         //Get the string after the double line break
         int start = mHttpRequest.indexOf(HEADER_BODY_DELIMITER);
         //If the delimiter was  found
@@ -195,7 +194,7 @@ public class HttpRequest {
      * found.
      */
     public String getRequestHeaderValue(String headerName) {
-        String headerValue = EmptyObjects.EMPTY_STRING;
+        String headerValue = "";
         //If argument header name was empty
         if (Checker.isEmpty(headerName)) {
             return headerValue;

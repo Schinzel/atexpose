@@ -10,7 +10,6 @@ import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.util.ByteStorage;
-import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.collections.namedvalues.INamedValue;
@@ -19,6 +18,7 @@ import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -177,7 +177,7 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
                 request = mParser.getRequest(decodedIncomingRequest);
                 //if is a file request
                 if (request.isFileRequest()) {
-                    wrappedResponse = EmptyObjects.EMPTY_STRING;
+                    wrappedResponse = StringUtils.EMPTY;
                     wrappedResponseAsUtf8ByteArray = mWrapper.wrapFile(request.getFileName());
                 } // Else must be a method call 
                 else {

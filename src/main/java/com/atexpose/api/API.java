@@ -23,11 +23,11 @@ import java.util.List;
 @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
 @Accessors(prefix = "m")
 public class API implements IStateNode {
-    @Getter private final NamedValues<MethodObject> mMethods = NamedValues.create("Method");
-    @Getter private final NamedValues<Argument> mArguments = NamedValues.create("Argument");
-    @Getter(AccessLevel.PACKAGE) final NamedValues<Label> mLabels = NamedValues.create("Label");
-    @Getter(AccessLevel.PACKAGE) private final NamedValues<Alias> mAliases = NamedValues.create("Alias");
-    private final NamedValues<AbstractDataType> mDataTypes = NamedValues.create("DataType");
+    @Getter private final NamedValues<MethodObject> mMethods = NamedValues.create("Methods");
+    @Getter private final NamedValues<Argument> mArguments = NamedValues.create("Arguments");
+    @Getter(AccessLevel.PACKAGE) final NamedValues<Label> mLabels = NamedValues.create("Labels");
+    @Getter(AccessLevel.PACKAGE) private final NamedValues<Alias> mAliases = NamedValues.create("Aliases");
+    private final NamedValues<AbstractDataType> mDataTypes = NamedValues.create("DataTypes");
 
 
     public API() {
@@ -194,10 +194,10 @@ public class API implements IStateNode {
     @Override
     public State getState() {
         return State.getBuilder()
-                .addChildren("DataTypes", mDataTypes)
-                .addChildren("Arguments", mArguments)
-                .addChildren("Labels", mLabels)
-                .addChildren("Methods", mMethods)
+                .addChildren(mDataTypes)
+                .addChildren(mArguments)
+                .addChildren(mLabels)
+                .addChildren(mMethods)
                 .build();
     }
 

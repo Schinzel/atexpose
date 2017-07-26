@@ -6,7 +6,6 @@ import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.errors.RuntimeError;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.collections.namedvalues.INamedValue;
 import io.schinzel.basicutils.state.IStateNode;
@@ -15,6 +14,7 @@ import io.schinzel.basicutils.str.Str;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -257,7 +257,7 @@ public class MethodObject implements INamedValue, IStateNode {
      */
     private Object[] getCopyOfArgumentDefaultValues() {
         if (Checker.isEmpty(mArguments)) {
-            return EmptyObjects.EMPTY_OBJECT_ARRAY;
+            return ArrayUtils.EMPTY_OBJECT_ARRAY;
         } else {
             Object[] returnObjects;
             returnObjects = new Object[mArguments.size()];

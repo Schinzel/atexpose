@@ -1,8 +1,8 @@
 package com.atexpose.dispatcher.logging.format;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
-import io.schinzel.basicutils.EmptyObjects;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -34,7 +34,7 @@ public class SingleLineFormatTest extends SingleLineFormatter {
     @Test
     public void testGetEntryValueQualifier() {
         SingleLineFormatter slf = new SingleLineFormatter();
-        assertEquals(EmptyObjects.EMPTY_STRING, slf.getEntryValueQualifier());
+        assertEquals("", slf.getEntryValueQualifier());
     }
 
 
