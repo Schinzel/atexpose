@@ -134,7 +134,7 @@ public class ScheduledTaskChannel implements IChannel {
     public void shutdown(Thread thread) {
         //Set the class scope shutdown variable to true
         mShutdownWasInvoked = true;
-        //Call interrup to wake from sleep
+        //Call interrupt to wake from sleep
         thread.interrupt();
     }
 
