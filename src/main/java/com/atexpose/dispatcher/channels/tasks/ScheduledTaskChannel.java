@@ -45,7 +45,7 @@ public class ScheduledTaskChannel implements IChannel {
     /** The interval unit is days for daily tasks, and minute for minute tasks. */
     final TemporalUnit mIntervalUnit;
     /** A flag indicating if an explicit shutdown has been invoked. */
-    private boolean mShutdownWasInvoked = false;
+    boolean mShutdownWasInvoked = false;
     /** When to fire the task the next time. */
     LocalDateTime mTimeToFireNext;
     //------------------------------------------------------------------------

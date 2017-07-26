@@ -1,6 +1,7 @@
 package com.atexpose.dispatcher.channels.tasks;
 
 import com.atexpose.util.ByteStorage;
+import io.schinzel.basicutils.Sandman;
 import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
@@ -105,18 +106,29 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void testShutdown() {
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "thisIsAtask", 1);
-        //override next-fire-time and set it to be one second from now
-        stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(1);
-        //Start another thread that waits on scheduled task to finish
-        TaskRunner tr = new TaskRunner(stc);
-        Thread thread = new Thread(tr);
+    public void shutdown_RunningThread_mWasNormalWakeUpTrue() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "thisIsAtask", 1);
+        Thread thread = new Thread(() -> {
+            stc.getRequest(new ByteStorage());
+        });
         thread.start();
-        //Interrupt the waiting task but requesting a shutdown
+        //Interrupt the waiting task
         stc.shutdown(thread);
         //assert that false is returned as the wake-up was not normal, but a shutdown
-        assertFalse(tr.mWasNormalWakeUp);
+        assertThat(stc.mShutdownWasInvoked).isTrue();
+    }
+
+
+    @Test
+    public void getRequest_ShutdownInvokedWhileWaiting_False() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "thisIsAtask", 1);
+        Thread t = Thread.currentThread();
+        new Thread(() -> {
+            Sandman.snoozeMillis(100);
+            stc.shutdown(t);
+        }).start();
+        boolean response = stc.getRequest(new ByteStorage());
+        assertThat(response).isFalse();
     }
 
 
