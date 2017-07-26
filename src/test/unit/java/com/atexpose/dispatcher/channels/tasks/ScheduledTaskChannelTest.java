@@ -27,57 +27,110 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void testException_ConstructorToLowMinutes() {
-        String taskName = "theTaskName";
-        String request = "request";
-        int interval = 0;
-        exception.expect(RuntimeException.class);
-        new ScheduledTaskChannel(taskName, request, interval);
+    public void constructor_TooLowInterval_Exception() {
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
+                new ScheduledTaskChannel("theTaskName", "request", 0)
+        );
     }
 
 
     @Test
-    public void testException_ConstructorToHighMinutes() {
-        String taskName = "theTaskName";
-        String request = "request";
-        int interval = 1441;
-        exception.expect(RuntimeException.class);
-        new ScheduledTaskChannel(taskName, request, interval);
+    public void constructor_TooHighInterval_Exception() {
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
+                new ScheduledTaskChannel("theTaskName", "request", 1441)
+        );
     }
 
 
     @Test
-    public void testException_InvalidTimeFormat() {
-        String taskName = "theTaskName";
-        String request = "request";
-        String timeOfDay = "1441";
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Incorrect task time");
-        new ScheduledTaskChannel(taskName, request, timeOfDay);
+    public void constructor_InvalidTimeFormat_Exception() {
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
+                new ScheduledTaskChannel("theTaskName", "request", "12345678")
+        ).withMessageStartingWith("Incorrect task time: ");
     }
 
 
     @Test
-    public void testException_InvalidDayOfMonth1() {
-        String taskName = "theTaskName";
-        String request = "request";
-        String timeOfDay = "23:55";
-        int dayOfMonth = 0;
+    public void constructor_TooLowDayOfMonth_Exception() {
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> new ScheduledTaskChannel(taskName, request, timeOfDay, dayOfMonth))
+                .isThrownBy(() -> new ScheduledTaskChannel("theTaskName", "request", "23:55", 0))
                 .withMessageStartingWith("Incorrect day of month: '0'. Needs to be min 1 or max 28.");
     }
 
 
     @Test
-    public void testException_InvalidDayOfMonth2() {
-        String taskName = "theTaskName";
-        String request = "request";
-        String timeOfDay = "23:55";
-        int dayOfMonth = 29;
+    public void constructor_TooHighDayOfMonth_Exception() {
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> new ScheduledTaskChannel(taskName, request, timeOfDay, dayOfMonth))
+                .isThrownBy(() -> new ScheduledTaskChannel("theTaskName", "request", "23:55", 29))
                 .withMessageStartingWith("Incorrect day of month: '29'. Needs to be min 1 or max 28.");
+    }
+
+
+    @Test
+    public void getClone_Exception() {
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
+                new ScheduledTaskChannel("theTaskName", "request", 15).getClone()
+        );
+    }
+
+
+    @Test
+    public void writeResponse_DoesNothingButDoesNotThrowException() {
+        new ScheduledTaskChannel("theTaskName", "request", 15).writeResponse(null);
+    }
+
+
+    @Test
+    public void testRequestReadTime() {
+        long actualReadTime = new ScheduledTaskChannel("theTaskName", "request", 15)
+                .requestReadTime();
+        assertThat(actualReadTime).isEqualTo(0);
+    }
+
+
+    @Test
+    public void testSenderInfo() {
+        String actualSenderInfo = new ScheduledTaskChannel("TheTaskName", "request", 15)
+                .senderInfo();
+        assertThat(actualSenderInfo).isEqualTo("ScheduledTask: TheTaskName");
+    }
+
+
+    @Test
+    public void testGetRequestAsString() {
+        String actualRequest = new ScheduledTaskChannel("The task 1", "ThisIsMyRequest", 55)
+                .getRequestAsString();
+        assertThat(actualRequest).isEqualTo("ThisIsMyRequest");
+    }
+
+
+    @Test
+    public void testShutdown() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "thisIsAtask", 1);
+        //override next-fire-time and set it to be one second from now
+        stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(1);
+        //Start another thread that waits on scheduled task to finish
+        TaskRunner tr = new TaskRunner(stc);
+        Thread thread = new Thread(tr);
+        thread.start();
+        //Interrupt the waiting task but requesting a shutdown
+        stc.shutdown(thread);
+        //assert that false is returned as the wake-up was not normal, but a shutdown
+        assertFalse(tr.mWasNormalWakeUp);
+    }
+
+
+    @Test
+    public void testGetRequestAsBytes() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "thisIsAtask", 1);
+        //override next-fire-time and set it to be a short time in the future
+        long millisToSleep = 10;
+        long nanosToSleep = millisToSleep * 1000000;
+        stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusNanos(nanosToSleep);
+        ByteStorage bs = new ByteStorage();
+        boolean wasNormalWakeUp = stc.getRequest(bs);
+        assertTrue(wasNormalWakeUp);
+        assertEquals("thisIsAtask", bs.getAsString());
     }
 
 
@@ -171,16 +224,6 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void testGetClone() {
-        String taskName = "theTaskName";
-        String request = "request";
-        int interval = 15;
-        ScheduledTaskChannel stc = new ScheduledTaskChannel(taskName, request, interval);
-        assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(stc::getClone);
-    }
-
-
-    @Test
     public void testSleep() {
         String taskName = "theTaskName";
         String request = "request";
@@ -194,57 +237,6 @@ public class ScheduledTaskChannelTest {
         long executionTimeInMS = (System.nanoTime() - start) / 1000000;
         assertThat(executionTimeInMS).isBetween(20L, 30L);
 
-    }
-
-
-    @Test
-    public void testWriteResponse() {
-        String taskName = "theTaskName";
-        String request = "request";
-        int interval = 15;
-        ScheduledTaskChannel stc = new ScheduledTaskChannel(taskName, request, interval);
-        stc.writeResponse(null);
-    }
-
-
-    @Test
-    public void testRequestReadTime() {
-        String taskName = "theTaskName";
-        String request = "request";
-        int interval = 15;
-        ScheduledTaskChannel stc = new ScheduledTaskChannel(taskName, request, interval);
-        assertEquals(0, stc.requestReadTime());
-    }
-
-
-    @Test
-    public void testSenderInfo() {
-        String taskName = "theTaskName";
-        String request = "request";
-        int interval = 15;
-        ScheduledTaskChannel stc = new ScheduledTaskChannel(taskName, request, interval);
-        assertEquals("ScheduledTask: " + taskName, stc.senderInfo());
-    }
-
-
-    @Test
-    public void testGetRequestAsString() {
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "time", 55);
-        assertEquals("time", stc.getRequestAsString());
-    }
-
-
-    @Test
-    public void testGetRequestAsBytes() {
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "thisIsAtask", 1);
-        //override next-fire-time and set it to be a short time in the future
-        long millisToSleep = 10;
-        long nanosToSleep = millisToSleep * 1000000;
-        stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusNanos(nanosToSleep);
-        ByteStorage bs = new ByteStorage();
-        boolean wasNormalWakeUp = stc.getRequest(bs);
-        assertTrue(wasNormalWakeUp);
-        assertEquals("thisIsAtask", bs.getAsString());
     }
 
 
@@ -279,22 +271,6 @@ public class ScheduledTaskChannelTest {
         assertEquals(28, status.getInt("day_of_month"));
         assertFalse(status.has("minutes"));
         assertTrue(status.has("next_task_time_utc"));
-    }
-
-
-    @Test
-    public void testShutdown() {
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "thisIsAtask", 1);
-        //override next-fire-time and set it to be one second from now
-        stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(1);
-        //Start another thread that waits on scheduled task to finish
-        TaskRunner tr = new TaskRunner(stc);
-        Thread thread = new Thread(tr);
-        thread.start();
-        //Interrupt the waiting task but requesting a shutdown
-        stc.shutdown(thread);
-        //assert that false is returned as the wake-up was not normal, but a shutdown
-        assertFalse(tr.mWasNormalWakeUp);
     }
 
 
