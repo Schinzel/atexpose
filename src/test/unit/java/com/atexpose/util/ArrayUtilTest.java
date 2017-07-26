@@ -1,12 +1,9 @@
 package com.atexpose.util;
 
-import io.schinzel.basicutils.EmptyObjects;
-
-import java.util.List;
-
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  * @author schinzel
@@ -20,22 +17,22 @@ public class ArrayUtilTest {
         b1 = null;
         b2 = null;
         result = ArrayUtil.concat(b1, b2);
-        assertArrayEquals(EmptyObjects.EMPTY_BYTE_ARRAY, result);
+        assertArrayEquals(ArrayUtils.EMPTY_BYTE_ARRAY, result);
         //
-        b1 = EmptyObjects.EMPTY_BYTE_ARRAY;
+        b1 = ArrayUtils.EMPTY_BYTE_ARRAY;
         b2 = null;
         result = ArrayUtil.concat(b1, b2);
-        assertArrayEquals(EmptyObjects.EMPTY_BYTE_ARRAY, result);
+        assertArrayEquals(ArrayUtils.EMPTY_BYTE_ARRAY, result);
         //
         b1 = null;
-        b2 = EmptyObjects.EMPTY_BYTE_ARRAY;
+        b2 = ArrayUtils.EMPTY_BYTE_ARRAY;
         result = ArrayUtil.concat(b1, b2);
-        assertArrayEquals(EmptyObjects.EMPTY_BYTE_ARRAY, result);
+        assertArrayEquals(ArrayUtils.EMPTY_BYTE_ARRAY, result);
         //
-        b1 = EmptyObjects.EMPTY_BYTE_ARRAY;
-        b2 = EmptyObjects.EMPTY_BYTE_ARRAY;
+        b1 = ArrayUtils.EMPTY_BYTE_ARRAY;
+        b2 = ArrayUtils.EMPTY_BYTE_ARRAY;
         result = ArrayUtil.concat(b1, b2);
-        assertArrayEquals(EmptyObjects.EMPTY_BYTE_ARRAY, result);
+        assertArrayEquals(ArrayUtils.EMPTY_BYTE_ARRAY, result);
         //
         b1 = new byte[]{1, 2, 3};
         b2 = null;

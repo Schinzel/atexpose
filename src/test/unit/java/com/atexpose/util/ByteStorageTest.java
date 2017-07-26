@@ -1,8 +1,10 @@
 package com.atexpose.util;
 
-import static org.junit.Assert.*;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
-import io.schinzel.basicutils.EmptyObjects;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -32,7 +34,7 @@ public class ByteStorageTest {
         bs.clear();
         assertEquals(0, bs.getNoOfBytesStored());
         assertEquals("", bs.getAsString());
-        assertArrayEquals(EmptyObjects.EMPTY_BYTE_ARRAY, bs.getBytes());
+        assertArrayEquals(ArrayUtils.EMPTY_BYTE_ARRAY, bs.getBytes());
         //Add a single byte
         bs.add((byte) 66);
         assertEquals("B", bs.getAsString());
@@ -67,7 +69,7 @@ public class ByteStorageTest {
         ByteStorage bs = new ByteStorage();
         assertEquals(0, bs.getNoOfBytesStored());
         assertEquals("", bs.getAsString());
-        assertArrayEquals(EmptyObjects.EMPTY_BYTE_ARRAY, bs.getBytes());
+        assertArrayEquals(ArrayUtils.EMPTY_BYTE_ARRAY, bs.getBytes());
         bs.add(new byte[]{65, 65, 65});
         bs.add(new byte[]{66, 66, 66});
         bs.add(new byte[]{67, 67, 67});
@@ -77,7 +79,7 @@ public class ByteStorageTest {
         bs.clear();
         assertEquals(0, bs.getNoOfBytesStored());
         assertEquals("", bs.getAsString());
-        assertArrayEquals(EmptyObjects.EMPTY_BYTE_ARRAY, bs.getBytes());
+        assertArrayEquals(ArrayUtils.EMPTY_BYTE_ARRAY, bs.getBytes());
     }
 
 
@@ -102,7 +104,7 @@ public class ByteStorageTest {
         bs.clear();
         assertEquals(0, bs.getNoOfBytesStored());
         assertEquals("", bs.getAsString());
-        assertArrayEquals(EmptyObjects.EMPTY_BYTE_ARRAY, bs.getBytes());
+        assertArrayEquals(ArrayUtils.EMPTY_BYTE_ARRAY, bs.getBytes());
     }
 
 

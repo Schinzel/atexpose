@@ -2,7 +2,6 @@ package com.atexpose.dispatcher.logging.format;
 
 import com.atexpose.dispatcher.logging.LogKey;
 import java.util.Map;
-import io.schinzel.basicutils.EmptyObjects;
 
 /**
  * A single line log format. Example Call time,Sender,Thread,Read time,Execution
@@ -65,7 +64,7 @@ public class SingleLineFormatter implements ILogFormatter {
      * @return The qualifier for values.
      */
     public String getEntryValueQualifier() {
-        return EmptyObjects.EMPTY_STRING;
+        return "";
     }
 
 

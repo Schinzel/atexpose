@@ -1,7 +1,7 @@
 package com.atexpose.util;
 
-import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.Checker;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * This class holds a set of method for array operations.
@@ -29,7 +29,7 @@ public class ArrayUtil {
         }
         //If both arrays are empty return empty array
         if (Checker.isEmpty(arr1) && Checker.isEmpty(arr2)) {
-            return EmptyObjects.EMPTY_BYTE_ARRAY;
+            return ArrayUtils.EMPTY_BYTE_ARRAY;
         }
         //Return array
         final byte[] abReturn = new byte[arr1.length + arr2.length];

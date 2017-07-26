@@ -5,7 +5,6 @@ import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.dispatcher.parser.urlparser.httprequest.HttpRequest;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.state.State;
 import io.schinzel.basicutils.substring.SubString;
 import lombok.AccessLevel;
@@ -81,7 +80,7 @@ public class UrlParser implements IParser {
      * @return The method name invoked
      */
     private static String getMethodName(String path) {
-        String returnString = EmptyObjects.EMPTY_STRING;
+        String returnString = "";
         if (!Checker.isEmpty(path)) {
             returnString = path.substring(PropertiesDispatcher.COMMAND_REQUEST_MARKER.length());
         }
