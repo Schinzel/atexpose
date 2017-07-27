@@ -6,6 +6,8 @@ import com.atexpose.util.DateTimeStrings;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.State;
 import io.schinzel.basicutils.state.StateBuilder;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -22,6 +24,7 @@ import java.util.regex.Pattern;
  *
  * @author Schinzel
  */
+@Accessors(prefix = "m")
 public class ScheduledTaskChannel implements IChannel {
     /** Pattern for time for daily tasks. */
     private static final Pattern TIME_PATTERN = Pattern.compile("^[0-2][0-9]:[0-5][0-9]");
@@ -32,7 +35,7 @@ public class ScheduledTaskChannel implements IChannel {
     /** The name of this tasks. */
     final String mTaskName;
     /** The task to run. Is a request in the text format. E.g. "echo hi" */
-    final String mRequest;
+    @Getter private final String mRequest;
     /** The time of day to run the task. Format HH:mm. E.g. 15:30 */
     final String mTaskTime;
     /** The day of month to fire the task. Min 1, max 28. */

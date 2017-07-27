@@ -86,7 +86,7 @@ public class ScheduledReportChannelTest {
                 .fromName("fromName")
                 .build();
         assertEquals(taskName, src.mTaskName);
-        assertEquals(request, src.mRequest);
+        assertEquals(request, src.getRequest());
         assertEquals(timeOfDay, src.mTaskTime);
         assertEquals(mMailSender.getClass().getSimpleName(), src.mEmailSender.getClass().getSimpleName());
         assertEquals(recipient, src.mRecipient);

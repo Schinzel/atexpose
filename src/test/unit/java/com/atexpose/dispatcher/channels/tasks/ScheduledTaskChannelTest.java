@@ -101,14 +101,14 @@ public class ScheduledTaskChannelTest {
     @Test
     public void testGetRequestAsString() {
         String actualRequest = new ScheduledTaskChannel("The task 1", "ThisIsMyRequest", 55)
-                .getRequestAsString();
+                .getRequest();
         assertThat(actualRequest).isEqualTo("ThisIsMyRequest");
     }
 
 
     @Test
     public void shutdown_RunningThread_mWasNormalWakeUpTrue() {
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "thisIsAtask", 1);
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "ThisIsTheTask", 1);
         Thread thread = new Thread(() -> stc.getRequest(new ByteStorage()));
         thread.start();
         //Interrupt the waiting task

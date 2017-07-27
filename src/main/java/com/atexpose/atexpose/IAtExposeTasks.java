@@ -7,14 +7,13 @@ import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import com.atexpose.dispatcher.parser.IParser;
-import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import io.schinzel.basicutils.Thrower;
 
 /**
  * Sets up scheduled tasks.
- *
+ * <p>
  * Created by schinzel on 2017-04-16.
  */
 public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
@@ -34,7 +33,8 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
 
 
     /**
-     * Sets up a task to run every X minutes. Runs the first time after the argument number of minutes.
+     * Sets up a task to run every X minutes. Runs the first time after the argument number of
+     * minutes.
      *
      * @param taskName The name of the task.
      * @param request  The request to execute. Example: "time", "echo 123"
@@ -75,8 +75,9 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
 
     default T addTask(String taskName, ScheduledTaskChannel scheduledTask) {
         IParser parser = new TextParser();
-        Request request = parser.getRequest(scheduledTask.getRequestAsString());
-        String methodName = request.getMethodName();
+        String methodName = parser
+                .getRequest(scheduledTask.getRequestAsString())
+                .getMethodName();
         Thrower.throwIfFalse(this.getAPI().methodExits(methodName), "No such method '" + methodName + "'");
         String dispatcherName = "ScheduledTask_" + taskName;
         Dispatcher dispatcher = Dispatcher.builder()
