@@ -2,7 +2,6 @@ package com.atexpose.dispatcher.channels.tasks;
 
 import com.atexpose.util.ByteStorage;
 import io.schinzel.basicutils.FunnyChars;
-import io.schinzel.basicutils.Sandman;
 import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -119,15 +119,18 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void getRequest_ShutdownInvokedWhileWaiting_False() {
+    public void getRequest_ShutdownInvokedWhileWaiting_False() throws InterruptedException {
         ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "ThisIsTheTask", 1);
-        Thread t = Thread.currentThread();
+        AtomicBoolean bool = new AtomicBoolean(true);
+        Thread thread = new Thread(() -> {
+            bool.set(stc.getRequest(new ByteStorage()));
+        });
+        thread.start();
         new Thread(() -> {
-            Sandman.snoozeMillis(100);
-            stc.shutdown(t);
+            stc.shutdown(thread);
         }).start();
-        boolean response = stc.getRequest(new ByteStorage());
-        assertThat(response).isFalse();
+        thread.join();
+        assertThat(bool).isFalse();
     }
 
 
