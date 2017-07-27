@@ -8,9 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
@@ -158,18 +156,13 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void test_FireTime_MinutesTask() {
-        String taskName = "theTaskName";
-        String request = "request";
-        int interval = 15;
-        ScheduledTaskChannel stc = new ScheduledTaskChannel(taskName, request, interval);
-        assertEquals(interval, stc.mIntervalAmount);
-        assertEquals(ChronoUnit.MINUTES, stc.mIntervalUnit);
-        int timeInSeconds = 15 * 60;
-        //Time to fire is after interval - 1 seconds
-        assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC).plus(timeInSeconds - 1, ChronoUnit.SECONDS)));
-        //Time to fire is before interval + 1 seconds
-        assertTrue(stc.mTimeToFireNext.isBefore(LocalDateTime.now(ZoneOffset.UTC).plus(timeInSeconds + 1, ChronoUnit.SECONDS)));
+    public void getRquest_IntervalSetTo15Min_TimeToFireNextIs15Min() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "TheRequest", 15);
+        new Thread(() -> {
+            stc.getRequest(new ByteStorage());
+        }).start();
+        LocalDateTime fifteenMinFromNow = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(15);
+        assertThat(stc.mTimeToFireNext).isBetween(fifteenMinFromNow.minusSeconds(1), fifteenMinFromNow.plusSeconds(1));
     }
 
 
