@@ -290,24 +290,4 @@ public class ScheduledTaskChannelTest {
     }
 
 
-    /**
-     * Help class that waits for a task to wake up.
-     */
-    static class TaskRunner implements Runnable {
-        private final ScheduledTaskChannel mStc;
-        boolean mWasNormalWakeUp;
-
-
-        TaskRunner(ScheduledTaskChannel stc) {
-            mStc = stc;
-        }
-
-
-        @Override
-        public void run() {
-            ByteStorage byteStorage = new ByteStorage();
-            mWasNormalWakeUp = mStc.getRequest(byteStorage);
-        }
-
-    }
 }
