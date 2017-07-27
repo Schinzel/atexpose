@@ -1,6 +1,7 @@
 package com.atexpose.dispatcher.channels.tasks;
 
 import com.atexpose.util.ByteStorage;
+import io.schinzel.basicutils.FunnyChars;
 import io.schinzel.basicutils.Sandman;
 import org.json.JSONObject;
 import org.junit.Rule;
@@ -133,16 +134,26 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void testGetRequestAsBytes() {
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "thisIsAtask", 1);
+    public void getRequest_TaskTimeOccurs_True() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "ThisIsAtask", 1);
         //override next-fire-time and set it to be a short time in the future
         long millisToSleep = 10;
-        long nanosToSleep = millisToSleep * 1_000_000;
-        stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusNanos(nanosToSleep);
-        ByteStorage bs = new ByteStorage();
-        boolean wasNormalWakeUp = stc.getRequest(bs);
-        assertTrue(wasNormalWakeUp);
-        assertEquals("thisIsAtask", bs.getAsString());
+        stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusNanos(millisToSleep * 1_000_000);
+        boolean wasNormalWakeUp = stc.getRequest(new ByteStorage());
+        assertThat(wasNormalWakeUp).isTrue();
+    }
+
+
+    @Test
+    public void getRequest_TaskTimeOccurs_ByteStorageReturnsSetRequest() {
+        String request = FunnyChars.SERBO_CROATION_GAJ.getString();
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", request, 1);
+        //override next-fire-time and set it to be a short time in the future
+        long millisToSleep = 10;
+        stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusNanos(millisToSleep * 1_000_000);
+        ByteStorage byteStorage = new ByteStorage();
+        stc.getRequest(byteStorage);
+        assertThat(byteStorage.getAsString()).isEqualTo(request);
     }
 
 
