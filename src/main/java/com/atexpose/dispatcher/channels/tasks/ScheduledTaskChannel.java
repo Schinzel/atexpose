@@ -6,6 +6,7 @@ import com.atexpose.util.DateTimeStrings;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.State;
 import io.schinzel.basicutils.state.StateBuilder;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
@@ -35,7 +36,7 @@ public class ScheduledTaskChannel implements IChannel {
     /** The name of this tasks. */
     final String mTaskName;
     /** The task to run. Is a request in the text format. E.g. "echo hi" */
-    @Getter private final String mRequest;
+    @Getter private final String mTaskRequest;
     /** The time of day to run the task. Format HH:mm. E.g. 15:30 */
     final String mTaskTime;
     /** The day of month to fire the task. Min 1, max 28. */
@@ -48,7 +49,7 @@ public class ScheduledTaskChannel implements IChannel {
     /** The interval unit is days for daily tasks, and minute for minute tasks. */
     final TemporalUnit mIntervalUnit;
     /** A flag indicating if an explicit shutdown has been invoked. */
-    boolean mShutdownWasInvoked = false;
+    @Getter(AccessLevel.PACKAGE) private Boolean  mShutdownWasInvoked = false;
     /** When to fire the task the next time. */
     LocalDateTime mTimeToFireNext;
     //------------------------------------------------------------------------
@@ -123,7 +124,7 @@ public class ScheduledTaskChannel implements IChannel {
         Thrower.throwIfFalse(ScheduledTaskChannel.isValidDayOfMonth(dayOfMonth))
                 .message("Incorrect day of month: '" + dayOfMonth + "'. Needs to be min 1 or max 28.");
         mTaskName = taskName;
-        mRequest = request;
+        mTaskRequest = request;
         mIntervalUnit = intervalUnit;
         mIntervalAmount = intervalAmount;
         mTaskTime = timeOfDay;
@@ -150,10 +151,9 @@ public class ScheduledTaskChannel implements IChannel {
     //------------------------------------------------------------------------
     // MESSAGING
     //------------------------------------------------------------------------
-    @Override
     public boolean getRequest(ByteStorage request) {
         //Convert request to byte array and add to request argument.
-        request.add(mRequest);
+        request.add(mTaskRequest);
         //Get the number of nanoseconds the executing thread should sleep. 
         long nanosToSleep = this.getNanosUntilNextTask();
         //Put executing thread to sleep. 
@@ -260,7 +260,7 @@ public class ScheduledTaskChannel implements IChannel {
 
 
     public String getRequestAsString() {
-        return mRequest;
+        return mTaskRequest;
     }
 
 
@@ -268,7 +268,7 @@ public class ScheduledTaskChannel implements IChannel {
     public State getState() {
         StateBuilder builder = State.getBuilder()
                 .add("task_name", mTaskName)
-                .add("request", mRequest);
+                .add("request", mTaskRequest);
         //If time of day has not been set
         if (mTaskTime.equalsIgnoreCase(TIME_OF_DAY_NOT_SET)) {
             builder.add("minutes", mIntervalAmount);

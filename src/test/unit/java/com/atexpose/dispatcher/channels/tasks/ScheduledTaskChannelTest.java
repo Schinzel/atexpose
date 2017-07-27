@@ -29,7 +29,7 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void constructor_TooLowInterval_Exception() {
+    public void constructor_IntervalTooLow_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
                 new ScheduledTaskChannel("theTaskName", "request", 0)
         );
@@ -37,7 +37,7 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void constructor_TooHighInterval_Exception() {
+    public void constructor_IntervalTooHigh_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
                 new ScheduledTaskChannel("theTaskName", "request", 1441)
         );
@@ -46,22 +46,24 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void constructor_InvalidTimeFormat_Exception() {
-        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                new ScheduledTaskChannel("theTaskName", "request", "12345678")
-        ).withMessageStartingWith("Incorrect task time: ");
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() ->
+                        new ScheduledTaskChannel("theTaskName", "request", "12345678"))
+                .withMessageStartingWith("Incorrect task time: ");
     }
 
 
     @Test
-    public void constructor_TooLowDayOfMonth_Exception() {
+    public void constructor_DayOfMonthTooLow_Exception() {
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> new ScheduledTaskChannel("theTaskName", "request", "23:55", 0))
+                .isThrownBy(() ->
+                        new ScheduledTaskChannel("theTaskName", "request", "23:55", 0))
                 .withMessageStartingWith("Incorrect day of month: '0'. Needs to be min 1 or max 28.");
     }
 
 
     @Test
-    public void constructor_TooHighDayOfMonth_Exception() {
+    public void constructor_DayOfMonthTooHigh_Exception() {
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> new ScheduledTaskChannel("theTaskName", "request", "23:55", 29))
                 .withMessageStartingWith("Incorrect day of month: '29'. Needs to be min 1 or max 28.");
@@ -70,9 +72,10 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void getClone_Exception() {
-        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                new ScheduledTaskChannel("theTaskName", "request", 15).getClone()
-        );
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() ->
+                        new ScheduledTaskChannel("theTaskName", "request", 15).getClone()
+                );
     }
 
 
@@ -99,10 +102,10 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void testGetRequestAsString() {
-        String actualRequest = new ScheduledTaskChannel("The task 1", "ThisIsMyRequest", 55)
-                .getRequest();
-        assertThat(actualRequest).isEqualTo("ThisIsMyRequest");
+    public void getTaskRequest_SetInConstructorMyRequest_MyRequest() {
+        String actualRequest = new ScheduledTaskChannel("The task 1", "MyRequest", 55)
+                .getTaskRequest();
+        assertThat(actualRequest).isEqualTo("MyRequest");
     }
 
 
@@ -114,7 +117,7 @@ public class ScheduledTaskChannelTest {
         //Interrupt the waiting task
         stc.shutdown(thread);
         //assert that false is returned as the wake-up was not normal, but a shutdown
-        assertThat(stc.mShutdownWasInvoked).isTrue();
+        assertThat(stc.getShutdownWasInvoked()).isTrue();
     }
 
 
@@ -122,13 +125,9 @@ public class ScheduledTaskChannelTest {
     public void getRequest_ShutdownInvokedWhileWaiting_False() throws InterruptedException {
         ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "ThisIsTheTask", 1);
         AtomicBoolean bool = new AtomicBoolean(true);
-        Thread thread = new Thread(() -> {
-            bool.set(stc.getRequest(new ByteStorage()));
-        });
+        Thread thread = new Thread(() -> bool.set(stc.getRequest(new ByteStorage())));
         thread.start();
-        new Thread(() -> {
-            stc.shutdown(thread);
-        }).start();
+        new Thread(() -> stc.shutdown(thread)).start();
         thread.join();
         assertThat(bool).isFalse();
     }
@@ -136,7 +135,7 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void getRequest_TaskTimeOccurs_True() {
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "ThisIsAtask", 1);
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "ThisIsMyTask", 1);
         //override next-fire-time and set it to be a short time in the future
         long millisToSleep = 10;
         stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusNanos(millisToSleep * 1_000_000);
