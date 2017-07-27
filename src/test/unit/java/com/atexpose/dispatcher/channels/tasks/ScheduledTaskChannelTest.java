@@ -8,7 +8,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
@@ -107,9 +109,7 @@ public class ScheduledTaskChannelTest {
     @Test
     public void shutdown_RunningThread_mWasNormalWakeUpTrue() {
         ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "thisIsAtask", 1);
-        Thread thread = new Thread(() -> {
-            stc.getRequest(new ByteStorage());
-        });
+        Thread thread = new Thread(() -> stc.getRequest(new ByteStorage()));
         thread.start();
         //Interrupt the waiting task
         stc.shutdown(thread);
@@ -120,7 +120,7 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void getRequest_ShutdownInvokedWhileWaiting_False() {
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "thisIsAtask", 1);
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "ThisIsTheTask", 1);
         Thread t = Thread.currentThread();
         new Thread(() -> {
             Sandman.snoozeMillis(100);
@@ -156,13 +156,45 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void getRquest_IntervalSetTo15Min_TimeToFireNextIs15Min() {
+    public void getRequest_IntervalSetTo15Min_TimeToFireNextIs15Min() {
         ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "TheRequest", 15);
-        new Thread(() -> {
-            stc.getRequest(new ByteStorage());
-        }).start();
+        new Thread(() -> stc.getRequest(new ByteStorage())).start();
         LocalDateTime fifteenMinFromNow = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(15);
         assertThat(stc.mTimeToFireNext).isBetween(fifteenMinFromNow.minusSeconds(1), fifteenMinFromNow.plusSeconds(1));
+    }
+
+
+    @Test
+    public void testStatus() {
+        ScheduledTaskChannel stc;
+        JSONObject status;
+        //Test minute interval task
+        stc = new ScheduledTaskChannel("The task 1", "time", 55);
+        status = stc.getState().getJson();
+        assertEquals("The task 1", status.getString("task_name"));
+        assertEquals("time", status.getString("request"));
+        assertEquals(55, status.getInt("minutes"));
+        assertFalse(status.has("time"));
+        assertFalse(status.has("day_of_month"));
+        assertTrue(status.has("next_task_time_utc"));
+        //Test time of day task
+        stc = new ScheduledTaskChannel("The task 2", "getStatus", "23:55");
+        status = stc.getState().getJson();
+        assertEquals("The task 2", status.getString("task_name"));
+        assertEquals("getStatus", status.getString("request"));
+        assertEquals("23:55", status.getString("time_of_day"));
+        assertFalse(status.has("minutes"));
+        assertFalse(status.has("day_of_month"));
+        assertTrue(status.has("next_task_time_utc"));
+        //Test day of month task
+        stc = new ScheduledTaskChannel("The task 2", "getStatus", "23:55", 28);
+        status = stc.getState().getJson();
+        assertEquals("The task 2", status.getString("task_name"));
+        assertEquals("getStatus", status.getString("request"));
+        assertEquals("23:55", status.getString("time_of_day"));
+        assertEquals(28, status.getInt("day_of_month"));
+        assertFalse(status.has("minutes"));
+        assertTrue(status.has("next_task_time_utc"));
     }
 
 
@@ -253,40 +285,6 @@ public class ScheduledTaskChannelTest {
         long executionTimeInMS = (System.nanoTime() - start) / 1_000_000;
         assertThat(executionTimeInMS).isBetween(20L, 30L);
 
-    }
-
-
-    @Test
-    public void testStatus() {
-        ScheduledTaskChannel stc;
-        JSONObject status;
-        //Test minute interval task
-        stc = new ScheduledTaskChannel("The task 1", "time", 55);
-        status = stc.getState().getJson();
-        assertEquals("The task 1", status.getString("task_name"));
-        assertEquals("time", status.getString("request"));
-        assertEquals(55, status.getInt("minutes"));
-        assertFalse(status.has("time"));
-        assertFalse(status.has("day_of_month"));
-        assertTrue(status.has("next_task_time_utc"));
-        //Test time of day task
-        stc = new ScheduledTaskChannel("The task 2", "getStatus", "23:55");
-        status = stc.getState().getJson();
-        assertEquals("The task 2", status.getString("task_name"));
-        assertEquals("getStatus", status.getString("request"));
-        assertEquals("23:55", status.getString("time_of_day"));
-        assertFalse(status.has("minutes"));
-        assertFalse(status.has("day_of_month"));
-        assertTrue(status.has("next_task_time_utc"));
-        //Test day of month task
-        stc = new ScheduledTaskChannel("The task 2", "getStatus", "23:55", 28);
-        status = stc.getState().getJson();
-        assertEquals("The task 2", status.getString("task_name"));
-        assertEquals("getStatus", status.getString("request"));
-        assertEquals("23:55", status.getString("time_of_day"));
-        assertEquals(28, status.getInt("day_of_month"));
-        assertFalse(status.has("minutes"));
-        assertTrue(status.has("next_task_time_utc"));
     }
 
 
