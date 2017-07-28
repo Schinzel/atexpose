@@ -5,7 +5,6 @@ import com.atexpose.util.ByteStorage;
 import com.atexpose.util.DateTimeStrings;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.State;
-import io.schinzel.basicutils.state.StateBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -29,22 +28,13 @@ import java.util.regex.Pattern;
 public class ScheduledTaskChannel implements IChannel {
     /** Pattern for time for daily tasks. */
     private static final Pattern TIME_PATTERN = Pattern.compile("^[0-2][0-9]:[0-5][0-9]");
-    /** Flag for that day of month is not set, i.e. not used. */
-    private static final int DAY_OF_MONTH_NOT_SET = -1;
-    /** Flag for that time of day is not set, i.e. not used. */
-    private static final String TIME_OF_DAY_NOT_SET = "NOT USED";
     /** The name of this tasks. */
     final String mTaskName;
     /** The task to run. Is a request in the text format. E.g. "echo hi" */
     @Getter private final String mTaskRequest;
-    /** The time of day to run the task. Format HH:mm. E.g. 15:30 */
-    final String mTimeOfDay;
-    /** The day of month to fire the task. Min 1, max 28. */
-    private final int mDayOfMonth;
-    /**
-     * The size of the interval. For daily tasks this is 1. For minute tasks
-     * this is the number of minutes between tasks.
-     */
+    /** Human readable string for when the task is to execute. */
+    private final String mTaskTime;
+    /** The interval size. For minute tasks this is the number of minutes between tasks. */
     final int mIntervalAmount;
     /** The interval unit is days for daily tasks, and minute for minute tasks. */
     final TemporalUnit mIntervalUnit;
@@ -65,7 +55,7 @@ public class ScheduledTaskChannel implements IChannel {
      * @param intervalInMinutes The interval in minutes.
      */
     public ScheduledTaskChannel(String taskName, String request, int intervalInMinutes) {
-        this(taskName, request, ChronoUnit.MINUTES, intervalInMinutes, TIME_OF_DAY_NOT_SET, DAY_OF_MONTH_NOT_SET);
+        this(taskName, request, ChronoUnit.MINUTES, intervalInMinutes, "Every " + intervalInMinutes + " minutes");
         Thrower.throwIfVarOutsideRange(intervalInMinutes, "Mintues", 1, 1440);
         //Set start time to be one interval in the future
         mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(mIntervalAmount);
@@ -80,7 +70,8 @@ public class ScheduledTaskChannel implements IChannel {
      * @param timeOfDay What time of day to execute. Format HH:mm, e.g. 23:55
      */
     public ScheduledTaskChannel(String taskName, String request, String timeOfDay) {
-        this(taskName, request, ChronoUnit.DAYS, 1, timeOfDay, DAY_OF_MONTH_NOT_SET);
+        this(taskName, request, ChronoUnit.DAYS, 1, "Every day at " + timeOfDay);
+        validateTimeOfDay(timeOfDay);
         mTimeToFireNext = LocalTime.parse(timeOfDay).atDate(LocalDate.now(ZoneOffset.UTC));
         //Call this so that mTimeToFireNext is set to next day if fire time already passed today
         this.getNanosUntilNextTask();
@@ -96,11 +87,14 @@ public class ScheduledTaskChannel implements IChannel {
      * @param dayOfMonth Day of month to execute. Min 1 and max 28.
      */
     public ScheduledTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth) {
-        this(taskName, request, ChronoUnit.MONTHS, 1, timeOfDay, dayOfMonth);
+        this(taskName, request, ChronoUnit.MONTHS, 1, "Once a month at " + timeOfDay + " on month day " + dayOfMonth);
+        validateTimeOfDay(timeOfDay);
+        validateDayOfMonth(dayOfMonth);
+        //Check that the argument task time is valid
         mTimeToFireNext = LocalTime.parse(timeOfDay)
                 .atDate(LocalDate.now(ZoneOffset.UTC))
                 .withDayOfMonth(dayOfMonth);
-        //Call this so that mTimeToFireNext is set to next month if fire time 
+        //Call this so that mTimeToFireNext is set to next month if fire time
         //already passed this month
         this.getNanosUntilNextTask();
     }
@@ -113,22 +107,13 @@ public class ScheduledTaskChannel implements IChannel {
      *                       conjunction with intervalAmount.
      * @param intervalAmount The amount to wait. Used in conjunction with
      *                       intervalUnit.
-     * @param timeOfDay      What time of day to execute. Format HH:mm, e.g. 23:55
-     * @param dayOfMonth     Day of month to execute. Min 1 and max 28.
      */
-    private ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount, String timeOfDay, int dayOfMonth) {
-        //Check that the argument task time is valid
-        Thrower.throwIfFalse(ScheduledTaskChannel.isValidTimeOfDay(timeOfDay))
-                .message("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
-        //Check that the argument task time is valid
-        Thrower.throwIfFalse(ScheduledTaskChannel.isValidDayOfMonth(dayOfMonth))
-                .message("Incorrect day of month: '" + dayOfMonth + "'. Needs to be min 1 or max 28.");
+    private ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount, String taskTime) {
         mTaskName = taskName;
         mTaskRequest = request;
         mIntervalUnit = intervalUnit;
         mIntervalAmount = intervalAmount;
-        mTimeOfDay = timeOfDay;
-        mDayOfMonth = dayOfMonth;
+        mTaskTime = taskTime;
     }
 
 
@@ -225,20 +210,22 @@ public class ScheduledTaskChannel implements IChannel {
 
 
     /**
-     * @param time Time-string to validate.
-     * @return True if the argument was a valid time of day, else false.
+     * Validates argument day of time string. Throws exception if not valid.
+     *
+     * @param timeOfDay Time-string to validate. E.g. "23:55"
      */
-    private static boolean isValidTimeOfDay(String time) {
-        return time.equalsIgnoreCase(TIME_OF_DAY_NOT_SET) || TIME_PATTERN.matcher(time).matches();
+    private static void validateTimeOfDay(String timeOfDay) {
+        boolean isValidTimeOfDay = TIME_PATTERN.matcher(timeOfDay).matches();
+        Thrower.throwIfFalse(isValidTimeOfDay).message("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
     }
 
 
     /**
-     * @param dayOfMonth The day of the month. A number between 1 and 28 or -1 if is not-set-flag.
-     * @return True if the argument was a valid day of month, else false.
+     * @param dayOfMonth The day of the month. A number between 1 and 28.
      */
-    private static boolean isValidDayOfMonth(int dayOfMonth) {
-        return dayOfMonth == DAY_OF_MONTH_NOT_SET || (dayOfMonth >= 1 && dayOfMonth <= 28);
+    private static void validateDayOfMonth(int dayOfMonth) {
+        boolean isValidDayOfMonth = (dayOfMonth >= 1 && dayOfMonth <= 28);
+        Thrower.throwIfFalse(isValidDayOfMonth).message("Incorrect day of month: '" + dayOfMonth + "'. Needs to be min 1 or max 28.");
     }
 
 
@@ -260,21 +247,12 @@ public class ScheduledTaskChannel implements IChannel {
 
     @Override
     public State getState() {
-        StateBuilder builder = State.getBuilder()
+        return State.getBuilder()
                 .add("task_name", mTaskName)
-                .add("request", mTaskRequest);
-        //If time of day has not been set
-        if (mTimeOfDay.equalsIgnoreCase(TIME_OF_DAY_NOT_SET)) {
-            builder.add("minutes", mIntervalAmount);
-        } else {
-            builder.add("time_of_day", mTimeOfDay);
-        }
-        //If day of month has been set
-        if (mDayOfMonth != DAY_OF_MONTH_NOT_SET) {
-            builder.add("day_of_month", mDayOfMonth);
-        }
-        builder.add("next_task_time_utc", DateTimeStrings.getDateTimeUTC(mTimeToFireNext.toInstant(ZoneOffset.UTC)));
-        return builder.build();
+                .add("request", mTaskRequest)
+                .add("task_time", mTaskTime)
+                .add("next_task_time_utc", DateTimeStrings.getDateTimeUTC(mTimeToFireNext.toInstant(ZoneOffset.UTC)))
+                .build();
     }
 
 

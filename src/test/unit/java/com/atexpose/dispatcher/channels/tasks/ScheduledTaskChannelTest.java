@@ -180,45 +180,40 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void getState_MinuteIntervalTask() {
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("TaskName1", "TheRequest1", 55);
+    public void getState_() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TaskName", "TheRequest", 55);
         JSONObject status = stc.getState().getJson();
-        assertThat(status.getString("task_name")).isEqualTo("TaskName1");
-        assertThat(status.getString("request")).isEqualTo("TheRequest1");
-        assertThat(status.getInt("minutes")).isEqualTo(55);
-        assertThat(status.has("time_of_day")).isFalse();
-        assertThat(status.has("day_of_month")).isFalse();
+        assertThat(status.getString("task_name")).isEqualTo("TaskName");
+        assertThat(status.getString("request")).isEqualTo("TheRequest");
         assertThat(status.has("next_task_time_utc")).isTrue();
     }
 
 
     @Test
-    public void getState_DailyTask() {
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("TaskName2", "TheRequest2", "23:55");
+    public void getState_MinuteIntervalTask_TaskTimeContainsMinuteInterval() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TaskName", "TheRequest", 55);
         JSONObject status = stc.getState().getJson();
-        assertThat(status.getString("task_name")).isEqualTo("TaskName2");
-        assertThat(status.getString("request")).isEqualTo("TheRequest2");
-        assertThat(status.has("minutes")).isFalse();
-        assertThat(status.getString("time_of_day")).isEqualTo("23:55");
-        assertThat(status.has("day_of_month")).isFalse();
-        assertThat(status.has("next_task_time_utc")).isTrue();
+        assertThat(status.getString("task_time")).contains("55");
     }
 
 
     @Test
-    public void getState_MonthlyTask() {
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("TaskName3", "TheRequest3", "23:55", 28);
+    public void getState_DailyTask_TaskTimeContainsSetTimeOfDay() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TaskName", "TheRequest", "23:57");
         JSONObject status = stc.getState().getJson();
-        assertThat(status.getString("task_name")).isEqualTo("TaskName3");
-        assertThat(status.getString("request")).isEqualTo("TheRequest3");
-        assertThat(status.has("minutes")).isFalse();
-        assertThat(status.getString("time_of_day")).isEqualTo("23:55");
-        assertThat(status.getInt("day_of_month")).isEqualTo(28);
-        assertThat(status.has("next_task_time_utc")).isTrue();
+        assertThat(status.getString("task_time")).contains("23:57");
     }
 
 
     @Test
+    public void getState_MonthlyTask_TaskTimeContainsTimeOfDayAndDayOfMonth() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TaskName3", "TheRequest3", "23:53", 28);
+        JSONObject status = stc.getState().getJson();
+        assertThat(status.getString("task_time")).contains("23:53").contains("28");
+    }
+
+
+/*    @Test
     public void test_FireTime_TimeOfDayTask() {
         String taskName = "theTaskName";
         String request = "request";
@@ -261,7 +256,7 @@ public class ScheduledTaskChannelTest {
         assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
         //Time to fire should be within 24 hours
         assertTrue(stc.mTimeToFireNext.isBefore(LocalDateTime.now(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS)));
-    }
+    }*/
 
 
     @Test
