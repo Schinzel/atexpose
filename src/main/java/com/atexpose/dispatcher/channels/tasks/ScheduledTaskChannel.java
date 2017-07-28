@@ -35,9 +35,9 @@ public class ScheduledTaskChannel implements IChannel {
     /** Human readable string for when the task is to execute. */
     private final String mTaskTime;
     /** The interval size. For minute tasks this is the number of minutes between tasks. */
-    final int mIntervalAmount;
+    private final int mIntervalAmount;
     /** The interval unit. Is days for daily tasks, and minutes for minute tasks. */
-    final TemporalUnit mIntervalUnit;
+    private final TemporalUnit mIntervalUnit;
     /** A flag indicating if an explicit shutdown has been invoked. */
     @Getter(AccessLevel.PACKAGE) private Boolean mShutdownWasInvoked = false;
     /** When to fire the task the next time. */
@@ -55,10 +55,9 @@ public class ScheduledTaskChannel implements IChannel {
      * @param intervalInMinutes The interval in minutes.
      */
     public ScheduledTaskChannel(String taskName, String request, int intervalInMinutes) {
-        this(taskName, request, ChronoUnit.MINUTES, intervalInMinutes, "Every " + intervalInMinutes + " minutes");
-        Thrower.throwIfVarOutsideRange(intervalInMinutes, "Mintues", 1, 1440);
-        //Set start time to be one interval in the future
-        mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(mIntervalAmount);
+        this(taskName, request, ChronoUnit.MINUTES, intervalInMinutes,
+                "Every " + intervalInMinutes + " minutes",
+                LocalDateTime.now(ZoneOffset.UTC).plusMinutes(validateMinuteInterval(intervalInMinutes)));
     }
 
 
@@ -70,11 +69,10 @@ public class ScheduledTaskChannel implements IChannel {
      * @param timeOfDay What time of day to execute. Format HH:mm, e.g. 23:55
      */
     public ScheduledTaskChannel(String taskName, String request, String timeOfDay) {
-        this(taskName, request, ChronoUnit.DAYS, 1, "Every day at " + timeOfDay);
-        validateTimeOfDay(timeOfDay);
-        mTimeToFireNext = LocalTime.parse(timeOfDay).atDate(LocalDate.now(ZoneOffset.UTC));
-        //Call this so that mTimeToFireNext is set to next day if fire time already passed today
-        this.getNanosUntilNextTask();
+        this(taskName, request, ChronoUnit.DAYS, 1,
+                "Every day at " + timeOfDay,
+                LocalTime.parse(validateTimeOfDay(timeOfDay))
+                        .atDate(LocalDate.now(ZoneOffset.UTC)));
     }
 
 
@@ -87,16 +85,11 @@ public class ScheduledTaskChannel implements IChannel {
      * @param dayOfMonth Day of month to execute. Min 1 and max 28.
      */
     public ScheduledTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth) {
-        this(taskName, request, ChronoUnit.MONTHS, 1, "Once a month at " + timeOfDay + " on month day " + dayOfMonth);
-        validateTimeOfDay(timeOfDay);
-        validateDayOfMonth(dayOfMonth);
-        //Check that the argument task time is valid
-        mTimeToFireNext = LocalTime.parse(timeOfDay)
-                .atDate(LocalDate.now(ZoneOffset.UTC))
-                .withDayOfMonth(dayOfMonth);
-        //Call this so that mTimeToFireNext is set to next month if fire time
-        //already passed this month
-        this.getNanosUntilNextTask();
+        this(taskName, request, ChronoUnit.MONTHS, 1,
+                "Once a month at " + timeOfDay + " on month day " + dayOfMonth,
+                LocalTime.parse(validateTimeOfDay(timeOfDay))
+                        .atDate(LocalDate.now(ZoneOffset.UTC))
+                        .withDayOfMonth(validateDayOfMonth(dayOfMonth)));
     }
 
 
@@ -108,12 +101,13 @@ public class ScheduledTaskChannel implements IChannel {
      * @param intervalAmount The amount to wait. Used in conjunction with
      *                       intervalUnit.
      */
-    private ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount, String taskTime) {
+    private ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount, String taskTime, LocalDateTime intialTaskFireTime) {
         mTaskName = taskName;
         mTaskRequest = request;
         mIntervalUnit = intervalUnit;
         mIntervalAmount = intervalAmount;
         mTaskTime = taskTime;
+        mTimeToFireNext = getNextTaskTime(intialTaskFireTime, 1, ChronoUnit.MONTHS);
     }
 
 
@@ -136,13 +130,15 @@ public class ScheduledTaskChannel implements IChannel {
     // MESSAGING
     //------------------------------------------------------------------------
     public boolean getRequest(ByteStorage request) {
-        //Convert request to byte array and add to request argument.
-        request.add(mTaskRequest);
-        //Get the number of nanoseconds the executing thread should sleep. 
-        long nanosToSleep = this.getNanosUntilNextTask();
+        //Get the number of nanoseconds the executing thread should sleep.
+        long nanosToSleep = Duration.between(LocalDateTime.now(ZoneOffset.UTC), mTimeToFireNext).toNanos();
         //Put executing thread to sleep. 
         boolean wasNormalWakeUp = this.sleep(nanosToSleep);
-        //Return true if was normal wake up. False if this thread has been instructed to shutdown. 
+        //Convert request to byte array and add to request argument.
+        request.add(mTaskRequest);
+        //Calc the next time to fire task
+        mTimeToFireNext = getNextTaskTime(mTimeToFireNext, mIntervalAmount, mIntervalUnit);
+        //Return true if was normal wake up. False if this thread has been instructed to shutdown.
         return wasNormalWakeUp;
     }
 
@@ -171,29 +167,6 @@ public class ScheduledTaskChannel implements IChannel {
     }
 
 
-    /**
-     * Calculates and returns the number of milliseconds until is to run the
-     * task again.
-     * <p>
-     * There is three cases when the while loop is used 1) Most common. Iterate
-     * once. Just get the next time to run. 2) For minute tasks, when the tasks
-     * to longer time to execute than the interval is. It will add intervals
-     * until the next time is in the future. 3) For daily task. When starting
-     * up. When the time of day has already passed one more day is added.
-     *
-     * @return The number of nanoseconds until next task should run.
-     */
-    long getNanosUntilNextTask() {
-        //While the time to fire task has already passed
-        //Note, Instant.now().isBefore(mTimeToFireNext) does not work. 
-        while (!mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC))) {
-            //Add another interval
-            mTimeToFireNext = mTimeToFireNext.plus(mIntervalAmount, mIntervalUnit);
-        }
-        return Duration.between(LocalDateTime.now(ZoneOffset.UTC), mTimeToFireNext).toNanos();
-    }
-
-
     @Override
     public void writeResponse(byte[] response) {
         //Do nothing. The default event log is where one will look for the response. 
@@ -204,27 +177,49 @@ public class ScheduledTaskChannel implements IChannel {
     public long responseWriteTime() {
         return 0;
     }
+
+
     //------------------------------------------------------------------------
     // STATIC UTIL
     //------------------------------------------------------------------------
+    static LocalDateTime getNextTaskTime(LocalDateTime time, int intervalAmount, TemporalUnit intervalUnit) {
+        //Note, Instant.now().isBefore(mTimeToFireNext) does not work.
+        return (!time.isAfter(LocalDateTime.now(ZoneOffset.UTC)))
+                ? getNextTaskTime(time.plus(intervalAmount, intervalUnit), intervalAmount, intervalUnit)
+                : time;
+    }
+
+
+    /**
+     * @param minuteInterval The interval in minutes to validate
+     * @return The argument minutes
+     */
+    private static int validateMinuteInterval(int minuteInterval) {
+        Thrower.throwIfVarOutsideRange(minuteInterval, "Mintues", 1, 1440);
+        return minuteInterval;
+    }
 
 
     /**
      * Validates argument day of time string. Throws exception if not valid.
      *
      * @param timeOfDay Time-string to validate. E.g. "23:55"
+     * @return The argument time of day
      */
-    private static void validateTimeOfDay(String timeOfDay) {
+    private static String validateTimeOfDay(String timeOfDay) {
         Thrower.throwIfFalse(TIME_PATTERN.matcher(timeOfDay).matches())
                 .message("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
+        return timeOfDay;
     }
 
 
     /**
      * @param dayOfMonth The day of the month. A number between 1 and 28.
+     * @return The argument day of month
      */
-    private static void validateDayOfMonth(int dayOfMonth) {
+    private static int validateDayOfMonth(int dayOfMonth) {
         Thrower.throwIfVarOutsideRange(dayOfMonth, "dayOfMonth", 1, 28);
+        return dayOfMonth;
     }
 
 

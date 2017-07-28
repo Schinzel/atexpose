@@ -7,16 +7,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.*;
 
 
 /**
@@ -213,7 +210,64 @@ public class ScheduledTaskChannelTest {
     }
 
 
-/*    @Test
+    @Test
+    public void getNextTaskTime__1SecondAgo_Amount1_UnitMinutes__1MinAfterNow() {
+        LocalDateTime actual = ScheduledTaskChannel.getNextTaskTime(LocalDateTime.now(
+                ZoneOffset.UTC).minusSeconds(1),
+                1, ChronoUnit.MINUTES);
+        assertThat(actual).isEqualToIgnoringSeconds(LocalDateTime.now(ZoneOffset.UTC).plusMinutes(1));
+    }
+
+
+    @Test
+    public void getNextTaskTime__1SecondAgo_Amount17_UnitMinutes__17MinAfterNow() {
+        LocalDateTime actual = ScheduledTaskChannel.getNextTaskTime(
+                LocalDateTime.now(ZoneOffset.UTC).minusSeconds(1),
+                17, ChronoUnit.MINUTES);
+        assertThat(actual).isEqualToIgnoringSeconds(LocalDateTime.now(ZoneOffset.UTC).plusMinutes(17));
+    }
+
+
+    @Test
+    public void getNextTaskTime__1SecondAgo_Amount2_UnitDays__2DaysAfterNow() {
+        LocalDateTime actual = ScheduledTaskChannel.getNextTaskTime(
+                LocalDateTime.now(ZoneOffset.UTC).minusSeconds(1),
+                2, ChronoUnit.DAYS);
+        assertThat(actual).isEqualToIgnoringSeconds(LocalDateTime.now(ZoneOffset.UTC).plusDays(2));
+
+    }
+
+
+    @Test
+    public void getNextTaskTime__1SecondAgo_Amount1_UnitMonths__1MonthAfterNow() {
+        LocalDateTime actual = ScheduledTaskChannel.getNextTaskTime(
+                LocalDateTime.now(ZoneOffset.UTC).minusSeconds(1),
+                1, ChronoUnit.MONTHS);
+        assertThat(actual).isEqualToIgnoringSeconds(LocalDateTime.now(ZoneOffset.UTC).plusMonths(1));
+    }
+
+
+    @Test
+    public void getNextTaskTime__10SecondsInTheFuture_Amount13_UnitMinutes__ReturnTimeShouldBeArgumentTime() {
+        LocalDateTime actual = ScheduledTaskChannel.getNextTaskTime(
+                LocalDateTime.now(ZoneOffset.UTC).plusSeconds(10),
+                13, ChronoUnit.MINUTES);
+        assertThat(actual).isEqualToIgnoringSeconds(LocalDateTime.now(ZoneOffset.UTC));
+    }
+
+
+    @Test
+    public void getNextTaskTime__10SecondsInTheFuture_Amount1_UnitMonths__ReturnTimeShouldBeArgumentTime() {
+        LocalDateTime actual = ScheduledTaskChannel.getNextTaskTime(
+                LocalDateTime.now(ZoneOffset.UTC).plusSeconds(10),
+                1, ChronoUnit.MONTHS);
+        assertThat(actual).isEqualToIgnoringSeconds(LocalDateTime.now(ZoneOffset.UTC));
+    }
+
+
+
+
+    /*    @Test
     public void test_FireTime_TimeOfDayTask() {
         String taskName = "theTaskName";
         String request = "request";
@@ -259,6 +313,7 @@ public class ScheduledTaskChannelTest {
     }*/
 
 
+/*
     @Test
     public void test_FireTime_MonthlyTask() {
         //Get day of month 25 days and 2 minutes from now
@@ -284,6 +339,6 @@ public class ScheduledTaskChannelTest {
         //There is a diff as the wake-up-time is set to whole minutes
         assertTrue(diff < 60_000);
     }
-
+*/
 
 }
