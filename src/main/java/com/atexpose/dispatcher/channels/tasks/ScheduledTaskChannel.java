@@ -258,11 +258,6 @@ public class ScheduledTaskChannel implements IChannel {
     }
 
 
-    public String getRequestAsString() {
-        return mTaskRequest;
-    }
-
-
     @Override
     public State getState() {
         StateBuilder builder = State.getBuilder()

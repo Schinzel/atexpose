@@ -76,7 +76,7 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
     default T addTask(String taskName, ScheduledTaskChannel scheduledTask) {
         IParser parser = new TextParser();
         String methodName = parser
-                .getRequest(scheduledTask.getRequestAsString())
+                .getRequest(scheduledTask.getTaskRequest())
                 .getMethodName();
         Thrower.throwIfFalse(this.getAPI().methodExits(methodName), "No such method '" + methodName + "'");
         String dispatcherName = "ScheduledTask_" + taskName;
