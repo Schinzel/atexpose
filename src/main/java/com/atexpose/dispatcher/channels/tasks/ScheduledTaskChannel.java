@@ -49,7 +49,7 @@ public class ScheduledTaskChannel implements IChannel {
     /** The interval unit is days for daily tasks, and minute for minute tasks. */
     final TemporalUnit mIntervalUnit;
     /** A flag indicating if an explicit shutdown has been invoked. */
-    @Getter(AccessLevel.PACKAGE) private Boolean  mShutdownWasInvoked = false;
+    @Getter(AccessLevel.PACKAGE) private Boolean mShutdownWasInvoked = false;
     /** When to fire the task the next time. */
     LocalDateTime mTimeToFireNext;
     //------------------------------------------------------------------------
@@ -134,7 +134,6 @@ public class ScheduledTaskChannel implements IChannel {
 
     @Override
     public void shutdown(Thread thread) {
-        //Set the class scope shutdown variable to true
         mShutdownWasInvoked = true;
         //Call interrupt to wake from sleep
         thread.interrupt();
@@ -199,7 +198,7 @@ public class ScheduledTaskChannel implements IChannel {
      *
      * @return The number of nanoseconds until next task should run.
      */
-    final long getNanosUntilNextTask() {
+    long getNanosUntilNextTask() {
         //While the time to fire task has already passed
         //Note, Instant.now().isBefore(mTimeToFireNext) does not work. 
         while (!mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC))) {
