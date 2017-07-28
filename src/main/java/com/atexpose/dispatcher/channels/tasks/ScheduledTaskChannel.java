@@ -36,7 +36,7 @@ public class ScheduledTaskChannel implements IChannel {
     private final String mTaskTime;
     /** The interval size. For minute tasks this is the number of minutes between tasks. */
     final int mIntervalAmount;
-    /** The interval unit is days for daily tasks, and minute for minute tasks. */
+    /** The interval unit. Is days for daily tasks, and minutes for minute tasks. */
     final TemporalUnit mIntervalUnit;
     /** A flag indicating if an explicit shutdown has been invoked. */
     @Getter(AccessLevel.PACKAGE) private Boolean mShutdownWasInvoked = false;
