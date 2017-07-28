@@ -233,7 +233,7 @@ public class ScheduledTaskChannel implements IChannel {
     //------------------------------------------------------------------------
     @Override
     public long requestReadTime() {
-        //Hardcoded to one as the read time does not really exist
+        //Hardcoded to zero as the read time is there is no read time for scheduled tasks
         return 0;
     }
 
