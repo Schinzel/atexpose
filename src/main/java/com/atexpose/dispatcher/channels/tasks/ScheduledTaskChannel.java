@@ -118,7 +118,7 @@ public class ScheduledTaskChannel implements IChannel {
      */
     private ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount, String timeOfDay, int dayOfMonth) {
         //Check that the argument task time is valid
-        Thrower.throwIfFalse(ScheduledTaskChannel.isValidTime(timeOfDay))
+        Thrower.throwIfFalse(ScheduledTaskChannel.isValidTimeOfDay(timeOfDay))
                 .message("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
         //Check that the argument task time is valid
         Thrower.throwIfFalse(ScheduledTaskChannel.isValidDayOfMonth(dayOfMonth))
@@ -229,7 +229,7 @@ public class ScheduledTaskChannel implements IChannel {
      * @param time Time-string to validate.
      * @return True if the argument was a valid time of day, else false.
      */
-    private static boolean isValidTime(String time) {
+    private static boolean isValidTimeOfDay(String time) {
         return time.equalsIgnoreCase(TIME_OF_DAY_NOT_SET) || TIME_PATTERN.matcher(time).matches();
     }
 

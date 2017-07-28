@@ -167,36 +167,54 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void testStatus() {
-        ScheduledTaskChannel stc;
-        JSONObject status;
-        //Test minute interval task
-        stc = new ScheduledTaskChannel("The task 1", "time", 55);
-        status = stc.getState().getJson();
-        assertEquals("The task 1", status.getString("task_name"));
-        assertEquals("time", status.getString("request"));
-        assertEquals(55, status.getInt("minutes"));
-        assertFalse(status.has("time"));
-        assertFalse(status.has("day_of_month"));
-        assertTrue(status.has("next_task_time_utc"));
-        //Test time of day task
-        stc = new ScheduledTaskChannel("The task 2", "getStatus", "23:55");
-        status = stc.getState().getJson();
-        assertEquals("The task 2", status.getString("task_name"));
-        assertEquals("getStatus", status.getString("request"));
-        assertEquals("23:55", status.getString("time_of_day"));
-        assertFalse(status.has("minutes"));
-        assertFalse(status.has("day_of_month"));
-        assertTrue(status.has("next_task_time_utc"));
-        //Test day of month task
-        stc = new ScheduledTaskChannel("The task 2", "getStatus", "23:55", 28);
-        status = stc.getState().getJson();
-        assertEquals("The task 2", status.getString("task_name"));
-        assertEquals("getStatus", status.getString("request"));
-        assertEquals("23:55", status.getString("time_of_day"));
-        assertEquals(28, status.getInt("day_of_month"));
-        assertFalse(status.has("minutes"));
-        assertTrue(status.has("next_task_time_utc"));
+    public void testSleep() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "TheRequest", 15);
+        long millisToSleep = 20;
+        long nanosToSleep = millisToSleep * 1_000_000;
+        long start = System.nanoTime();
+        stc.sleep(nanosToSleep);
+        //Calc the time to do all iterations
+        long executionTimeInMS = (System.nanoTime() - start) / 1_000_000;
+        assertThat(executionTimeInMS).isBetween(20L, 30L);
+    }
+
+
+    @Test
+    public void getState_MinuteIntervalTask() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TaskName1", "TheRequest1", 55);
+        JSONObject status = stc.getState().getJson();
+        assertThat(status.getString("task_name")).isEqualTo("TaskName1");
+        assertThat(status.getString("request")).isEqualTo("TheRequest1");
+        assertThat(status.getInt("minutes")).isEqualTo(55);
+        assertThat(status.has("time_of_day")).isFalse();
+        assertThat(status.has("day_of_month")).isFalse();
+        assertThat(status.has("next_task_time_utc")).isTrue();
+    }
+
+
+    @Test
+    public void getState_DailyTask() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TaskName2", "TheRequest2", "23:55");
+        JSONObject status = stc.getState().getJson();
+        assertThat(status.getString("task_name")).isEqualTo("TaskName2");
+        assertThat(status.getString("request")).isEqualTo("TheRequest2");
+        assertThat(status.has("minutes")).isFalse();
+        assertThat(status.getString("time_of_day")).isEqualTo("23:55");
+        assertThat(status.has("day_of_month")).isFalse();
+        assertThat(status.has("next_task_time_utc")).isTrue();
+    }
+
+
+    @Test
+    public void getState_MonthlyTask() {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TaskName3", "TheRequest3", "23:55", 28);
+        JSONObject status = stc.getState().getJson();
+        assertThat(status.getString("task_name")).isEqualTo("TaskName3");
+        assertThat(status.getString("request")).isEqualTo("TheRequest3");
+        assertThat(status.has("minutes")).isFalse();
+        assertThat(status.getString("time_of_day")).isEqualTo("23:55");
+        assertThat(status.getInt("day_of_month")).isEqualTo(28);
+        assertThat(status.has("next_task_time_utc")).isTrue();
     }
 
 
@@ -270,23 +288,6 @@ public class ScheduledTaskChannelTest {
         //Check that the diff between future and wake-up-time is less than 60 seconds
         //There is a diff as the wake-up-time is set to whole minutes
         assertTrue(diff < 60_000);
-    }
-
-
-    @Test
-    public void testSleep() {
-        String taskName = "theTaskName";
-        String request = "request";
-        int interval = 15;
-        ScheduledTaskChannel stc = new ScheduledTaskChannel(taskName, request, interval);
-        long millisToSleep = 20;
-        long nanosToSleep = millisToSleep * 1_000_000;
-        long start = System.nanoTime();
-        stc.sleep(nanosToSleep);
-        //Calc the time to do all iterations
-        long executionTimeInMS = (System.nanoTime() - start) / 1_000_000;
-        assertThat(executionTimeInMS).isBetween(20L, 30L);
-
     }
 
 
