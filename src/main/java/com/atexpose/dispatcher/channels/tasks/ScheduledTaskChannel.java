@@ -38,7 +38,7 @@ public class ScheduledTaskChannel implements IChannel {
     /** The task to run. Is a request in the text format. E.g. "echo hi" */
     @Getter private final String mTaskRequest;
     /** The time of day to run the task. Format HH:mm. E.g. 15:30 */
-    final String mTaskTime;
+    final String mTimeOfDay;
     /** The day of month to fire the task. Min 1, max 28. */
     private final int mDayOfMonth;
     /**
@@ -81,7 +81,7 @@ public class ScheduledTaskChannel implements IChannel {
      */
     public ScheduledTaskChannel(String taskName, String request, String timeOfDay) {
         this(taskName, request, ChronoUnit.DAYS, 1, timeOfDay, DAY_OF_MONTH_NOT_SET);
-        mTimeToFireNext = LocalTime.parse(mTaskTime).atDate(LocalDate.now(ZoneOffset.UTC));
+        mTimeToFireNext = LocalTime.parse(timeOfDay).atDate(LocalDate.now(ZoneOffset.UTC));
         //Call this so that mTimeToFireNext is set to next day if fire time already passed today
         this.getNanosUntilNextTask();
     }
@@ -97,7 +97,7 @@ public class ScheduledTaskChannel implements IChannel {
      */
     public ScheduledTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth) {
         this(taskName, request, ChronoUnit.MONTHS, 1, timeOfDay, dayOfMonth);
-        mTimeToFireNext = LocalTime.parse(mTaskTime)
+        mTimeToFireNext = LocalTime.parse(timeOfDay)
                 .atDate(LocalDate.now(ZoneOffset.UTC))
                 .withDayOfMonth(dayOfMonth);
         //Call this so that mTimeToFireNext is set to next month if fire time 
@@ -127,7 +127,7 @@ public class ScheduledTaskChannel implements IChannel {
         mTaskRequest = request;
         mIntervalUnit = intervalUnit;
         mIntervalAmount = intervalAmount;
-        mTaskTime = timeOfDay;
+        mTimeOfDay = timeOfDay;
         mDayOfMonth = dayOfMonth;
     }
 
@@ -270,10 +270,10 @@ public class ScheduledTaskChannel implements IChannel {
                 .add("task_name", mTaskName)
                 .add("request", mTaskRequest);
         //If time of day has not been set
-        if (mTaskTime.equalsIgnoreCase(TIME_OF_DAY_NOT_SET)) {
+        if (mTimeOfDay.equalsIgnoreCase(TIME_OF_DAY_NOT_SET)) {
             builder.add("minutes", mIntervalAmount);
         } else {
-            builder.add("time_of_day", mTaskTime);
+            builder.add("time_of_day", mTimeOfDay);
         }
         //If day of month has been set
         if (mDayOfMonth != DAY_OF_MONTH_NOT_SET) {

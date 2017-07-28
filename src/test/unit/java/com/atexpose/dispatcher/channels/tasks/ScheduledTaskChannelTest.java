@@ -226,7 +226,7 @@ public class ScheduledTaskChannelTest {
         ScheduledTaskChannel stc = new ScheduledTaskChannel(taskName, request, timeOfDay);
         assertEquals(1, stc.mIntervalAmount);
         assertEquals(ChronoUnit.DAYS, stc.mIntervalUnit);
-        assertEquals(timeOfDay, stc.mTaskTime);
+        assertEquals(timeOfDay, stc.mTimeOfDay);
         //Time to fire should be after now
         assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
         //Time to fire should be within 24 hours
@@ -236,7 +236,7 @@ public class ScheduledTaskChannelTest {
         stc = new ScheduledTaskChannel(taskName, request, timeOfDay);
         assertEquals(1, stc.mIntervalAmount);
         assertEquals(ChronoUnit.DAYS, stc.mIntervalUnit);
-        assertEquals(timeOfDay, stc.mTaskTime);
+        assertEquals(timeOfDay, stc.mTimeOfDay);
         //Time to fire should be after now
         assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
         //Time to fire should be within 24 hours
@@ -246,7 +246,7 @@ public class ScheduledTaskChannelTest {
         stc = new ScheduledTaskChannel(taskName, request, timeOfDay);
         assertEquals(1, stc.mIntervalAmount);
         assertEquals(ChronoUnit.DAYS, stc.mIntervalUnit);
-        assertEquals(timeOfDay, stc.mTaskTime);
+        assertEquals(timeOfDay, stc.mTimeOfDay);
         //Time to fire should be after now
         assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
         //Time to fire should be within 24 hours
@@ -256,7 +256,7 @@ public class ScheduledTaskChannelTest {
         stc = new ScheduledTaskChannel(taskName, request, timeOfDay);
         assertEquals(1, stc.mIntervalAmount);
         assertEquals(ChronoUnit.DAYS, stc.mIntervalUnit);
-        assertEquals(timeOfDay, stc.mTaskTime);
+        assertEquals(timeOfDay, stc.mTimeOfDay);
         //Time to fire should be after now
         assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
         //Time to fire should be within 24 hours
