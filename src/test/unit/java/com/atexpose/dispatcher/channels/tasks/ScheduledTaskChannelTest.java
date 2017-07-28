@@ -58,7 +58,7 @@ public class ScheduledTaskChannelTest {
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() ->
                         new ScheduledTaskChannel("theTaskName", "request", "23:55", 0))
-                .withMessageStartingWith("Incorrect day of month: '0'. Needs to be min 1 or max 28.");
+                .withMessageStartingWith("The value 0 in variable 'dayOfMonth' is too small.");
     }
 
 
@@ -66,7 +66,7 @@ public class ScheduledTaskChannelTest {
     public void constructor_DayOfMonthTooHigh_Exception() {
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> new ScheduledTaskChannel("theTaskName", "request", "23:55", 29))
-                .withMessageStartingWith("Incorrect day of month: '29'. Needs to be min 1 or max 28.");
+                .withMessageStartingWith("The value 29 in variable 'dayOfMonth' is too large");
     }
 
 

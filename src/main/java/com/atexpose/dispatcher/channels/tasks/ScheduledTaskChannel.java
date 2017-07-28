@@ -215,8 +215,8 @@ public class ScheduledTaskChannel implements IChannel {
      * @param timeOfDay Time-string to validate. E.g. "23:55"
      */
     private static void validateTimeOfDay(String timeOfDay) {
-        boolean isValidTimeOfDay = TIME_PATTERN.matcher(timeOfDay).matches();
-        Thrower.throwIfFalse(isValidTimeOfDay).message("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
+        Thrower.throwIfFalse(TIME_PATTERN.matcher(timeOfDay).matches())
+                .message("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
     }
 
 
@@ -224,8 +224,7 @@ public class ScheduledTaskChannel implements IChannel {
      * @param dayOfMonth The day of the month. A number between 1 and 28.
      */
     private static void validateDayOfMonth(int dayOfMonth) {
-        boolean isValidDayOfMonth = (dayOfMonth >= 1 && dayOfMonth <= 28);
-        Thrower.throwIfFalse(isValidDayOfMonth).message("Incorrect day of month: '" + dayOfMonth + "'. Needs to be min 1 or max 28.");
+        Thrower.throwIfVarOutsideRange(dayOfMonth, "dayOfMonth", 1, 28);
     }
 
 
