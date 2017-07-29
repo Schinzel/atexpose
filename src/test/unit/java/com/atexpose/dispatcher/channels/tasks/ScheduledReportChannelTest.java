@@ -127,7 +127,6 @@ public class ScheduledReportChannelTest {
         JSONObject jo = src.getState().getJson();
         assertEquals(taskName, jo.getString("task_name"));
         assertEquals(request, jo.getString("request"));
-        assertEquals(timeOfDay, jo.getString("time_of_day"));
         //
         String mailSenderName = jo.getJSONObject("MailSender").getString("name");
         assertEquals(mMailSender.getClass().getSimpleName(), mailSenderName);

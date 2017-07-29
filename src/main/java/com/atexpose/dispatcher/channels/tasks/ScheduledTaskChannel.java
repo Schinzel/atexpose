@@ -31,7 +31,8 @@ public class ScheduledTaskChannel implements IChannel {
     /** The name of this tasks. */
     final String mTaskName;
     /** The task to run. Is a request in the text format. E.g. "echo hi" */
-    @Getter private final String mTaskRequest;
+    @Getter
+    private final String mTaskRequest;
     /** Human readable string for when the task is to execute. */
     private final String mTaskTime;
     /** The interval size. For minute tasks this is the number of minutes between tasks. */
@@ -39,7 +40,8 @@ public class ScheduledTaskChannel implements IChannel {
     /** The interval unit. Is days for daily tasks, and minutes for minute tasks. */
     private final TemporalUnit mIntervalUnit;
     /** A flag indicating if an explicit shutdown has been invoked. */
-    @Getter(AccessLevel.PACKAGE) private Boolean mShutdownWasInvoked = false;
+    @Getter(AccessLevel.PACKAGE)
+    private Boolean mShutdownWasInvoked = false;
     /** When to fire the task the next time. */
     LocalDateTime mTimeToFireNext;
     //------------------------------------------------------------------------
