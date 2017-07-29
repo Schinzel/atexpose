@@ -213,27 +213,24 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void getNextTaskTime__1SecondAgo_Amount1_UnitMinutes__1MinAfterNow() {
-        ZonedDateTime actual = ScheduledTaskChannel
-                .getNextTaskTime(ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1),
-                        1, ChronoUnit.MINUTES);
+        ZonedDateTime taskTime = ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1);
+        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(taskTime, 1, ChronoUnit.MINUTES, Watch.create());
         assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(1));
     }
 
 
     @Test
     public void getNextTaskTime__1SecondAgo_Amount17_UnitMinutes__17MinAfterNow() {
-        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(
-                ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1),
-                17, ChronoUnit.MINUTES);
+        ZonedDateTime taskTime = ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1);
+        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(taskTime, 17, ChronoUnit.MINUTES, Watch.create());
         assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(17));
     }
 
 
     @Test
     public void getNextTaskTime__1SecondAgo_Amount2_UnitDays__2DaysAfterNow() {
-        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(
-                ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1),
-                2, ChronoUnit.DAYS);
+        ZonedDateTime taskTime = ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1);
+        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(taskTime, 2, ChronoUnit.DAYS, Watch.create());
         assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")).plusDays(2));
 
     }
@@ -241,27 +238,24 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void getNextTaskTime__1SecondAgo_Amount1_UnitMonths__1MonthAfterNow() {
-        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(
-                ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1),
-                1, ChronoUnit.MONTHS);
+        ZonedDateTime taskTime = ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1);
+        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(taskTime, 1, ChronoUnit.MONTHS, Watch.create());
         assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")).plusMonths(1));
     }
 
 
     @Test
     public void getNextTaskTime__10SecondsInTheFuture_Amount13_UnitMinutes__ReturnTimeShouldBeArgumentTime() {
-        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(
-                ZonedDateTime.now(ZoneOffset.UTC).plusSeconds(10),
-                13, ChronoUnit.MINUTES);
+        ZonedDateTime taskTime = ZonedDateTime.now(ZoneOffset.UTC).plusSeconds(10);
+        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(taskTime, 13, ChronoUnit.MINUTES, Watch.create());
         assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")));
     }
 
 
     @Test
     public void getNextTaskTime__10SecondsInTheFuture_Amount1_UnitMonths__ReturnTimeShouldBeArgumentTime() {
-        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(
-                ZonedDateTime.now(ZoneOffset.UTC).plusSeconds(10),
-                1, ChronoUnit.MONTHS);
+        ZonedDateTime taskTime = ZonedDateTime.now(ZoneOffset.UTC).plusSeconds(10);
+        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(taskTime, 1, ChronoUnit.MONTHS, Watch.create());
         assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")));
     }
 

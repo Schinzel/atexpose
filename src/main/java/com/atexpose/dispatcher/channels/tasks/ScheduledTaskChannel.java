@@ -129,7 +129,7 @@ public class ScheduledTaskChannel implements IChannel {
         mIntervalUnit = intervalUnit;
         mIntervalAmount = intervalAmount;
         mTaskTime = taskTime;
-        mTimeToFireNext = getNextTaskTime(initialTaskFireTime, 1, ChronoUnit.MONTHS);
+        mTimeToFireNext = getNextTaskTime(initialTaskFireTime, 1, ChronoUnit.MONTHS, watch);
         mWatch = watch;
     }
 
@@ -160,7 +160,7 @@ public class ScheduledTaskChannel implements IChannel {
         //Convert request to byte array and add to request argument.
         request.add(mTaskRequest);
         //Calc the next time to fire task
-        mTimeToFireNext = getNextTaskTime(mTimeToFireNext, mIntervalAmount, mIntervalUnit);
+        mTimeToFireNext = getNextTaskTime(mTimeToFireNext, mIntervalAmount, mIntervalUnit, mWatch);
         //Return true if was normal wake up. False if this thread has been instructed to shutdown.
         return wasNormalWakeUp;
     }
@@ -205,10 +205,10 @@ public class ScheduledTaskChannel implements IChannel {
     //------------------------------------------------------------------------
     // STATIC UTIL
     //------------------------------------------------------------------------
-    static ZonedDateTime getNextTaskTime(ZonedDateTime time, int intervalAmount, TemporalUnit intervalUnit) {
+    static ZonedDateTime getNextTaskTime(ZonedDateTime time, int intervalAmount, TemporalUnit intervalUnit, IWatch watch) {
         //Note, Instant.now().isBefore(mTimeToFireNext) does not work.
-        return (!time.isAfter(ZonedDateTime.now(ZoneId.of("UTC"))))
-                ? getNextTaskTime(time.plus(intervalAmount, intervalUnit), intervalAmount, intervalUnit)
+        return (!time.isAfter(ZonedDateTime.ofInstant(watch.getInstant(), time.getZone())))
+                ? getNextTaskTime(time.plus(intervalAmount, intervalUnit), intervalAmount, intervalUnit, watch)
                 : time;
     }
 
