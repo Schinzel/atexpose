@@ -2,7 +2,6 @@ package com.atexpose.dispatcher.channels.tasks;
 
 import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.util.ByteStorage;
-import com.atexpose.util.DateTimeStrings;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
@@ -43,7 +42,8 @@ public class ScheduledTaskChannel implements IChannel {
     @Getter(AccessLevel.PACKAGE)
     private Boolean mShutdownWasInvoked = false;
     /** When to fire the task the next time. */
-    LocalDateTime mTimeToFireNext;
+    ZonedDateTime mTimeToFireNext;
+    final IWatch mWatch;
     //------------------------------------------------------------------------
     // CONSTRUCTORS AND SHUTDOWN
     //------------------------------------------------------------------------
@@ -57,9 +57,15 @@ public class ScheduledTaskChannel implements IChannel {
      * @param intervalInMinutes The interval in minutes.
      */
     public ScheduledTaskChannel(String taskName, String request, int intervalInMinutes) {
+        this(taskName, request, intervalInMinutes, Watch.create());
+    }
+
+
+    ScheduledTaskChannel(String taskName, String request, int intervalInMinutes, IWatch watch) {
         this(taskName, request, ChronoUnit.MINUTES, intervalInMinutes,
                 "Every " + intervalInMinutes + " minutes",
-                LocalDateTime.now(ZoneOffset.UTC).plusMinutes(validateMinuteInterval(intervalInMinutes)));
+                ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(validateMinuteInterval(intervalInMinutes)),
+                watch);
     }
 
 
@@ -71,10 +77,17 @@ public class ScheduledTaskChannel implements IChannel {
      * @param timeOfDay What time of day to execute. Format HH:mm, e.g. 23:55
      */
     public ScheduledTaskChannel(String taskName, String request, String timeOfDay) {
+        this(taskName, request, timeOfDay, Watch.create());
+    }
+
+
+    ScheduledTaskChannel(String taskName, String request, String timeOfDay, IWatch watch) {
         this(taskName, request, ChronoUnit.DAYS, 1,
                 "Every day at " + timeOfDay,
                 LocalTime.parse(validateTimeOfDay(timeOfDay))
-                        .atDate(LocalDate.now(ZoneOffset.UTC)));
+                        .atDate(LocalDate.now(ZoneId.of("UTC")))
+                        .atZone(ZoneId.of("UTC")),
+                watch);
     }
 
 
@@ -87,11 +100,18 @@ public class ScheduledTaskChannel implements IChannel {
      * @param dayOfMonth Day of month to execute. Min 1 and max 28.
      */
     public ScheduledTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth) {
+        this(taskName, request, timeOfDay, dayOfMonth, Watch.create());
+    }
+
+
+    ScheduledTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth, IWatch watch) {
         this(taskName, request, ChronoUnit.MONTHS, 1,
                 "Once a month at " + timeOfDay + " on month day " + dayOfMonth,
                 LocalTime.parse(validateTimeOfDay(timeOfDay))
-                        .atDate(LocalDate.now(ZoneOffset.UTC))
-                        .withDayOfMonth(validateDayOfMonth(dayOfMonth)));
+                        .atDate(LocalDate.now(ZoneId.of("UTC")))
+                        .withDayOfMonth(validateDayOfMonth(dayOfMonth))
+                        .atZone(ZoneId.of("UTC")),
+                watch);
     }
 
 
@@ -103,13 +123,14 @@ public class ScheduledTaskChannel implements IChannel {
      * @param intervalAmount The amount to wait. Used in conjunction with
      *                       intervalUnit.
      */
-    private ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount, String taskTime, LocalDateTime intialTaskFireTime) {
+    ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount, String taskTime, ZonedDateTime initialTaskFireTime, IWatch watch) {
         mTaskName = taskName;
         mTaskRequest = request;
         mIntervalUnit = intervalUnit;
         mIntervalAmount = intervalAmount;
         mTaskTime = taskTime;
-        mTimeToFireNext = getNextTaskTime(intialTaskFireTime, 1, ChronoUnit.MONTHS);
+        mTimeToFireNext = getNextTaskTime(initialTaskFireTime, 1, ChronoUnit.MONTHS);
+        mWatch = watch;
     }
 
 
@@ -133,7 +154,7 @@ public class ScheduledTaskChannel implements IChannel {
     //------------------------------------------------------------------------
     public boolean getRequest(ByteStorage request) {
         //Get the number of nanoseconds the executing thread should sleep.
-        long nanosToSleep = Duration.between(LocalDateTime.now(ZoneOffset.UTC), mTimeToFireNext).toNanos();
+        long nanosToSleep = Duration.between(LocalDateTime.now(ZoneId.of("UTC")), mTimeToFireNext).toNanos();
         //Put executing thread to sleep. 
         boolean wasNormalWakeUp = this.sleep(nanosToSleep);
         //Convert request to byte array and add to request argument.
@@ -184,9 +205,9 @@ public class ScheduledTaskChannel implements IChannel {
     //------------------------------------------------------------------------
     // STATIC UTIL
     //------------------------------------------------------------------------
-    static LocalDateTime getNextTaskTime(LocalDateTime time, int intervalAmount, TemporalUnit intervalUnit) {
+    static ZonedDateTime getNextTaskTime(ZonedDateTime time, int intervalAmount, TemporalUnit intervalUnit) {
         //Note, Instant.now().isBefore(mTimeToFireNext) does not work.
-        return (!time.isAfter(LocalDateTime.now(ZoneOffset.UTC)))
+        return (!time.isAfter(ZonedDateTime.now(ZoneId.of("UTC"))))
                 ? getNextTaskTime(time.plus(intervalAmount, intervalUnit), intervalAmount, intervalUnit)
                 : time;
     }
@@ -247,7 +268,7 @@ public class ScheduledTaskChannel implements IChannel {
                 .add("task_name", mTaskName)
                 .add("request", mTaskRequest)
                 .add("task_time", mTaskTime)
-                .add("next_task_time_utc", DateTimeStrings.getDateTimeUTC(mTimeToFireNext.toInstant(ZoneOffset.UTC)))
+                .add("next_task_time", mTimeToFireNext.toString())
                 .build();
     }
 

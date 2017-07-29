@@ -7,8 +7,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -135,7 +136,7 @@ public class ScheduledTaskChannelTest {
         ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "ThisIsMyTask", 1);
         //override next-fire-time and set it to be a short time in the future
         long millisToSleep = 10;
-        stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusNanos(millisToSleep * 1_000_000);
+        stc.mTimeToFireNext = ZonedDateTime.now(ZoneOffset.UTC).plusNanos(millisToSleep * 1_000_000);
         boolean wasNormalWakeUp = stc.getRequest(new ByteStorage());
         assertThat(wasNormalWakeUp).isTrue();
     }
@@ -147,7 +148,7 @@ public class ScheduledTaskChannelTest {
         ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", request, 1);
         //override next-fire-time and set it to be a short time in the future
         long millisToSleep = 10;
-        stc.mTimeToFireNext = LocalDateTime.now(ZoneOffset.UTC).plusNanos(millisToSleep * 1_000_000);
+        stc.mTimeToFireNext = ZonedDateTime.now(ZoneOffset.UTC).plusNanos(millisToSleep * 1_000_000);
         ByteStorage byteStorage = new ByteStorage();
         stc.getRequest(byteStorage);
         assertThat(byteStorage.getAsString()).isEqualTo(request);
@@ -158,7 +159,7 @@ public class ScheduledTaskChannelTest {
     public void getRequest_IntervalSetTo15Min_TimeToFireNextIs15Min() {
         ScheduledTaskChannel stc = new ScheduledTaskChannel("The task 1", "TheRequest", 15);
         new Thread(() -> stc.getRequest(new ByteStorage())).start();
-        LocalDateTime fifteenMinFromNow = LocalDateTime.now(ZoneOffset.UTC).plusMinutes(15);
+        ZonedDateTime fifteenMinFromNow = ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(15);
         assertThat(stc.mTimeToFireNext).isBetween(fifteenMinFromNow.minusSeconds(1), fifteenMinFromNow.plusSeconds(1));
     }
 
@@ -182,7 +183,7 @@ public class ScheduledTaskChannelTest {
         JSONObject status = stc.getState().getJson();
         assertThat(status.getString("task_name")).isEqualTo("TaskName");
         assertThat(status.getString("request")).isEqualTo("TheRequest");
-        assertThat(status.has("next_task_time_utc")).isTrue();
+        assertThat(status.has("next_task_time")).isTrue();
     }
 
 
@@ -212,56 +213,56 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void getNextTaskTime__1SecondAgo_Amount1_UnitMinutes__1MinAfterNow() {
-        LocalDateTime actual = ScheduledTaskChannel.getNextTaskTime(LocalDateTime.now(
-                ZoneOffset.UTC).minusSeconds(1),
-                1, ChronoUnit.MINUTES);
-        assertThat(actual).isEqualToIgnoringSeconds(LocalDateTime.now(ZoneOffset.UTC).plusMinutes(1));
+        ZonedDateTime actual = ScheduledTaskChannel
+                .getNextTaskTime(ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1),
+                        1, ChronoUnit.MINUTES);
+        assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(1));
     }
 
 
     @Test
     public void getNextTaskTime__1SecondAgo_Amount17_UnitMinutes__17MinAfterNow() {
-        LocalDateTime actual = ScheduledTaskChannel.getNextTaskTime(
-                LocalDateTime.now(ZoneOffset.UTC).minusSeconds(1),
+        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(
+                ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1),
                 17, ChronoUnit.MINUTES);
-        assertThat(actual).isEqualToIgnoringSeconds(LocalDateTime.now(ZoneOffset.UTC).plusMinutes(17));
+        assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(17));
     }
 
 
     @Test
     public void getNextTaskTime__1SecondAgo_Amount2_UnitDays__2DaysAfterNow() {
-        LocalDateTime actual = ScheduledTaskChannel.getNextTaskTime(
-                LocalDateTime.now(ZoneOffset.UTC).minusSeconds(1),
+        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(
+                ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1),
                 2, ChronoUnit.DAYS);
-        assertThat(actual).isEqualToIgnoringSeconds(LocalDateTime.now(ZoneOffset.UTC).plusDays(2));
+        assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")).plusDays(2));
 
     }
 
 
     @Test
     public void getNextTaskTime__1SecondAgo_Amount1_UnitMonths__1MonthAfterNow() {
-        LocalDateTime actual = ScheduledTaskChannel.getNextTaskTime(
-                LocalDateTime.now(ZoneOffset.UTC).minusSeconds(1),
+        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(
+                ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1),
                 1, ChronoUnit.MONTHS);
-        assertThat(actual).isEqualToIgnoringSeconds(LocalDateTime.now(ZoneOffset.UTC).plusMonths(1));
+        assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")).plusMonths(1));
     }
 
 
     @Test
     public void getNextTaskTime__10SecondsInTheFuture_Amount13_UnitMinutes__ReturnTimeShouldBeArgumentTime() {
-        LocalDateTime actual = ScheduledTaskChannel.getNextTaskTime(
-                LocalDateTime.now(ZoneOffset.UTC).plusSeconds(10),
+        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(
+                ZonedDateTime.now(ZoneOffset.UTC).plusSeconds(10),
                 13, ChronoUnit.MINUTES);
-        assertThat(actual).isEqualToIgnoringSeconds(LocalDateTime.now(ZoneOffset.UTC));
+        assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")));
     }
 
 
     @Test
     public void getNextTaskTime__10SecondsInTheFuture_Amount1_UnitMonths__ReturnTimeShouldBeArgumentTime() {
-        LocalDateTime actual = ScheduledTaskChannel.getNextTaskTime(
-                LocalDateTime.now(ZoneOffset.UTC).plusSeconds(10),
+        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(
+                ZonedDateTime.now(ZoneOffset.UTC).plusSeconds(10),
                 1, ChronoUnit.MONTHS);
-        assertThat(actual).isEqualToIgnoringSeconds(LocalDateTime.now(ZoneOffset.UTC));
+        assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")));
     }
 
 
