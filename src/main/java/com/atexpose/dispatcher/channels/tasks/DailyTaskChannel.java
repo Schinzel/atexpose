@@ -7,8 +7,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
 public class DailyTaskChannel extends ScheduledTaskChannel {
-    /** Pattern for time for daily tasks. */
-    private static final Pattern TIME_PATTERN = Pattern.compile("^[0-2][0-9]:[0-5][0-9]");
 
 
     /**
@@ -47,7 +45,8 @@ public class DailyTaskChannel extends ScheduledTaskChannel {
      * @return The argument time of day
      */
     private static String validateTimeOfDay(String timeOfDay) {
-        Thrower.throwIfFalse(TIME_PATTERN.matcher(timeOfDay).matches())
+        Pattern timePattern = Pattern.compile("^[0-2][0-9]:[0-5][0-9]");
+        Thrower.throwIfFalse(timePattern.matcher(timeOfDay).matches())
                 .message("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
         return timeOfDay;
     }

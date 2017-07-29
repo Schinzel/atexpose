@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 /**
- * The purpose of this interface is to return an Instant that represents now.
+ * The purpose of this interface is to return the time now.
  */
 
 public interface IWatch {

@@ -2,15 +2,11 @@ package com.atexpose.dispatcher.channels.tasks;
 
 import io.schinzel.basicutils.Thrower;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
 public class MonthlyTaskChannel extends ScheduledTaskChannel {
-    /** Pattern for time for daily tasks. */
-    private static final Pattern TIME_PATTERN = Pattern.compile("^[0-2][0-9]:[0-5][0-9]");
 
 
     /**
@@ -30,9 +26,9 @@ public class MonthlyTaskChannel extends ScheduledTaskChannel {
         super(taskName, request, ChronoUnit.MONTHS, 1,
                 "Once a month at " + timeOfDay + " on month day " + dayOfMonth,
                 LocalTime.parse(validateTimeOfDay(timeOfDay))
-                        .atDate(LocalDate.now(ZoneId.of("UTC")))
+                        .atDate(watch.getLocalDate(watch.UTC))
                         .withDayOfMonth(validateDayOfMonth(dayOfMonth))
-                        .atZone(ZoneId.of("UTC")),
+                        .atZone(watch.UTC),
                 watch);
     }
 
@@ -44,7 +40,8 @@ public class MonthlyTaskChannel extends ScheduledTaskChannel {
      * @return The argument time of day
      */
     private static String validateTimeOfDay(String timeOfDay) {
-        Thrower.throwIfFalse(TIME_PATTERN.matcher(timeOfDay).matches())
+        Pattern timePattern = Pattern.compile("^[0-2][0-9]:[0-5][0-9]");
+        Thrower.throwIfFalse(timePattern.matcher(timeOfDay).matches())
                 .message("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
         return timeOfDay;
     }
