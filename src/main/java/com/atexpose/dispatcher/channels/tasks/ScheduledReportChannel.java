@@ -4,7 +4,6 @@ import com.atexpose.util.mail.IEmailSender;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
-import lombok.NonNull;
 
 /**
  * The purpose of this class is to send reports as emails at a scheduled
@@ -12,7 +11,7 @@ import lombok.NonNull;
  *
  * @author Schinzel
  */
-public class ScheduledReportChannel extends ScheduledTaskChannel {
+public class ScheduledReportChannel extends DailyTaskChannel {
     /** The object that does the sending of emails. **/
     final IEmailSender mEmailSender;
     /** The recipient of the report **/
@@ -22,8 +21,8 @@ public class ScheduledReportChannel extends ScheduledTaskChannel {
 
 
     @Builder
-    private ScheduledReportChannel(@NonNull String taskName, @NonNull String request, @NonNull String timeOfDay,
-                                  @NonNull IEmailSender emailSender, @NonNull String recipient, @NonNull String fromName) {
+    private ScheduledReportChannel(String taskName, String request, String timeOfDay,
+                                   IEmailSender emailSender, String recipient, String fromName) {
         super(taskName, request, timeOfDay);
         mEmailSender = emailSender;
         mRecipient = recipient;

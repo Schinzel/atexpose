@@ -2,13 +2,15 @@ package com.atexpose.dispatcher.channels.tasks;
 
 import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.util.ByteStorage;
-import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
@@ -44,75 +46,6 @@ public class ScheduledTaskChannel implements IChannel {
     /** When to fire the task the next time. */
     ZonedDateTime mTimeToFireNext;
     final IWatch mWatch;
-    //------------------------------------------------------------------------
-    // CONSTRUCTORS AND SHUTDOWN
-    //------------------------------------------------------------------------
-
-
-    /**
-     * Sets up a tasks that executes every argument amount of minutes.
-     *
-     * @param taskName          The name of the task.
-     * @param request           The request to execute.
-     * @param intervalInMinutes The interval in minutes.
-     */
-    public ScheduledTaskChannel(String taskName, String request, int intervalInMinutes) {
-        this(taskName, request, intervalInMinutes, Watch.create());
-    }
-
-
-    ScheduledTaskChannel(String taskName, String request, int intervalInMinutes, IWatch watch) {
-        this(taskName, request, ChronoUnit.MINUTES, intervalInMinutes,
-                "Every " + intervalInMinutes + " minutes",
-                ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(validateMinuteInterval(intervalInMinutes)),
-                watch);
-    }
-
-
-    /**
-     * Sets up a daily task that executes once per days.
-     *
-     * @param taskName  The name of the task.
-     * @param request   The request to execute.
-     * @param timeOfDay What time of day to execute. Format HH:mm, e.g. 23:55
-     */
-    public ScheduledTaskChannel(String taskName, String request, String timeOfDay) {
-        this(taskName, request, timeOfDay, Watch.create());
-    }
-
-
-    ScheduledTaskChannel(String taskName, String request, String timeOfDay, IWatch watch) {
-        this(taskName, request, ChronoUnit.DAYS, 1,
-                "Every day at " + timeOfDay,
-                LocalTime.parse(validateTimeOfDay(timeOfDay))
-                        .atDate(LocalDate.now(ZoneId.of("UTC")))
-                        .atZone(ZoneId.of("UTC")),
-                watch);
-    }
-
-
-    /**
-     * Sets up a monthly task that executes once per month.
-     *
-     * @param taskName   The name of the task.
-     * @param request    The request to execute.
-     * @param timeOfDay  What time of day to execute. Format HH:mm, e.g. 23:55
-     * @param dayOfMonth Day of month to execute. Min 1 and max 28.
-     */
-    public ScheduledTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth) {
-        this(taskName, request, timeOfDay, dayOfMonth, Watch.create());
-    }
-
-
-    ScheduledTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth, IWatch watch) {
-        this(taskName, request, ChronoUnit.MONTHS, 1,
-                "Once a month at " + timeOfDay + " on month day " + dayOfMonth,
-                LocalTime.parse(validateTimeOfDay(timeOfDay))
-                        .atDate(LocalDate.now(ZoneId.of("UTC")))
-                        .withDayOfMonth(validateDayOfMonth(dayOfMonth))
-                        .atZone(ZoneId.of("UTC")),
-                watch);
-    }
 
 
     /**
@@ -149,9 +82,6 @@ public class ScheduledTaskChannel implements IChannel {
     }
 
 
-    //------------------------------------------------------------------------
-    // MESSAGING
-    //------------------------------------------------------------------------
     public boolean getRequest(ByteStorage request) {
         //Get the number of nanoseconds the executing thread should sleep.
         long nanosToSleep = Duration.between(LocalDateTime.now(ZoneId.of("UTC")), mTimeToFireNext).toNanos();
@@ -202,9 +132,6 @@ public class ScheduledTaskChannel implements IChannel {
     }
 
 
-    //------------------------------------------------------------------------
-    // STATIC UTIL
-    //------------------------------------------------------------------------
     static ZonedDateTime getNextTaskTime(ZonedDateTime time, int intervalAmount, TemporalUnit intervalUnit, IWatch watch) {
         //Note, Instant.now().isBefore(mTimeToFireNext) does not work.
         return (!time.isAfter(ZonedDateTime.ofInstant(watch.getInstant(), time.getZone())))
@@ -213,42 +140,6 @@ public class ScheduledTaskChannel implements IChannel {
     }
 
 
-    /**
-     * @param minuteInterval The interval in minutes to validate
-     * @return The argument minutes
-     */
-    private static int validateMinuteInterval(int minuteInterval) {
-        Thrower.throwIfVarOutsideRange(minuteInterval, "Mintues", 1, 1440);
-        return minuteInterval;
-    }
-
-
-    /**
-     * Validates argument day of time string. Throws exception if not valid.
-     *
-     * @param timeOfDay Time-string to validate. E.g. "23:55"
-     * @return The argument time of day
-     */
-    private static String validateTimeOfDay(String timeOfDay) {
-        Thrower.throwIfFalse(TIME_PATTERN.matcher(timeOfDay).matches())
-                .message("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
-        return timeOfDay;
-    }
-
-
-    /**
-     * @param dayOfMonth The day of the month. A number between 1 and 28.
-     * @return The argument day of month
-     */
-    private static int validateDayOfMonth(int dayOfMonth) {
-        Thrower.throwIfVarOutsideRange(dayOfMonth, "dayOfMonth", 1, 28);
-        return dayOfMonth;
-    }
-
-
-    //------------------------------------------------------------------------
-    // LOGGING & STATS
-    //------------------------------------------------------------------------
     @Override
     public long requestReadTime() {
         //Hardcoded to zero as the read time is there is no read time for scheduled tasks

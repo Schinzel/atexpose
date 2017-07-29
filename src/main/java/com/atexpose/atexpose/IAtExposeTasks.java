@@ -1,6 +1,9 @@
 package com.atexpose.atexpose;
 
 import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.channels.tasks.DailyTaskChannel;
+import com.atexpose.dispatcher.channels.tasks.MinuteIntervalTaskChannel;
+import com.atexpose.dispatcher.channels.tasks.MonthlyTaskChannel;
 import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannel;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
@@ -27,7 +30,7 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
      * @return This for chaining.
      */
     default T addDailyTask(String taskName, String request, String timeOfDay) {
-        ScheduledTaskChannel scheduledTaskChannel = new ScheduledTaskChannel(taskName, request, timeOfDay);
+        DailyTaskChannel scheduledTaskChannel = new DailyTaskChannel(taskName, request, timeOfDay);
         return this.addTask(taskName, scheduledTaskChannel);
     }
 
@@ -42,7 +45,7 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
      * @return This for chaining.
      */
     default T addTask(String taskName, String request, int minutes) {
-        ScheduledTaskChannel scheduledTaskChannel = new ScheduledTaskChannel(taskName, request, minutes);
+        MinuteIntervalTaskChannel scheduledTaskChannel = new MinuteIntervalTaskChannel(taskName, request, minutes);
         return this.addTask(taskName, scheduledTaskChannel);
     }
 
@@ -55,7 +58,7 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
      * @return This for chaining.
      */
     default T addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth) {
-        ScheduledTaskChannel scheduledTaskChannel = new ScheduledTaskChannel(taskName, request, timeOfDay, dayOfMonth);
+        MonthlyTaskChannel scheduledTaskChannel = new MonthlyTaskChannel(taskName, request, timeOfDay, dayOfMonth);
         return this.addTask(taskName, scheduledTaskChannel);
     }
 
