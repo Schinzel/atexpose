@@ -23,17 +23,15 @@ public class ScheduledTaskChannelTest {
 
 
     static ScheduledTaskChannel getTestChannel() {
-        return new ScheduledTaskChannel("theTaskName", "request", ChronoUnit.MINUTES, 15, "", ZonedDateTime.now(), Watch.create());
+        return new ScheduledTaskChannel("TheTaskName", "MyRequest", ChronoUnit.MINUTES, 15, "", ZonedDateTime.now(), Watch.create());
 
     }
 
 
     @Test
     public void getClone_Exception() {
-        assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() ->
-                        getTestChannel().getClone()
-                );
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
+                getTestChannel().getClone());
     }
 
 
@@ -52,16 +50,14 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void testSenderInfo() {
-        String actualSenderInfo = new ScheduledTaskChannel("TheTaskName", "request", ChronoUnit.MINUTES, 15, "", ZonedDateTime.now(), Watch.create())
-                .senderInfo();
+        String actualSenderInfo = getTestChannel().senderInfo();
         assertThat(actualSenderInfo).isEqualTo("ScheduledTask: TheTaskName");
     }
 
 
     @Test
     public void getTaskRequest_SetInConstructorMyRequest_MyRequest() {
-        String actualRequest = new ScheduledTaskChannel("TheTaskName", "MyRequest", ChronoUnit.MINUTES, 15, "", ZonedDateTime.now(), Watch.create())
-                .getTaskRequest();
+        String actualRequest = getTestChannel().getTaskRequest();
         assertThat(actualRequest).isEqualTo("MyRequest");
     }
 

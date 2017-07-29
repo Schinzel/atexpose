@@ -2,15 +2,14 @@ package com.atexpose.dispatcher.channels.tasks;
 
 import io.schinzel.basicutils.Thrower;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
 public class DailyTaskChannel extends ScheduledTaskChannel {
     /** Pattern for time for daily tasks. */
     private static final Pattern TIME_PATTERN = Pattern.compile("^[0-2][0-9]:[0-5][0-9]");
+
 
     /**
      * Sets up a daily task that executes once per days.
@@ -24,14 +23,22 @@ public class DailyTaskChannel extends ScheduledTaskChannel {
     }
 
 
+    /**
+     * Sets up a daily task that executes once per days.
+     *
+     * @param taskName  The name of the task.
+     * @param request   The request to execute.
+     * @param timeOfDay What time of day to execute. Format HH:mm, e.g. 23:55
+     */
     DailyTaskChannel(String taskName, String request, String timeOfDay, IWatch watch) {
         super(taskName, request, ChronoUnit.DAYS, 1,
                 "Every day at " + timeOfDay,
                 LocalTime.parse(validateTimeOfDay(timeOfDay))
-                        .atDate(LocalDate.now(ZoneId.of("UTC")))
-                        .atZone(ZoneId.of("UTC")),
+                        .atDate(watch.getLocalDate(watch.UTC))
+                        .atZone(watch.UTC),
                 watch);
     }
+
 
     /**
      * Validates argument day of time string. Throws exception if not valid.

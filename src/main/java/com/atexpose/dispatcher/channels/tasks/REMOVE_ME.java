@@ -8,6 +8,7 @@ public class REMOVE_ME {
         LocalTime.parse(timeOfDay).atDate(LocalDate.now(ZoneOffset.UTC));
         LocalTime.parse(timeOfDay).atDate(LocalDate.now(ZoneOffset.UTC)).atZone(ZoneId.of("UTC"));
         ZonedDateTime.now(ZoneId.of("UTC")).minusSeconds(1);
+        LocalDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toLocalDate();
 
 
     }

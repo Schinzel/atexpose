@@ -1,8 +1,6 @@
 package com.atexpose.dispatcher.channels.tasks;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 
 /**
  * The run-time purpose of this class is simply to return an instant that represents now. Run-time
@@ -30,6 +28,7 @@ public class Watch implements IWatch {
     public Instant getInstant() {
         return (mInstant == null) ? Instant.now() : mInstant;
     }
+
 
 
     /**
@@ -80,4 +79,9 @@ public class Watch implements IWatch {
         return this;
     }
 
+
+    @Override
+    public String toString() {
+        return this.getInstant().toString();
+    }
 }
