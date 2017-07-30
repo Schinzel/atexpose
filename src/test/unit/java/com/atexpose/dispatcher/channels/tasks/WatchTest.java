@@ -38,4 +38,11 @@ public class WatchTest {
         assertThat(timepiece.getInstant()).isEqualTo("2017-07-27T21:55:00Z");
     }
 
+
+    @Test
+    public void toString_SetDate_TheSetDate() {
+        Watch timepiece = Watch.create().setDateTime(2017, 7, 27, 23, 55, ZoneId.of("Europe/Stockholm"));
+        assertThat(timepiece.toString()).isEqualTo("2017-07-27T21:55:00Z");
+    }
+
 }
