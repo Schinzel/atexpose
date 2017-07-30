@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -42,14 +43,14 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void testRequestReadTime() {
+    public void requestReadTime_NormalCase_0() {
         long actualReadTime = getTestChannel().requestReadTime();
         assertThat(actualReadTime).isEqualTo(0);
     }
 
 
     @Test
-    public void testSenderInfo() {
+    public void senderInfo_NomralCase_TaskName() {
         String actualSenderInfo = getTestChannel().senderInfo();
         assertThat(actualSenderInfo).isEqualTo("ScheduledTask: TheTaskName");
     }
@@ -111,7 +112,34 @@ public class ScheduledTaskChannelTest {
     }
 
 
+    @Test
+    public void sleep_Interrupt_Exception() throws InterruptedException {
+        ScheduledTaskChannel stc = getTestChannel();
+        AtomicBoolean exceptionThrown = new AtomicBoolean(false);
+        Thread sleepThread = new Thread(() -> {
+            try {
+                stc.sleep(1_000_000);
+            } catch (RuntimeException e) {
+                exceptionThrown.set(true);
+            }
+        });
+        sleepThread.start();
+        new Thread(() -> sleepThread.interrupt()).start();
+        sleepThread.join();
+        assertThat(exceptionThrown).isTrue();
+    }
 
+
+    @Test
+    public void sleep_Shutdown_False() throws InterruptedException {
+        ScheduledTaskChannel stc = getTestChannel();
+        AtomicBoolean sleepReturn = new AtomicBoolean(true);
+        Thread sleepThread = new Thread(() -> sleepReturn.set(stc.sleep(1_000_000)));
+        sleepThread.start();
+        new Thread(() -> stc.shutdown(sleepThread)).start();
+        sleepThread.join();
+        assertThat(sleepReturn).isFalse();
+    }
 
     /*    @Test
     public void test_FireTime_TimeOfDayTask() {
