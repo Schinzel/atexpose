@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
@@ -44,7 +42,6 @@ public class ScheduledTaskChannel implements IChannel {
     @Getter(AccessLevel.PACKAGE)
     private Boolean mShutdownWasInvoked = false;
     /** When to fire the task the next time. */
-    @Getter
     ZonedDateTime mTimeToFireNext;
     final IWatch mWatch;
 
@@ -83,40 +80,26 @@ public class ScheduledTaskChannel implements IChannel {
     }
 
 
+    @Override
     public boolean getRequest(ByteStorage request) {
         //Get the number of nanoseconds the executing thread should sleep.
-        long nanosToSleep = Duration.between(LocalDateTime.now(ZoneId.of("UTC")), mTimeToFireNext).toNanos();
-        //Put executing thread to sleep. 
-        boolean wasNormalWakeUp = this.sleep(nanosToSleep);
+        long nanosToSleep = Duration.between(mWatch.getInstant(), mTimeToFireNext).toNanos();
+        try {
+            //Put executing thread to sleep.
+            TimeUnit.NANOSECONDS.sleep(nanosToSleep);
+        } catch (InterruptedException ex) {
+            //If another thread had invoked shutdown, i.e. this is an everything-is-order shutdown
+            if (mShutdownWasInvoked) {
+                return false;
+            } else {
+                throw new RuntimeException("Invocation error in scheduled task. Sleep was interrupted in a unexpected manner. " + ex.getMessage());
+            }
+        }
         //Convert request to byte array and add to request argument.
         request.add(mTaskRequest);
         //Calc the next time to fire task
         mTimeToFireNext = getNextTaskTime(mTimeToFireNext, mIntervalAmount, mIntervalUnit, mWatch);
-        //Return true if was normal wake up. False if this thread has been instructed to shutdown.
-        return wasNormalWakeUp;
-    }
-
-
-    /**
-     * Puts the executing thread to sleep the argument amount of time.
-     *
-     * @param nanosToSleep The number of nano seconds to sleep.
-     * @return True if it was time to wake up. False this thread was requested
-     * to shutdown.
-     */
-    boolean sleep(long nanosToSleep) {
-        try {
-            //Good night...
-            TimeUnit.NANOSECONDS.sleep(nanosToSleep);
-        } catch (InterruptedException ex) {
-            //Good morning! If got here, hopefully shutdown was invoked. If so the shutdown variable should be true
-            if (mShutdownWasInvoked) {
-                return false;
-            } //Interruption was caused by something else than shutdown being invoked. Which is not right.
-            else {
-                throw new RuntimeException("Invocation error in scheduled task. " + ex.getMessage());
-            }
-        }
+        //Return true if was normal wake up. Else return false.
         return true;
     }
 

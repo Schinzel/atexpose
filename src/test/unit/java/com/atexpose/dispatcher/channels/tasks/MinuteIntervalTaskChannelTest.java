@@ -87,7 +87,7 @@ public class MinuteIntervalTaskChannelTest {
         assertThat(stc.mTimeToFireNext).isBetween(fifteenMinFromNow.minusSeconds(1), fifteenMinFromNow.plusSeconds(1));
     }
 
-
+/*
     @Test
     public void testSleep() {
         MinuteIntervalTaskChannel stc = new MinuteIntervalTaskChannel("TheTaskName", "TheRequest", 15);
@@ -98,7 +98,7 @@ public class MinuteIntervalTaskChannelTest {
         //Calc the time to do all iterations
         long executionTimeInMS = (System.nanoTime() - start) / 1_000_000;
         assertThat(executionTimeInMS).isBetween(20L, 30L);
-    }
+    }*/
 
 
     @Test

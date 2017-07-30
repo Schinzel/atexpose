@@ -1,10 +1,10 @@
 package com.atexpose.dispatcher.channels.tasks;
 
+import com.atexpose.util.ByteStorage;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -50,7 +50,7 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void senderInfo_NomralCase_TaskName() {
+    public void senderInfo_NormalCase_TaskName() {
         String actualSenderInfo = getTestChannel().senderInfo();
         assertThat(actualSenderInfo).isEqualTo("ScheduledTask: TheTaskName");
     }
@@ -64,61 +64,52 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void getNextTaskTime__1SecondAgo_Amount1_UnitMinutes__1MinAfterNow() {
+    public void getNextTaskTime__1SecondAgo_Amount1_UnitMinutes__1MinAfterArgumentTime() {
         ZonedDateTime taskTime = ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1);
         ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(taskTime, 1, ChronoUnit.MINUTES, Watch.create());
-        assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(1));
+        assertThat(actual).isEqualToIgnoringSeconds(taskTime.plusMinutes(1));
     }
 
 
     @Test
-    public void getNextTaskTime__1SecondAgo_Amount17_UnitMinutes__17MinAfterNow() {
+    public void getNextTaskTime__1SecondAgo_Amount17_UnitMinutes__17MinAfterArgumentTime() {
         ZonedDateTime taskTime = ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1);
         ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(taskTime, 17, ChronoUnit.MINUTES, Watch.create());
-        assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(17));
+        assertThat(actual).isEqualTo(taskTime.plusMinutes(17));
     }
 
 
     @Test
-    public void getNextTaskTime__1SecondAgo_Amount2_UnitDays__2DaysAfterNow() {
+    public void getNextTaskTime__1SecondAgo_Amount2_UnitDays__2DaysAfterArgumentTime() {
         ZonedDateTime taskTime = ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1);
         ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(taskTime, 2, ChronoUnit.DAYS, Watch.create());
-        assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")).plusDays(2));
-
+        assertThat(actual).isEqualTo(taskTime.plusDays(2));
     }
 
 
     @Test
-    public void getNextTaskTime__1SecondAgo_Amount1_UnitMonths__1MonthAfterNow() {
+    public void getNextTaskTime__1SecondAgo_Amount1_UnitMonths__1MonthAfterArgumentTime() {
         ZonedDateTime taskTime = ZonedDateTime.now(ZoneOffset.UTC).minusSeconds(1);
         ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(taskTime, 1, ChronoUnit.MONTHS, Watch.create());
-        assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")).plusMonths(1));
+        assertThat(actual).isEqualTo(taskTime.plusMonths(1));
     }
 
 
     @Test
-    public void getNextTaskTime__10SecondsInTheFuture_Amount13_UnitMinutes__ReturnTimeShouldBeArgumentTime() {
+    public void getNextTaskTime__TaskTime10SecondsInTheFuture__ReturnTimeShouldBeArgumentTime() {
         ZonedDateTime taskTime = ZonedDateTime.now(ZoneOffset.UTC).plusSeconds(10);
         ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(taskTime, 13, ChronoUnit.MINUTES, Watch.create());
-        assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")));
+        assertThat(actual).isEqualTo(taskTime);
     }
 
 
     @Test
-    public void getNextTaskTime__10SecondsInTheFuture_Amount1_UnitMonths__ReturnTimeShouldBeArgumentTime() {
-        ZonedDateTime taskTime = ZonedDateTime.now(ZoneOffset.UTC).plusSeconds(10);
-        ZonedDateTime actual = ScheduledTaskChannel.getNextTaskTime(taskTime, 1, ChronoUnit.MONTHS, Watch.create());
-        assertThat(actual).isEqualToIgnoringSeconds(ZonedDateTime.now(ZoneId.of("UTC")));
-    }
-
-
-    @Test
-    public void sleep_Interrupt_Exception() throws InterruptedException {
+    public void getRequest_Interrupt_Exception() throws InterruptedException {
         ScheduledTaskChannel stc = getTestChannel();
         AtomicBoolean exceptionThrown = new AtomicBoolean(false);
         Thread sleepThread = new Thread(() -> {
             try {
-                stc.sleep(1_000_000);
+                stc.getRequest(new ByteStorage());
             } catch (RuntimeException e) {
                 exceptionThrown.set(true);
             }
@@ -131,14 +122,29 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void sleep_Shutdown_False() throws InterruptedException {
+    public void getRequest_SleepEnds_True() throws InterruptedException {
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "MyRequest", ChronoUnit.MILLIS, 50, "", ZonedDateTime.now(), Watch.create());
+        boolean actual = stc.getRequest(new ByteStorage());
+        assertThat(actual).isTrue();
+    }
+
+
+    @Test
+    public void getRequest_Shutdown_False() throws InterruptedException {
         ScheduledTaskChannel stc = getTestChannel();
         AtomicBoolean sleepReturn = new AtomicBoolean(true);
-        Thread sleepThread = new Thread(() -> sleepReturn.set(stc.sleep(1_000_000)));
+        Thread sleepThread = new Thread(() -> sleepReturn.set(stc.getRequest(new ByteStorage())));
         sleepThread.start();
         new Thread(() -> stc.shutdown(sleepThread)).start();
         sleepThread.join();
         assertThat(sleepReturn).isFalse();
+    }
+
+
+    @Test
+    public void responseWriteTime_NormalCase_0() {
+        long actual = getTestChannel().responseWriteTime();
+        assertThat(actual).isZero();
     }
 
     /*    @Test
