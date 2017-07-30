@@ -24,7 +24,7 @@ public class MonthlyTaskChannel extends ScheduledTaskChannel {
 
     MonthlyTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth, IWatch watch) {
         super(taskName, request, ChronoUnit.MONTHS, 1,
-                "Once a month at " + timeOfDay + " on month day " + dayOfMonth,
+                "Once a month at " + timeOfDay + " on day of month " + dayOfMonth,
                 LocalTime.parse(validateTimeOfDay(timeOfDay))
                         .atDate(watch.getLocalDate(watch.UTC))
                         .withDayOfMonth(validateDayOfMonth(dayOfMonth))

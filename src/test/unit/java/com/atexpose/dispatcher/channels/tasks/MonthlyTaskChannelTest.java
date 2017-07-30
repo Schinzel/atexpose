@@ -29,7 +29,7 @@ public class MonthlyTaskChannelTest {
     public void getState_MonthlyTask_TaskTimeContainsTimeOfDayAndDayOfMonth() {
         MonthlyTaskChannel stc = new MonthlyTaskChannel("TaskName3", "TheRequest3", "23:53", 28);
         JSONObject status = stc.getState().getJson();
-        assertThat(status.getString("task_time")).contains("23:53").contains("28");
+        assertThat(status.getString("task_time")).isEqualTo("Once a month at 23:53 on day of month 28");
     }
 
 

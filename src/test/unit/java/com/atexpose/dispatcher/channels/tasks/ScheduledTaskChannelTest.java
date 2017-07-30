@@ -1,6 +1,7 @@
 package com.atexpose.dispatcher.channels.tasks;
 
 import com.atexpose.util.ByteStorage;
+import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -146,6 +147,17 @@ public class ScheduledTaskChannelTest {
         long actual = getTestChannel().responseWriteTime();
         assertThat(actual).isZero();
     }
+
+
+    @Test
+    public void getState_NormalCase_CheckThatLabelsAreThere() {
+        ScheduledTaskChannel stc = getTestChannel();
+        JSONObject status = stc.getState().getJson();
+        assertThat(status.getString("task_name")).isEqualTo("TheTaskName");
+        assertThat(status.getString("request")).isEqualTo("MyRequest");
+        assertThat(status.has("next_task_time")).isTrue();
+    }
+
 
     /*    @Test
     public void test_FireTime_TimeOfDayTask() {

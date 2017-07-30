@@ -24,7 +24,7 @@ public class DailyTaskChannelTest {
     public void getState_DailyTask_TaskTimeContainsSetTimeOfDay() {
         DailyTaskChannel stc = new DailyTaskChannel("TaskName", "TheRequest", "23:57");
         JSONObject status = stc.getState().getJson();
-        assertThat(status.getString("task_time")).contains("23:57");
+        assertThat(status.getString("task_time")).isEqualTo("Every day at 23:57");
     }
 
 

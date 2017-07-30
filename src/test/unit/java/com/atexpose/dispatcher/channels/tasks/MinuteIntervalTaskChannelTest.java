@@ -87,35 +87,12 @@ public class MinuteIntervalTaskChannelTest {
         assertThat(stc.mTimeToFireNext).isBetween(fifteenMinFromNow.minusSeconds(1), fifteenMinFromNow.plusSeconds(1));
     }
 
-/*
-    @Test
-    public void testSleep() {
-        MinuteIntervalTaskChannel stc = new MinuteIntervalTaskChannel("TheTaskName", "TheRequest", 15);
-        long millisToSleep = 20;
-        long nanosToSleep = millisToSleep * 1_000_000;
-        long start = System.nanoTime();
-        stc.sleep(nanosToSleep);
-        //Calc the time to do all iterations
-        long executionTimeInMS = (System.nanoTime() - start) / 1_000_000;
-        assertThat(executionTimeInMS).isBetween(20L, 30L);
-    }*/
-
-
-    @Test
-    public void getState_() {
-        MinuteIntervalTaskChannel stc = new MinuteIntervalTaskChannel("TaskName", "TheRequest", 55);
-        JSONObject status = stc.getState().getJson();
-        assertThat(status.getString("task_name")).isEqualTo("TaskName");
-        assertThat(status.getString("request")).isEqualTo("TheRequest");
-        assertThat(status.has("next_task_time")).isTrue();
-    }
-
 
     @Test
     public void getState_MinuteIntervalTask_TaskTimeContainsMinuteInterval() {
         MinuteIntervalTaskChannel stc = new MinuteIntervalTaskChannel("TaskName", "TheRequest", 55);
         JSONObject status = stc.getState().getJson();
-        assertThat(status.getString("task_time")).contains("55");
+        assertThat(status.getString("task_time")).contains("Every 55 minutes");
     }
 
 }
