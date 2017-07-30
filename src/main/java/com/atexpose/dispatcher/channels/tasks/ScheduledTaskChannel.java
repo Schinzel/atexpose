@@ -12,7 +12,6 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 /**
  * The purpose of this class is to execute a custom command at a regular
@@ -25,8 +24,6 @@ import java.util.regex.Pattern;
  */
 @Accessors(prefix = "m")
 public class ScheduledTaskChannel implements IChannel {
-    /** Pattern for time for daily tasks. */
-    private static final Pattern TIME_PATTERN = Pattern.compile("^[0-2][0-9]:[0-5][0-9]");
     /** The name of this tasks. */
     final String mTaskName;
     /** The task to run. Is a request in the text format. E.g. "echo hi" */

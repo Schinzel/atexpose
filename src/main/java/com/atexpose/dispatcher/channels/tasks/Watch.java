@@ -34,7 +34,7 @@ public class Watch implements IWatch {
     /**
      * For testing purposes only. Set a instant that will be returned by getInstant.
      *
-     * @param instant
+     * @param instant The instant that this instance should return.
      * @return This for chaining.
      */
     public Watch setInstant(Instant instant) {
@@ -55,7 +55,7 @@ public class Watch implements IWatch {
      * @param minute     The minute-of-hour. From 0 to 59
      * @return This for chaining.
      */
-    public Watch setDateTimeUTC(int year, int month, int dayOfMonth, int hour, int minute) {
+    Watch setDateTimeUTC(int year, int month, int dayOfMonth, int hour, int minute) {
         return this.setDateTime(year, month, dayOfMonth, hour, minute, ZoneId.of("UTC"));
     }
 
@@ -73,7 +73,7 @@ public class Watch implements IWatch {
      * @param zoneId     The id of the zone
      * @return An instance of this for chaining.
      */
-    public Watch setDateTime(int year, int month, int dayOfMonth, int hour, int minute, ZoneId zoneId) {
+    Watch setDateTime(int year, int month, int dayOfMonth, int hour, int minute, ZoneId zoneId) {
         ZonedDateTime zdt = ZonedDateTime.of(year, month, dayOfMonth, hour, minute, 0, 0, zoneId);
         mInstant = zdt.toInstant();
         return this;
