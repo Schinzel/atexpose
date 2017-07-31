@@ -1,11 +1,13 @@
 package com.atexpose.dispatcher.channels.tasks;
 
 import com.atexpose.util.ByteStorage;
+import io.schinzel.basicutils.FunnyChars;
 import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -24,6 +26,11 @@ public class ScheduledTaskChannelTest {
     public ExpectedException exception = ExpectedException.none();
 
 
+    /**
+     * Util method
+     *
+     * @return A scheduled task channel
+     */
     static ScheduledTaskChannel getTestChannel() {
         return new ScheduledTaskChannel("TheTaskName", "MyRequest", ChronoUnit.MINUTES, 15, "", ZonedDateTime.now(), Watch.create());
 
@@ -31,36 +38,27 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
+    public void constructor_SetCustomWatch_CustomWatch() {
+        Instant myInstant = Instant.now();
+        ScheduledTaskChannel dailyTaskChannel = new ScheduledTaskChannel("TheTaskName",
+                "MyRequest", ChronoUnit.MINUTES, 15, "",
+                ZonedDateTime.now(), Watch.create().setInstant(myInstant));
+        assertThat(dailyTaskChannel.mWatch.getInstant()).isEqualTo(myInstant);
+    }
+
+
+    @Test
+    public void constructor_DefaultWatch_WatchReturnsNow() {
+        Instant start = Instant.now();
+        ScheduledTaskChannel dailyTaskChannel = getTestChannel();
+        assertThat(dailyTaskChannel.mWatch.getInstant()).isBetween(start, Instant.now());
+    }
+
+
+    @Test
     public void getClone_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
                 getTestChannel().getClone());
-    }
-
-
-    @Test
-    public void writeResponse_DoesNothingButDoesNotThrowException() {
-        getTestChannel().writeResponse(null);
-    }
-
-
-    @Test
-    public void requestReadTime_NormalCase_0() {
-        long actualReadTime = getTestChannel().requestReadTime();
-        assertThat(actualReadTime).isEqualTo(0);
-    }
-
-
-    @Test
-    public void senderInfo_NormalCase_TaskName() {
-        String actualSenderInfo = getTestChannel().senderInfo();
-        assertThat(actualSenderInfo).isEqualTo("ScheduledTask: TheTaskName");
-    }
-
-
-    @Test
-    public void getTaskRequest_SetInConstructorMyRequest_MyRequest() {
-        String actualRequest = getTestChannel().getTaskRequest();
-        assertThat(actualRequest).isEqualTo("MyRequest");
     }
 
 
@@ -143,9 +141,13 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void responseWriteTime_NormalCase_0() {
-        long actual = getTestChannel().responseWriteTime();
-        assertThat(actual).isZero();
+    public void getRequest_TaskTimeOccurs_ByteStorageReturnsSetRequest() {
+        String request = FunnyChars.SERBO_CROATION_GAJ.getString();
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", request, ChronoUnit.MILLIS, 10, "", ZonedDateTime.now(), Watch.create());
+        //override next-fire-time and set it to be a short time in the future
+        ByteStorage byteStorage = new ByteStorage();
+        stc.getRequest(byteStorage);
+        assertThat(byteStorage.getAsString()).isEqualTo(request);
     }
 
 
@@ -153,84 +155,53 @@ public class ScheduledTaskChannelTest {
     public void getState_NormalCase_CheckThatLabelsAreThere() {
         ScheduledTaskChannel stc = getTestChannel();
         JSONObject status = stc.getState().getJson();
-        assertThat(status.getString("task_name")).isEqualTo("TheTaskName");
-        assertThat(status.getString("request")).isEqualTo("MyRequest");
-        assertThat(status.has("next_task_time")).isTrue();
     }
 
 
-    /*    @Test
-    public void test_FireTime_TimeOfDayTask() {
-        String taskName = "theTaskName";
-        String request = "request";
-        String timeOfDay = "08:50";
-        ScheduledTaskChannel stc = new ScheduledTaskChannel(taskName, request, timeOfDay);
-        assertEquals(1, stc.mIntervalAmount);
-        assertEquals(ChronoUnit.DAYS, stc.mIntervalUnit);
-        assertEquals(timeOfDay, stc.mTimeOfDay);
-        //Time to fire should be after now
-        assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
-        //Time to fire should be within 24 hours
-        assertTrue(stc.mTimeToFireNext.isBefore(LocalDateTime.now(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS)));
-        //
-        timeOfDay = "14:55";
-        stc = new ScheduledTaskChannel(taskName, request, timeOfDay);
-        assertEquals(1, stc.mIntervalAmount);
-        assertEquals(ChronoUnit.DAYS, stc.mIntervalUnit);
-        assertEquals(timeOfDay, stc.mTimeOfDay);
-        //Time to fire should be after now
-        assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
-        //Time to fire should be within 24 hours
-        assertTrue(stc.mTimeToFireNext.isBefore(LocalDateTime.now(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS)));
-        //
-        timeOfDay = "21:00";
-        stc = new ScheduledTaskChannel(taskName, request, timeOfDay);
-        assertEquals(1, stc.mIntervalAmount);
-        assertEquals(ChronoUnit.DAYS, stc.mIntervalUnit);
-        assertEquals(timeOfDay, stc.mTimeOfDay);
-        //Time to fire should be after now
-        assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
-        //Time to fire should be within 24 hours
-        assertTrue(stc.mTimeToFireNext.isBefore(LocalDateTime.now(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS)));
-        //
-        timeOfDay = "04:06";
-        stc = new ScheduledTaskChannel(taskName, request, timeOfDay);
-        assertEquals(1, stc.mIntervalAmount);
-        assertEquals(ChronoUnit.DAYS, stc.mIntervalUnit);
-        assertEquals(timeOfDay, stc.mTimeOfDay);
-        //Time to fire should be after now
-        assertTrue(stc.mTimeToFireNext.isAfter(LocalDateTime.now(ZoneOffset.UTC)));
-        //Time to fire should be within 24 hours
-        assertTrue(stc.mTimeToFireNext.isBefore(LocalDateTime.now(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS)));
-    }*/
-
-
-/*
     @Test
-    public void test_FireTime_MonthlyTask() {
-        //Get day of month 25 days and 2 minutes from now
-        LocalDateTime ldtFuture = LocalDateTime.now(ZoneOffset.UTC)
-                .plus(25, ChronoUnit.DAYS)
-                .plus(2, ChronoUnit.MINUTES);
-        while (ldtFuture.getDayOfMonth() > 28) {
-            ldtFuture = ldtFuture.minusDays(1);
-        }
-        //Get the time of the day in the future
-        String timeOfDay = DateTimeFormatter.ofPattern("HH:mm").format(ldtFuture);
-        //Get the day of month in the future
-        int dayOfMonth = ldtFuture.getDayOfMonth();
-        //Create the scheduled task
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("taskName", "request", timeOfDay, dayOfMonth);
-        //Get the number of nanos the task will sleep until it fires
-        long sleepTime = stc.getNanosUntilNextTask();
-        //Add the sleep time to now
-        LocalDateTime ldtWakeUpTime = LocalDateTime.now(ZoneOffset.UTC).plus(sleepTime, ChronoUnit.NANOS);
-        //Get the diff between wake-up-time and the future
-        long diff = Duration.between(ldtWakeUpTime, ldtFuture).toMillis();
-        //Check that the diff between future and wake-up-time is less than 60 seconds
-        //There is a diff as the wake-up-time is set to whole minutes
-        assertTrue(diff < 60_000);
+    public void getTaskRequest_SetInConstructorMyRequest_MyRequest() {
+        String actualRequest = getTestChannel().getTaskRequest();
+        assertThat(actualRequest).isEqualTo("MyRequest");
     }
-*/
+
+
+    @Test
+    public void requestReadTime_NormalCase_0() {
+        long actualReadTime = getTestChannel().requestReadTime();
+        assertThat(actualReadTime).isEqualTo(0);
+    }
+
+
+    @Test
+    public void responseWriteTime_NormalCase_0() {
+        long actual = getTestChannel().responseWriteTime();
+        assertThat(actual).isZero();
+    }
+
+
+    @Test
+    public void senderInfo_NormalCase_TaskName() {
+        String actualSenderInfo = getTestChannel().senderInfo();
+        assertThat(actualSenderInfo).isEqualTo("ScheduledTask: TheTaskName");
+    }
+
+
+    @Test
+    public void shutdown_RunningThread_mWasNormalWakeUpTrue() {
+        MinuteIntervalTaskChannel stc = new MinuteIntervalTaskChannel("TheTaskName", "ThisIsTheTask", 1);
+        Thread thread = new Thread(() -> stc.getRequest(new ByteStorage()));
+        thread.start();
+        //Interrupt the waiting task
+        stc.shutdown(thread);
+        //assert that false is returned as the wake-up was not normal, but a shutdown
+        assertThat(stc.getShutdownWasInvoked()).isTrue();
+    }
+
+
+    @Test
+    public void writeResponse_DoesNothingButDoesNotThrowException() {
+        getTestChannel().writeResponse(null);
+    }
+
 
 }

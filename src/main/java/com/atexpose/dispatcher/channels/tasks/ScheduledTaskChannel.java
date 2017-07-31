@@ -39,7 +39,9 @@ public class ScheduledTaskChannel implements IChannel {
     @Getter(AccessLevel.PACKAGE)
     private Boolean mShutdownWasInvoked = false;
     /** When to fire the task the next time. */
-    ZonedDateTime mTimeToFireNext;
+    @Getter(AccessLevel.PACKAGE)
+    private ZonedDateTime mTimeToFireNext;
+    //For getting the time
     final IWatch mWatch;
 
 

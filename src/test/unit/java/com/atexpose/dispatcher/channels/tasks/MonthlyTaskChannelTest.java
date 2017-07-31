@@ -26,7 +26,7 @@ public class MonthlyTaskChannelTest {
 
 
     @Test
-    public void getState_MonthlyTask_TaskTimeContainsTimeOfDayAndDayOfMonth() {
+    public void getState_TaskTimeContainsTimeOfDayAndDayOfMonth() {
         MonthlyTaskChannel stc = new MonthlyTaskChannel("TaskName3", "TheRequest3", "23:53", 28);
         JSONObject status = stc.getState().getJson();
         assertThat(status.getString("task_time")).isEqualTo("Once a month at 23:53 on day of month 28");
@@ -37,7 +37,7 @@ public class MonthlyTaskChannelTest {
     public void getTimeToFireNext_Now1HourBeforeTaskTime_SameDayAtTaskTime() {
         IWatch watch = Watch.create().setDateTimeUTC(2017, 7, 27, 13, 30);
         MonthlyTaskChannel dailyTaskChannel = new MonthlyTaskChannel("TaskName", "MyRequest", "14:30", 27, watch);
-        assertThat(dailyTaskChannel.mTimeToFireNext.toInstant()).isEqualTo("2017-07-27T14:30:00Z");
+        assertThat(dailyTaskChannel.getTimeToFireNext().toInstant()).isEqualTo("2017-07-27T14:30:00Z");
     }
 
 
@@ -45,13 +45,13 @@ public class MonthlyTaskChannelTest {
     public void getTimeToFireNext_Now1HourAfterTaskTime_NextMonth() {
         IWatch watch = Watch.create().setDateTimeUTC(2017, 7, 27, 15, 30);
         MonthlyTaskChannel dailyTaskChannel = new MonthlyTaskChannel("TaskName", "MyRequest", "14:30", 27, watch);
-        assertThat(dailyTaskChannel.mTimeToFireNext.toInstant()).isEqualTo("2017-08-27T14:30:00Z");
+        assertThat(dailyTaskChannel.getTimeToFireNext().toInstant()).isEqualTo("2017-08-27T14:30:00Z");
     }
 
     @Test
     public void getTimeToFireNext__NowEndFebruaryLeapYear_TaskTimeDay15__15March() {
         IWatch watch = Watch.create().setDateTimeUTC(2016, 2, 27, 14, 30);
         MonthlyTaskChannel dailyTaskChannel = new MonthlyTaskChannel("TaskName", "MyRequest", "14:30", 15, watch);
-        assertThat(dailyTaskChannel.mTimeToFireNext.toInstant()).isEqualTo("2016-03-15T14:30:00Z");
+        assertThat(dailyTaskChannel.getTimeToFireNext().toInstant()).isEqualTo("2016-03-15T14:30:00Z");
     }
 }
