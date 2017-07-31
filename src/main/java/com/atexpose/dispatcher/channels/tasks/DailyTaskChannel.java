@@ -15,7 +15,7 @@ public class DailyTaskChannel extends ScheduledTaskChannel {
 
 
     /**
-     * Sets up a daily task that executes once per days.
+     * Sets up a task that executes once per days.
      *
      * @param taskName  The name of the task.
      * @param request   The request to execute.
@@ -48,15 +48,16 @@ public class DailyTaskChannel extends ScheduledTaskChannel {
      * @param timeOfDay E.g. "23:55"
      * @param zoneId    The zone which the argument time-of-day string is in
      * @param watch     Watch the returns the time now
-     * @return The argument data as a ZonedDateTime
+     * @return The argument time as date today in the argument zone
      */
     static ZonedDateTime getZonedDateTime(String timeOfDay, ZoneId zoneId, IWatch watch) {
-        return //Get the local time from time-of-day string
-                LocalTime.parse(timeOfDay)
-                        //Get LocalDateTime by setting the date to today in the argument zone
-                        .atDate(watch.getLocalDate(zoneId))
-                        //Get ZoneDateTime by setting the  argument zone
-                        .atZone(zoneId);
+        return LocalTime
+                //Get the local time from time-of-day string
+                .parse(timeOfDay)
+                //Get date by setting  the date to today in the argument zone
+                .atDate(watch.getLocalDate(zoneId))
+                //Get ZoneDateTime by setting the  argument zone id
+                .atZone(zoneId);
     }
 
 
