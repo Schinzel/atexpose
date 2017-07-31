@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
 /**
- * The purpose of this class is to return a request daily at a set time.
+ * The purpose of this class is to return a request daily at a set time of day.
  */
 public class DailyTaskChannel extends ScheduledTaskChannel {
 

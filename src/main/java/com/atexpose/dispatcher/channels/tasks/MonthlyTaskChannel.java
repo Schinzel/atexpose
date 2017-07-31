@@ -6,6 +6,10 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
+/**
+ * The purpose of this class is to return a request monthly at a set day of month at a set time of
+ * day
+ */
 public class MonthlyTaskChannel extends ScheduledTaskChannel {
 
 
