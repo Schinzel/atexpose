@@ -8,6 +8,9 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
+/**
+ * The purpose of this class is to return a request daily at a set time.
+ */
 public class DailyTaskChannel extends ScheduledTaskChannel {
 
 
@@ -17,6 +20,7 @@ public class DailyTaskChannel extends ScheduledTaskChannel {
      * @param taskName  The name of the task.
      * @param request   The request to execute.
      * @param timeOfDay What time of day to execute. Format HH:mm, e.g. 23:55
+     * @param zoneId    The zone of the time-of-day
      */
     public DailyTaskChannel(String taskName, String request, String timeOfDay, ZoneId zoneId) {
         this(taskName, request, timeOfDay, zoneId, Watch.create());
@@ -29,6 +33,8 @@ public class DailyTaskChannel extends ScheduledTaskChannel {
      * @param taskName  The name of the task.
      * @param request   The request to execute.
      * @param timeOfDay What time of day to execute. Format HH:mm, e.g. 23:55
+     * @param zoneId    The zone of the time-of-day
+     * @param watch     Represents the time now
      */
     DailyTaskChannel(String taskName, String request, String timeOfDay, ZoneId zoneId, IWatch watch) {
         super(taskName, request, ChronoUnit.DAYS, 1,
