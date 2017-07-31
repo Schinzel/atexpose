@@ -23,7 +23,7 @@ public class ScheduledReportChannel extends DailyTaskChannel {
     @Builder
     private ScheduledReportChannel(String taskName, String request, String timeOfDay,
                                    IEmailSender emailSender, String recipient, String fromName) {
-        super(taskName, request, timeOfDay);
+        super(taskName, request, timeOfDay, IWatch.UTC);
         mEmailSender = emailSender;
         mRecipient = recipient;
         mFromName = fromName;

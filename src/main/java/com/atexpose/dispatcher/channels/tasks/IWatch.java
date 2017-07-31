@@ -11,6 +11,8 @@ import java.time.ZoneId;
 
 public interface IWatch {
     ZoneId UTC = ZoneId.of("UTC");
+    ZoneId NEW_YORK = ZoneId.of("America/New_York");
+    ZoneId STOCKHOLM = ZoneId.of("Europe/Stockholm");
 
 
     /**

@@ -53,12 +53,13 @@ public class ScheduledTaskChannel implements IChannel {
      * @param intervalAmount The amount to wait. Used in conjunction with
      *                       intervalUnit.
      */
-    ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount, String taskTime, ZonedDateTime initialTaskFireTime, IWatch watch) {
+    ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount,
+                         String humanReadableTaskTime, ZonedDateTime initialTaskFireTime, IWatch watch) {
         mTaskName = taskName;
         mTaskRequest = request;
         mIntervalUnit = intervalUnit;
         mIntervalAmount = intervalAmount;
-        mTaskTime = taskTime;
+        mTaskTime = humanReadableTaskTime;
         mTimeToFireNext = getNextTaskTime(initialTaskFireTime, intervalAmount, intervalUnit, watch);
         mWatch = watch;
     }

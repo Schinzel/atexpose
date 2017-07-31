@@ -3,6 +3,8 @@ package com.atexpose.dispatcher.channels.tasks;
 import io.schinzel.basicutils.Thrower;
 
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
@@ -16,8 +18,8 @@ public class DailyTaskChannel extends ScheduledTaskChannel {
      * @param request   The request to execute.
      * @param timeOfDay What time of day to execute. Format HH:mm, e.g. 23:55
      */
-    public DailyTaskChannel(String taskName, String request, String timeOfDay) {
-        this(taskName, request, timeOfDay, Watch.create());
+    public DailyTaskChannel(String taskName, String request, String timeOfDay, ZoneId zoneId) {
+        this(taskName, request, timeOfDay, zoneId, Watch.create());
     }
 
 
@@ -28,13 +30,27 @@ public class DailyTaskChannel extends ScheduledTaskChannel {
      * @param request   The request to execute.
      * @param timeOfDay What time of day to execute. Format HH:mm, e.g. 23:55
      */
-    DailyTaskChannel(String taskName, String request, String timeOfDay, IWatch watch) {
+    DailyTaskChannel(String taskName, String request, String timeOfDay, ZoneId zoneId, IWatch watch) {
         super(taskName, request, ChronoUnit.DAYS, 1,
-                "Every day at " + timeOfDay,
-                LocalTime.parse(validateTimeOfDay(timeOfDay))
-                        .atDate(watch.getLocalDate(watch.UTC))
-                        .atZone(watch.UTC),
+                "Every day at " + timeOfDay + "[" + zoneId.getId() + "]",
+                getZonedDateTime(validateTimeOfDay(timeOfDay), zoneId, watch),
                 watch);
+    }
+
+
+    /**
+     * @param timeOfDay E.g. "23:55"
+     * @param zoneId    The zone which the argument time-of-day string is in
+     * @param watch     Watch the returns the time now
+     * @return The argument data as a ZonedDateTime
+     */
+    static ZonedDateTime getZonedDateTime(String timeOfDay, ZoneId zoneId, IWatch watch) {
+        return //Get the local time from time-of-day string
+                LocalTime.parse(timeOfDay)
+                        //Get LocalDateTime by setting the date to today in the argument zone
+                        .atDate(watch.getLocalDate(zoneId))
+                        //Get ZoneDateTime by setting the  argument zone
+                        .atZone(zoneId);
     }
 
 
@@ -50,5 +66,7 @@ public class DailyTaskChannel extends ScheduledTaskChannel {
                 .message("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
         return timeOfDay;
     }
+
+
 }
 
