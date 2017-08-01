@@ -187,7 +187,8 @@ class NativeSetup {
                 .addArgument(Argument.builder()
                         .name("TimeZone")
                         .dataType(DataType.STRING)
-                        .description("A zone id string. E.g. UTC, America/New_York, Europe/Stockholm.")
+                        .defaultValue("UTC")
+                        .description("A time zone. E.g. UTC, America/New_York, Europe/Stockholm.")
                         .build());
     }
 

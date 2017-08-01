@@ -15,6 +15,8 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
+import java.time.ZoneId;
+
 /**
  * The purpose of this class is to expose @Expose and allow string returns that contain status of
  * the operation
@@ -104,7 +106,7 @@ class ExposedAtExpose {
 
 
     @Expose(
-            arguments = {"TaskName", "Request", "TimeOfDay"},
+            arguments = {"TaskName", "Request", "TimeOfDay", "TimeZone"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 3,
             description = "Performs a task every day at the stated time of day. " +
@@ -112,14 +114,14 @@ class ExposedAtExpose {
                     "Tasks are given an event logger with default logger and format. ",
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
-    public String addDailyTask(String taskName, String request, String timeOfDay) {
-        this.getAtExpose().addDailyTask(taskName, request, timeOfDay);
+    public String addDailyTask(String taskName, String request, String timeOfDay, String timeZone) {
+        this.getAtExpose().addDailyTask(taskName, request, timeOfDay, ZoneId.of(timeZone));
         return "Daily task '" + taskName + "' set up";
     }
 
 
     @Expose(
-            arguments = {"TaskName", "Request", "TimeOfDay", "DayOfMonth"},
+            arguments = {"TaskName", "Request", "TimeOfDay", "DayOfMonth", "TimeZone"},
             requiredAccessLevel = 3,
             description = "Adds a scheduled a task that will run monthly at the stated time of day at the stated day of month " +
                     "The time stated is in UTC. " +
@@ -127,14 +129,14 @@ class ExposedAtExpose {
             requiredArgumentCount = 4,
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
-    public String addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth) {
-        this.getAtExpose().addMonthlyTask(taskName, request, timeOfDay, dayOfMonth);
+    public String addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, String timeZone) {
+        this.getAtExpose().addMonthlyTask(taskName, request, timeOfDay, dayOfMonth, ZoneId.of(timeZone));
         return "Monthly task '" + taskName + "' set up";
     }
 
 
     @Expose(
-            arguments = {"TaskName", "Request", "TimeOfDay", "Recipient", "FromName"},
+            arguments = {"TaskName", "Request", "TimeOfDay", "TimeZone", "Recipient", "FromName"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 4,
             description = "Performs a task every day at the stated time of day. " +
@@ -143,8 +145,8 @@ class ExposedAtExpose {
                     "Reports are given an event logger with default logger and format.",
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
-    public String addScheduledReport(String taskName, String request, String timeOfDay, String recipient, String fromName) {
-        this.getAtExpose().addScheduledReport(taskName, request, timeOfDay, recipient, fromName);
+    public String addScheduledReport(String taskName, String request, String timeOfDay, String timeZone, String recipient, String fromName) {
+        this.getAtExpose().addScheduledReport(taskName, request, timeOfDay, ZoneId.of(timeZone), recipient, fromName);
         return "Scheduled report '" + taskName + "' has been set up";
     }
 

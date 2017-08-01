@@ -11,25 +11,14 @@ import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import io.schinzel.basicutils.Thrower;
 
+import java.time.ZoneId;
+
 /**
  * Sets up scheduled tasks.
  * <p>
  * Created by schinzel on 2017-04-16.
  */
 public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
-
-    /**
-     * Sets up a task to run once a day at the argument time of the day.
-     *
-     * @param taskName  The name of the task.
-     * @param request   The request to execute. Example: "time", "echo 123"
-     * @param timeOfDay The time for the day. UTC. Examples "23:55" "07:05"
-     * @return This for chaining.
-     */
-    default T addDailyTask(String taskName, String request, String timeOfDay) {
-        DailyTaskChannel scheduledTaskChannel = new DailyTaskChannel(taskName, request, timeOfDay, IWatch.UTC);
-        return this.addTask(taskName, scheduledTaskChannel);
-    }
 
 
     /**
@@ -48,14 +37,30 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
 
 
     /**
+     * Sets up a task to run once a day at the argument time of the day.
+     *
+     * @param taskName  The name of the task.
+     * @param request   The request to execute. Example: "time", "echo 123"
+     * @param timeOfDay The time for the day. UTC. Examples "23:55" "07:05"
+     * @param zoneId    The timezone
+     * @return This for chaining.
+     */
+    default T addDailyTask(String taskName, String request, String timeOfDay, ZoneId zoneId) {
+        DailyTaskChannel scheduledTaskChannel = new DailyTaskChannel(taskName, request, timeOfDay, zoneId);
+        return this.addTask(taskName, scheduledTaskChannel);
+    }
+
+
+    /**
      * @param taskName   The name of the task.
      * @param request    The request to execute. Example: "time", "echo 123"
      * @param timeOfDay  The time for the day. UTC. Examples "23:55" "07:05"
      * @param dayOfMonth The day of the month the task can execute.
+     * @param zoneId    The timezone
      * @return This for chaining.
      */
-    default T addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth) {
-        MonthlyTaskChannel scheduledTaskChannel = new MonthlyTaskChannel(taskName, request, timeOfDay, dayOfMonth, IWatch.UTC);
+    default T addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, ZoneId zoneId) {
+        MonthlyTaskChannel scheduledTaskChannel = new MonthlyTaskChannel(taskName, request, timeOfDay, dayOfMonth, zoneId);
         return this.addTask(taskName, scheduledTaskChannel);
     }
 
