@@ -3,8 +3,6 @@ package com.atexpose.dispatcher.channels.tasks;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import java.time.ZonedDateTime;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -61,7 +59,7 @@ public class DailyTaskChannelTest {
 
 
     @Test
-    public void getTimeToFireNext_ConstructorTaskTimeNewYork_SametDayFourHoursLaterUtc() {
+    public void getTimeToFireNext_ConstructorTaskTimeNewYork_SameDayFourHoursLaterUtc() {
         IWatch watch = Watch.create().setDateTime(2017, 7, 27, 13, 30, IWatch.NEW_YORK);
         DailyTaskChannel dtc = new DailyTaskChannel("TaskName", "MyRequest", "14:30", IWatch.NEW_YORK, watch);
         assertThat(dtc.getTimeToFireNext().toInstant()).isEqualTo("2017-07-27T18:30:00Z");
@@ -99,23 +97,4 @@ public class DailyTaskChannelTest {
         assertThat(dtc.getTimeToFireNext().toInstant()).isEqualTo("2017-07-28T18:30:00Z");
     }
 
-
-    @Test
-    public void getZonedDateTime_MidDayNewYork_4HoursLaterUtc() {
-        //Exact time does not matter. Only that is summer time
-        IWatch watch = Watch.create().setDateTimeUTC(2017, 7, 27, 15, 30);
-        ZonedDateTime actual = DailyTaskChannel.getZonedDateTime("14:30", IWatch.NEW_YORK, watch);
-        assertThat(actual).isEqualTo("2017-07-27T18:30:00Z");
-        assertThat(actual).isEqualTo("2017-07-27T14:30-04:00[America/New_York]");
-    }
-
-
-    @Test
-    public void getZonedDateTime_EveningNewYork_NextDayUtc() {
-        //Exact time does not matter. Only that is summer time
-        IWatch watch = Watch.create().setDateTimeUTC(2017, 7, 27, 15, 30);
-        ZonedDateTime actual = DailyTaskChannel.getZonedDateTime("22:30", IWatch.NEW_YORK, watch);
-        assertThat(actual).isEqualTo("2017-07-28T02:30:00Z");
-        assertThat(actual).isEqualTo("2017-07-27T22:30-04:00[America/New_York]");
-    }
 }

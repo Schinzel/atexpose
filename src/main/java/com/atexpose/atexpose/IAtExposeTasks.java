@@ -55,7 +55,7 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
      * @return This for chaining.
      */
     default T addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth) {
-        MonthlyTaskChannel scheduledTaskChannel = new MonthlyTaskChannel(taskName, request, timeOfDay, dayOfMonth);
+        MonthlyTaskChannel scheduledTaskChannel = new MonthlyTaskChannel(taskName, request, timeOfDay, dayOfMonth, IWatch.UTC);
         return this.addTask(taskName, scheduledTaskChannel);
     }
 
