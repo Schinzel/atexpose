@@ -57,8 +57,4 @@ public class MonthlyTaskChannelTest {
     }
 
 
-    @Test
-    public void getZonedDateTime_() {
-
-    }
 }
