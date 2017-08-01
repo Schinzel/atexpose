@@ -15,8 +15,6 @@ import com.atexpose.util.mail.IEmailSender;
 import com.atexpose.util.mail.MockMailSender;
 import io.schinzel.basicutils.Thrower;
 
-import java.time.ZoneId;
-
 /**
  * The purpose of this interface is to set up scheduled reports.
  * <p>
@@ -61,13 +59,13 @@ public interface IAtExposeReports<T extends IAtExpose<T>> extends IAtExpose<T> {
      *
      * @param taskName   The name of the report.
      * @param rawRequest The request to execute. Example: "echo hi"
-     * @param timeOfDay  The time of day to run the report. Examples: "13:05" "07:55"
-     * @param zoneId     The time zone
+     * @param timeOfDay  The time of day in the argument time zone to run the report. Examples: "13:05" "07:55"
+     * @param zoneId     The time zone. E.g. "UTC", "Europe/Stockholm"
      * @param recipient  The recipient email address.
      * @param fromName   The name in the from field in the email
      * @return This for chaining.
      */
-    default T addScheduledReport(String taskName, String rawRequest, String timeOfDay, ZoneId zoneId, String recipient, String fromName) {
+    default T addScheduledReport(String taskName, String rawRequest, String timeOfDay, String zoneId, String recipient, String fromName) {
         Thrower.throwIfTrue(this.getMailSender() == null, "You need to set SMTP settings before setting up a scheduled report. Use method setSMTPServer.");
         IParser parser = new TextParser();
         Request request1 = parser.getRequest(rawRequest);

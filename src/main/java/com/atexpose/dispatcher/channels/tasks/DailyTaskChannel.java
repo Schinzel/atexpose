@@ -1,6 +1,5 @@
 package com.atexpose.dispatcher.channels.tasks;
 
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 /**
@@ -17,7 +16,7 @@ public class DailyTaskChannel extends ScheduledTaskChannel {
      * @param timeOfDay What time of day to execute. Format HH:mm, e.g. 23:55
      * @param zoneId    The zone of the time-of-day
      */
-    public DailyTaskChannel(String taskName, String request, String timeOfDay, ZoneId zoneId) {
+    public DailyTaskChannel(String taskName, String request, String timeOfDay, String zoneId) {
         this(taskName, request, timeOfDay, zoneId, Watch.create());
     }
 
@@ -31,10 +30,10 @@ public class DailyTaskChannel extends ScheduledTaskChannel {
      * @param zoneId    The zone of the time-of-day
      * @param watch     Represents the time now
      */
-    DailyTaskChannel(String taskName, String request, String timeOfDay, ZoneId zoneId, IWatch watch) {
+    DailyTaskChannel(String taskName, String request, String timeOfDay, String zoneId, IWatch watch) {
         super(taskName, request, ChronoUnit.DAYS, 1,
-                "Every day at " + timeOfDay + "[" + zoneId.getId() + "]",
-                Util.getZonedDateTime(Util.validateTimeOfDay(timeOfDay), zoneId, watch),
+                "Every day at " + timeOfDay + "[" + TasksUtil.getZoneId(zoneId).getId() + "]",
+                TasksUtil.getZonedDateTime(TasksUtil.validateTimeOfDay(timeOfDay), TasksUtil.getZoneId(zoneId), watch),
                 watch);
     }
 

@@ -1,5 +1,6 @@
 package com.atexpose.dispatcher.channels.tasks;
 
+import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Thrower;
 
 import java.time.LocalTime;
@@ -12,7 +13,18 @@ import java.util.regex.Pattern;
  * DailyTaskChannel.
  */
 
-class Util {
+class TasksUtil {
+
+    /**
+     * @param zoneId
+     * @return The zone id of the argument zone id
+     */
+    static ZoneId getZoneId(String zoneId) {
+        if (Checker.isEmpty(zoneId)) {
+            return ZoneId.of("UTC");
+        }
+        return ZoneId.of(zoneId);
+    }
 
 
     /**
@@ -23,7 +35,7 @@ class Util {
      * @return The argument time-of-day and day-of-month as a date in the argument zone.
      */
     static ZonedDateTime getZonedDateTime(String timeOfDay, int dayOfMonth, ZoneId zoneId, IWatch watch) {
-        return Util.getZonedDateTime(timeOfDay, zoneId, watch).withDayOfMonth(dayOfMonth);
+        return TasksUtil.getZonedDateTime(timeOfDay, zoneId, watch).withDayOfMonth(dayOfMonth);
     }
 
 

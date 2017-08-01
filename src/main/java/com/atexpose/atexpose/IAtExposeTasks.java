@@ -1,7 +1,10 @@
 package com.atexpose.atexpose;
 
 import com.atexpose.dispatcher.Dispatcher;
-import com.atexpose.dispatcher.channels.tasks.*;
+import com.atexpose.dispatcher.channels.tasks.DailyTaskChannel;
+import com.atexpose.dispatcher.channels.tasks.MinuteIntervalTaskChannel;
+import com.atexpose.dispatcher.channels.tasks.MonthlyTaskChannel;
+import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannel;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
@@ -10,8 +13,6 @@ import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import io.schinzel.basicutils.Thrower;
-
-import java.time.ZoneId;
 
 /**
  * Sets up scheduled tasks.
@@ -40,12 +41,12 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
      * Sets up a task to run once a day at the argument time of the day.
      *
      * @param taskName  The name of the task.
-     * @param request   The request to execute. Example: "time", "echo 123"
-     * @param timeOfDay The time for the day. UTC. Examples "23:55" "07:05"
-     * @param zoneId    The timezone
+     * @param request   The request to execute. E.g. "time", "echo 123"
+     * @param timeOfDay The time of day in the argument time zone. E.g. "23:55" "07:05"
+     * @param zoneId    The time zone. E.g. "UTC", "Europe/Stockholm"
      * @return This for chaining.
      */
-    default T addDailyTask(String taskName, String request, String timeOfDay, ZoneId zoneId) {
+    default T addDailyTask(String taskName, String request, String timeOfDay, String zoneId) {
         DailyTaskChannel scheduledTaskChannel = new DailyTaskChannel(taskName, request, timeOfDay, zoneId);
         return this.addTask(taskName, scheduledTaskChannel);
     }
@@ -53,13 +54,13 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
 
     /**
      * @param taskName   The name of the task.
-     * @param request    The request to execute. Example: "time", "echo 123"
-     * @param timeOfDay  The time for the day. UTC. Examples "23:55" "07:05"
-     * @param dayOfMonth The day of the month the task can execute.
-     * @param zoneId    The timezone
+     * @param request    The request to execute. Examples: "time", "echo 123"
+     * @param timeOfDay  TThe time of day in the argument time zone. Examples: "23:55" "07:05"
+     * @param dayOfMonth The day of the month in the argument time zone.
+     * @param zoneId    The time zone. E.g. "UTC", "Europe/Stockholm"
      * @return This for chaining.
      */
-    default T addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, ZoneId zoneId) {
+    default T addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId) {
         MonthlyTaskChannel scheduledTaskChannel = new MonthlyTaskChannel(taskName, request, timeOfDay, dayOfMonth, zoneId);
         return this.addTask(taskName, scheduledTaskChannel);
     }

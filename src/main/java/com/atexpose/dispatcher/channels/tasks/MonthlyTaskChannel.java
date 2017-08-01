@@ -1,6 +1,5 @@
 package com.atexpose.dispatcher.channels.tasks;
 
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 /**
@@ -19,15 +18,15 @@ public class MonthlyTaskChannel extends ScheduledTaskChannel {
      * @param dayOfMonth Day of month to execute. Min 1 and max 28.
      * @param zoneId     The zone of the argument time-of-day and day-of-month
      */
-    public MonthlyTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth, ZoneId zoneId) {
+    public MonthlyTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId) {
         this(taskName, request, timeOfDay, dayOfMonth, zoneId, Watch.create());
     }
 
 
-    MonthlyTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth, ZoneId zoneId, IWatch watch) {
+    MonthlyTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId, IWatch watch) {
         super(taskName, request, ChronoUnit.MONTHS, 1,
-                "Once a month at " + timeOfDay + " on day of month " + dayOfMonth,
-                Util.getZonedDateTime(Util.validateTimeOfDay(timeOfDay), Util.validateDayOfMonth(dayOfMonth), zoneId, watch),
+                "Once a month at " + timeOfDay + " on day of month " + dayOfMonth + " in time zone " + TasksUtil.getZoneId(zoneId).getId(),
+                TasksUtil.getZonedDateTime(TasksUtil.validateTimeOfDay(timeOfDay), TasksUtil.validateDayOfMonth(dayOfMonth), TasksUtil.getZoneId(zoneId), watch),
                 watch);
     }
 

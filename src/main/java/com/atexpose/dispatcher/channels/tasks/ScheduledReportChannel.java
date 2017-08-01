@@ -5,8 +5,6 @@ import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 
-import java.time.ZoneId;
-
 /**
  * The purpose of this class is to send reports as emails at a scheduled
  * interval.
@@ -23,7 +21,7 @@ public class ScheduledReportChannel extends DailyTaskChannel {
 
 
     @Builder
-    private ScheduledReportChannel(String taskName, String request, String timeOfDay, ZoneId zoneId,
+    private ScheduledReportChannel(String taskName, String request, String timeOfDay, String zoneId,
                                    IEmailSender emailSender, String recipient, String fromName) {
         super(taskName, request, timeOfDay, zoneId);
         mEmailSender = emailSender;

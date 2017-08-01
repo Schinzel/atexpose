@@ -22,7 +22,7 @@ class Main {
                 //Set your Gmail username and password
                 .setSMTPServerGmail("myusername@example.com", "mypassword")
                 //Set the the time to send in UTC a
-                .addScheduledReport("MyTask", "ping", "10:24", "recipient@example.com", "Me")
+                .addScheduledReport("MyTask", "ping", "10:24", "UTC", "recipient@example.com", "Me")
                 //Start command line interface
                 .startCLI();
     }

@@ -24,7 +24,7 @@ public class ScheduledReportTest {
         AtExpose cc = new AtExpose();
         exception.expect(RuntimeException.class);
         exception.expectMessage("You need to set SMTP settings");
-        cc.addScheduledReport(taskName, request, timeOfDay, "monkey@example.com", "fromName");
+        cc.addScheduledReport(taskName, request, timeOfDay, "UTC", "monkey@example.com", "fromName");
     }
 
 
@@ -35,7 +35,7 @@ public class ScheduledReportTest {
         String timeOfDay = "14:30";
         AtExpose atExpose = AtExpose.create();
         atExpose.setSMTPServerGmail("u1", "p1");
-        atExpose.addScheduledReport(taskName, request, timeOfDay, "monkey@example.com", "fn1");
+        atExpose.addScheduledReport(taskName, request, timeOfDay, "UTC", "monkey@example.com", "fn1");
         JSONObject jo = atExpose.getState().getJson();
         JSONObject joDispatcher = jo.getJSONArray("Dispatchers").getJSONObject(0);
         assertEquals("ScheduledReport_" + taskName, joDispatcher.getString("Name"));

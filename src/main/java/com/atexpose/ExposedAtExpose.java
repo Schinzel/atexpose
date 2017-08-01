@@ -15,8 +15,6 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
-import java.time.ZoneId;
-
 /**
  * The purpose of this class is to expose @Expose and allow string returns that contain status of
  * the operation
@@ -115,7 +113,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
     public String addDailyTask(String taskName, String request, String timeOfDay, String timeZone) {
-        this.getAtExpose().addDailyTask(taskName, request, timeOfDay, ZoneId.of(timeZone));
+        this.getAtExpose().addDailyTask(taskName, request, timeOfDay, timeZone);
         return "Daily task '" + taskName + "' set up";
     }
 
@@ -130,7 +128,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
     public String addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, String timeZone) {
-        this.getAtExpose().addMonthlyTask(taskName, request, timeOfDay, dayOfMonth, ZoneId.of(timeZone));
+        this.getAtExpose().addMonthlyTask(taskName, request, timeOfDay, dayOfMonth, timeZone);
         return "Monthly task '" + taskName + "' set up";
     }
 
@@ -146,7 +144,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
     public String addScheduledReport(String taskName, String request, String timeOfDay, String timeZone, String recipient, String fromName) {
-        this.getAtExpose().addScheduledReport(taskName, request, timeOfDay, ZoneId.of(timeZone), recipient, fromName);
+        this.getAtExpose().addScheduledReport(taskName, request, timeOfDay, timeZone, recipient, fromName);
         return "Scheduled report '" + taskName + "' has been set up";
     }
 
