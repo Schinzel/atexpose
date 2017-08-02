@@ -6,7 +6,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-public class MinuteIntervalTaskChannel extends ScheduledTaskChannel {
+public class ScheduledTaskChannelMinute extends ScheduledTaskChannel {
 
     /**
      * Sets up a tasks that executes every argument amount of minutes.
@@ -15,12 +15,12 @@ public class MinuteIntervalTaskChannel extends ScheduledTaskChannel {
      * @param request           The request to execute.
      * @param intervalInMinutes The interval in minutes.
      */
-    public MinuteIntervalTaskChannel(String taskName, String request, int intervalInMinutes) {
+    public ScheduledTaskChannelMinute(String taskName, String request, int intervalInMinutes) {
         this(taskName, request, intervalInMinutes, Watch.create());
     }
 
 
-    MinuteIntervalTaskChannel(String taskName, String request, int intervalInMinutes, IWatch watch) {
+    ScheduledTaskChannelMinute(String taskName, String request, int intervalInMinutes, IWatch watch) {
         super(taskName, request, ChronoUnit.MINUTES, intervalInMinutes,
                 "Every " + intervalInMinutes + " minutes",
                 ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(validateMinuteInterval(intervalInMinutes)),

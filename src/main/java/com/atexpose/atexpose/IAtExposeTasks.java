@@ -1,9 +1,9 @@
 package com.atexpose.atexpose;
 
 import com.atexpose.dispatcher.Dispatcher;
-import com.atexpose.dispatcher.channels.tasks.DailyTaskChannel;
-import com.atexpose.dispatcher.channels.tasks.MinuteIntervalTaskChannel;
-import com.atexpose.dispatcher.channels.tasks.MonthlyTaskChannel;
+import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelDaily;
+import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelMinute;
+import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelMonthly;
 import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannel;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
@@ -32,7 +32,7 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
      * @return This for chaining.
      */
     default T addTask(String taskName, String request, int minutes) {
-        MinuteIntervalTaskChannel scheduledTaskChannel = new MinuteIntervalTaskChannel(taskName, request, minutes);
+        ScheduledTaskChannelMinute scheduledTaskChannel = new ScheduledTaskChannelMinute(taskName, request, minutes);
         return this.addTask(taskName, scheduledTaskChannel);
     }
 
@@ -47,7 +47,7 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
      * @return This for chaining.
      */
     default T addDailyTask(String taskName, String request, String timeOfDay, String zoneId) {
-        DailyTaskChannel scheduledTaskChannel = new DailyTaskChannel(taskName, request, timeOfDay, zoneId);
+        ScheduledTaskChannelDaily scheduledTaskChannel = new ScheduledTaskChannelDaily(taskName, request, timeOfDay, zoneId);
         return this.addTask(taskName, scheduledTaskChannel);
     }
 
@@ -61,7 +61,7 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
      * @return This for chaining.
      */
     default T addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId) {
-        MonthlyTaskChannel scheduledTaskChannel = new MonthlyTaskChannel(taskName, request, timeOfDay, dayOfMonth, zoneId);
+        ScheduledTaskChannelMonthly scheduledTaskChannel = new ScheduledTaskChannelMonthly(taskName, request, timeOfDay, dayOfMonth, zoneId);
         return this.addTask(taskName, scheduledTaskChannel);
     }
 

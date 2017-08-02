@@ -11,7 +11,7 @@ import lombok.Builder;
  *
  * @author Schinzel
  */
-public class ScheduledReportChannel extends DailyTaskChannel {
+public class ScheduledReportChannel extends ScheduledTaskChannelDaily {
     /** The object that does the sending of emails. **/
     final IEmailSender mEmailSender;
     /** The recipient of the report **/

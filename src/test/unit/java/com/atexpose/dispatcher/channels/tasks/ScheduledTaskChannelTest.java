@@ -188,7 +188,7 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void shutdown_RunningThread_mWasNormalWakeUpTrue() {
-        MinuteIntervalTaskChannel stc = new MinuteIntervalTaskChannel("TheTaskName", "ThisIsTheTask", 1);
+        ScheduledTaskChannelMinute stc = new ScheduledTaskChannelMinute("TheTaskName", "ThisIsTheTask", 1);
         Thread thread = new Thread(() -> stc.getRequest(new ByteStorage()));
         thread.start();
         //Interrupt the waiting task

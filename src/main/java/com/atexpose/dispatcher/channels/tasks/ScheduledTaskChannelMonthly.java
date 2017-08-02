@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit;
  * The purpose of this class is to return a request monthly at a set day of month at a set time of
  * day
  */
-public class MonthlyTaskChannel extends ScheduledTaskChannel {
+public class ScheduledTaskChannelMonthly extends ScheduledTaskChannel {
 
 
     /**
@@ -18,12 +18,12 @@ public class MonthlyTaskChannel extends ScheduledTaskChannel {
      * @param dayOfMonth Day of month to execute. Min 1 and max 28.
      * @param zoneId     The zone of the argument time-of-day and day-of-month
      */
-    public MonthlyTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId) {
+    public ScheduledTaskChannelMonthly(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId) {
         this(taskName, request, timeOfDay, dayOfMonth, zoneId, Watch.create());
     }
 
 
-    MonthlyTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId, IWatch watch) {
+    ScheduledTaskChannelMonthly(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId, IWatch watch) {
         super(taskName, request, ChronoUnit.MONTHS, 1,
                 "Once a month at " + timeOfDay + " on day of month " + dayOfMonth + " in time zone " + TaskUtil.getZoneId(zoneId).getId(),
                 TaskUtil.getZonedDateTime(TaskUtil.validateTimeOfDay(timeOfDay), TaskUtil.validateDayOfMonth(dayOfMonth), TaskUtil.getZoneId(zoneId), watch),
