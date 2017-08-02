@@ -1,15 +1,14 @@
-package com.atexpose.dispatcher.channels.tasks;
+package com.atexpose.util.watch;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 /**
- * The run-time purpose of this class is simply to return an instant that represents now. Run-time
- * the only method that should be used is getInstant.
- * <p>
- * The full purpose of this class is that for tests be able to set a custom instant that is now.
+ * The purpose of this class is return an instant to represents now and to be able to specify this
+ * instant for testing purposes.
  */
-
-public class Watch implements IWatch {
+public class TestWatch implements IWatch {
     /** The instant for now. */
     private Instant mInstant = null;
 
@@ -17,8 +16,8 @@ public class Watch implements IWatch {
     /**
      * @return A new instance.
      */
-    public static Watch create() {
-        return new Watch();
+    public static TestWatch create() {
+        return new TestWatch();
     }
 
 
@@ -30,14 +29,13 @@ public class Watch implements IWatch {
     }
 
 
-
     /**
      * For testing purposes only. Set a instant that will be returned by getInstant.
      *
      * @param instant The instant that this instance should return.
      * @return This for chaining.
      */
-    public Watch setInstant(Instant instant) {
+    public TestWatch setInstant(Instant instant) {
         mInstant = instant;
         return this;
     }
@@ -55,7 +53,7 @@ public class Watch implements IWatch {
      * @param minute     The minute-of-hour. From 0 to 59
      * @return This for chaining.
      */
-    Watch setDateTimeUTC(int year, int month, int dayOfMonth, int hour, int minute) {
+    public TestWatch setDateTimeUtc(int year, int month, int dayOfMonth, int hour, int minute) {
         return this.setDateTime(year, month, dayOfMonth, hour, minute, ZoneId.of("UTC"));
     }
 
@@ -73,7 +71,7 @@ public class Watch implements IWatch {
      * @param zoneId     The id of the zone
      * @return An instance of this for chaining.
      */
-    Watch setDateTime(int year, int month, int dayOfMonth, int hour, int minute, ZoneId zoneId) {
+    public TestWatch setDateTime(int year, int month, int dayOfMonth, int hour, int minute, ZoneId zoneId) {
         ZonedDateTime zdt = ZonedDateTime.of(year, month, dayOfMonth, hour, minute, 0, 0, zoneId);
         mInstant = zdt.toInstant();
         return this;

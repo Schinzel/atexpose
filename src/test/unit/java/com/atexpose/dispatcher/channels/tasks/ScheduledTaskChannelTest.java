@@ -1,6 +1,8 @@
 package com.atexpose.dispatcher.channels.tasks;
 
 import com.atexpose.util.ByteStorage;
+import com.atexpose.util.watch.TestWatch;
+import com.atexpose.util.watch.Watch;
 import io.schinzel.basicutils.FunnyChars;
 import org.json.JSONObject;
 import org.junit.Rule;
@@ -42,7 +44,7 @@ public class ScheduledTaskChannelTest {
         Instant myInstant = Instant.now();
         ScheduledTaskChannel dailyTaskChannel = new ScheduledTaskChannel("TheTaskName",
                 "MyRequest", ChronoUnit.MINUTES, 15, "",
-                ZonedDateTime.now(), Watch.create().setInstant(myInstant));
+                ZonedDateTime.now(), TestWatch.create().setInstant(myInstant));
         assertThat(dailyTaskChannel.mWatch.getInstant()).isEqualTo(myInstant);
     }
 

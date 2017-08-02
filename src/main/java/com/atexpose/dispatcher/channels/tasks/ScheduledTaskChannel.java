@@ -2,6 +2,7 @@ package com.atexpose.dispatcher.channels.tasks;
 
 import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.util.ByteStorage;
+import com.atexpose.util.watch.IWatch;
 import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
 import lombok.Getter;

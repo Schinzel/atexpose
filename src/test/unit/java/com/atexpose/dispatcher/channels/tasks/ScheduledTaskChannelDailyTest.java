@@ -1,5 +1,7 @@
 package com.atexpose.dispatcher.channels.tasks;
 
+import com.atexpose.util.watch.IWatch;
+import com.atexpose.util.watch.TestWatch;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -36,7 +38,7 @@ public class ScheduledTaskChannelDailyTest {
 
     @Test
     public void getTimeToFireNext_Now1HourBeforeTaskTime_SameDayAtTaskTime() {
-        IWatch watch = Watch.create().setDateTimeUTC(2017, 7, 27, 13, 30);
+        IWatch watch = TestWatch.create().setDateTimeUtc(2017, 7, 27, 13, 30);
         ScheduledTaskChannelDaily dailyTaskChannel = new ScheduledTaskChannelDaily("TaskName", "MyRequest", "14:30", "UTC", watch);
         assertThat(dailyTaskChannel.getTimeToFireNext().toInstant()).isEqualTo("2017-07-27T14:30:00Z");
     }
@@ -44,7 +46,7 @@ public class ScheduledTaskChannelDailyTest {
 
     @Test
     public void getTimeToFireNext_Now1HourBeforeTaskTimeUTC_SameDayAtTaskTime() {
-        IWatch watch = Watch.create().setDateTime(2017, 7, 27, 13, 30, IWatch.UTC);
+        IWatch watch = TestWatch.create().setDateTime(2017, 7, 27, 13, 30, IWatch.UTC);
         ScheduledTaskChannelDaily dtc = new ScheduledTaskChannelDaily("TaskName", "MyRequest", "14:30", "UTC", watch);
         assertThat(dtc.getTimeToFireNext().toInstant()).isEqualTo("2017-07-27T14:30:00Z");
     }
@@ -52,7 +54,7 @@ public class ScheduledTaskChannelDailyTest {
 
     @Test
     public void getTimeToFireNext_Now1HourBeforeTaskTimeStockholm_SameDayTwoHoursEarlierUtc() {
-        IWatch watch = Watch.create().setDateTime(2017, 7, 27, 13, 30, IWatch.STOCKHOLM);
+        IWatch watch = TestWatch.create().setDateTime(2017, 7, 27, 13, 30, IWatch.STOCKHOLM);
         ScheduledTaskChannelDaily dtc = new ScheduledTaskChannelDaily("TaskName", "MyRequest", "14:30", "Europe/Stockholm", watch);
         assertThat(dtc.getTimeToFireNext().toInstant()).isEqualTo("2017-07-27T12:30:00Z");
     }
@@ -60,7 +62,7 @@ public class ScheduledTaskChannelDailyTest {
 
     @Test
     public void getTimeToFireNext_ConstructorTaskTimeNewYork_SameDayFourHoursLaterUtc() {
-        IWatch watch = Watch.create().setDateTime(2017, 7, 27, 13, 30, IWatch.NEW_YORK);
+        IWatch watch = TestWatch.create().setDateTime(2017, 7, 27, 13, 30, IWatch.NEW_YORK);
         ScheduledTaskChannelDaily dtc = new ScheduledTaskChannelDaily("TaskName", "MyRequest", "14:30", "America/New_York", watch);
         assertThat(dtc.getTimeToFireNext().toInstant()).isEqualTo("2017-07-27T18:30:00Z");
     }
@@ -68,7 +70,7 @@ public class ScheduledTaskChannelDailyTest {
 
     @Test
     public void getTimeToFireNext_Now1HourAfterTaskTime_NextDayAtTaskTime() {
-        IWatch watch = Watch.create().setDateTimeUTC(2017, 7, 27, 15, 30);
+        IWatch watch = TestWatch.create().setDateTimeUtc(2017, 7, 27, 15, 30);
         ScheduledTaskChannelDaily dailyTaskChannel = new ScheduledTaskChannelDaily("TaskName", "MyRequest", "14:30", "UTC", watch);
         assertThat(dailyTaskChannel.getTimeToFireNext().toInstant()).isEqualTo("2017-07-28T14:30:00Z");
     }
@@ -76,7 +78,7 @@ public class ScheduledTaskChannelDailyTest {
 
     @Test
     public void getTimeToFireNext_Now1HourAfterTaskTimeUTC_NextDayAtTaskTime() {
-        IWatch watch = Watch.create().setDateTime(2017, 7, 27, 15, 30, IWatch.UTC);
+        IWatch watch = TestWatch.create().setDateTime(2017, 7, 27, 15, 30, IWatch.UTC);
         ScheduledTaskChannelDaily dtc = new ScheduledTaskChannelDaily("TaskName", "MyRequest", "14:30", "UTC", watch);
         assertThat(dtc.getTimeToFireNext().toInstant()).isEqualTo("2017-07-28T14:30:00Z");
     }
@@ -84,7 +86,7 @@ public class ScheduledTaskChannelDailyTest {
 
     @Test
     public void getTimeToFireNext_Now1HourAfterTaskTimeStockholm_NextDayTwoHoursEarlierUtc() {
-        IWatch watch = Watch.create().setDateTime(2017, 7, 27, 15, 30, IWatch.STOCKHOLM);
+        IWatch watch = TestWatch.create().setDateTime(2017, 7, 27, 15, 30, IWatch.STOCKHOLM);
         ScheduledTaskChannelDaily dtc = new ScheduledTaskChannelDaily("TaskName", "MyRequest", "14:30", "Europe/Stockholm", watch);
         assertThat(dtc.getTimeToFireNext().toInstant()).isEqualTo("2017-07-28T12:30:00Z");
     }
@@ -92,7 +94,7 @@ public class ScheduledTaskChannelDailyTest {
 
     @Test
     public void getTimeToFireNext_ConstructorTaskTimeNewYork_NextDayFourHoursLaterUtc() {
-        IWatch watch = Watch.create().setDateTime(2017, 7, 27, 15, 30, IWatch.NEW_YORK);
+        IWatch watch = TestWatch.create().setDateTime(2017, 7, 27, 15, 30, IWatch.NEW_YORK);
         ScheduledTaskChannelDaily dtc = new ScheduledTaskChannelDaily("TaskName", "MyRequest", "14:30", "America/New_York", watch);
         assertThat(dtc.getTimeToFireNext().toInstant()).isEqualTo("2017-07-28T18:30:00Z");
     }

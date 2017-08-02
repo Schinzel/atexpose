@@ -1,9 +1,12 @@
 package com.atexpose.dispatcher.channels.tasks;
 
+import com.atexpose.util.watch.IWatch;
+import com.atexpose.util.watch.TestWatch;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 
 public class ScheduledTaskChannelMonthlyTest {
@@ -35,7 +38,7 @@ public class ScheduledTaskChannelMonthlyTest {
 
     @Test
     public void getTimeToFireNext_Now1HourBeforeTaskTime_SameDayAtTaskTime() {
-        IWatch watch = Watch.create().setDateTimeUTC(2017, 7, 27, 13, 30);
+        IWatch watch = TestWatch.create().setDateTimeUtc(2017, 7, 27, 13, 30);
         ScheduledTaskChannelMonthly dailyTaskChannel = new ScheduledTaskChannelMonthly("TaskName", "MyRequest", "14:30", 27, "UTC", watch);
         assertThat(dailyTaskChannel.getTimeToFireNext().toInstant()).isEqualTo("2017-07-27T14:30:00Z");
     }
@@ -43,7 +46,7 @@ public class ScheduledTaskChannelMonthlyTest {
 
     @Test
     public void getTimeToFireNext_Now1HourAfterTaskTime_NextMonth() {
-        IWatch watch = Watch.create().setDateTimeUTC(2017, 7, 27, 15, 30);
+        IWatch watch = TestWatch.create().setDateTimeUtc(2017, 7, 27, 15, 30);
         ScheduledTaskChannelMonthly dailyTaskChannel = new ScheduledTaskChannelMonthly("TaskName", "MyRequest", "14:30", 27, "UTC", watch);
         assertThat(dailyTaskChannel.getTimeToFireNext().toInstant()).isEqualTo("2017-08-27T14:30:00Z");
     }
@@ -51,7 +54,7 @@ public class ScheduledTaskChannelMonthlyTest {
 
     @Test
     public void getTimeToFireNext__NowEndFebruaryLeapYear_TaskTimeDay15__15March() {
-        IWatch watch = Watch.create().setDateTimeUTC(2016, 2, 27, 14, 30);
+        IWatch watch = TestWatch.create().setDateTimeUtc(2016, 2, 27, 14, 30);
         ScheduledTaskChannelMonthly dailyTaskChannel = new ScheduledTaskChannelMonthly("TaskName", "MyRequest", "14:30", 15, "UTC", watch);
         assertThat(dailyTaskChannel.getTimeToFireNext().toInstant()).isEqualTo("2016-03-15T14:30:00Z");
     }

@@ -1,5 +1,7 @@
 package com.atexpose.dispatcher.channels.tasks;
 
+import com.atexpose.util.watch.IWatch;
+import com.atexpose.util.watch.TestWatch;
 import org.junit.Test;
 
 import java.time.ZoneId;
@@ -38,7 +40,7 @@ public class TaskUtilTest extends TaskUtil {
     @Test
     public void getZonedDateTime_MidDayNewYorkInSummerTime_4HoursLaterUtc() {
         //Exact time does not matter. Only that is summer time
-        IWatch watch = Watch.create().setDateTimeUTC(2017, 7, 27, 15, 30);
+        IWatch watch = TestWatch.create().setDateTimeUtc(2017, 7, 27, 15, 30);
         ZonedDateTime actual = TaskUtil.getZonedDateTime("14:30", IWatch.NEW_YORK, watch);
         assertThat(actual).isEqualTo("2017-07-27T18:30:00Z");
         assertThat(actual).isEqualTo("2017-07-27T14:30-04:00[America/New_York]");
@@ -48,7 +50,7 @@ public class TaskUtilTest extends TaskUtil {
     @Test
     public void getZonedDateTime_EveningNewYorkInTheSummerTime_NextDayUtc() {
         //Exact time does not matter. Only that is summer time
-        IWatch watch = Watch.create().setDateTimeUTC(2017, 7, 27, 15, 30);
+        IWatch watch = TestWatch.create().setDateTimeUtc(2017, 7, 27, 15, 30);
         ZonedDateTime actual = TaskUtil.getZonedDateTime("22:30", IWatch.NEW_YORK, watch);
         assertThat(actual).isEqualTo("2017-07-28T02:30:00Z");
         assertThat(actual).isEqualTo("2017-07-27T22:30-04:00[America/New_York]");
@@ -58,7 +60,7 @@ public class TaskUtilTest extends TaskUtil {
     @Test
     public void getZonedDateTime_EveningNewYorkInTheSummerTimeDayOfMonth14_DayOfMonth15Utc() {
         //Exact time does not matter. Only that is summer time
-        IWatch watch = Watch.create().setDateTimeUTC(2017, 7, 27, 15, 30);
+        IWatch watch = TestWatch.create().setDateTimeUtc(2017, 7, 27, 15, 30);
         ZonedDateTime actual = TaskUtil.getZonedDateTime("22:30", 14, IWatch.NEW_YORK, watch);
         assertThat(actual).isEqualTo("2017-07-15T02:30:00Z");
         assertThat(actual).isEqualTo("2017-07-14T22:30-04:00[America/New_York]");
