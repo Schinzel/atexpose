@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * DailyTaskChannel.
  */
 
-class TasksUtil {
+class TaskUtil {
 
     /**
      * @param zoneId
@@ -35,7 +35,7 @@ class TasksUtil {
      * @return The argument time-of-day and day-of-month as a date in the argument zone.
      */
     static ZonedDateTime getZonedDateTime(String timeOfDay, int dayOfMonth, ZoneId zoneId, IWatch watch) {
-        return TasksUtil.getZonedDateTime(timeOfDay, zoneId, watch).withDayOfMonth(dayOfMonth);
+        return TaskUtil.getZonedDateTime(timeOfDay, zoneId, watch).withDayOfMonth(dayOfMonth);
     }
 
 

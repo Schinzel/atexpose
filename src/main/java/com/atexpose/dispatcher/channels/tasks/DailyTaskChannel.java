@@ -32,8 +32,8 @@ public class DailyTaskChannel extends ScheduledTaskChannel {
      */
     DailyTaskChannel(String taskName, String request, String timeOfDay, String zoneId, IWatch watch) {
         super(taskName, request, ChronoUnit.DAYS, 1,
-                "Every day at " + timeOfDay + "[" + TasksUtil.getZoneId(zoneId).getId() + "]",
-                TasksUtil.getZonedDateTime(TasksUtil.validateTimeOfDay(timeOfDay), TasksUtil.getZoneId(zoneId), watch),
+                "Every day at " + timeOfDay + "[" + TaskUtil.getZoneId(zoneId).getId() + "]",
+                TaskUtil.getZonedDateTime(TaskUtil.validateTimeOfDay(timeOfDay), TaskUtil.getZoneId(zoneId), watch),
                 watch);
     }
 

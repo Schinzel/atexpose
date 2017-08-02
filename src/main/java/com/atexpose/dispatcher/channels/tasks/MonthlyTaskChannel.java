@@ -25,8 +25,8 @@ public class MonthlyTaskChannel extends ScheduledTaskChannel {
 
     MonthlyTaskChannel(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId, IWatch watch) {
         super(taskName, request, ChronoUnit.MONTHS, 1,
-                "Once a month at " + timeOfDay + " on day of month " + dayOfMonth + " in time zone " + TasksUtil.getZoneId(zoneId).getId(),
-                TasksUtil.getZonedDateTime(TasksUtil.validateTimeOfDay(timeOfDay), TasksUtil.validateDayOfMonth(dayOfMonth), TasksUtil.getZoneId(zoneId), watch),
+                "Once a month at " + timeOfDay + " on day of month " + dayOfMonth + " in time zone " + TaskUtil.getZoneId(zoneId).getId(),
+                TaskUtil.getZonedDateTime(TaskUtil.validateTimeOfDay(timeOfDay), TaskUtil.validateDayOfMonth(dayOfMonth), TaskUtil.getZoneId(zoneId), watch),
                 watch);
     }
 
