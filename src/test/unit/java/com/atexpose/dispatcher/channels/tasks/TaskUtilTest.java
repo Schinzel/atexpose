@@ -2,6 +2,7 @@ package com.atexpose.dispatcher.channels.tasks;
 
 import org.junit.Test;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,6 +12,27 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  * The extending ony for vanity coverage points.
  */
 public class TaskUtilTest extends TaskUtil {
+
+
+    @Test
+    public void getZoneId_null_UTC() {
+        assertThat(TaskUtil.getZoneId(null)).isEqualTo(ZoneId.of("UTC"));
+
+    }
+
+
+    @Test
+    public void getZoneId_EmptyString_UTC() {
+        assertThat(TaskUtil.getZoneId("")).isEqualTo(ZoneId.of("UTC"));
+
+    }
+
+
+    @Test
+    public void getZoneId_AmericaNew_York_AmericaNew_York() {
+        assertThat(TaskUtil.getZoneId("America/New_York"))
+                .isEqualTo(ZoneId.of("America/New_York"));
+    }
 
 
     @Test
