@@ -15,11 +15,9 @@ import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The purpose of this class is to execute a custom command at a regular
- * scheduled interval.
- * This class is essentially a sleeper. It sleeps either:
- * 1) a number of minutes
- * 2) until a certain time of day
+ * The purpose of this class is to execute a method at a regular scheduled interval.
+ * This class is essentially a sleeper that sleep until the method that is to be executed
+ * is returned with getRequest.
  *
  * @author Schinzel
  */
