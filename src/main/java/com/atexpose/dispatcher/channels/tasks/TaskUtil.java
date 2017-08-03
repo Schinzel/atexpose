@@ -64,7 +64,7 @@ class TaskUtil {
      * @return The argument time of day
      */
     static String validateTimeOfDay(String timeOfDay) {
-        Pattern timePattern = Pattern.compile("^[0-2][0-4]:[0-5][0-9]");
+        Pattern timePattern = Pattern.compile("^([01]?[0-9]|2[0-3]):[0-5][0-9]");
         Thrower.throwIfFalse(timePattern.matcher(timeOfDay).matches())
                 .message("Incorrect task time: '" + timeOfDay + "'. Correct format is HH:mm, e.g. 09:00 or 23:55.");
         return timeOfDay;

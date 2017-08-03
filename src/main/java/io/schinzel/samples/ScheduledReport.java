@@ -1,4 +1,4 @@
-package io.schinzel.samples.sample_email_report;
+package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
 
@@ -15,7 +15,7 @@ import com.atexpose.AtExpose;
  * * = If you are unsure about the time in UTC, just start this sample and write "time" in the terminal to get
  * the current time in UTC.
  */
-class Main {
+class ScheduledReport {
 
     public static void main(String[] args) {
         AtExpose.create()

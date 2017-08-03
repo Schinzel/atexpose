@@ -1,4 +1,4 @@
-package io.schinzel.samples.sample_exception;
+package io.schinzel.samples.exception;
 
 import com.atexpose.AtExpose;
 

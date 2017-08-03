@@ -68,9 +68,23 @@ public class TaskUtilTest extends TaskUtil {
 
 
     @Test
-    public void validateTimeOfDay_CorrectTime_CorrectTime() {
+    public void validateTimeOfDay_CorrectTime2355_CorrectTime() {
         String actual = TaskUtil.validateTimeOfDay("23:55");
         assertThat(actual).isEqualTo("23:55");
+    }
+
+
+    @Test
+    public void validateTimeOfDay_CorrectTime0700_CorrectTime() {
+        String actual = TaskUtil.validateTimeOfDay("07:00");
+        assertThat(actual).isEqualTo("07:00");
+    }
+
+
+    @Test
+    public void validateTimeOfDay_CorrectTime700_CorrectTime() {
+        String actual = TaskUtil.validateTimeOfDay("7:00");
+        assertThat(actual).isEqualTo("7:00");
     }
 
 

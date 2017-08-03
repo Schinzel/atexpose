@@ -1,4 +1,4 @@
-package io.schinzel.samples.sample_3_webserver;
+package io.schinzel.samples._3_webserver;
 
 import com.atexpose.Expose;
 

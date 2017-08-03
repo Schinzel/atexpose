@@ -1,4 +1,4 @@
-package io.schinzel.samples.sample_2_webserver;
+package io.schinzel.samples._3_webserver;
 
 import com.atexpose.Expose;
 
@@ -8,14 +8,13 @@ import com.atexpose.Expose;
 public class MyClass {
 
     @Expose
-    static String sayIt() {
+    public static String sayIt() {
         return "Helloooo world!";
     }
 
 
     @Expose(
-            arguments = {"Int"},
-            theReturn = "The argument number doubled"
+            arguments = {"Int"}
     )
     public static int doubleIt(int i) {
         return i * 2;
@@ -23,8 +22,7 @@ public class MyClass {
 
 
     @Expose(
-            arguments = {"String"},
-            theReturn = "The argument string prefixed with Echo"
+            arguments = {"String"}
     )
     public static String doEcho(String str) {
         return "Echo: " + str;
