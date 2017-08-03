@@ -4,7 +4,6 @@ import com.atexpose.util.ByteStorage;
 import com.atexpose.util.watch.TestWatch;
 import com.atexpose.util.watch.Watch;
 import io.schinzel.basicutils.FunnyChars;
-import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -13,6 +12,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -116,7 +116,7 @@ public class ScheduledTaskChannelTest {
             }
         });
         sleepThread.start();
-        new Thread(() -> sleepThread.interrupt()).start();
+        new Thread(sleepThread::interrupt).start();
         sleepThread.join();
         assertThat(exceptionThrown).isTrue();
     }
@@ -156,7 +156,8 @@ public class ScheduledTaskChannelTest {
     @Test
     public void getState_NormalCase_CheckThatLabelsAreThere() {
         ScheduledTaskChannel stc = getTestChannel();
-        JSONObject status = stc.getState().getJson();
+        Set<String> labels = stc.getState().getJson().toMap().keySet();
+        assertThat(labels).contains("task_name", "request", "task_interval", "next_task_time");
     }
 
 

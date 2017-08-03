@@ -16,7 +16,7 @@ public class ScheduledTaskChannelMinuteTest {
     @Test
     public void constructor_IntervalTooLow_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                new ScheduledTaskChannelMinute("theTŒaskName", "request", 0)
+                new ScheduledTaskChannelMinute("theTaskName", "request", 0)
         );
     }
 

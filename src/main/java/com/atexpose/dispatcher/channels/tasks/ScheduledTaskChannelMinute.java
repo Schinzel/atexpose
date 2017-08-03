@@ -22,7 +22,7 @@ public class ScheduledTaskChannelMinute extends ScheduledTaskChannel {
     }
 
 
-    ScheduledTaskChannelMinute(String taskName, String request, int intervalInMinutes, IWatch watch) {
+    private ScheduledTaskChannelMinute(String taskName, String request, int intervalInMinutes, IWatch watch) {
         super(taskName, request, ChronoUnit.MINUTES, intervalInMinutes,
                 "Every " + intervalInMinutes + " minutes",
                 ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(validateMinuteInterval(intervalInMinutes)),
@@ -35,7 +35,7 @@ public class ScheduledTaskChannelMinute extends ScheduledTaskChannel {
      * @return The argument minutes
      */
     private static int validateMinuteInterval(int minuteInterval) {
-        Thrower.throwIfVarOutsideRange(minuteInterval, "Mintues", 1, 1440);
+        Thrower.throwIfVarOutsideRange(minuteInterval, "Minutes", 1, 1440);
         return minuteInterval;
     }
 

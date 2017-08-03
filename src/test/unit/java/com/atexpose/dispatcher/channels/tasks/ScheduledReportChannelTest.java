@@ -19,11 +19,8 @@ import java.security.Security;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author Schinzel
- */
 public class ScheduledReportChannelTest {
-    IEmailSender mMailSender = new GmailEmailSender("noreply@example.com", "myPsw");
+    private IEmailSender mMailSender = new GmailEmailSender("noreply@example.com", "myPsw");
 
     @Rule
     public ExpectedException exception = ExpectedException.none();

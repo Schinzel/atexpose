@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 class TaskUtil {
 
     /**
-     * @param zoneId
+     * @param zoneId E.g. "UTC", ""America/New_York"
      * @return The zone id of the argument zone id
      */
     static ZoneId getZoneId(String zoneId) {
