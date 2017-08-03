@@ -88,37 +88,6 @@ class ExposedAtExpose {
 
 
     @Expose(
-            arguments = {"TaskName", "Request", "TimeOfDay", "Recipient", "FromName"},
-            requiredAccessLevel = 3,
-            requiredArgumentCount = 4,
-            description = "Performs a task every day at the stated time of day. " +
-                    "The time stated is in UTC. " +
-                    "Scheduled reports are close relatives of scheduled tasks with the difference that the result of operations are sent as mail. " +
-                    "Reports are given an event logger with default logger and format.",
-            labels = {"@Expose", "AtExpose", "ScheduledTasks"}
-    )
-    public String addScheduledReport(String taskName, String request, String timeOfDay, String recipient, String fromName) {
-        this.getAtExpose().addScheduledReport(taskName, request, timeOfDay, recipient, fromName);
-        return "Scheduled report '" + taskName + "' has been set up";
-    }
-
-
-    @Expose(
-            arguments = {"TaskName", "Request", "TimeOfDay"},
-            requiredAccessLevel = 3,
-            requiredArgumentCount = 3,
-            description = "Performs a task every day at the stated time of day. " +
-                    "The time stated is in UTC. " +
-                    "Tasks are given an event logger with default logger and format. ",
-            labels = {"@Expose", "AtExpose", "ScheduledTasks"}
-    )
-    public String addDailyTask(String taskName, String request, String timeOfDay) {
-        this.getAtExpose().addDailyTask(taskName, request, timeOfDay);
-        return "Daily task '" + taskName + "' set up";
-    }
-
-
-    @Expose(
             arguments = {"TaskName", "Request", "Minutes"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 3,
@@ -128,14 +97,29 @@ class ExposedAtExpose {
                     "Tasks are given an event logger with default logger and format.",
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
-    public String addTask(String taskName, String request, int minutes) {
-        this.getAtExpose().addTask(taskName, request, minutes);
+    public String addMinuteTask(String taskName, String request, int minutes) {
+        this.getAtExpose().addMinuteTask(taskName, request, minutes);
         return "Task that runs every '" + minutes + "' minutes set up";
     }
 
 
     @Expose(
-            arguments = {"TaskName", "Request", "TimeOfDay", "DayOfMonth"},
+            arguments = {"TaskName", "Request", "TimeOfDay", "TimeZone"},
+            requiredAccessLevel = 3,
+            requiredArgumentCount = 3,
+            description = "Performs a task every day at the stated time of day. " +
+                    "The time stated is in UTC. " +
+                    "Tasks are given an event logger with default logger and format. ",
+            labels = {"@Expose", "AtExpose", "ScheduledTasks"}
+    )
+    public String addDailyTask(String taskName, String request, String timeOfDay, String timeZone) {
+        this.getAtExpose().addDailyTask(taskName, request, timeOfDay, timeZone);
+        return "Daily task '" + taskName + "' set up";
+    }
+
+
+    @Expose(
+            arguments = {"TaskName", "Request", "TimeOfDay", "DayOfMonth", "TimeZone"},
             requiredAccessLevel = 3,
             description = "Adds a scheduled a task that will run monthly at the stated time of day at the stated day of month " +
                     "The time stated is in UTC. " +
@@ -143,9 +127,25 @@ class ExposedAtExpose {
             requiredArgumentCount = 4,
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
-    public String addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth) {
-        this.getAtExpose().addMonthlyTask(taskName, request, timeOfDay, dayOfMonth);
-        return "Montly task '" + taskName + "' set up";
+    public String addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, String timeZone) {
+        this.getAtExpose().addMonthlyTask(taskName, request, timeOfDay, dayOfMonth, timeZone);
+        return "Monthly task '" + taskName + "' set up";
+    }
+
+
+    @Expose(
+            arguments = {"TaskName", "Request", "TimeOfDay", "TimeZone", "Recipient", "FromName"},
+            requiredAccessLevel = 3,
+            requiredArgumentCount = 4,
+            description = "Performs a task every day at the stated time of day. " +
+                    "The time stated is in UTC. " +
+                    "Scheduled reports are close relatives of scheduled tasks with the difference that the result of operations are sent as mail. " +
+                    "Reports are given an event logger with default logger and format.",
+            labels = {"@Expose", "AtExpose", "ScheduledTasks"}
+    )
+    public String addScheduledReport(String taskName, String request, String timeOfDay, String timeZone, String recipient, String fromName) {
+        this.getAtExpose().addScheduledReport(taskName, request, timeOfDay, timeZone, recipient, fromName);
+        return "Scheduled report '" + taskName + "' has been set up";
     }
 
 

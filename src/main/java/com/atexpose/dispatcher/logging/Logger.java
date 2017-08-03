@@ -6,6 +6,8 @@ import com.atexpose.dispatcher.logging.writer.ILogWriter;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import io.schinzel.basicutils.crypto.cipher.ICipher;
 import io.schinzel.basicutils.crypto.cipher.NoCipher;
+import io.schinzel.basicutils.state.IStateNode;
+import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 import lombok.experimental.Accessors;
 
@@ -20,7 +22,7 @@ import java.util.Map;
  */
 @Builder
 @Accessors(prefix = "m")
-public class Logger {
+public class Logger implements IStateNode {
     /** The type of the logger. E.g. error or event */
     @Builder.Default
     private LoggerType mLoggerType = LoggerType.EVENT;
@@ -51,5 +53,14 @@ public class Logger {
         }
     }
 
+
+    @Override
+    public State getState() {
+        return State.getBuilder()
+                .add("Type", mLoggerType.name().toLowerCase())
+                .add("Writer", mLogWriter.getClass().getSimpleName())
+                .add("Formatter", mLogFormatter.getClass().getSimpleName())
+                .build();
+    }
 
 }

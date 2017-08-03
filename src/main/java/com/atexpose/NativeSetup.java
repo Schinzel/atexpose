@@ -183,6 +183,12 @@ class NativeSetup {
                         .name("Message")
                         .dataType(DataType.STRING)
                         .description("A message.")
+                        .build())
+                .addArgument(Argument.builder()
+                        .name("TimeZone")
+                        .dataType(DataType.STRING)
+                        .defaultValue("UTC")
+                        .description("A time zone. E.g. UTC, America/New_York, Europe/Stockholm.")
                         .build());
     }
 

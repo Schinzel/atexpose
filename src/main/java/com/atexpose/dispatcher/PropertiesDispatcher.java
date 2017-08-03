@@ -6,7 +6,7 @@ package com.atexpose.dispatcher;
  * Created by schinzel on 2017-04-23.
  */
 public class PropertiesDispatcher {
-    /** Name of the server in the http respone header */
+    /** Name of the server in the http response header */
     public static final String RESP_HEADER_SERVER_NAME = "@Expose";
     /**
      * This marker is the suffix to all commands in http requests. E.g.

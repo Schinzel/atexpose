@@ -1,7 +1,7 @@
 package com.atexpose.atexpose;
 
 import com.atexpose.dispatcher.Dispatcher;
-import com.atexpose.dispatcher.channels.ScheduledReportChannel;
+import com.atexpose.dispatcher.channels.tasks.ScheduledReportChannel;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
@@ -53,17 +53,19 @@ public interface IAtExposeReports<T extends IAtExpose<T>> extends IAtExpose<T> {
 
 
     /**
-     * Sets up a scheduled report. This is a scheduled task where the result of the operation is sent to the argument
+     * Sets up a scheduled report. This is a scheduled task where the result of the operation is
+     * sent to the argument
      * recipient.
      *
-     * @param taskName  The name of the report.
-     * @param rawRequest   The request to execute. Example: "echo hi"
-     * @param timeOfDay The time of day to run the report. Examples: "13:05" "07:55"
-     * @param recipient The recipient email address.
-     * @param fromName  The name in the from field in the email
+     * @param taskName   The name of the report.
+     * @param rawRequest The request to execute. Example: "echo hi"
+     * @param timeOfDay  The time of day in the argument time zone to run the report. Examples: "13:05" "07:55"
+     * @param zoneId     The time zone. E.g. "UTC", "Europe/Stockholm"
+     * @param recipient  The recipient email address.
+     * @param fromName   The name in the from field in the email
      * @return This for chaining.
      */
-    default T addScheduledReport(String taskName, String rawRequest, String timeOfDay, String recipient, String fromName) {
+    default T addScheduledReport(String taskName, String rawRequest, String timeOfDay, String zoneId, String recipient, String fromName) {
         Thrower.throwIfTrue(this.getMailSender() == null, "You need to set SMTP settings before setting up a scheduled report. Use method setSMTPServer.");
         IParser parser = new TextParser();
         Request request1 = parser.getRequest(rawRequest);
@@ -77,6 +79,7 @@ public interface IAtExposeReports<T extends IAtExpose<T>> extends IAtExpose<T> {
                 .request(rawRequest)
                 .taskName(taskName)
                 .timeOfDay(timeOfDay)
+                .zoneId(zoneId)
                 .fromName(fromName)
                 .build();
         String dispatcherName = "ScheduledReport_" + taskName;
