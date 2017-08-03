@@ -31,7 +31,7 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
      * @param minutes  The interval at which to execute the task.
      * @return This for chaining.
      */
-    default T addTask(String taskName, String request, int minutes) {
+    default T addMinuteTask(String taskName, String request, int minutes) {
         ScheduledTaskChannelMinute scheduledTaskChannel = new ScheduledTaskChannelMinute(taskName, request, minutes);
         return this.addTask(taskName, scheduledTaskChannel);
     }

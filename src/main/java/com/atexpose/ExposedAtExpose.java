@@ -97,8 +97,8 @@ class ExposedAtExpose {
                     "Tasks are given an event logger with default logger and format.",
             labels = {"@Expose", "AtExpose", "ScheduledTasks"}
     )
-    public String addTask(String taskName, String request, int minutes) {
-        this.getAtExpose().addTask(taskName, request, minutes);
+    public String addMinuteTask(String taskName, String request, int minutes) {
+        this.getAtExpose().addMinuteTask(taskName, request, minutes);
         return "Task that runs every '" + minutes + "' minutes set up";
     }
 
