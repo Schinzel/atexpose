@@ -3,7 +3,7 @@ package io.schinzel.samples.exception;
 import com.atexpose.AtExpose;
 
 /**
- * The purpose of this sample is to show how to attach customer key-value properties to an
+ * The purpose of this sample is to show how to attach custom key-value properties to an
  * exception.
  * <p>
  * 1) Start main method below
