@@ -10,8 +10,8 @@ import com.atexpose.AtExpose;
  * http://127.0.0.1:5555/call/sayIt
  * http://127.0.0.1:5555/call/doubleIt?Int=55
  * http://127.0.0.1:5555/call/doEcho?String=chimp
- * http://127.0.0.1:5555/call/setIt?String=gorilla
- * http://127.0.0.1:5555/call/getIt
+ * http://127.0.0.1:5555/call/setTheThing?String=gorilla
+ * http://127.0.0.1:5555/call/getTheThing
  *
  * @author schinzel
  */
