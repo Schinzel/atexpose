@@ -33,7 +33,7 @@ public class ScheduledTaskChannelTest {
      *
      * @return A scheduled task channel
      */
-    static ScheduledTaskChannel getTestChannel() {
+    private static ScheduledTaskChannel getTestChannel() {
         return new ScheduledTaskChannel("TheTaskName", "MyRequest", ChronoUnit.MINUTES, 15, "", ZonedDateTime.now(), Watch.create());
 
     }
