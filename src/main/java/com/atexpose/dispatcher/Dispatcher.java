@@ -282,6 +282,7 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
                 .addChild("Parser", mParser)
                 .addChild("Wrapper", mWrapper)
                 .addChild("Channel", mChannel)
+                .addChildren("Loggers", mLoggers)
                 .build();
     }
 
