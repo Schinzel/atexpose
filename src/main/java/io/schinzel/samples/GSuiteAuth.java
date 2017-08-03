@@ -3,9 +3,8 @@ package io.schinzel.samples;
 import com.atexpose.AtExpose;
 
 /**
- * The purpose of this class
- * <p>
- * Created by Schinzel on 2017-03-03.
+ * This sample sets a web server that requires you to be logged in to the argument domain
+ * using Google.
  */
 class GSuiteAuth {
 
