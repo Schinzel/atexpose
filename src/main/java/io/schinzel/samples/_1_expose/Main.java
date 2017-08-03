@@ -10,8 +10,8 @@ import com.atexpose.AtExpose;
  * sayIt
  * doubleIt 55
  * doEcho chimp
- * setIt gorilla
- * getIt
+ * setTheThing gorilla
+ * getTheThing
  * close
  *
  * @author schinzel
