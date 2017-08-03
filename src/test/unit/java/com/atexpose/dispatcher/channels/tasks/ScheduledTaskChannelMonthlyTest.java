@@ -32,7 +32,7 @@ public class ScheduledTaskChannelMonthlyTest {
     public void getState_TaskTimeContainsTimeOfDayAndDayOfMonth() {
         ScheduledTaskChannelMonthly stc = new ScheduledTaskChannelMonthly("TaskName3", "TheRequest3", "23:53", 28, "UTC");
         JSONObject status = stc.getState().getJson();
-        assertThat(status.getString("task_time")).isEqualTo("Once a month at 23:53 on day of month 28 in time zone UTC");
+        assertThat(status.getString("task_interval")).isEqualTo("Once a month at 23:53 on day of month 28 in time zone UTC");
     }
 
 

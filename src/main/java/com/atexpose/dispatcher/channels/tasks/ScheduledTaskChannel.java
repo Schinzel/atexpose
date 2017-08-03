@@ -28,8 +28,8 @@ public class ScheduledTaskChannel implements IChannel {
     /** The task to run. Is a request in the text format. E.g. "echo hi" */
     @Getter
     private final String mTaskRequest;
-    /** Human readable string for when the task is to execute. */
-    private final String mTaskTime;
+    /** Human readable string describing the task interval. */
+    private final String mHumanReadableTaskInterval;
     /** The interval size. For minute tasks this is the number of minutes between tasks. */
     private final int mIntervalAmount;
     /** The interval unit. Is days for daily tasks, and minutes for minute tasks. */
@@ -53,12 +53,12 @@ public class ScheduledTaskChannel implements IChannel {
      *                       intervalUnit.
      */
     ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount,
-                         String humanReadableTaskTime, ZonedDateTime initialTaskFireTime, IWatch watch) {
+                         String humanReadableTaskInterval, ZonedDateTime initialTaskFireTime, IWatch watch) {
         mTaskName = taskName;
         mTaskRequest = request;
         mIntervalUnit = intervalUnit;
         mIntervalAmount = intervalAmount;
-        mTaskTime = humanReadableTaskTime;
+        mHumanReadableTaskInterval = humanReadableTaskInterval;
         mTimeToFireNext = getNextTaskTime(initialTaskFireTime, intervalAmount, intervalUnit, watch);
         mWatch = watch;
     }
@@ -141,7 +141,7 @@ public class ScheduledTaskChannel implements IChannel {
         return State.getBuilder()
                 .add("task_name", mTaskName)
                 .add("request", mTaskRequest)
-                .add("task_time", mTaskTime)
+                .add("task_interval", mHumanReadableTaskInterval)
                 .add("next_task_time", mTimeToFireNext.toString())
                 .build();
     }

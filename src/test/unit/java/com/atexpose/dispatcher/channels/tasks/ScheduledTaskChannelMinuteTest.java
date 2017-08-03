@@ -42,7 +42,7 @@ public class ScheduledTaskChannelMinuteTest {
     public void getState_MinuteIntervalTask_TaskTimeContainsMinuteInterval() {
         ScheduledTaskChannelMinute stc = new ScheduledTaskChannelMinute("TaskName", "TheRequest", 55);
         JSONObject status = stc.getState().getJson();
-        assertThat(status.getString("task_time")).contains("Every 55 minutes");
+        assertThat(status.getString("task_interval")).contains("Every 55 minutes");
     }
 
 }

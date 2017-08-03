@@ -24,7 +24,7 @@ public class ScheduledTaskChannelDailyTest {
     public void getState_TaskTimeContainsSetTimeOfDay() {
         ScheduledTaskChannelDaily stc = new ScheduledTaskChannelDaily("TaskName", "TheRequest", "23:57", "UTC");
         JSONObject status = stc.getState().getJson();
-        assertThat(status.getString("task_time")).isEqualTo("Every day at 23:57[UTC]");
+        assertThat(status.getString("task_interval")).isEqualTo("Every day at 23:57[UTC]");
     }
 
 
@@ -32,7 +32,7 @@ public class ScheduledTaskChannelDailyTest {
     public void getState_NewYork_TaskTimeContainsSetTimeOfDay() {
         ScheduledTaskChannelDaily stc = new ScheduledTaskChannelDaily("TaskName", "TheRequest", "23:57", "America/New_York");
         JSONObject status = stc.getState().getJson();
-        assertThat(status.getString("task_time")).isEqualTo("Every day at 23:57[America/New_York]");
+        assertThat(status.getString("task_interval")).isEqualTo("Every day at 23:57[America/New_York]");
     }
 
 
