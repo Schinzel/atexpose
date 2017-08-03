@@ -202,9 +202,9 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
                         ? mWrapper.wrapError(((IExceptionProperties) e).getProperties())
                         : mWrapper.wrapError(Collections.singletonMap("error_message", e.getMessage()));
                 wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
+                logEntry.setIsError();
             } finally {
                 logEntry.setTimeOfIncomingCall();
-                logEntry.setIsError();
                 // Get incoming request as string.
                 decodedIncomingRequest = incomingRequest.getAsString();
             }
