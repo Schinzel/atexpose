@@ -94,8 +94,8 @@ public interface IAtExposeReports<T extends IAtExpose<T>> extends IAtExpose<T> {
                 .build();
         Logger eventLogger = Logger.builder()
                 .loggerType(LoggerType.EVENT)
-                .logFormatter(LogFormatterFactory.JSON.getInstance())
-                .logWriter(LogWriterFactory.SYSTEM_OUT.getInstance())
+                .logFormatter(LogFormatterFactory.JSON.create())
+                .logWriter(LogWriterFactory.SYSTEM_OUT.create())
                 .build();
         dispatcher.addLogger(eventLogger);
         return this.startDispatcher(dispatcher, false, false);

@@ -1,6 +1,8 @@
-package io.schinzel.samples._1_expose;
+package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
+import io.schinzel.samples.auxiliary.MyClass;
+import io.schinzel.samples.auxiliary.MyObject;
 
 /**
  * This sample exposes a class and an object.
@@ -16,7 +18,7 @@ import com.atexpose.AtExpose;
  *
  * @author schinzel
  */
-public class Main {
+public class _Sample1_Expose {
 
 
     public static void main(String[] args) {

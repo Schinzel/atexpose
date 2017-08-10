@@ -1,6 +1,8 @@
-package io.schinzel.samples._2_webserver;
+package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
+import io.schinzel.samples.auxiliary.MyClass;
+import io.schinzel.samples.auxiliary.MyObject;
 
 /**
  * This sample exposes a class and an object.
@@ -15,7 +17,7 @@ import com.atexpose.AtExpose;
  *
  * @author schinzel
  */
-public class Main {
+public class _Sample2_WebServer {
 
 
     public static void main(String[] args) {
@@ -25,11 +27,9 @@ public class Main {
                 .expose(MyClass.class)
                 //Expose an instance
                 .expose(new MyObject());
-        atExpose
-                //Start a command line interface
-                .startCLI()
-                //Start a web server
-                .getWebServerBuilder().startWebServer();
+        //Start a web server
+        atExpose.getWebServerBuilder().startWebServer();
+
 
     }
 }

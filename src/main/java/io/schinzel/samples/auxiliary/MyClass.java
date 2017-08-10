@@ -1,4 +1,4 @@
-package io.schinzel.samples._1_expose;
+package io.schinzel.samples.auxiliary;
 
 import com.atexpose.Expose;
 
@@ -14,8 +14,7 @@ public class MyClass {
 
 
     @Expose(
-            arguments = {"Int"},
-            theReturn = "The argument number doubled"
+            arguments = {"Int"}
     )
     public static int doubleIt(int i) {
         return i * 2;
@@ -23,8 +22,7 @@ public class MyClass {
 
 
     @Expose(
-            arguments = {"String"},
-            theReturn = "The argument string prefixed with Echo"
+            arguments = {"String"}
     )
     public static String doEcho(String str) {
         return "Echo: " + str;
