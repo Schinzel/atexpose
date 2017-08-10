@@ -21,7 +21,11 @@ public enum LogFormatterFactory {
     }
 
 
-    public ILogFormatter getInstance() {
+    /**
+     *
+     * @return A new log formatter instance.
+     */
+    public ILogFormatter getNewInstance() {
         try {
             return (ILogFormatter) mClass.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
@@ -30,13 +34,16 @@ public enum LogFormatterFactory {
     }
 
 
-    public static LogFormatterFactory get(String className) {
+    /**
+     * @param formatterName The name of the log formatter
+     * @return The log writer formatter with the argument name.
+     */
+    public static LogFormatterFactory get(String formatterName) {
         for (LogFormatterFactory logFormatter : LogFormatterFactory.values()) {
-            String currentFormaterClassName = logFormatter.mClass.getSimpleName();
-            if (currentFormaterClassName.equalsIgnoreCase(className)) {
+            if (logFormatter.name().equalsIgnoreCase(formatterName)) {
                 return logFormatter;
             }
         }
-        throw new RuntimeException("Sorry. No LogFormatter named '" + className + "' exists.");
+        throw new RuntimeException("Sorry. No LogFormatter named '" + formatterName + "' exists.");
     }
 }

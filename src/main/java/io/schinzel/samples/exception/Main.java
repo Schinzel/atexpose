@@ -1,6 +1,7 @@
 package io.schinzel.samples.exception;
 
 import com.atexpose.AtExpose;
+import io.schinzel.samples.auxiliary.MyClass;
 
 /**
  * The purpose of this sample is to show how to attach custom key-value properties to an

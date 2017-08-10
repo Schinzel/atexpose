@@ -1,6 +1,8 @@
-package io.schinzel.samples._3_webserver;
+package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
+import io.schinzel.samples.auxiliary.MyClass;
+import io.schinzel.samples.auxiliary.MyObject;
 
 /**
  * This sample exposes a class and an object.
@@ -12,7 +14,7 @@ import com.atexpose.AtExpose;
  *
  * @author schinzel
  */
-public class Main {
+public class _Sample3_WebServer {
 
 
     public static void main(String[] args) {
@@ -22,14 +24,13 @@ public class Main {
                 .expose(MyClass.class)
                 //Expose an instance
                 .expose(new MyObject());
-        atExpose
-                //Start a command line interface
-                .startCLI()
-                //Start a web server
-                .getWebServerBuilder()
+        //Get web server builder
+        atExpose.getWebServerBuilder()
+                //Set the dir from which requested file will be read
                 .webServerDir("web/sample3")
-                //Disable RAM cache so that change made kicks through without restarting the web server
+                //Disable RAM cache so that changes to files made kicks through without restarting the web server
                 .cacheFilesInRAM(false)
+                //Start a web server
                 .startWebServer();
 
     }

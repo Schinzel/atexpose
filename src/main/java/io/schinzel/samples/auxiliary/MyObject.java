@@ -1,4 +1,4 @@
-package io.schinzel.samples._2_webserver;
+package io.schinzel.samples.auxiliary;
 
 import com.atexpose.Expose;
 
@@ -28,5 +28,6 @@ public class MyObject {
     public String getTheThing() {
         return mStr;
     }
+
 
 }

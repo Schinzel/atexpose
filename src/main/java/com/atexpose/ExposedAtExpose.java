@@ -163,7 +163,7 @@ class ExposedAtExpose {
 
 
     @Expose(
-            arguments = {"DispatcherName", "LogWriter", "LogFormatter", "CryptoKey"},
+            arguments = {"DispatcherName", "LogFormatter", "LogWriter",  "CryptoKey"},
             requiredAccessLevel = 3,
             description = "Adds an event logger to a dispatcher.",
             labels = {"@Expose", "AtExpose", "Logs"},
@@ -175,7 +175,7 @@ class ExposedAtExpose {
 
 
     @Expose(
-            arguments = {"DispatcherName", "LogWriter", "LogFormatter", "CryptoKey"},
+            arguments = {"DispatcherName", "LogFormatter", "LogWriter", "CryptoKey"},
             requiredAccessLevel = 3,
             description = "Adds an error logger to a dispatcher.",
             labels = {"@Expose", "AtExpose", "Logs"},
@@ -192,8 +192,8 @@ class ExposedAtExpose {
                 : new Aes256Gcm(cryptoKey);
         Logger logger = Logger.builder()
                 .loggerType(LoggerType.EVENT)
-                .logFormatter(LogFormatterFactory.get(logFormatter).getInstance())
-                .logWriter(LogWriterFactory.get(logWriter).getInstance())
+                .logFormatter(LogFormatterFactory.get(logFormatter).getNewInstance())
+                .logWriter(LogWriterFactory.get(logWriter).getNewInstance())
                 .cipher(crypto)
                 .build();
         this.getAtExpose().getDispatchers().get(dispatcherName).addLogger(logger);

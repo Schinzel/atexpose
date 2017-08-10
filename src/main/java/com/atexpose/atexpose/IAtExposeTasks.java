@@ -97,13 +97,13 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
                 .build();
         Logger errorLogger = Logger.builder()
                 .loggerType(LoggerType.ERROR)
-                .logFormatter(LogFormatterFactory.JSON.getInstance())
-                .logWriter(LogWriterFactory.SYSTEM_OUT.getInstance())
+                .logFormatter(LogFormatterFactory.JSON.getNewInstance())
+                .logWriter(LogWriterFactory.SYSTEM_OUT.getNewInstance())
                 .build();
         Logger eventLogger = Logger.builder()
                 .loggerType(LoggerType.EVENT)
-                .logFormatter(LogFormatterFactory.JSON.getInstance())
-                .logWriter(LogWriterFactory.SYSTEM_OUT.getInstance())
+                .logFormatter(LogFormatterFactory.JSON.getNewInstance())
+                .logWriter(LogWriterFactory.SYSTEM_OUT.getNewInstance())
                 .build();
         dispatcher.addLogger(errorLogger).addLogger(eventLogger);
         return this.startDispatcher(dispatcher, false, false);

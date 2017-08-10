@@ -12,16 +12,15 @@ public enum LogWriterFactory {
     private final Class mClass;
 
 
-    private LogWriterFactory(Class theClass) {
+    LogWriterFactory(Class theClass) {
         mClass = theClass;
     }
 
 
     /**
-     * 
-     * @return A log writer instance. 
+     * @return A new log writer instance.
      */
-    public ILogWriter getInstance() {
+    public ILogWriter getNewInstance() {
         try {
             return (ILogWriter) mClass.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
@@ -31,17 +30,15 @@ public enum LogWriterFactory {
 
 
     /**
-     * 
-     * @param className
-     * @return The log writer factory for the argument class.
+     * @param logWriterName The name of the log writer
+     * @return The log writer factory with the argument name.
      */
-    public static LogWriterFactory get(String className) {
+    public static LogWriterFactory get(String logWriterName) {
         for (LogWriterFactory logWriter : LogWriterFactory.values()) {
-            if (logWriter.mClass.getSimpleName().equalsIgnoreCase(className)) {
+            if (logWriter.name().equalsIgnoreCase(logWriterName)) {
                 return logWriter;
             }
         }
-        throw new RuntimeException("Sorry. No LogWriter named '" + className + "' exists.");
+        throw new RuntimeException("Sorry. No LogWriter named '" + logWriterName + "' exists.");
     }
-
 }
