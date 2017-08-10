@@ -204,7 +204,6 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
                 wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
                 logEntry.setIsError();
             } finally {
-                logEntry.setTimeOfIncomingCall();
                 // Get incoming request as string.
                 decodedIncomingRequest = incomingRequest.getAsString();
             }

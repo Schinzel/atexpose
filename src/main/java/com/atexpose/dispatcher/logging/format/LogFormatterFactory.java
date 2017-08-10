@@ -25,7 +25,7 @@ public enum LogFormatterFactory {
      *
      * @return A new log formatter instance.
      */
-    public ILogFormatter getNewInstance() {
+    public ILogFormatter create() {
         try {
             return (ILogFormatter) mClass.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {

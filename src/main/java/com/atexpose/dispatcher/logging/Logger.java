@@ -28,10 +28,10 @@ public class Logger implements IStateNode {
     private LoggerType mLoggerType = LoggerType.EVENT;
     /** Handles the writing of log entries. */
     @Builder.Default
-    private ILogWriter mLogWriter = LogWriterFactory.SYSTEM_OUT.getNewInstance();
+    private ILogWriter mLogWriter = LogWriterFactory.SYSTEM_OUT.create();
     /** Handles the formatting of log entries. */
     @Builder.Default
-    private ILogFormatter mLogFormatter = LogFormatterFactory.JSON.getNewInstance();
+    private ILogFormatter mLogFormatter = LogFormatterFactory.JSON.create();
     /** Used to encrypt part of the log data. */
     @Builder.Default
     private ICipher mCipher = new NoCipher();

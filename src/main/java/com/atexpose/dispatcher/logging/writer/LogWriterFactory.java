@@ -20,7 +20,7 @@ public enum LogWriterFactory {
     /**
      * @return A new log writer instance.
      */
-    public ILogWriter getNewInstance() {
+    public ILogWriter create() {
         try {
             return (ILogWriter) mClass.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {

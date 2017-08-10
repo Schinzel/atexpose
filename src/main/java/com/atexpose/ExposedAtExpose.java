@@ -192,8 +192,8 @@ class ExposedAtExpose {
                 : new Aes256Gcm(cryptoKey);
         Logger logger = Logger.builder()
                 .loggerType(LoggerType.EVENT)
-                .logFormatter(LogFormatterFactory.get(logFormatter).getNewInstance())
-                .logWriter(LogWriterFactory.get(logWriter).getNewInstance())
+                .logFormatter(LogFormatterFactory.get(logFormatter).create())
+                .logWriter(LogWriterFactory.get(logWriter).create())
                 .cipher(crypto)
                 .build();
         this.getAtExpose().getDispatchers().get(dispatcherName).addLogger(logger);
