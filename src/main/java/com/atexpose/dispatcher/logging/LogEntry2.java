@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Builder
-public class LogEntry2 {
+public class LogEntry2 implements ILogEntry {
     final private Instant timeOfIncomingRequest;
     @Getter final private boolean isError;
     final private String requestString;
@@ -30,7 +30,7 @@ public class LogEntry2 {
     /**
      * @return
      */
-    Map<String, String> getLogData(ICipher crypto) {
+    public Map<String, String> getLogData(ICipher crypto) {
         List<String> argValues = request.getArgumentValues();
         //Encrypt argument values
         if (!Checker.isEmpty(argValues)) {

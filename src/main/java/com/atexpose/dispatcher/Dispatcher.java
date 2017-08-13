@@ -214,7 +214,7 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
                 decodedIncomingRequest = incomingRequest.getAsString();
             }
             mChannel.writeResponse(wrappedResponseAsUtf8ByteArray);
-            LogEntry2 logEntry2 = LogEntry2.builder()
+            LogEntry2 logEntry = LogEntry2.builder()
                     .isError(isError)
                     .timeOfIncomingRequest(timeOfIncomingRequest)
                     .requestString(decodedIncomingRequest)
@@ -226,7 +226,7 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
                     .request(request)
                     .senderInfo(mChannel.senderInfo())
                     .build();
-            this.log(logEntry2);
+            this.log(logEntry);
             incomingRequest.clear();
         }
     }

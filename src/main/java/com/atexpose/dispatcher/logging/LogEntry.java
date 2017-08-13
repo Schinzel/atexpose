@@ -18,11 +18,11 @@ import java.util.Map;
  *
  * @author schinzel
  */
-public class LogEntry {
+public class LogEntry implements ILogEntry {
     /**
      * Holds the values of the logged data.
      */
-    private final Map<LogKey, String> mLogValues = new LinkedHashMap<>(LogKey.values().length);
+    private final Map<String, String> mLogValues = new LinkedHashMap<>();
     /**
      * The time of the incoming call.
      */
@@ -83,7 +83,7 @@ public class LogEntry {
      * @param crypto Encrypts selected pars of the log data.
      * @return A map with log data.
      */
-    Map<LogKey, String> getLogData(ICipher crypto) {
+    public Map<String, String> getLogData(ICipher crypto) {
         String request = crypto.encrypt(mDecodedIncomingRequest);
         List<String> argNames = mRequest.getArgumentNames();
         List<String> argValues = mRequest.getArgumentValues();
@@ -97,17 +97,17 @@ public class LogEntry {
         if (mTimeOfIncomingCall == null) {
             mTimeOfIncomingCall = Instant.now();
         }
-        mLogValues.put(LogKey.CALL_TIME_UTC, DateTimeStrings.getDateTimeUTC(mTimeOfIncomingCall));
-        mLogValues.put(LogKey.METHOD_NAME, mRequest.getMethodName());
-        mLogValues.put(LogKey.ARGUMENTS, arguments);
-        mLogValues.put(LogKey.FILENAME, mRequest.getFileName());
-        mLogValues.put(LogKey.RESPONSE, mResponse);
-        mLogValues.put(LogKey.THREAD, mThreadNumber);
-        mLogValues.put(LogKey.READ_TIME_IN_MS, String.valueOf(mChannel.requestReadTime()));
-        mLogValues.put(LogKey.EXEC_TIME_IN_MS, String.valueOf(mTimeOfIncomingCall.until(Instant.now(), ChronoUnit.MILLIS)));
-        mLogValues.put(LogKey.WRITE_TIME_IN_MS, String.valueOf(mChannel.responseWriteTime()));
-        mLogValues.put(LogKey.SENDER, mChannel.senderInfo());
-        mLogValues.put(LogKey.REQUEST, request);
+        mLogValues.put(LogKey.CALL_TIME_UTC.toString(), DateTimeStrings.getDateTimeUTC(mTimeOfIncomingCall));
+        mLogValues.put(LogKey.METHOD_NAME.toString(), mRequest.getMethodName());
+        mLogValues.put(LogKey.ARGUMENTS.toString(), arguments);
+        mLogValues.put(LogKey.FILENAME.toString(), mRequest.getFileName());
+        mLogValues.put(LogKey.RESPONSE.toString(), mResponse);
+        mLogValues.put(LogKey.THREAD.toString(), mThreadNumber);
+        mLogValues.put(LogKey.READ_TIME_IN_MS.toString(), String.valueOf(mChannel.requestReadTime()));
+        mLogValues.put(LogKey.EXEC_TIME_IN_MS.toString(), String.valueOf(mTimeOfIncomingCall.until(Instant.now(), ChronoUnit.MILLIS)));
+        mLogValues.put(LogKey.WRITE_TIME_IN_MS.toString(), String.valueOf(mChannel.responseWriteTime()));
+        mLogValues.put(LogKey.SENDER.toString(), mChannel.senderInfo());
+        mLogValues.put(LogKey.REQUEST.toString(), request);
         return mLogValues;
     }
 

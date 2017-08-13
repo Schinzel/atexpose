@@ -45,28 +45,20 @@ public class LoggerTest {
 
 
     @Test
-    public void log_EventLoggerLogOneEventAndOneError_TwoEntriesInLog() {
+    public void log_LogOneEventAndOneErrorInAnEventLogger_BothEntriesInLog() {
         TestLogWriter logWriter = new TestLogWriter();
         Logger logger = Logger.builder()
                 .loggerType(LoggerType.EVENT)
                 .logFormatter(new JsonFormatter())
                 .logWriter(logWriter)
                 .build();
-        Request request = Request.builder()
-                .argumentNames(Collections.emptyList())
-                .argumentValues(Collections.emptyList())
-                .methodName("")
-                .fileName("")
-                .fileRequest(false)
-                .build();
-        LogEntry logEntry1 = new LogEntry(THREAD_NO, mChannel);
-        logEntry1.setLogData("RequestAsString", "Reponse", request);
-        //An even should be logged
+        ILogEntry logEntry1 = Mockito.mock(ILogEntry.class);
+        Mockito.when(logEntry1.isError()).thenReturn(true);
+        //An event should be logged
         logger.log(logEntry1);
         assertEquals(1, logWriter.mLogEntries.size());
-        LogEntry logEntry2 = new LogEntry(THREAD_NO, mChannel);
-        logEntry2.setIsError();
-        logEntry2.setLogData("RequestAsString", "Reponse", request);
+        ILogEntry logEntry2 = Mockito.mock(ILogEntry.class);
+        Mockito.when(logEntry2.isError()).thenReturn(false);
         //An error should be logged
         logger.log(logEntry2);
         assertEquals(2, logWriter.mLogEntries.size());

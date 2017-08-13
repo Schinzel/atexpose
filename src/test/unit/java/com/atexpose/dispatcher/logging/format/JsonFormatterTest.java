@@ -20,11 +20,11 @@ public class JsonFormatterTest {
 
     @Test
     public void testFormatLogEntry() {
-        Map<LogKey, String> logdata = new LinkedHashMap<>();
-        logdata.put(LogKey.SENDER, "1234");
-        logdata.put(LogKey.REQUEST, FunnyChars.CYRILLIC_LETTERS.getString());
-        logdata.put(LogKey.RESPONSE, FunnyChars.ARABIC_LETTERS.getString());
-        logdata.put(LogKey.CALL_TIME_UTC, FunnyChars.CYRILLIC_NUMERALS.getString());
+        Map<String, String> logdata = new LinkedHashMap<>();
+        logdata.put(LogKey.SENDER.toString(), "1234");
+        logdata.put(LogKey.REQUEST.toString(), FunnyChars.CYRILLIC_LETTERS.getString());
+        logdata.put(LogKey.RESPONSE.toString(), FunnyChars.ARABIC_LETTERS.getString());
+        logdata.put(LogKey.CALL_TIME_UTC.toString(), FunnyChars.CYRILLIC_NUMERALS.getString());
         ILogFormatter formatter = new JsonFormatter();
         String jsonString = formatter.formatLogEntry(logdata);
         JSONObject joFromString = new JSONObject(jsonString);

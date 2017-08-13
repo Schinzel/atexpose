@@ -42,7 +42,7 @@ public class Logger implements IStateNode {
      *
      * @param logEntry The entry to add to log.
      */
-    public void log(LogEntry2 logEntry) {
+    public void log(ILogEntry logEntry) {
         //If this is an event logger
         if (mLoggerType == LoggerType.EVENT
                 //OR (this is an error logger AND this is an error)
