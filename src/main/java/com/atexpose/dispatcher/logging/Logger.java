@@ -42,12 +42,12 @@ public class Logger implements IStateNode {
      *
      * @param logEntry The entry to add to log.
      */
-    public void log(LogEntry logEntry) {
+    public void log(LogEntry2 logEntry) {
         //If this is an event logger
         if (mLoggerType == LoggerType.EVENT
                 //OR (this is an error logger AND this is an error)
                 || (this.mLoggerType == LoggerType.ERROR && logEntry.isError())) {
-            Map<LogKey, String> logData = logEntry.getLogData(mCipher);
+            Map<String, String> logData = logEntry.getLogData(mCipher);
             String logEntryAsString = mLogFormatter.formatLogEntry(logData);
             mLogWriter.log(logEntryAsString);
         }

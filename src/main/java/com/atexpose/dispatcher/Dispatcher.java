@@ -3,7 +3,7 @@ package com.atexpose.dispatcher;
 import com.atexpose.api.API;
 import com.atexpose.api.MethodObject;
 import com.atexpose.dispatcher.channels.IChannel;
-import com.atexpose.dispatcher.logging.LogEntry;
+import com.atexpose.dispatcher.logging.LogEntry2;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.Request;
@@ -21,6 +21,8 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -163,14 +165,17 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
         Object responseAsStrings;
         String wrappedResponse = "";
         byte[] wrappedResponseAsUtf8ByteArray;
+        boolean isError = false;
+        Instant timeOfIncomingRequest = null;
         Request request = null;
-        LogEntry logEntry = new LogEntry(mThreadNumber, mChannel);
         while (true) {
+            isError = false;
+            timeOfIncomingRequest = null;
             try {
                 if (!mChannel.getRequest(incomingRequest)) {
                     break;
                 }
-                logEntry.setTimeOfIncomingCall();
+                timeOfIncomingRequest = Instant.now();
                 // Get incoming request as string.
                 decodedIncomingRequest = incomingRequest.getAsString();
                 //Send the incoming request to the protocol for extracting method name and arguments
@@ -197,20 +202,31 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
                     wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
                 }
             } catch (Exception e) {
+                isError = true;
                 //If the exception has properties
                 wrappedResponse = (e instanceof IExceptionProperties)
                         ? mWrapper.wrapError(((IExceptionProperties) e).getProperties())
                         : mWrapper.wrapError(Collections.singletonMap("error_message", e.getMessage()));
                 wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
-                logEntry.setIsError();
             } finally {
+                timeOfIncomingRequest = (timeOfIncomingRequest == null) ? Instant.now() : timeOfIncomingRequest;
                 // Get incoming request as string.
                 decodedIncomingRequest = incomingRequest.getAsString();
             }
             mChannel.writeResponse(wrappedResponseAsUtf8ByteArray);
-            logEntry.setLogData(decodedIncomingRequest, wrappedResponse, request);
-            this.log(logEntry);
-            logEntry.cleanUpLogData();
+            LogEntry2 logEntry2 = LogEntry2.builder()
+                    .isError(isError)
+                    .timeOfIncomingRequest(timeOfIncomingRequest)
+                    .requestString(decodedIncomingRequest)
+                    .response(wrappedResponse)
+                    .threadNumber(mThreadNumber)
+                    .requestReadTime(mChannel.requestReadTime())
+                    .execTime(timeOfIncomingRequest.until(Instant.now(), ChronoUnit.MILLIS))
+                    .responseWriteTime(mChannel.responseWriteTime())
+                    .request(request)
+                    .senderInfo(mChannel.senderInfo())
+                    .build();
+            this.log(logEntry2);
             incomingRequest.clear();
         }
     }
@@ -261,7 +277,7 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
      *
      * @param logEntry The entry to add to logs.
      */
-    private void log(LogEntry logEntry) {
+    private void log(LogEntry2 logEntry) {
         //Go through all logger attached to this dispatcher
         for (Logger logger : mLoggers) {
             //Log event

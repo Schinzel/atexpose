@@ -102,10 +102,10 @@ public class SingleLineFormatter implements ILogFormatter {
      * @return A log entry to be added to a log.
      */
     @Override
-    public String formatLogEntry(Map<LogKey, String> logData) {
+    public String formatLogEntry(Map<String, String> logData) {
         StringBuilder sb = new StringBuilder();
         String value;
-        for (Map.Entry<LogKey, String> entry : logData.entrySet()) {
+        for (Map.Entry<String, String> entry : logData.entrySet()) {
             //If this is not the first entry
             if (sb.length() > 0) {
                 sb.append(this.getEntryValueDelimiter());
