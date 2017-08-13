@@ -7,6 +7,7 @@ import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.crypto.cipher.ICipher;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.val;
 
 import java.time.Instant;
@@ -30,7 +31,7 @@ public class LogEntry2 implements ILogEntry {
     /**
      * @return
      */
-    public Map<String, String> getLogData(ICipher crypto) {
+    public Map<String, String> getLogData(@NonNull ICipher crypto) {
         List<String> argValues = request.getArgumentValues();
         //Encrypt argument values
         if (!Checker.isEmpty(argValues)) {
