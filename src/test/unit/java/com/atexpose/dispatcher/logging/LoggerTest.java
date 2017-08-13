@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -75,36 +74,6 @@ public class LoggerTest {
         Mockito.when(errorLogEntry.isError()).thenReturn(false);
         logger.log(errorLogEntry);
         assertEquals(1, logWriter.mLogEntries.size());
-    }
-
-
-    @Test
-    public void testServeralLogEntries() {
-        String rawIncomingRequest = "MyRequest";
-        String response = "MyResponse";
-        Request request = Request.builder()
-                .argumentNames(Collections.emptyList())
-                .argumentValues(Collections.emptyList())
-                .methodName("")
-                .fileName("")
-                .fileRequest(false)
-                .build();
-        for (int i = 0; i < 100; i++) {
-            mChannel.mTestWriteTime = i;
-            mChannel.mTestReadTime = i * 2;
-            mLogEntry.setLogData(rawIncomingRequest + i, response + i, request);
-            mLogger.log(mLogEntry);
-            mLogEntry.cleanUpLogData();
-        }
-        assertEquals(100, mLogWriter.mLogEntries.size());
-        for (int i = 0; i < 100; i++) {
-            String logEntryAsString = mLogWriter.mLogEntries.get(i);
-            JSONObject jo = new JSONObject(logEntryAsString);
-            assertEquals(i, jo.getInt(LogKey.WRITE_TIME_IN_MS.toString()));
-            assertEquals(i * 2, jo.getInt(LogKey.READ_TIME_IN_MS.toString()));
-            assertEquals("EncryptedString", jo.getString(LogKey.REQUEST.toString()));
-            assertEquals(response + i, jo.getString(LogKey.RESPONSE.toString()));
-        }
     }
 
 
