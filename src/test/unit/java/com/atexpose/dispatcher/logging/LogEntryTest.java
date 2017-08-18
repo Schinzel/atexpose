@@ -68,9 +68,9 @@ public class LogEntryTest {
                 .fileName("my_file_name")
                 .build()
                 .getLogData(cipher);
-        assertThat(logData).containsKey("filename")
-                .doesNotContainKey("method_name")
-                .doesNotContainKey("arguments");
+        assertThat(logData).containsKey(LogEntry.KEY_FILENAME)
+                .doesNotContainKey(LogEntry.KEY_METHOD_NAME)
+                .doesNotContainKey(LogEntry.KEY_ARGUMENTS);
     }
 
 
@@ -85,9 +85,9 @@ public class LogEntryTest {
                 .argValues(ImmutableList.of("arg_value_1", "arg_value_2"))
                 .build()
                 .getLogData(cipher);
-        assertThat(logData).doesNotContainKey("filename")
-                .containsKey("method_name")
-                .containsKey("arguments");
+        assertThat(logData).doesNotContainKey(LogEntry.KEY_FILENAME)
+                .containsKey(LogEntry.KEY_METHOD_NAME)
+                .containsKey(LogEntry.KEY_ARGUMENTS);
     }
 
 

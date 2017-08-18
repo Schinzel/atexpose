@@ -21,6 +21,16 @@ import java.util.stream.IntStream;
 @ToString
 public class LogEntry implements ILogEntry {
     public static final String KEY_CALL_TIME = "call_time_utc";
+    public static final String KEY_RESPONSE = "response";
+    public static final String KEY_THREAD = "thread";
+    public static final String KEY_READ_TIME = "read_time_in_ms";
+    public static final String KEY_EXEC_TIME = "exec_time_in_ms";
+    public static final String KEY_WRITE_TIME = "write_time_in_ms";
+    public static final String KEY_SENDER = "sender";
+    public static final String KEY_REQUEST_STRING = "request_string";
+    public static final String KEY_FILENAME = "filename";
+    public static final String KEY_METHOD_NAME = "method_name";
+    public static final String KEY_ARGUMENTS = "arguments";
 
     final @NonNull private Instant timeOfIncomingRequest;
     @Getter final private boolean isError;
@@ -47,19 +57,19 @@ public class LogEntry implements ILogEntry {
                 .collect(Collectors.toList());
         String arguments = argumentsToString(argNames, encryptedArguments);
         val logDataBuilder = ImmutableMap.<String, String>builder()
-                .put("call_time_utc", DateTimeStrings.getDateTimeUTC(timeOfIncomingRequest))
-                .put("response", response)
-                .put("thread", String.valueOf(threadNumber))
-                .put("read_time_in_ms", String.valueOf(requestReadTime))
-                .put("exec_time_in_ms", String.valueOf(execTime))
-                .put("write_time_in_ms", String.valueOf(responseWriteTime))
-                .put("sender", senderInfo)
-                .put("request_string", crypto.encrypt(requestString));
+                .put(LogEntry.KEY_CALL_TIME, DateTimeStrings.getDateTimeUTC(timeOfIncomingRequest))
+                .put(LogEntry.KEY_RESPONSE, response)
+                .put(LogEntry.KEY_THREAD, String.valueOf(threadNumber))
+                .put(LogEntry.KEY_READ_TIME, String.valueOf(requestReadTime))
+                .put(LogEntry.KEY_EXEC_TIME, String.valueOf(execTime))
+                .put(LogEntry.KEY_WRITE_TIME, String.valueOf(responseWriteTime))
+                .put(LogEntry.KEY_SENDER, senderInfo)
+                .put(LogEntry.KEY_REQUEST_STRING, crypto.encrypt(requestString));
         //If request is a file request
         if (isFileRequest) {
-            logDataBuilder.put("filename", fileName);
+            logDataBuilder.put(LogEntry.KEY_FILENAME, fileName);
         } else {
-            logDataBuilder.put("method_name", methodName).put("arguments", arguments);
+            logDataBuilder.put(LogEntry.KEY_METHOD_NAME, methodName).put("arguments", arguments);
         }
         return logDataBuilder.build();
     }
