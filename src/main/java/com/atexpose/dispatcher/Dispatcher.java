@@ -3,7 +3,7 @@ package com.atexpose.dispatcher;
 import com.atexpose.api.API;
 import com.atexpose.api.MethodObject;
 import com.atexpose.dispatcher.channels.IChannel;
-import com.atexpose.dispatcher.logging.LogEntry2;
+import com.atexpose.dispatcher.logging.LogEntry;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.Request;
@@ -214,7 +214,7 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
                 decodedIncomingRequest = incomingRequest.getAsString();
             }
             mChannel.writeResponse(wrappedResponseAsUtf8ByteArray);
-            LogEntry2 logEntry = LogEntry2.builder()
+            LogEntry logEntry = LogEntry.builder()
                     .isError(isError)
                     .timeOfIncomingRequest(timeOfIncomingRequest)
                     .requestString(decodedIncomingRequest)
@@ -277,7 +277,7 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
      *
      * @param logEntry The entry to add to logs.
      */
-    private void log(LogEntry2 logEntry) {
+    private void log(LogEntry logEntry) {
         //Go through all logger attached to this dispatcher
         for (Logger logger : mLoggers) {
             //Log event

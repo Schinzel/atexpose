@@ -14,8 +14,13 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The purpose of this class is to hold the data for one log entry that will end upp in zero, one
+ * or more logs.
+ */
+
 @Builder
-public class LogEntry2 implements ILogEntry {
+public class LogEntry implements ILogEntry {
     final private Instant timeOfIncomingRequest;
     @Getter final private boolean isError;
     final private String requestString;
@@ -60,14 +65,27 @@ public class LogEntry2 implements ILogEntry {
 
 
     /**
+     * The argument names and values as a string.
+     * Example
+     *
+     *
      * @param argumentNames  The names of the arguments
      * @param argumentValues The values of the arguments
      * @return The argument names and values formatted to a string
      */
-    private static String argumentsToString(List<String> argumentNames, List<String> argumentValues) {
-        //If there are no arguments
-        if (Checker.isEmpty(argumentNames) && Checker.isEmpty(argumentValues)) {
-            return "-";
+    static String argumentsToString(@NonNull List<String> argumentNames, List<String> argumentValues) {
+        //If there are no argument values
+        if (Checker.isEmpty(argumentValues)) {
+            //If there are no arguments names
+            if (Checker.isEmpty(argumentNames)) {
+                return "-";
+            }//else, i.e. there are argument names
+            else {
+                throw new RuntimeException("Illegal state. There cannot be argument names but no argument values.");
+            }
+        }
+        if (argumentNames.size()!= 0 && argumentNames.size() != argumentValues.size()) {
+            throw new RuntimeException("Illegal state. The number argument names and values must be the same.");
         }
         StringBuilder sb = new StringBuilder();
         //Go through all arguments values
@@ -78,10 +96,11 @@ public class LogEntry2 implements ILogEntry {
             }
             //If there are argument names
             if (!Checker.isEmpty(argumentNames)) {
+                //Append argument name
                 sb.append(argumentNames.get(i)).append("=");
             }
-            String argumentValue = argumentValues.get(i);
-            sb.append("\'").append(argumentValue).append("\'");
+            //Append argument value
+            sb.append("\'").append(argumentValues.get(i)).append("\'");
         }
         return sb.toString();
     }
