@@ -4,6 +4,7 @@ import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.util.DateTimeStrings;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.crypto.cipher.ICipher;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,8 @@ import lombok.val;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * The purpose of this class is to hold the data for one log entry that will end upp in zero, one
@@ -68,40 +71,26 @@ public class LogEntry implements ILogEntry {
      * The argument names and values as a string.
      * Example
      *
-     *
-     * @param argumentNames  The names of the arguments
-     * @param argumentValues The values of the arguments
+     * @param argNames  The names of the arguments
+     * @param argValues The values of the arguments
      * @return The argument names and values formatted to a string
      */
-    static String argumentsToString(@NonNull List<String> argumentNames, List<String> argumentValues) {
+    static String argumentsToString(@NonNull List<String> argNames, @NonNull List<String> argValues) {
         //If there are no argument values
-        if (Checker.isEmpty(argumentValues)) {
-            //If there are no arguments names
-            if (Checker.isEmpty(argumentNames)) {
-                return "-";
-            }//else, i.e. there are argument names
-            else {
-                throw new RuntimeException("Illegal state. There cannot be argument names but no argument values.");
-            }
+        if (argNames.isEmpty() && argValues.isEmpty()) {
+            return "-";
         }
-        if (argumentNames.size()!= 0 && argumentNames.size() != argumentValues.size()) {
-            throw new RuntimeException("Illegal state. The number argument names and values must be the same.");
-        }
-        StringBuilder sb = new StringBuilder();
-        //Go through all arguments values
-        for (int i = 0; i < argumentValues.size(); i++) {
-            //If not is first argument
-            if (i != 0) {
-                sb.append(", ");
-            }
-            //If there are argument names
-            if (!Checker.isEmpty(argumentNames)) {
-                //Append argument name
-                sb.append(argumentNames.get(i)).append("=");
-            }
-            //Append argument value
-            sb.append("\'").append(argumentValues.get(i)).append("\'");
-        }
-        return sb.toString();
+        Thrower.throwIfTrue(!argNames.isEmpty() && argValues.isEmpty())
+                .message("Illegal state. There cannot be argument names but no argument values.");
+        Thrower.throwIfTrue(!argNames.isEmpty() && argNames.size() != argValues.size())
+                .message("Illegal state. The number argument names and values must be the same.");
+        return argNames.isEmpty() ?
+                argValues.stream()
+                        .map(value -> "'" + value + "'")
+                        .collect(Collectors.joining(", "))
+                :
+                IntStream.range(0, argNames.size())
+                        .mapToObj(i -> argNames.get(i) + "='" + argValues.get(i) + "'")
+                        .collect(Collectors.joining(", "));
     }
 }
