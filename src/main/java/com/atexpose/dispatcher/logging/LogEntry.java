@@ -1,15 +1,10 @@
 package com.atexpose.dispatcher.logging;
 
-import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.util.DateTimeStrings;
 import com.google.common.collect.ImmutableMap;
-import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.crypto.cipher.ICipher;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.val;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.List;
@@ -23,31 +18,34 @@ import java.util.stream.IntStream;
  */
 
 @Builder
+@ToString
 public class LogEntry implements ILogEntry {
-    final private Instant timeOfIncomingRequest;
+    public static final String KEY_CALL_TIME = "call_time_utc";
+
+    final @NonNull private Instant timeOfIncomingRequest;
     @Getter final private boolean isError;
-    final private String requestString;
-    final String response;
+    final @NonNull private String requestString;
+    final @NonNull String response;
     final int threadNumber;
     final long requestReadTime;
     final long execTime;
     final long responseWriteTime;
-    final Request request;
-    final String senderInfo;
+    final @NonNull String senderInfo;
+    final @NonNull List<String> argNames;
+    final @NonNull List<String> argValues;
+    final boolean isFileRequest;
+    final @NonNull String fileName;
+    final @NonNull String methodName;
 
 
     /**
      * @return
      */
     public Map<String, String> getLogData(@NonNull ICipher crypto) {
-        List<String> argValues = request.getArgumentValues();
-        //Encrypt argument values
-        if (!Checker.isEmpty(argValues)) {
-            for (int i = 0; i < argValues.size(); i++) {
-                argValues.set(i, crypto.encrypt(argValues.get(i)));
-            }
-        }
-        String arguments = argumentsToString(request.getArgumentNames(), argValues);
+        List<String> encryptedArguments = argValues.stream()
+                .map(s -> crypto.encrypt(s))
+                .collect(Collectors.toList());
+        String arguments = argumentsToString(argNames, encryptedArguments);
         val logDataBuilder = ImmutableMap.<String, String>builder()
                 .put("call_time_utc", DateTimeStrings.getDateTimeUTC(timeOfIncomingRequest))
                 .put("response", response)
@@ -58,10 +56,10 @@ public class LogEntry implements ILogEntry {
                 .put("sender", senderInfo)
                 .put("request_string", crypto.encrypt(requestString));
         //If request is a file request
-        if (request.isFileRequest()) {
-            logDataBuilder.put("filename", request.getFileName());
+        if (isFileRequest) {
+            logDataBuilder.put("filename", fileName);
         } else {
-            logDataBuilder.put("method_name", request.getMethodName()).put("arguments", arguments);
+            logDataBuilder.put("method_name", methodName).put("arguments", arguments);
         }
         return logDataBuilder.build();
     }

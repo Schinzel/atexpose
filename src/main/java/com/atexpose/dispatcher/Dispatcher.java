@@ -223,8 +223,12 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
                     .requestReadTime(mChannel.requestReadTime())
                     .execTime(timeOfIncomingRequest.until(Instant.now(), ChronoUnit.MILLIS))
                     .responseWriteTime(mChannel.responseWriteTime())
-                    .request(request)
                     .senderInfo(mChannel.senderInfo())
+                    .argNames(request.getArgumentNames())
+                    .argValues(request.getArgumentValues())
+                    .isFileRequest(request.isFileRequest())
+                    .fileName(request.getFileName())
+                    .methodName(request.getMethodName())
                     .build();
             this.log(logEntry);
             incomingRequest.clear();
