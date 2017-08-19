@@ -63,15 +63,16 @@ public class LogEntry implements ILogEntry {
                 .put(LogEntry.KEY_EXEC_TIME, String.valueOf(execTime))
                 .put(LogEntry.KEY_WRITE_TIME, String.valueOf(responseWriteTime))
                 .put(LogEntry.KEY_SENDER, senderInfo)
-                .put(LogEntry.KEY_REQUEST_STRING, crypto.encrypt(requestString));
+                .put(LogEntry.KEY_REQUEST_STRING, crypto.encrypt(requestString))
+                .put(LogEntry.KEY_RESPONSE, response);
         //If request is a file request
         if (isFileRequest) {
             logDataBuilder.put(LogEntry.KEY_FILENAME, fileName);
         } else {
             logDataBuilder
                     .put(LogEntry.KEY_METHOD_NAME, methodName)
-                    .put("arguments", arguments)
-                    .put(LogEntry.KEY_RESPONSE, response);
+                    .put("arguments", arguments);
+
         }
         return logDataBuilder.build();
     }
