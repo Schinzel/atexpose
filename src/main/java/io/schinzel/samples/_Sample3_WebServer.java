@@ -1,6 +1,10 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
+import com.atexpose.dispatcher.logging.Logger;
+import com.atexpose.dispatcher.logging.LoggerType;
+import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
+import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import io.schinzel.samples.auxiliary.MyClass;
 import io.schinzel.samples.auxiliary.MyObject;
 
@@ -31,7 +35,16 @@ public class _Sample3_WebServer {
                 //Disable RAM cache so that changes to files made kicks through without restarting the web server
                 .cacheFilesInRAM(false)
                 //Start a web server
-                .startWebServer();
+                .startWebServer()
+                .addLogger(getEventLogger());
 
+    }
+
+    private static Logger getEventLogger() {
+        return Logger.builder()
+                .loggerType(LoggerType.EVENT)
+                .logFormatter(LogFormatterFactory.JSON.create())
+                .logWriter(LogWriterFactory.SYSTEM_OUT.create())
+                .build();
     }
 }

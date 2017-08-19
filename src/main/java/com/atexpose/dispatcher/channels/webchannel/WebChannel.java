@@ -127,15 +127,14 @@ public class WebChannel implements IChannel {
                 }
             }//Catch read timeout errors
             catch (InterruptedIOException iioe) {
-                keepReadingFromSocket = true;
                 mLogRequestReadTime = System.currentTimeMillis() - mLogRequestReadTime;
-                String err = "Server got read timeout error when reading from client socket No of bytes: " + request.getNoOfBytesStored() + " ";
+                String err = "Server got interrupted exception when reading from client socket. No of bytes read: " + request.getNoOfBytesStored() + ".";
                 try {
                     mClientSocket.close();
                 } catch (IOException e) {
-                    err += " and failed to close the connection";
+                    err += " And failed to close the connection.";
                 }
-                err += " : " + iioe.getMessage();
+                err += " Exception message: '" + iioe.getMessage() + "'";
                 throw new RuntimeException(err);
             } catch (Exception e) {
                 mLogRequestReadTime = System.currentTimeMillis() - mLogRequestReadTime;

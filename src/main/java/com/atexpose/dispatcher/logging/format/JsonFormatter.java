@@ -1,6 +1,5 @@
 package com.atexpose.dispatcher.logging.format;
 
-import com.atexpose.dispatcher.logging.LogKey;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -17,7 +16,7 @@ public class JsonFormatter implements ILogFormatter {
      * @return A log entry to be added to a log.
      */
     @Override
-    public String formatLogEntry(Map<LogKey, String> logData) {
+    public String formatLogEntry(Map<String, String> logData) {
         JSONObject jo = new JSONObject((Map) logData);
         return jo.toString();
     }

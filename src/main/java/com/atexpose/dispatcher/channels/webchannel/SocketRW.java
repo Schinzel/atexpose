@@ -28,7 +28,7 @@ class SocketRW {
     /**
      * Reads a request from a socket.
      *
-     * @param request The incoming reuqest is written to this argument.
+     * @param request The incoming request is written to this argument.
      * @param socket  The socket to read from.
      */
     public static HttpRequest read(ByteStorage request, Socket socket) throws IOException {
@@ -42,7 +42,7 @@ class SocketRW {
             request.add(arr, 0, bytesRead);
         }
         //Do a short snooze. This as if using a POST request to send data
-        //all the bytes might not be avaiable without this snooze
+        //all the bytes might not be available without this snooze
         Sandman.snoozeMillis(10);
         //Read again from the socket
         while ((inputStream.available() > 0) && ((bytesRead = inputStream.read(arr)) != -1)) {

@@ -21,6 +21,8 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -161,16 +163,17 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
         String decodedIncomingRequest;
         Object responseAsObjects;
         Object responseAsStrings;
-        String wrappedResponse = "";
+        String wrappedResponse;
         byte[] wrappedResponseAsUtf8ByteArray;
-        Request request = null;
-        LogEntry logEntry = new LogEntry(mThreadNumber, mChannel);
         while (true) {
+            boolean isError = false;
+            Instant timeOfIncomingRequest = null;
+            Request request = Request.EMPTY;
             try {
                 if (!mChannel.getRequest(incomingRequest)) {
                     break;
                 }
-                logEntry.setTimeOfIncomingCall();
+                timeOfIncomingRequest = Instant.now();
                 // Get incoming request as string.
                 decodedIncomingRequest = incomingRequest.getAsString();
                 //Send the incoming request to the protocol for extracting method name and arguments
@@ -197,20 +200,35 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
                     wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
                 }
             } catch (Exception e) {
+                isError = true;
                 //If the exception has properties
                 wrappedResponse = (e instanceof IExceptionProperties)
                         ? mWrapper.wrapError(((IExceptionProperties) e).getProperties())
                         : mWrapper.wrapError(Collections.singletonMap("error_message", e.getMessage()));
                 wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
-                logEntry.setIsError();
             } finally {
+                timeOfIncomingRequest = (timeOfIncomingRequest == null) ? Instant.now() : timeOfIncomingRequest;
                 // Get incoming request as string.
                 decodedIncomingRequest = incomingRequest.getAsString();
             }
             mChannel.writeResponse(wrappedResponseAsUtf8ByteArray);
-            logEntry.setLogData(decodedIncomingRequest, wrappedResponse, request);
+            LogEntry logEntry = LogEntry.builder()
+                    .isError(isError)
+                    .timeOfIncomingRequest(timeOfIncomingRequest)
+                    .requestString(decodedIncomingRequest)
+                    .response(wrappedResponse)
+                    .threadNumber(mThreadNumber)
+                    .requestReadTime(mChannel.requestReadTime())
+                    .execTime(timeOfIncomingRequest.until(Instant.now(), ChronoUnit.MILLIS))
+                    .responseWriteTime(mChannel.responseWriteTime())
+                    .senderInfo(mChannel.senderInfo())
+                    .argNames(request.getArgumentNames())
+                    .argValues(request.getArgumentValues())
+                    .isFileRequest(request.isFileRequest())
+                    .fileName(request.getFileName())
+                    .methodName(request.getMethodName())
+                    .build();
             this.log(logEntry);
-            logEntry.cleanUpLogData();
             incomingRequest.clear();
         }
     }
@@ -245,14 +263,12 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
     /**
      * Removes all loggers from this dispatcher.
      *
-     * @return This for chaining.
      */
-    public Dispatcher removeLoggers() {
-        mLoggers = Collections.<Logger>emptyList();
+    public void removeLoggers() {
+        mLoggers = Collections.emptyList();
         if (mNextDispatcher != null) {
             mNextDispatcher.removeLoggers();
         }
-        return this;
     }
 
 

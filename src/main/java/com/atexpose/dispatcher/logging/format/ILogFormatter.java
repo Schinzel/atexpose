@@ -1,7 +1,5 @@
 package com.atexpose.dispatcher.logging.format;
 
-import com.atexpose.dispatcher.logging.LogKey;
-
 import java.util.Map;
 
 /**
@@ -12,7 +10,7 @@ import java.util.Map;
  */
 public interface ILogFormatter {
 
-    String formatLogEntry(Map<LogKey, String> logData);
+    String formatLogEntry(Map<String, String> logData);
 
 
 }

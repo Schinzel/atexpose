@@ -9,7 +9,7 @@ import io.schinzel.basicutils.state.State;
 public class TestChannel implements IChannel {
     public long mTestWriteTime;
     public long mTestReadTime;
-    public String mSenderInfo;
+    public String mSenderInfo = "DefaultTestSenderInfo";
 
 
     @Override

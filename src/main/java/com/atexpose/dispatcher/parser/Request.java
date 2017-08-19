@@ -17,6 +17,8 @@ import java.util.List;
 @ToString
 @Accessors(prefix = "m")
 public class Request {
+    public static final Request EMPTY = Request.builder().build();
+
     @Getter @Builder.Default private String mMethodName = "";
     @Getter @Builder.Default private List<String> mArgumentNames = Collections.emptyList();
     @Getter @Builder.Default private List<String> mArgumentValues = Collections.emptyList();

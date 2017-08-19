@@ -25,16 +25,16 @@ import java.util.Map;
 public class Logger implements IStateNode {
     /** The type of the logger. E.g. error or event */
     @Builder.Default
-    private LoggerType mLoggerType = LoggerType.EVENT;
+    LoggerType mLoggerType = LoggerType.EVENT;
     /** Handles the writing of log entries. */
     @Builder.Default
-    private ILogWriter mLogWriter = LogWriterFactory.SYSTEM_OUT.create();
+    ILogWriter mLogWriter = LogWriterFactory.SYSTEM_OUT.create();
     /** Handles the formatting of log entries. */
     @Builder.Default
-    private ILogFormatter mLogFormatter = LogFormatterFactory.JSON.create();
+    ILogFormatter mLogFormatter = LogFormatterFactory.JSON.create();
     /** Used to encrypt part of the log data. */
     @Builder.Default
-    private ICipher mCipher = new NoCipher();
+    ICipher mCipher = new NoCipher();
 
 
     /**
@@ -42,12 +42,12 @@ public class Logger implements IStateNode {
      *
      * @param logEntry The entry to add to log.
      */
-    public void log(LogEntry logEntry) {
+    public void log(ILogEntry logEntry) {
         //If this is an event logger
         if (mLoggerType == LoggerType.EVENT
                 //OR (this is an error logger AND this is an error)
                 || (this.mLoggerType == LoggerType.ERROR && logEntry.isError())) {
-            Map<LogKey, String> logData = logEntry.getLogData(mCipher);
+            Map<String, String> logData = logEntry.getLogData(mCipher);
             String logEntryAsString = mLogFormatter.formatLogEntry(logData);
             mLogWriter.log(logEntryAsString);
         }

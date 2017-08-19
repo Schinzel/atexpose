@@ -1,155 +1,107 @@
 package com.atexpose.dispatcher.logging;
 
-import com.atexpose.dispatcher.channels.IChannel;
-import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.util.DateTimeStrings;
-import io.schinzel.basicutils.Checker;
+import com.google.common.collect.ImmutableMap;
+import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.crypto.cipher.ICipher;
+import lombok.*;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
- * The purpose of this class to hold the data wholly or partially end up in a
- * log. For example a log file.
- *
- * @author schinzel
+ * The purpose of this class is to hold the data for one log entry that will end upp in zero, one
+ * or more logs.
  */
-public class LogEntry {
-    /**
-     * Holds the values of the logged data.
-     */
-    private final Map<LogKey, String> mLogValues = new LinkedHashMap<>(LogKey.values().length);
-    /**
-     * The time of the incoming call.
-     */
-    private Instant mTimeOfIncomingCall;
-    /**
-     * Flag if current log entry is an error.
-     */
-    private boolean mIsError = false;
-    /**
-     *
-     */
-    private final String mThreadNumber;
-    private final IChannel mChannel;
-    private String mDecodedIncomingRequest;
-    private String mResponse;
-    private Request mRequest;
 
+@Builder
+@ToString
+public class LogEntry implements ILogEntry {
+    public static final String KEY_CALL_TIME = "call_time_utc";
+    public static final String KEY_RESPONSE = "response";
+    public static final String KEY_THREAD = "thread";
+    public static final String KEY_READ_TIME = "read_time_in_ms";
+    public static final String KEY_EXEC_TIME = "exec_time_in_ms";
+    public static final String KEY_WRITE_TIME = "write_time_in_ms";
+    public static final String KEY_SENDER = "sender";
+    public static final String KEY_REQUEST_STRING = "request_string";
+    public static final String KEY_FILENAME = "filename";
+    public static final String KEY_METHOD_NAME = "method_name";
+    public static final String KEY_ARGUMENTS = "arguments";
 
-    public LogEntry(int threadNumber, IChannel channel) {
-        mThreadNumber = String.valueOf(threadNumber);
-        mChannel = channel;
-    }
-
-
-    public void setIsError() {
-        mIsError = true;
-    }
-
-
-    /**
-     * @return True if this log entry is an error that is being logged, else
-     * false.
-     */
-    public boolean isError() {
-        return mIsError;
-    }
+    final @NonNull private Instant timeOfIncomingRequest;
+    @Getter final private boolean isError;
+    final @NonNull private String requestString;
+    final @NonNull String response;
+    final int threadNumber;
+    final long requestReadTime;
+    final long execTime;
+    final long responseWriteTime;
+    final @NonNull String senderInfo;
+    final @NonNull List<String> argNames;
+    final @NonNull List<String> argValues;
+    final boolean isFileRequest;
+    final @NonNull String fileName;
+    final @NonNull String methodName;
 
 
     /**
-     * Sets the time of the incoming call. Is the time after all bytes of
-     * when the incoming call have been read.
+     * @return
      */
-    public void setTimeOfIncomingCall() {
-        mTimeOfIncomingCall = Instant.now();
-    }
+    public Map<String, String> getLogData(@NonNull ICipher crypto) {
+        List<String> encryptedArguments = argValues.stream()
+                .map(s -> crypto.encrypt(s))
+                .collect(Collectors.toList());
+        String arguments = argumentsToString(argNames, encryptedArguments);
+        val logDataBuilder = ImmutableMap.<String, String>builder()
+                .put(LogEntry.KEY_CALL_TIME, DateTimeStrings.getDateTimeUTC(timeOfIncomingRequest))
+                .put(LogEntry.KEY_THREAD, String.valueOf(threadNumber))
+                .put(LogEntry.KEY_READ_TIME, String.valueOf(requestReadTime))
+                .put(LogEntry.KEY_EXEC_TIME, String.valueOf(execTime))
+                .put(LogEntry.KEY_WRITE_TIME, String.valueOf(responseWriteTime))
+                .put(LogEntry.KEY_SENDER, senderInfo)
+                .put(LogEntry.KEY_REQUEST_STRING, crypto.encrypt(requestString))
+                .put(LogEntry.KEY_RESPONSE, response);
+        //If request is a file request
+        if (isFileRequest) {
+            logDataBuilder.put(LogEntry.KEY_FILENAME, fileName);
+        } else {
+            logDataBuilder
+                    .put(LogEntry.KEY_METHOD_NAME, methodName)
+                    .put("arguments", arguments);
 
-
-    /**
-     * Set all log values to be empty string.
-     */
-    public final void cleanUpLogData() {
-        mLogValues.clear();
-        mIsError = false;
-    }
-
-
-    /**
-     * @param crypto Encrypts selected pars of the log data.
-     * @return A map with log data.
-     */
-    Map<LogKey, String> getLogData(ICipher crypto) {
-        String request = crypto.encrypt(mDecodedIncomingRequest);
-        List<String> argNames = mRequest.getArgumentNames();
-        List<String> argValues = mRequest.getArgumentValues();
-        //Encrypt argument values
-        if (!Checker.isEmpty(argValues)) {
-            for (int i = 0; i < argValues.size(); i++) {
-                argValues.set(i, crypto.encrypt(argValues.get(i)));
-            }
         }
-        String arguments = argumentsToString(argNames, argValues);
-        if (mTimeOfIncomingCall == null) {
-            mTimeOfIncomingCall = Instant.now();
-        }
-        mLogValues.put(LogKey.CALL_TIME_UTC, DateTimeStrings.getDateTimeUTC(mTimeOfIncomingCall));
-        mLogValues.put(LogKey.METHOD_NAME, mRequest.getMethodName());
-        mLogValues.put(LogKey.ARGUMENTS, arguments);
-        mLogValues.put(LogKey.FILENAME, mRequest.getFileName());
-        mLogValues.put(LogKey.RESPONSE, mResponse);
-        mLogValues.put(LogKey.THREAD, mThreadNumber);
-        mLogValues.put(LogKey.READ_TIME_IN_MS, String.valueOf(mChannel.requestReadTime()));
-        mLogValues.put(LogKey.EXEC_TIME_IN_MS, String.valueOf(mTimeOfIncomingCall.until(Instant.now(), ChronoUnit.MILLIS)));
-        mLogValues.put(LogKey.WRITE_TIME_IN_MS, String.valueOf(mChannel.responseWriteTime()));
-        mLogValues.put(LogKey.SENDER, mChannel.senderInfo());
-        mLogValues.put(LogKey.REQUEST, request);
-        return mLogValues;
+        return logDataBuilder.build();
     }
 
 
     /**
-     * Sets the log entry data for ea
+     * The argument names and values as a string.
+     * Example
      *
-     * @param request  The incoming request.
-     * @param response The response sent.
-     */
-    public void setLogData(String decodedIncomingRequest, String response, Request request) {
-        mDecodedIncomingRequest = decodedIncomingRequest;
-        mResponse = response;
-        mRequest = request;
-    }
-
-
-    /**
-     * @param argumentNames  The names of the arguments
-     * @param argumentValues The values of the arguments
+     * @param argNames  The names of the arguments
+     * @param argValues The values of the arguments
      * @return The argument names and values formatted to a string
      */
-    private static String argumentsToString(List<String> argumentNames, List<String> argumentValues) {
-        //If there are no arguments
-        if (Checker.isEmpty(argumentNames) && Checker.isEmpty(argumentValues)) {
+    static String argumentsToString(@NonNull List<String> argNames, @NonNull List<String> argValues) {
+        //If there are no argument values
+        if (argNames.isEmpty() && argValues.isEmpty()) {
             return "-";
         }
-        StringBuilder sb = new StringBuilder();
-        //Go through all arguments values
-        for (int i = 0; i < argumentValues.size(); i++) {
-            //If not is first argument
-            if (i != 0) {
-                sb.append(", ");
-            }
-            //If there are argument names
-            if (!Checker.isEmpty(argumentNames)) {
-                sb.append(argumentNames.get(i)).append("=");
-            }
-            String argumentValue = argumentValues.get(i);
-            sb.append("\'").append(argumentValue).append("\'");
-        }
-        return sb.toString();
+        Thrower.throwIfTrue(!argNames.isEmpty() && argValues.isEmpty())
+                .message("Illegal state. There cannot be argument names but no argument values.");
+        Thrower.throwIfTrue(!argNames.isEmpty() && argNames.size() != argValues.size())
+                .message("Illegal state. The number argument names and values must be the same.");
+        return argNames.isEmpty() ?
+                argValues.stream()
+                        .map(value -> "'" + value + "'")
+                        .collect(Collectors.joining(", "))
+                :
+                IntStream.range(0, argNames.size())
+                        .mapToObj(i -> argNames.get(i) + "='" + argValues.get(i) + "'")
+                        .collect(Collectors.joining(", "));
     }
-
 }
