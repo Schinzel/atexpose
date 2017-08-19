@@ -58,7 +58,6 @@ public class LogEntry implements ILogEntry {
         String arguments = argumentsToString(argNames, encryptedArguments);
         val logDataBuilder = ImmutableMap.<String, String>builder()
                 .put(LogEntry.KEY_CALL_TIME, DateTimeStrings.getDateTimeUTC(timeOfIncomingRequest))
-                .put(LogEntry.KEY_RESPONSE, response)
                 .put(LogEntry.KEY_THREAD, String.valueOf(threadNumber))
                 .put(LogEntry.KEY_READ_TIME, String.valueOf(requestReadTime))
                 .put(LogEntry.KEY_EXEC_TIME, String.valueOf(execTime))
@@ -69,7 +68,10 @@ public class LogEntry implements ILogEntry {
         if (isFileRequest) {
             logDataBuilder.put(LogEntry.KEY_FILENAME, fileName);
         } else {
-            logDataBuilder.put(LogEntry.KEY_METHOD_NAME, methodName).put("arguments", arguments);
+            logDataBuilder
+                    .put(LogEntry.KEY_METHOD_NAME, methodName)
+                    .put("arguments", arguments)
+                    .put(LogEntry.KEY_RESPONSE, response);
         }
         return logDataBuilder.build();
     }
