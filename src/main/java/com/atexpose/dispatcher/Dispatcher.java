@@ -167,10 +167,10 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
         byte[] wrappedResponseAsUtf8ByteArray;
         boolean isError = false;
         Instant timeOfIncomingRequest = null;
-        Request request = null;
         while (true) {
             isError = false;
             timeOfIncomingRequest = null;
+            Request request = Request.EMPTY;
             try {
                 if (!mChannel.getRequest(incomingRequest)) {
                     break;
