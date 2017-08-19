@@ -163,13 +163,11 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
         String decodedIncomingRequest;
         Object responseAsObjects;
         Object responseAsStrings;
-        String wrappedResponse = "";
+        String wrappedResponse;
         byte[] wrappedResponseAsUtf8ByteArray;
-        boolean isError = false;
-        Instant timeOfIncomingRequest = null;
         while (true) {
-            isError = false;
-            timeOfIncomingRequest = null;
+            boolean isError = false;
+            Instant timeOfIncomingRequest = null;
             Request request = Request.EMPTY;
             try {
                 if (!mChannel.getRequest(incomingRequest)) {
@@ -265,14 +263,12 @@ public class Dispatcher implements Runnable, INamedValue, IStateNode {
     /**
      * Removes all loggers from this dispatcher.
      *
-     * @return This for chaining.
      */
-    public Dispatcher removeLoggers() {
-        mLoggers = Collections.<Logger>emptyList();
+    public void removeLoggers() {
+        mLoggers = Collections.emptyList();
         if (mNextDispatcher != null) {
             mNextDispatcher.removeLoggers();
         }
-        return this;
     }
 
 
