@@ -22,7 +22,7 @@ enum HttpMethod {
 
 
     /**
-     * @param httpRequest A whole http requst with header and everything
+     * @param httpRequest A whole http request with header and everything
      * @return returns true if this argument http request was of this type
      */
     private boolean isThisTypeOfRequest(String httpRequest) {
