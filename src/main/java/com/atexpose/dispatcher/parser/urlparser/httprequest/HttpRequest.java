@@ -1,10 +1,9 @@
 package com.atexpose.dispatcher.parser.urlparser.httprequest;
 
-import com.atexpose.errors.RuntimeError;
 import com.google.common.base.Splitter;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.substring.SubString;
 import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.substring.SubString;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
@@ -37,6 +36,14 @@ public class HttpRequest {
     private final String mHttpRequest;
     /** True if this is a ghost call, i.e. that the whole request is one byte. */
     @Getter private final boolean mGhostCall;
+    /** The body of the http request */
+    @Getter private final String mBody;
+    /** The url part of a request. Including the query string variables */
+    @Getter private final String mURL;
+    /** The part of the URL before query string */
+    @Getter private final String mPath;
+    /** The variables of the request. If GET, query string, if POST body. As map. */
+    @Getter private final Map<String, String> mVariables;
 
 
     /**
@@ -49,6 +56,20 @@ public class HttpRequest {
         mHttpMethod = this.isGhostCall()
                 ? HttpMethod.GET
                 : HttpMethod.getRequestMethod(httpRequest);
+        mBody = SubString.create(httpRequest).startDelimiter(HEADER_BODY_DELIMITER).getString();
+        mURL = SubString.create(httpRequest)
+                .startDelimiter(mHttpMethod.getAsString())
+                .endDelimiter(END_OF_URL)
+                .getString();
+        mPath = SubString.create(mURL).endDelimiter("?").getString();
+        String queryString = SubString.create(mURL).startDelimiter("?").getString();
+        String variablesAsString = (mHttpMethod == HttpMethod.GET)
+                ? queryString
+                : mBody;
+        mVariables = Checker.isEmpty(variablesAsString)
+                ? Collections.emptyMap()
+                : Splitter.on('&').trimResults().withKeyValueSeparator('=').split(variablesAsString);
+
     }
 
 
@@ -56,14 +77,14 @@ public class HttpRequest {
      * @return The url part of a request. Including the query string variables
      * if any.
      */
-    public String getURL() {
-        int start = mHttpRequest.indexOf(mHttpMethod.mRequestMethodAsString);
+ /*   public String getURL() {
+        int start = mHttpRequest.indexOf(mHttpMethod.getAsString());
         if (start == -1) {
             //throw error
-            throw new RuntimeError("Request method marker '" + mHttpMethod.mRequestMethodAsString + "' was missing");
+            throw new RuntimeError("Request method marker '" + mHttpMethod.getAsString() + "' was missing");
         }
         //Set the start to be where the request label was found plus the length of the request label
-        start += mHttpMethod.mRequestMethodAsString.length();
+        start += mHttpMethod.getAsString().length();
         //Set the end to be end of url
         int end = mHttpRequest.indexOf(END_OF_URL);
         //If the end of url marker was not found
@@ -72,9 +93,7 @@ public class HttpRequest {
         }
         //Get the substring
         return mHttpRequest.substring(start, end);
-    }
-
-
+    }*/
     @SneakyThrows
     public URI getURI() {
         //Get protocol
@@ -108,12 +127,10 @@ public class HttpRequest {
                 .setCustomQuery(query)
                 .build();
     }
-
-
     /**
      * @return The method name invoked
      */
-    public String getPath() {
+ /*   public String getPath() {
         String url = this.getURL();
         int end = url.indexOf('?');
         //If there was no question mark
@@ -122,14 +139,12 @@ public class HttpRequest {
             end = url.length();
         }
         return url.substring(0, end);
-    }
-
-
+    }*/
     /**
      * @return The variable of the request. The body if this is a POST the
      * query string of this is a GET.
      */
-    String getVariablesAsString() {
+    /*String getVariablesAsString() {
         //If this is a GET method
         if (mHttpMethod == HttpMethod.GET) {
             //Get and return the query string
@@ -139,27 +154,23 @@ public class HttpRequest {
             //Get and return the body
             return this.getBody();
         }
-    }
-
-
+    }*/
     /**
      * @return The variable of the request. The body if this is a POST the
      * query string of this is a GET.
      */
-    public Map<String, String> getVariablesAsMap() {
+    /*public Map<String, String> getVariables() {
         Map<String, String> map = Collections.emptyMap();
         String variablesAsString = this.getVariablesAsString();
         if (!Checker.isEmpty(variablesAsString)) {
             map = Splitter.on('&').trimResults().withKeyValueSeparator('=').split(variablesAsString);
         }
         return map;
-    }
-
-
+    }*/
     /**
      * @return The query string part of the URL.
      */
-    String getQueryString() {
+   /* String getQueryString() {
         String url = this.getURL();
         String returnString = "";
         int start = url.indexOf('?');
@@ -168,13 +179,11 @@ public class HttpRequest {
             returnString = url.substring(start + 1);
         }
         return returnString;
-    }
-
-
+    }*/
     /**
      * @return The body of the request
      */
-    public String getBody() {
+   /* public String getBody() {
         String returnString = "";
         //Get the string after the double line break
         int start = mHttpRequest.indexOf(HEADER_BODY_DELIMITER);
@@ -186,6 +195,7 @@ public class HttpRequest {
         }
         return returnString;
     }
+*/
 
 
     /**
