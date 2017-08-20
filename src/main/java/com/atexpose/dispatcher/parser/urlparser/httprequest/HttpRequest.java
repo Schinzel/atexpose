@@ -68,7 +68,7 @@ public class HttpRequest {
         int end = mHttpRequest.indexOf(END_OF_URL);
         //If the end of url marker was not found
         if (end == -1) {
-            throw new RuntimeError("HTTP protocal marker '" + END_OF_URL + "' was missing");
+            throw new RuntimeError("HTTP protocol marker '" + END_OF_URL + "' was missing");
         }
         //Get the substring
         return mHttpRequest.substring(start, end);
@@ -127,12 +127,12 @@ public class HttpRequest {
 
     /**
      * @return The variable of the request. The body if this is a POST the
-     * querystring of this is a GET.
+     * query string of this is a GET.
      */
     String getVariablesAsString() {
         //If this is a GET method
         if (mHttpMethod == HttpMethod.GET) {
-            //Get and return the querystring
+            //Get and return the query string
             return this.getQueryString();
         }//else, i.e. this is a POST method
         else {
@@ -144,7 +144,7 @@ public class HttpRequest {
 
     /**
      * @return The variable of the request. The body if this is a POST the
-     * querystring of this is a GET.
+     * query string of this is a GET.
      */
     public Map<String, String> getVariablesAsMap() {
         Map<String, String> map = Collections.emptyMap();
@@ -157,7 +157,7 @@ public class HttpRequest {
 
 
     /**
-     * @return The querystring part of the URL.
+     * @return The query string part of the URL.
      */
     String getQueryString() {
         String url = this.getURL();
@@ -172,7 +172,7 @@ public class HttpRequest {
 
 
     /**
-     * @return The body of the reqeust
+     * @return The body of the request
      */
     public String getBody() {
         String returnString = "";
