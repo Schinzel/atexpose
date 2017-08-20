@@ -8,25 +8,14 @@ import com.atexpose.errors.RuntimeError;
  * Created by Schinzel on 2017-04-13.
  */
 enum HttpMethod {
-    GET("GET"),
-    POST("POST");
-    final String mRequestMethodAsString;
+    GET, POST;
 
 
     /**
-     * @param requestMethodAsString The name of the request method
+     * @return The name of this request method as string followed by a slash. E.g. "GET/"
      */
-    HttpMethod(String requestMethodAsString) {
-        mRequestMethodAsString = requestMethodAsString + " /";
-    }
-
-
-    /**
-     * @param httpRequest A whole http request with header and everything
-     * @return returns true if this argument http request was of this type
-     */
-    private boolean isThisTypeOfRequest(String httpRequest) {
-        return (httpRequest.indexOf(mRequestMethodAsString) == 0);
+    public String getAsString() {
+        return this.name() + " /";
     }
 
 
@@ -35,12 +24,12 @@ enum HttpMethod {
      * @return The http method of the argument http request request
      */
     static HttpMethod getRequestMethod(String httpRequest) {
-        if (GET.isThisTypeOfRequest(httpRequest)) {
+        if (httpRequest.startsWith(GET.name())) {
             return GET;
-        } else if (POST.isThisTypeOfRequest(httpRequest)) {
+        } else if (httpRequest.startsWith(POST.name())) {
             return POST;
         } else {
-            throw new RuntimeError("Request not allowed. Request has to start with GET or POST. Request:' " + httpRequest + "'");
+            throw new RuntimeError("Request not allowed. Request has to start with GET or POST. Request: ' " + httpRequest + "'");
         }
     }
 }
