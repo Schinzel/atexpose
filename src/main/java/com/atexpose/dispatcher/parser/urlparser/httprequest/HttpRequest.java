@@ -73,27 +73,6 @@ public class HttpRequest {
     }
 
 
-    /**
-     * @return The url part of a request. Including the query string variables
-     * if any.
-     */
- /*   public String getURL() {
-        int start = mHttpRequest.indexOf(mHttpMethod.getAsString());
-        if (start == -1) {
-            //throw error
-            throw new RuntimeError("Request method marker '" + mHttpMethod.getAsString() + "' was missing");
-        }
-        //Set the start to be where the request label was found plus the length of the request label
-        start += mHttpMethod.getAsString().length();
-        //Set the end to be end of url
-        int end = mHttpRequest.indexOf(END_OF_URL);
-        //If the end of url marker was not found
-        if (end == -1) {
-            throw new RuntimeError("HTTP protocol marker '" + END_OF_URL + "' was missing");
-        }
-        //Get the substring
-        return mHttpRequest.substring(start, end);
-    }*/
     @SneakyThrows
     public URI getURI() {
         //Get protocol
@@ -127,76 +106,7 @@ public class HttpRequest {
                 .setCustomQuery(query)
                 .build();
     }
-    /**
-     * @return The method name invoked
-     */
- /*   public String getPath() {
-        String url = this.getURL();
-        int end = url.indexOf('?');
-        //If there was no question mark
-        if (end == -1) {
-            //Set end to be length of url
-            end = url.length();
-        }
-        return url.substring(0, end);
-    }*/
-    /**
-     * @return The variable of the request. The body if this is a POST the
-     * query string of this is a GET.
-     */
-    /*String getVariablesAsString() {
-        //If this is a GET method
-        if (mHttpMethod == HttpMethod.GET) {
-            //Get and return the query string
-            return this.getQueryString();
-        }//else, i.e. this is a POST method
-        else {
-            //Get and return the body
-            return this.getBody();
-        }
-    }*/
-    /**
-     * @return The variable of the request. The body if this is a POST the
-     * query string of this is a GET.
-     */
-    /*public Map<String, String> getVariables() {
-        Map<String, String> map = Collections.emptyMap();
-        String variablesAsString = this.getVariablesAsString();
-        if (!Checker.isEmpty(variablesAsString)) {
-            map = Splitter.on('&').trimResults().withKeyValueSeparator('=').split(variablesAsString);
-        }
-        return map;
-    }*/
-    /**
-     * @return The query string part of the URL.
-     */
-   /* String getQueryString() {
-        String url = this.getURL();
-        String returnString = "";
-        int start = url.indexOf('?');
-        //If there was a question mark
-        if (start != -1) {
-            returnString = url.substring(start + 1);
-        }
-        return returnString;
-    }*/
-    /**
-     * @return The body of the request
-     */
-   /* public String getBody() {
-        String returnString = "";
-        //Get the string after the double line break
-        int start = mHttpRequest.indexOf(HEADER_BODY_DELIMITER);
-        //If the delimiter was  found
-        if (start != -1) {
-            start += HEADER_BODY_DELIMITER.length();
-            int end = mHttpRequest.length();
-            returnString = mHttpRequest.substring(start, end);
-        }
-        return returnString;
-    }
-*/
-
+  
 
     /**
      * @param headerName The name of the header to look up.
