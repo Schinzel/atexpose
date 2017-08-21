@@ -11,7 +11,9 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+
 
 /**
  * @author schinzel
@@ -334,6 +336,45 @@ public class HttpRequestTest {
     }
 
 
+    @Test
+    public void getVariables_PostRequestRequest() {
+        Map<String, String> actual = new HttpRequest(POST_REQUEST_NORMAL).getVariables();
+        assertThat(actual).extracting("name").contains("John");
+        assertThat(actual).extracting("time").contains("2pm");
+        assertThat(actual).hasSize(2);
+    }
+
+
+    @Test
+    public void getVariables_GetRequest() {
+        Map<String, String> actual = new HttpRequest(GET_REQUEST_NORMAL).getVariables();
+        assertThat(actual).extracting("SSN").contains("197107282222");
+        assertThat(actual).extracting("Pin").contains("88889");
+        assertThat(actual).hasSize(2);
+    }
+
+
+    @Test
+    public void getVariables_PostRequestNoArgsNormal_EmptyMap() {
+        Map<String, String> actual = new HttpRequest(POST_REQUEST_NO_ARGS).getVariables();
+        assertThat(actual).isEmpty();
+    }
+
+
+    @Test
+    public void getVariables_PostRequestNoArgsOneLinebreak_EmptyMap() {
+        Map<String, String> actual = new HttpRequest(POST_REQUEST_ONE_LINEBREAK).getVariables();
+        assertThat(actual).isEmpty();
+    }
+
+
+    @Test
+    public void getVariables_PostRequestNoArgsNoLineabreaks_EmptyMap() {
+        Map<String, String> actual = new HttpRequest(POST_REQUEST_NO_LINEBREAKS).getVariables();
+        assertThat(actual).isEmpty();
+    }
+
+
  /*   @Test
     public void testGetVariablesAsString() {
         String request, expResult, result;
@@ -399,6 +440,7 @@ public class HttpRequestTest {
         assertEquals(expResult, result);
     }
 */
+
 
     @Test
     public void testGetVariablesAsMap() {
@@ -497,6 +539,7 @@ public class HttpRequestTest {
         assertEquals(expResult, result);
     }
 */
+
 
     @Test
     public void testGetBody() {
