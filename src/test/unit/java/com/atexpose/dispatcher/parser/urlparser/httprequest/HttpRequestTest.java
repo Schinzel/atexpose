@@ -11,19 +11,17 @@ import java.net.URI;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 
 
-/**
- * @author schinzel
- */
 public class HttpRequestTest {
 
     private static final String HTTP_HEADER = "GET /index.html?xyz=1234 HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Pragma: no-cache\r\n"
-            + "Pragma2:\r\n"
+            + "Pragma2: \r\n"
             + "Pragma3: This:is:the:value\r\n"
             + "Cache-Control: no-cache\r\n"
             + "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n"
@@ -424,51 +422,53 @@ public class HttpRequestTest {
 
 
     @Test
-    public void testGetHeader() {
-        String headerName;
-        String expResult;
-        String result;
-        HttpRequest instance = new HttpRequest(HTTP_HEADER);
-        //Standard
-        headerName = "Pragma";
-        expResult = "no-cache";
-        result = instance.getHeaderValue(headerName);
-        assertEquals(expResult, result);
-        //Non existing header
-        headerName = "dkfjhdskjfhkdsjh";
-        expResult = "";
-        result = instance.getHeaderValue(headerName);
-        assertEquals(expResult, result);
-        //Empty header name
-        headerName = "";
-        expResult = "";
-        result = instance.getHeaderValue(headerName);
-        assertEquals(expResult, result);
-        //Null header name
-        headerName = null;
-        expResult = "";
-        result = instance.getHeaderValue(headerName);
-        assertEquals(expResult, result);
-        //Empty value
-        headerName = "Pragma2";
-        expResult = "";
-        result = instance.getHeaderValue(headerName);
-        assertEquals(expResult, result);
-        //With colon in value
-        headerName = "Pragma3";
-        expResult = "This:is:the:value";
-        result = instance.getHeaderValue(headerName);
-        assertEquals(expResult, result);
-        //Long value
-        headerName = "Cookie";
-        expResult = "db=19710101; ci=0733787878; __distillery=v20150227_0d85f699-344b-49d2-96e2-c0a072b93bb3; _gat=1; _ga=GA1.1.921947710.1426063424; ptl=0; undefined=0; cp=0";
-        result = instance.getHeaderValue(headerName);
-        assertEquals(expResult, result);
-        //Host
-        headerName = "Host";
-        expResult = "127.0.0.1:5555";
-        result = instance.getHeaderValue(headerName);
-        assertEquals(expResult, result);
+    public void getHeaderValue_Pragma_NoCache() {
+        String headerValue = new HttpRequest(HTTP_HEADER).getHeaderValue("Pragma");
+        assertThat(headerValue).isEqualTo("no-cache");
+    }
+
+
+    @Test
+    public void getHeaderValue_NonExistingHeader_EmptyString() {
+        String headerValue = new HttpRequest(HTTP_HEADER).getHeaderValue("I_do_not_exist");
+        assertThat(headerValue).isEqualTo("");
+    }
+
+
+    @Test
+    public void getHeaderValue_EmptyHeaderName_Exception() {
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
+                new HttpRequest(HTTP_HEADER).getHeaderValue("")
+        );
+    }
+
+
+    @Test
+    public void getHeaderValue_NullHeaderName_Exception() {
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
+                new HttpRequest(HTTP_HEADER).getHeaderValue(null)
+        );
+    }
+
+
+    @Test
+    public void getHeaderValue_EmptyHeaderValue_EmptyString() {
+        String headerValue = new HttpRequest(HTTP_HEADER).getHeaderValue("Pragma2");
+        assertThat(headerValue).isEqualTo("");
+    }
+
+
+    @Test
+    public void getHeaderValue_LongHeaderValue_HeaderValue() {
+        String headerValue = new HttpRequest(HTTP_HEADER).getHeaderValue("Cookie");
+        assertThat(headerValue).isEqualTo("db=19710101; ci=0733787878; __distillery=v20150227_0d85f699-344b-49d2-96e2-c0a072b93bb3; _gat=1; _ga=GA1.1.921947710.1426063424; ptl=0; undefined=0; cp=0");
+    }
+
+
+    @Test
+    public void getHeaderValue_Host_LocalHost() {
+        String headerValue = new HttpRequest(HTTP_HEADER).getHeaderValue("Host");
+        assertThat(headerValue).isEqualTo("127.0.0.1:5555");
     }
 
 

@@ -7,7 +7,6 @@ import io.schinzel.basicutils.substring.SubString;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
 import java.net.URI;
@@ -106,7 +105,7 @@ public class HttpRequest {
                 .setCustomQuery(query)
                 .build();
     }
-  
+
 
     /**
      * @param headerName The name of the header to look up.
@@ -114,29 +113,12 @@ public class HttpRequest {
      * found.
      */
     public String getHeaderValue(String headerName) {
-        String headerValue = "";
         //If argument header name was empty
-        if (Checker.isEmpty(headerName)) {
-            return headerValue;
-        }
-        //Get the end of the request header
-        int endOfRequestHeader = mHttpRequest.indexOf(HEADER_BODY_DELIMITER);
-        //Add a colon to header name
-        headerName = headerName + ":";
-        //Get the start pos of the header name
-        int startPosHeaderName = StringUtils.indexOfIgnoreCase(mHttpRequest, headerName);
-        //If the header name was found and it was before the end of the header
-        if (startPosHeaderName > -1 && startPosHeaderName < endOfRequestHeader) {
-            //Get the end of the line after the header name
-            int endOfHeaderField = mHttpRequest.indexOf(HEADER_FIELD_DELIMITER, startPosHeaderName);
-            //If a end of header was found 
-            if (endOfHeaderField > -1) {
-                //Get the value, which is between the colon and the end of the line
-                headerValue = mHttpRequest.substring(startPosHeaderName + headerName.length(), endOfHeaderField);
-                headerValue = headerValue.trim();
-            }
-        }
-        return headerValue;
+        Thrower.throwIfVarEmpty(headerName, "headerName");
+        return SubString.create(mHttpRequest)
+                .startDelimiter(headerName + ": ")
+                .endDelimiter(HEADER_FIELD_DELIMITER)
+                .getString();
     }
 
 
