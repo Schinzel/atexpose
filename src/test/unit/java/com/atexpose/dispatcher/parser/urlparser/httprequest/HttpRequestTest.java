@@ -291,45 +291,51 @@ public class HttpRequestTest {
 
 
     @Test
-    public void testGetURL() {
-        String request, expResult, result;
-        //
-        request = POST_REQUEST_NORMAL;
-        expResult = "call/getDataFromPM";
-        result = new HttpRequest(request).getURL();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_SHORT_METHODNAME;
-        expResult = "call/a";
-        result = new HttpRequest(request).getURL();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_LONG_METHODNAME;
-        expResult = "call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz";
-        result = new HttpRequest(request).getURL();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_NORMAL;
-        expResult = "call/getDataFromPM?SSN=197107282222&Pin=88889";
-        result = new HttpRequest(request).getURL();
-        assertEquals(expResult, result);
-        //
-        //
-        request = GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK;
-        expResult = "call/getDataFromPM?";
-        result = new HttpRequest(request).getURL();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_SHORT_METHODNAME;
-        expResult = "call/a?SSN=197107282222";
-        result = new HttpRequest(request).getURL();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_LONG_METHODNAME;
-        expResult = "call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz?SSN=197107282222";
-        result = new HttpRequest(request).getURL();
-        assertEquals(expResult, result);
+    public void getUrl_PostRequestNormal_Url() {
+        String url = new HttpRequest(POST_REQUEST_NORMAL).getURL();
+        assertThat(url).isEqualTo("call/getDataFromPM");
+    }
 
+
+    @Test
+    public void getUrl_PostRequestShortMethodName_Url() {
+        String url = new HttpRequest(POST_REQUEST_SHORT_METHODNAME).getURL();
+        assertThat(url).isEqualTo("call/a");
+    }
+
+
+    @Test
+    public void getUrl_PostRequestLongMethodName_Url() {
+        String url = new HttpRequest(POST_REQUEST_LONG_METHODNAME).getURL();
+        assertThat(url).isEqualTo("call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz");
+    }
+
+
+    @Test
+    public void getUrl_GetRequestNormal_Url() {
+        String url = new HttpRequest(GET_REQUEST_NORMAL).getURL();
+        assertThat(url).isEqualTo("call/getDataFromPM?SSN=197107282222&Pin=88889");
+    }
+
+
+    @Test
+    public void getUrl_GetRequestNoVarsButWithQuestionMake_Url() {
+        String url = new HttpRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getURL();
+        assertThat(url).isEqualTo("call/getDataFromPM?");
+    }
+
+
+    @Test
+    public void getUrl_GetRequestShortMethodName_Url() {
+        String url = new HttpRequest(GET_REQUEST_SHORT_METHODNAME).getURL();
+        assertThat(url).isEqualTo("call/a?SSN=197107282222");
+    }
+
+
+    @Test
+    public void getUrl_GetRequestLongMethodName_Url() {
+        String url = new HttpRequest(GET_REQUEST_LONG_METHODNAME).getURL();
+        assertThat(url).isEqualTo("call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz?SSN=197107282222");
     }
 
 
