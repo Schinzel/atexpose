@@ -8,7 +8,6 @@ package com.atexpose.dispatcher.parser.urlparser.httprequest;
 import org.junit.Test;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -375,127 +374,12 @@ public class HttpRequestTest {
     }
 
 
- /*   @Test
-    public void testGetVariablesAsString() {
-        String request, expResult, result;
-        //
-        request = POST_REQUEST_NORMAL;
-        expResult = "name=John&time=2pm";
-        result = new HttpRequest(request).getVariablesAsString();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_SHORT_METHODNAME;
-        expResult = "name=John&time=2pm";
-        result = new HttpRequest(request).getVariablesAsString();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_LONG_METHODNAME;
-        expResult = "name=John&time=2pm";
-        result = new HttpRequest(request).getVariablesAsString();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_NO_ARGS;
-        expResult = "";
-        result = new HttpRequest(request).getVariablesAsString();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_ONE_LINEBREAK;
-        expResult = "";
-        result = new HttpRequest(request).getVariablesAsString();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_NO_LINEBREAKS;
-        expResult = "";
-        result = new HttpRequest(request).getVariablesAsString();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_NORMAL;
-        expResult = "SSN=197107282222&Pin=88889";
-        result = new HttpRequest(request).getVariablesAsString();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_ONE_SHORT_VARIABLE;
-        expResult = "a=1";
-        result = new HttpRequest(request).getVariablesAsString();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK;
-        expResult = "";
-        result = new HttpRequest(request).getVariablesAsString();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_SHORT_METHODNAME;
-        expResult = "SSN=197107282222";
-        result = new HttpRequest(request).getVariablesAsString();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_LONG_METHODNAME;
-        expResult = "SSN=197107282222";
-        result = new HttpRequest(request).getVariablesAsString();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_ONE_VARIABLE;
-        expResult = "SSN=197107282222";
-        result = new HttpRequest(request).getVariablesAsString();
-        assertEquals(expResult, result);
-    }
-*/
-
-
     @Test
-    public void testGetVariablesAsMap() {
-        String request;
-        Map<String, String> result;
-        HashMap<String, String> expResult;
-        //
-        request = POST_REQUEST_NORMAL;
-        expResult = new HashMap<>();
-        expResult.put("name", "John");
-        expResult.put("time", "2pm");
-        result = new HttpRequest(request).getVariables();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_LONG_METHODNAME;
-        expResult = new HashMap<>();
-        expResult.put("name", "John");
-        expResult.put("time", "2pm");
-        result = new HttpRequest(request).getVariables();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_NO_ARGS;
-        expResult = new HashMap<>();
-        result = new HttpRequest(request).getVariables();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_ONE_LINEBREAK;
-        expResult = new HashMap<>();
-        result = new HttpRequest(request).getVariables();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_NO_LINEBREAKS;
-        expResult = new HashMap<>();
-        result = new HttpRequest(request).getVariables();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_NORMAL;
-        expResult = new HashMap<>();
-        expResult.put("SSN", "197107282222");
-        expResult.put("Pin", "88889");
-        result = new HttpRequest(request).getVariables();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_ONE_SHORT_VARIABLE;
-        expResult = new HashMap<>();
-        expResult.put("a", "1");
-        result = new HttpRequest(request).getVariables();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK;
-        expResult = new HashMap<>();
-        result = new HttpRequest(request).getVariables();
-        assertEquals(expResult, result);
-
+    public void getVariables_GetRequestNoVariablesButWithQuestionMark_EmptyMap() {
+        Map<String, String> actual = new HttpRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getVariables();
+        assertThat(actual).isEmpty();
     }
+
 
 /*
     @Test
