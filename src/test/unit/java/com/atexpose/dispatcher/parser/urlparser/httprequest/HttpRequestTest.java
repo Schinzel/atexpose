@@ -381,103 +381,45 @@ public class HttpRequestTest {
     }
 
 
-/*
     @Test
-    public void testGetQueryString() {
-        String request, expResult, result;
-        //
-        request = POST_REQUEST_NORMAL;
-        expResult = "";
-        result = new HttpRequest(request).getQueryString();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_SHORT_METHODNAME;
-        expResult = "";
-        result = new HttpRequest(request).getQueryString();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_LONG_METHODNAME;
-        expResult = "";
-        result = new HttpRequest(request).getQueryString();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_NORMAL;
-        expResult = "SSN=197107282222&Pin=88889";
-        result = new HttpRequest(request).getQueryString();
-        assertEquals(expResult, result);
-        //
-        //
-        request = GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK;
-        expResult = "";
-        result = new HttpRequest(request).getQueryString();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_SHORT_METHODNAME;
-        expResult = "SSN=197107282222";
-        result = new HttpRequest(request).getQueryString();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_LONG_METHODNAME;
-        expResult = "SSN=197107282222";
-        result = new HttpRequest(request).getQueryString();
-        assertEquals(expResult, result);
+    public void getBody_PostRequest_Body() {
+        String body = new HttpRequest(POST_REQUEST_NORMAL).getBody();
+        assertThat(body).isEqualTo("name=John&time=2pm");
     }
-*/
 
 
     @Test
-    public void testGetBody() {
-        String request, expResult, result;
-        //
-        request = POST_REQUEST_NORMAL;
-        expResult = "name=John&time=2pm";
-        result = new HttpRequest(request).getBody();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_SHORT_METHODNAME;
-        expResult = "name=John&time=2pm";
-        result = new HttpRequest(request).getBody();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_LONG_METHODNAME;
-        expResult = "name=John&time=2pm";
-        result = new HttpRequest(request).getBody();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_NO_ARGS;
-        expResult = "";
-        result = new HttpRequest(request).getBody();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_ONE_LINEBREAK;
-        expResult = "";
-        result = new HttpRequest(request).getBody();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_NO_LINEBREAKS;
-        expResult = "";
-        result = new HttpRequest(request).getBody();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_NORMAL;
-        expResult = "";
-        result = new HttpRequest(request).getBody();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK;
-        expResult = "";
-        result = new HttpRequest(request).getBody();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_SHORT_METHODNAME;
-        expResult = "";
-        result = new HttpRequest(request).getBody();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_LONG_METHODNAME;
-        expResult = "";
-        result = new HttpRequest(request).getBody();
-        assertEquals(expResult, result);
+    public void getBody_PostRequestNoArguments_EmptyString() {
+        String body = new HttpRequest(POST_REQUEST_NO_ARGS).getBody();
+        assertThat(body).isEqualTo("");
+    }
+
+
+    @Test
+    public void getBody_PostRequestOneLineBreakBetweenHeaderAndBody_EmptyString() {
+        String body = new HttpRequest(POST_REQUEST_ONE_LINEBREAK).getBody();
+        assertThat(body).isEqualTo("");
+    }
+
+
+    @Test
+    public void getBody_PostRequestNoLineBreakBetweenHeaderAndBody_EmptyString() {
+        String body = new HttpRequest(POST_REQUEST_NO_LINEBREAKS).getBody();
+        assertThat(body).isEqualTo("");
+    }
+
+
+    @Test
+    public void getBody_GetRequest_Body() {
+        String body = new HttpRequest(GET_REQUEST_NORMAL).getBody();
+        assertThat(body).isEqualTo("");
+    }
+
+
+    @Test
+    public void getBody_GetRequestNoVariablesButWithQuestionMark_EmptyString() {
+        String body = new HttpRequest(GET_REQUEST_NORMAL).getBody();
+        assertThat(body).isEqualTo("");
     }
 
 
