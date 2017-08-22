@@ -76,12 +76,12 @@ public class HttpRequest {
     @SneakyThrows
     public URI getURI() {
         //Get protocol
-        String protocol = this.getRequestHeaderValue("X-Forwarded-Proto");
+        String protocol = this.getHeaderValue("X-Forwarded-Proto");
         if (Checker.isEmpty(protocol)) {
             protocol = "http";
         }
         //Get host
-        String host = this.getRequestHeaderValue("Host");
+        String host = this.getHeaderValue("Host");
         //Get path and query
         String pathAndQuery = SubString.create(mHttpRequest)
                 .startDelimiter("GET ")
@@ -113,7 +113,7 @@ public class HttpRequest {
      * @return The value of the argument header. Empty string is returned if not
      * found.
      */
-    public String getRequestHeaderValue(String headerName) {
+    public String getHeaderValue(String headerName) {
         String headerValue = "";
         //If argument header name was empty
         if (Checker.isEmpty(headerName)) {
@@ -142,7 +142,7 @@ public class HttpRequest {
 
     public Map<String, String> getCookies() {
         Map<String, String> cookies = new HashMap<>();
-        String cookieString = getRequestHeaderValue("Cookie");
+        String cookieString = getHeaderValue("Cookie");
         if (Checker.isEmpty(cookieString)) {
             return cookies;
         }

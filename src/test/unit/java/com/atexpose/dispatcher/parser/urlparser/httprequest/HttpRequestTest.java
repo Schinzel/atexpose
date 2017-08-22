@@ -432,42 +432,42 @@ public class HttpRequestTest {
         //Standard
         headerName = "Pragma";
         expResult = "no-cache";
-        result = instance.getRequestHeaderValue(headerName);
+        result = instance.getHeaderValue(headerName);
         assertEquals(expResult, result);
         //Non existing header
         headerName = "dkfjhdskjfhkdsjh";
         expResult = "";
-        result = instance.getRequestHeaderValue(headerName);
+        result = instance.getHeaderValue(headerName);
         assertEquals(expResult, result);
         //Empty header name
         headerName = "";
         expResult = "";
-        result = instance.getRequestHeaderValue(headerName);
+        result = instance.getHeaderValue(headerName);
         assertEquals(expResult, result);
         //Null header name
         headerName = null;
         expResult = "";
-        result = instance.getRequestHeaderValue(headerName);
+        result = instance.getHeaderValue(headerName);
         assertEquals(expResult, result);
         //Empty value
         headerName = "Pragma2";
         expResult = "";
-        result = instance.getRequestHeaderValue(headerName);
+        result = instance.getHeaderValue(headerName);
         assertEquals(expResult, result);
         //With colon in value
         headerName = "Pragma3";
         expResult = "This:is:the:value";
-        result = instance.getRequestHeaderValue(headerName);
+        result = instance.getHeaderValue(headerName);
         assertEquals(expResult, result);
         //Long value
         headerName = "Cookie";
         expResult = "db=19710101; ci=0733787878; __distillery=v20150227_0d85f699-344b-49d2-96e2-c0a072b93bb3; _gat=1; _ga=GA1.1.921947710.1426063424; ptl=0; undefined=0; cp=0";
-        result = instance.getRequestHeaderValue(headerName);
+        result = instance.getHeaderValue(headerName);
         assertEquals(expResult, result);
         //Host
         headerName = "Host";
         expResult = "127.0.0.1:5555";
-        result = instance.getRequestHeaderValue(headerName);
+        result = instance.getHeaderValue(headerName);
         assertEquals(expResult, result);
     }
 

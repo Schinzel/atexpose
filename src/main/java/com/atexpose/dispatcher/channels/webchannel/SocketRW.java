@@ -84,7 +84,7 @@ class SocketRW {
             //If there was any bytes
         } else if (request.getNoOfBytesStored() > 1) {
             hr = new HttpRequest(request.getAsString());
-            String sContentLength = hr.getRequestHeaderValue("Content-Length");
+            String sContentLength = hr.getHeaderValue("Content-Length");
             //If there was a content length
             if (!Checker.isEmpty(sContentLength)) {
                 int iContentLength = Integer.parseInt(sContentLength);
