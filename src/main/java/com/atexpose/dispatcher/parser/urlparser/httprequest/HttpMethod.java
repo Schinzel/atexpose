@@ -24,9 +24,9 @@ enum HttpMethod {
      * @return The http method of the argument http request request
      */
     static HttpMethod getRequestMethod(String httpRequest) {
-        if (httpRequest.startsWith(GET.name())) {
+        if (httpRequest.startsWith(GET.getAsString())) {
             return GET;
-        } else if (httpRequest.startsWith(POST.name())) {
+        } else if (httpRequest.startsWith(POST.getAsString())) {
             return POST;
         } else {
             throw new RuntimeError("Request not allowed. Request has to start with GET or POST. Request: ' " + httpRequest + "'");

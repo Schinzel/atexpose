@@ -29,8 +29,6 @@ public class HttpRequest {
     private static final String HEADER_BODY_DELIMITER = "\r\n\r\n";
     /** The delimiter between header fields. */
     private static final String HEADER_FIELD_DELIMITER = "\r\n";
-    /** Holds the request method used. */
-    private final HttpMethod mHttpMethod;
     /** Holds the http request. */
     private final String mHttpRequest;
     /** True if this is a ghost call, i.e. that the whole request is one byte. */
@@ -52,17 +50,17 @@ public class HttpRequest {
         Thrower.throwIfVarNull(httpRequest, "httpRequest");
         mHttpRequest = httpRequest;
         mGhostCall = (httpRequest.length() == 1);
-        mHttpMethod = this.isGhostCall()
+        HttpMethod httpMethod = this.isGhostCall()
                 ? HttpMethod.GET
                 : HttpMethod.getRequestMethod(httpRequest);
         mBody = SubString.create(httpRequest).startDelimiter(HEADER_BODY_DELIMITER).getString();
         mURL = SubString.create(httpRequest)
-                .startDelimiter(mHttpMethod.getAsString())
+                .startDelimiter(httpMethod.getAsString())
                 .endDelimiter(END_OF_URL)
                 .getString();
         mPath = SubString.create(mURL).endDelimiter("?").getString();
         String queryString = SubString.create(mURL).startDelimiter("?").getString();
-        String variablesAsString = (mHttpMethod == HttpMethod.GET)
+        String variablesAsString = (httpMethod == HttpMethod.GET)
                 ? queryString
                 : mBody;
         mVariables = Checker.isEmpty(variablesAsString)
