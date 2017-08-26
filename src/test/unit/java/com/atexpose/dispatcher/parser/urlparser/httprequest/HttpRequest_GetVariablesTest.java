@@ -12,27 +12,30 @@ public class HttpRequest_GetVariablesTest {
 
     @Test
     public void getVariables_PostRequestRequest() {
-        Map<String, String> actual = new HttpRequest(HttpRequestsUtil.POST_REQUEST_NORMAL).getVariables();
-        assertThat(actual).extracting("name").contains("John");
-        assertThat(actual).extracting("time").contains("2pm");
-        assertThat(actual).hasSize(2);
+        Map<String, String> variables = new HttpRequest(HttpRequestsUtil.POST_REQUEST_NORMAL).getVariables();
+        assertThat(variables)
+                .containsEntry("name", "John")
+                .containsEntry("time", "2pm")
+                .hasSize(2);
     }
 
 
     @Test
     public void getVariables_GetRequest() {
-        Map<String, String> actual = new HttpRequest(HttpRequestsUtil.GET_REQUEST_NORMAL).getVariables();
-        assertThat(actual).extracting("SSN").contains("197107282222");
-        assertThat(actual).extracting("Pin").contains("88889");
-        assertThat(actual).hasSize(2);
+        Map<String, String> variables = new HttpRequest(HttpRequestsUtil.GET_REQUEST_NORMAL).getVariables();
+        assertThat(variables)
+                .containsEntry("SSN", "197107282222")
+                .containsEntry("Pin", "88889")
+                .hasSize(2);
     }
 
 
     @Test
     public void getVariables_GetRequestOneVariable_GetRequest() {
-        Map<String, String> actual = new HttpRequest(HttpRequestsUtil.GET_REQUEST_ONE_VARIABLE).getVariables();
-        assertThat(actual).extracting("SSN").contains("197107282222");
-        assertThat(actual).hasSize(1);
+        Map<String, String> variables = new HttpRequest(HttpRequestsUtil.GET_REQUEST_ONE_VARIABLE).getVariables();
+        assertThat(variables)
+                .containsEntry("SSN", "197107282222")
+                .hasSize(1);
     }
 
 
