@@ -39,7 +39,7 @@ public class UrlParser implements IParser {
         //If is command call
         if (url.contains(PropertiesDispatcher.COMMAND_REQUEST_MARKER)) {
             mCallType = CallType.COMMAND;
-            Map<String, String> map = mHttpRequest.getVariablesAsMap();
+            Map<String, String> map = mHttpRequest.getVariables();
             List<String> argNames = new ArrayList<>();
             List<String> argValues = new ArrayList<>();
             //Go through all arguments
