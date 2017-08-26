@@ -64,7 +64,7 @@ public class HttpRequestTest {
             + "\r\n"
             + "name=John&time=2pm";
 
-    private static final String POST_REQUEST_SHORT_METHODNAME = "POST /call/a HTTP/1.1\r\n"
+    private static final String POST_REQUEST_SHORT_METHOD_NAME = "POST /call/a HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"
@@ -81,7 +81,7 @@ public class HttpRequestTest {
             + "name=John&time=2pm";
 
 
-    private static final String POST_REQUEST_LONG_METHODNAME = "POST /call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz HTTP/1.1\r\n"
+    private static final String POST_REQUEST_LONG_METHOD_NAME = "POST /call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"
@@ -97,22 +97,6 @@ public class HttpRequestTest {
             + "\r\n"
             + "name=John&time=2pm";
 
-
-    private static final String POST_REQUEST_ONE_SHORT_VARIABLE = "POST /call/getDataFromPM HTTP/1.1\r\n"
-            + "Host: 127.0.0.1:5555\r\n"
-            + "Connection: keep-alive\r\n"
-            + "Content-Length: 18\r\n"
-            + "Accept: */*\r\n"
-            + "Origin: http://127.0.0.1:5555\r\n"
-            + "X-Requested-With: XMLHttpRequest\r\n"
-            + "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36\r\n"
-            + "Content-Type: application/x-www-form-urlencoded; charset=UTF-8\r\n"
-            + "Referer: http://127.0.0.1:5555/\r\n"
-            + "Accept-Encoding: gzip, deflate\r\n"
-            + "Accept-Language: en-US,en;q=0.8\r\n"
-            + "Cookie: db=19710728; ci=+46733759593; _ga=GA1.1.957030889.1423688797; _gat=1; cp=1; ptl=2; undefined=1\r\n"
-            + "\r\n"
-            + "a=1";
 
     private static final String POST_REQUEST_NO_ARGS = "POST /call/a HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
@@ -194,7 +178,7 @@ public class HttpRequestTest {
             + "Cookie: db=19710728; ci=+46733759593; _ga=GA1.1.957030889.1423688797; _gat=1; cp=1; ptl=2; undefined=1\r\n"
             + "";
 
-    private static final String POST_REQUEST_NO_LINEBREAKS = "POST /call/a HTTP/1.1\r\n"
+    private static final String POST_REQUEST_NO_LINE_BREAKS = "POST /call/a HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"
@@ -250,43 +234,37 @@ public class HttpRequestTest {
 
 
     @Test
-    public void testGetPath() {
-        String request, expResult, result;
-        //
-        request = POST_REQUEST_NORMAL;
-        expResult = "call/getDataFromPM";
-        result = new HttpRequest(request).getPath();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_SHORT_METHODNAME;
-        expResult = "call/a";
-        result = new HttpRequest(request).getPath();
-        assertEquals(expResult, result);
-        //
-        request = POST_REQUEST_LONG_METHODNAME;
-        expResult = "call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz";
-        result = new HttpRequest(request).getPath();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_NORMAL;
-        expResult = "call/getDataFromPM";
-        result = new HttpRequest(request).getPath();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK;
-        expResult = "call/getDataFromPM";
-        result = new HttpRequest(request).getPath();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_SHORT_METHODNAME;
-        expResult = "call/a";
-        result = new HttpRequest(request).getPath();
-        assertEquals(expResult, result);
-        //
-        request = GET_REQUEST_LONG_METHODNAME;
-        expResult = "call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz";
-        result = new HttpRequest(request).getPath();
-        assertEquals(expResult, result);
+    public void getPath_PostRequestNormal_Path() {
+        String path = new HttpRequest(POST_REQUEST_NORMAL).getPath();
+        assertThat(path).isEqualTo("call/getDataFromPM");
+    }
+
+
+    @Test
+    public void getPath_GetRequestNormal_Path() {
+        String path = new HttpRequest(GET_REQUEST_NORMAL).getPath();
+        assertThat(path).isEqualTo("call/getDataFromPM");
+    }
+
+
+    @Test
+    public void getPath_GetRequestNoVariablesButWithQuestionMark_Path() {
+        String path = new HttpRequest(GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK).getPath();
+        assertThat(path).isEqualTo("call/getDataFromPM");
+    }
+
+
+    @Test
+    public void getPath_PostRequestLongMethodName() {
+        String path = new HttpRequest(POST_REQUEST_LONG_METHOD_NAME).getPath();
+        assertThat(path).isEqualTo("call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz");
+    }
+
+
+    @Test
+    public void getPath_PostRequestShortMethodName() {
+        String path = new HttpRequest(POST_REQUEST_SHORT_METHOD_NAME).getPath();
+        assertThat(path).isEqualTo("call/a");
     }
 
 
@@ -299,14 +277,14 @@ public class HttpRequestTest {
 
     @Test
     public void getUrl_PostRequestShortMethodName_Url() {
-        String url = new HttpRequest(POST_REQUEST_SHORT_METHODNAME).getURL();
+        String url = new HttpRequest(POST_REQUEST_SHORT_METHOD_NAME).getURL();
         assertThat(url).isEqualTo("call/a");
     }
 
 
     @Test
     public void getUrl_PostRequestLongMethodName_Url() {
-        String url = new HttpRequest(POST_REQUEST_LONG_METHODNAME).getURL();
+        String url = new HttpRequest(POST_REQUEST_LONG_METHOD_NAME).getURL();
         assertThat(url).isEqualTo("call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz");
     }
 
@@ -358,6 +336,14 @@ public class HttpRequestTest {
 
 
     @Test
+    public void getVariables_GetRequestOneVariable_GetRequest() {
+        Map<String, String> actual = new HttpRequest(GET_REQUEST_ONE_VARIABLE).getVariables();
+        assertThat(actual).extracting("SSN").contains("197107282222");
+        assertThat(actual).hasSize(1);
+    }
+
+
+    @Test
     public void getVariables_PostRequestNoArgsNormal_EmptyMap() {
         Map<String, String> actual = new HttpRequest(POST_REQUEST_NO_ARGS).getVariables();
         assertThat(actual).isEmpty();
@@ -365,15 +351,15 @@ public class HttpRequestTest {
 
 
     @Test
-    public void getVariables_PostRequestNoArgsOneLinebreak_EmptyMap() {
+    public void getVariables_PostRequestNoArgsOneLineBreak_EmptyMap() {
         Map<String, String> actual = new HttpRequest(POST_REQUEST_ONE_LINEBREAK).getVariables();
         assertThat(actual).isEmpty();
     }
 
 
     @Test
-    public void getVariables_PostRequestNoArgsNoLineabreaks_EmptyMap() {
-        Map<String, String> actual = new HttpRequest(POST_REQUEST_NO_LINEBREAKS).getVariables();
+    public void getVariables_PostRequestNoArgsNoLineBreaks_EmptyMap() {
+        Map<String, String> actual = new HttpRequest(POST_REQUEST_NO_LINE_BREAKS).getVariables();
         assertThat(actual).isEmpty();
     }
 
@@ -408,7 +394,7 @@ public class HttpRequestTest {
 
     @Test
     public void getBody_PostRequestNoLineBreakBetweenHeaderAndBody_EmptyString() {
-        String body = new HttpRequest(POST_REQUEST_NO_LINEBREAKS).getBody();
+        String body = new HttpRequest(POST_REQUEST_NO_LINE_BREAKS).getBody();
         assertThat(body).isEqualTo("");
     }
 
