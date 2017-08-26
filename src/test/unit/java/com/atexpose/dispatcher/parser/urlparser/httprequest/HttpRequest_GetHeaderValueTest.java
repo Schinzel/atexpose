@@ -48,7 +48,7 @@ public class HttpRequest_GetHeaderValueTest {
     @Test
     public void getHeaderValue_LongHeaderValue_HeaderValue() {
         String headerValue = new HttpRequest(HttpRequestsUtil.FILE_REQUEST_NO_QUERY).getHeaderValue("Cookie");
-        assertThat(headerValue).isEqualTo("db=19710101; ci=0733787878; __distillery=v20150227_0d85f699-344b-49d2-96e2-c0a072b93bb3; _gat=1; _ga=GA1.1.921947710.1426063424; ptl=0; undefined=0; cp=0");
+        assertThat(headerValue).isEqualTo("db=19710101; ci=0733787878; __distillery=v20150227_0d85f699-344b-49d2-96e2-c0a072b93bb3; _gat=1; _ga=GA1.1.921947710.1426063424; ptl=0; undefined=1; cp=2");
     }
 
 
