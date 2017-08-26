@@ -11,7 +11,6 @@ import org.apache.http.client.utils.URIBuilder;
 
 import java.net.URI;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -59,14 +58,18 @@ public class HttpRequest {
                 .endDelimiter(END_OF_URL)
                 .getString();
         mPath = SubString.create(mURL).endDelimiter("?").getString();
-        String queryString = SubString.create(mURL).startDelimiter("?").getString();
+        //Set variable string to
         String variablesAsString = (httpMethod == HttpMethod.GET)
-                ? queryString
+                //If get request, set query string
+                ? SubString.create(mURL).startDelimiter("?").getString()
+                //else, i.e. is post request, set body
                 : mBody;
+        //Set variables to
         mVariables = Checker.isEmpty(variablesAsString)
+                //If empty variable string, set to empty map
                 ? Collections.emptyMap()
+                //else, construct variable map
                 : Splitter.on('&').trimResults().withKeyValueSeparator('=').split(variablesAsString);
-
     }
 
 
@@ -119,20 +122,14 @@ public class HttpRequest {
     }
 
 
+    /**
+     * @return Get the cookies
+     */
     public Map<String, String> getCookies() {
-        Map<String, String> cookies = new HashMap<>();
         String cookieString = getHeaderValue("Cookie");
-        if (Checker.isEmpty(cookieString)) {
-            return cookies;
-        }
-        String[] cookieValues = cookieString.split(";");
-        for (String cookieValue : cookieValues) {
-            String[] aCookie = cookieValue.split("=");
-            if (2 == aCookie.length) {
-                cookies.put(aCookie[0].trim(), aCookie[1].trim());
-            }
-        }
-        return cookies;
+        return Checker.isEmpty(cookieString)
+                ? Collections.emptyMap()
+                : Splitter.on("; ").withKeyValueSeparator("=").split(cookieString);
     }
 
 }
