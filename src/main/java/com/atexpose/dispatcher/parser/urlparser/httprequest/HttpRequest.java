@@ -111,7 +111,6 @@ public class HttpRequest {
      * found.
      */
     public String getHeaderValue(String headerName) {
-        //If argument header name was empty
         Thrower.throwIfVarEmpty(headerName, "headerName");
         return SubString.create(mHttpRequest)
                 .startDelimiter(headerName + ": ")
