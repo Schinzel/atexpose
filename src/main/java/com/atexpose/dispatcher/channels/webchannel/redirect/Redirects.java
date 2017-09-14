@@ -140,7 +140,7 @@ public class Redirects {
 
     /**
      *
-     * @param uri
+     * @param uri An URI
      * @return True if the argument URI is a method call, else false.
      */
     static boolean isMethodCall(URI uri){

@@ -13,7 +13,7 @@ public class MailLogWriter implements ILogWriter {
     private final IEmailSender mMailSender;
 
 
-    public MailLogWriter(String recipient, IEmailSender emailSender) {
+    MailLogWriter(String recipient, IEmailSender emailSender) {
         mRecipient = recipient;
         mMailSender = emailSender;
     }

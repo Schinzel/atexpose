@@ -54,7 +54,7 @@ public class WebChannel implements IChannel {
     }
 
 
-    static ServerSocket getServerSocket(int port) {
+    private static ServerSocket getServerSocket(int port) {
         try {
             return new ServerSocket(port, MAX_PENDING_REQUESTS);
         } catch (IOException ioe) {
@@ -150,7 +150,7 @@ public class WebChannel implements IChannel {
      * Get any direct response. Direct responses is when the WebChannel send the response directly
      * without involving the rest of @expose. For example, if there is a http to https redirect.
      *
-     * @param httpRequest
+     * @param httpRequest A http request
      * @return Empty string if no direct response is to be sent. Else the direct response to send.
      */
     private String getDirectResponse(HttpRequest httpRequest) {

@@ -34,7 +34,7 @@ public class MultiLineFormatter extends SingleLineFormatter {
     @Override
     public String escapeValue(String value) {
         if (value == null) {
-            return value;
+            return null;
         }
         return value.replace("\r", "");
     }
