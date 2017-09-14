@@ -8,9 +8,6 @@ import lombok.Getter;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -24,18 +21,6 @@ public class IAtExposeSqsTest {
 
         @Override
         public AtExposeSqs getThis() {
-            return this;
-        }
-    }
-
-    private class QueueProducerMock implements IQueueProducer {
-        @Getter
-        List<String> messages = new ArrayList<>();
-
-
-        @Override
-        public IQueueProducer send(String message) {
-            messages.add(message);
             return this;
         }
     }
