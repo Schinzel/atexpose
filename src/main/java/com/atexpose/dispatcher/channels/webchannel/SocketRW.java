@@ -36,7 +36,7 @@ class SocketRW {
         byte firstByte = (byte) inputStream.read();
         request.add(firstByte);
         byte[] arr = new byte[BUFFER_SIZE];
-        int bytesRead = 0;
+        int bytesRead;
         //While there is more than one byte available and the read does not return end of stream
         while ((inputStream.available() > 0) && ((bytesRead = inputStream.read(arr)) != -1)) {
             request.add(arr, 0, bytesRead);
@@ -93,7 +93,7 @@ class SocketRW {
                         < iContentLength) && (attempts < LAGGARD_MAX_ATTEMPTS)) {
                     attempts++;
                     Sandman.snoozeMillis(LAGGARD_SNOOZE_BETWEEN_READS);
-                    int bytesRead = 0;
+                    int bytesRead;
                     byte[] arr = new byte[BUFFER_SIZE];
                     //Read again from the socket
                     while ((inputStream.available() > 0) && ((bytesRead = inputStream.read(arr)) != -1)) {

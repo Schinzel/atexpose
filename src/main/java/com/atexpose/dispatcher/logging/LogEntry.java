@@ -48,12 +48,9 @@ public class LogEntry implements ILogEntry {
     final @NonNull String methodName;
 
 
-    /**
-     * @return
-     */
     public Map<String, String> getLogData(@NonNull ICipher crypto) {
         List<String> encryptedArguments = argValues.stream()
-                .map(s -> crypto.encrypt(s))
+                .map(crypto::encrypt)
                 .collect(Collectors.toList());
         String arguments = argumentsToString(argNames, encryptedArguments);
         val logDataBuilder = ImmutableMap.<String, String>builder()

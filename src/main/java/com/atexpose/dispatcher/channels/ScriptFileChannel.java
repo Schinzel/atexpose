@@ -20,21 +20,13 @@ import java.io.InputStreamReader;
  * @author Schinzel
  */
 public class ScriptFileChannel implements IChannel {
-    /**
-     * If a line starts with a comment qualifier, that line is ignored.
-     */
+    /** If a line starts with a comment qualifier, that line is ignored. */
     private static final String COMMENT_QUALIFIER = "#";
-    /**
-     * The name of the file to read.
-     */
+    /** The name of the file to read. */
     private final String mFilename;
-    /**
-     * The time it took to read a line. For logging and statistics.
-     */
+    /** The time it took to read a line. For logging and statistics. */
     private long mLineReadTime;
-    /**
-     * Used to read the file.
-     */
+    /** Used to read the file. */
     private BufferedReader mBufferedReader;
     //------------------------------------------------------------------------
     // CONSTRUCTORS AND SHUTDOWN
