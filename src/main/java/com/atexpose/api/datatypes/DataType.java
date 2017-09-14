@@ -30,6 +30,6 @@ public enum DataType {
      * @return The name of the data type.
      */
     public String getName() {
-        return this.getInstance().getName();
+        return this.getInstance().getKey();
     }
 }

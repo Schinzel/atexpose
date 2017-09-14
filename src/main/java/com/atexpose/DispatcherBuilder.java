@@ -8,7 +8,7 @@ import com.atexpose.dispatcher.parser.JsonRpcParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import com.atexpose.util.sqs.SqsConsumer;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.collections.namedvalues.NamedValues;
+import io.schinzel.basicutils.collections.namedvalues.ValuesWithKeys;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.experimental.Accessors;
@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 class DispatcherBuilder {
     private final API mAPI;
-    private final NamedValues<Dispatcher> mDispatchers;
+    private final ValuesWithKeys<Dispatcher> mDispatchers;
 
 
     @Builder(builderClassName = "SqsConsumerBuilder", builderMethodName = "sqsConsumerBuilder", buildMethodName = "start")

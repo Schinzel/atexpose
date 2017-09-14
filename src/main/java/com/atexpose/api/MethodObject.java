@@ -7,7 +7,7 @@ import com.atexpose.errors.RuntimeError;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Thrower;
-import io.schinzel.basicutils.collections.namedvalues.INamedValue;
+import io.schinzel.basicutils.collections.namedvalues.IValueWithKey;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import io.schinzel.basicutils.str.Str;
@@ -27,8 +27,8 @@ import java.util.*;
  * meta-data.
  */
 @Accessors(prefix = "m")
-public class MethodObject implements INamedValue, IStateNode {
-    @Getter final String mName;
+public class MethodObject implements IValueWithKey, IStateNode {
+    @Getter final String mKey;
     //The type of the return of the method as defined by the static variables.
     @Getter private final AbstractDataType mReturnDataType;
     //The access level required to use this method.
@@ -60,7 +60,7 @@ public class MethodObject implements INamedValue, IStateNode {
                          List<Argument> arguments, int accessLevel, List<Label> labels,
                          AbstractDataType returnDataType, List<Alias> aliases, boolean requireAuthentication) {
         String methodName = method.getName();
-        this.mName = methodName;
+        this.mKey = methodName;
         mObject = theObject;
         mMethod = method;
         Thrower.throwIfVarNull(mMethod, "Error in setting up method '" + theObject.getClass().getName() + "." + methodName + "'. Class not found.");
@@ -74,7 +74,7 @@ public class MethodObject implements INamedValue, IStateNode {
         //Put arguments and its aliases in a hash map for quick up look of argument position
         int argumentPosition = 0;
         for (Argument argument : mArguments) {
-            mArgumentPositions.put(argument.getName(), argumentPosition);
+            mArgumentPositions.put(argument.getKey(), argumentPosition);
             if (!Checker.isEmpty(mAliases)) {
                 for (String alias : argument.getAliases()) {
                     mArgumentPositions.put(alias, argumentPosition);
@@ -149,7 +149,7 @@ public class MethodObject implements INamedValue, IStateNode {
         String argumentPlural = "arguments";
         if (noOfArgumentsInCall < this.mNoOfRequiredArguments) {
             errorText.append("Too few arguments. Was ").append(noOfArgumentsInCall).append(" and method ")
-                    .append(this.getName()).append(" requires a minimum of ").append(this.mNoOfRequiredArguments).append(" ");
+                    .append(this.getKey()).append(" requires a minimum of ").append(this.mNoOfRequiredArguments).append(" ");
             if (this.mNoOfRequiredArguments == 1) {
                 errorText.append(argumentSingular);
             } else {
@@ -159,7 +159,7 @@ public class MethodObject implements INamedValue, IStateNode {
         }
         if (noOfArgumentsInCall > this.mArguments.size()) {
             errorText.append("Too many arguments. Was ").append(noOfArgumentsInCall).append(" and method ")
-                    .append(this.getName()).append(" takes a maximum of ").append(this.mArguments.size()).append(" ");
+                    .append(this.getKey()).append(" takes a maximum of ").append(this.mArguments.size()).append(" ");
             if (this.mArguments.size() == 1) {
                 errorText.append(argumentSingular);
             } else {
@@ -247,7 +247,7 @@ public class MethodObject implements INamedValue, IStateNode {
      * Return the position of a single argument name.
      */
     private int getArgumentPosition(String argumentName) {
-        Thrower.throwIfFalse(mArgumentPositions.containsKey(argumentName), "No such argument named '" + argumentName + "' in method " + this.getName());
+        Thrower.throwIfFalse(mArgumentPositions.containsKey(argumentName), "No such argument named '" + argumentName + "' in method " + this.getKey());
         return mArgumentPositions.get(argumentName);
     }
 
@@ -272,7 +272,7 @@ public class MethodObject implements INamedValue, IStateNode {
 
     private void checkAccessLevel(int accessLevelOfDispatcher) {
         if (accessLevelOfDispatcher < this.mAccessLevelRequiredToUseThisMethod) {
-            throw new RuntimeException("The method '" + this.getName()
+            throw new RuntimeException("The method '" + this.getKey()
                     + "' has access level " + this.mAccessLevelRequiredToUseThisMethod
                     + ". The Dispatcher used only has access to level " + accessLevelOfDispatcher
                     + " methods and below.");
@@ -287,8 +287,8 @@ public class MethodObject implements INamedValue, IStateNode {
      * @return The syntax of the method
      */
     String getSyntax() {
-        Str str = Str.create().asp(mReturnDataType.getName())
-                .a(this.getName()).a("(");
+        Str str = Str.create().asp(mReturnDataType.getKey())
+                .a(this.getKey()).a("(");
         for (int i = 0; i < mArguments.size(); i++) {
             if (i > 0) {
                 str.a(", ");
@@ -296,8 +296,8 @@ public class MethodObject implements INamedValue, IStateNode {
             if (i >= this.mNoOfRequiredArguments) {
                 str.a('[');
             }
-            str.asp(mArguments.get(i).getDataType().getName());
-            str.a(mArguments.get(i).getName());
+            str.asp(mArguments.get(i).getDataType().getKey());
+            str.a(mArguments.get(i).getKey());
             if (i >= this.mNoOfRequiredArguments) {
                 str.a(']');
             }
@@ -310,8 +310,8 @@ public class MethodObject implements INamedValue, IStateNode {
     @Override
     public State getState() {
         return State.getBuilder()
-                .add("Name", this.getName())
-                .add("Return", mReturnDataType.getName())
+                .add("Name", this.getKey())
+                .add("Return", mReturnDataType.getKey())
                 .add("Description", mDescription)
                 .add("AccessLevelRequired", this.getAccessLevelRequiredToUseThisMethod())
                 .add("RequiredArgumentsCount", mNoOfRequiredArguments)
