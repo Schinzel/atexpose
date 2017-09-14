@@ -11,7 +11,7 @@ import com.atexpose.dispatcher.parser.urlparser.UrlParserWithGSuiteAuth;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.dispatcher.wrapper.WebWrapper;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.collections.namedvalues.NamedValues;
+import io.schinzel.basicutils.collections.namedvalues.ValuesWithKeys;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,10 +38,10 @@ public class WebServerBuilder {
     private final API mAPI;
     private String mAuthCookieName;
     private String mAuthDomain;
-    private final NamedValues<Dispatcher> mDispatchers;
+    private final ValuesWithKeys<Dispatcher> mDispatchers;
 
 
-    WebServerBuilder(API api, NamedValues<Dispatcher> dispatchers) {
+    WebServerBuilder(API api, ValuesWithKeys<Dispatcher> dispatchers) {
         mAPI = api;
         mDispatchers = dispatchers;
     }

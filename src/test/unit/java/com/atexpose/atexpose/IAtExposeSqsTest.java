@@ -3,13 +3,10 @@ package com.atexpose.atexpose;
 import com.atexpose.api.API;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.util.sqs.IQueueProducer;
-import io.schinzel.basicutils.collections.namedvalues.NamedValues;
+import io.schinzel.basicutils.collections.namedvalues.ValuesWithKeys;
 import lombok.Getter;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -17,8 +14,8 @@ import static org.mockito.Mockito.*;
 public class IAtExposeSqsTest {
 
     private class AtExposeSqs implements IAtExposeSqs<AtExposeSqs> {
-        @Getter NamedValues<QueueProducerWrapper> queueProducers = NamedValues.create("QueueProducers");
-        @Getter NamedValues<Dispatcher> dispatchers;
+        @Getter ValuesWithKeys<QueueProducerWrapper> queueProducers = ValuesWithKeys.create("QueueProducers");
+        @Getter ValuesWithKeys<Dispatcher> dispatchers;
         @Getter API API;
 
 
@@ -28,22 +25,10 @@ public class IAtExposeSqsTest {
         }
     }
 
-    private class QueueProducerMock implements IQueueProducer {
-        @Getter
-        List<String> messages = new ArrayList<>();
-
-
-        @Override
-        public IQueueProducer send(String message) {
-            messages.add(message);
-            return this;
-        }
-    }
-
 
     @Test
     public void getQueueProducers_AddThreeProducers_SizeShouldBeThree() {
-        NamedValues<QueueProducerWrapper> queueProducers = new AtExposeSqs()
+        ValuesWithKeys<QueueProducerWrapper> queueProducers = new AtExposeSqs()
                 .addQueueProducer("name1", mock(IQueueProducer.class))
                 .addQueueProducer("name2", mock(IQueueProducer.class))
                 .addQueueProducer("name3", mock(IQueueProducer.class))

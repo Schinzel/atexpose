@@ -5,7 +5,7 @@ import com.atexpose.atexpose.*;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.mail.IEmailSender;
-import io.schinzel.basicutils.collections.namedvalues.NamedValues;
+import io.schinzel.basicutils.collections.namedvalues.ValuesWithKeys;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Getter;
@@ -30,9 +30,9 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
     /** Holds an email sender instance if such has been set up. */
     @Getter private IEmailSender mMailSender;
     /** Holds the running dispatchers */
-    @Getter NamedValues<Dispatcher> mDispatchers = NamedValues.create("Dispatchers");
+    @Getter ValuesWithKeys<Dispatcher> mDispatchers = ValuesWithKeys.create("Dispatchers");
     /** Hold the SQS senders added to this instance. */
-    @Getter NamedValues<QueueProducerWrapper> mQueueProducers = NamedValues.create("QueueProducers");
+    @Getter ValuesWithKeys<QueueProducerWrapper> mQueueProducers = ValuesWithKeys.create("QueueProducers");
 
 
     /**
