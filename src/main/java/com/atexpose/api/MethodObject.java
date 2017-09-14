@@ -316,6 +316,7 @@ public class MethodObject implements IValueWithKey, IStateNode {
                 .add("AccessLevelRequired", this.getAccessLevelRequiredToUseThisMethod())
                 .add("RequiredArgumentsCount", mNoOfRequiredArguments)
                 .add("JavaClass", mObject.getClass().getCanonicalName())
+                .addChildren("Aliases", mAliases)
                 .addChildren("Arguments", mArguments)
                 .addChildren("Labels", mLabels)
                 .build();

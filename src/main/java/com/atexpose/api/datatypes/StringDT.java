@@ -23,11 +23,7 @@ public class StringDT extends AbstractDataType {
 
     @Override
     public boolean verifyValue(String value) {
-        if (value == null || value.equalsIgnoreCase(STRING_REPRESENTATION_OF_NULL)) {
-            return false;
-        } else {
-            return value.length() <= MAX_LENGTH;
-        }
+        return value != null && !value.equalsIgnoreCase(STRING_REPRESENTATION_OF_NULL) && value.length() <= MAX_LENGTH;
     }
 
 

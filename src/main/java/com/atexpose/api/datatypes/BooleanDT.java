@@ -13,10 +13,7 @@ public class BooleanDT extends AbstractDataType {
 
     @Override
     public boolean verifyValue(String value) {
-        if (value == null) {
-            return false;
-        }
-        return (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false"));
+        return value != null && (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false"));
     }
 
     @Override
