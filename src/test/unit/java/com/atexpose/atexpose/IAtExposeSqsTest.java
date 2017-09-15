@@ -3,7 +3,7 @@ package com.atexpose.atexpose;
 import com.atexpose.api.API;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.util.sqs.IQueueProducer;
-import io.schinzel.basicutils.collections.namedvalues.ValuesWithKeys;
+import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 import lombok.Getter;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
