@@ -1,7 +1,7 @@
 package com.atexpose.atexpose;
 
 import com.atexpose.util.sqs.IQueueProducer;
-import io.schinzel.basicutils.collections.namedvalues.ValuesWithKeys;
+import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 
 /**
  * The purpose of this interface is to send messages to AWS SQS queues.

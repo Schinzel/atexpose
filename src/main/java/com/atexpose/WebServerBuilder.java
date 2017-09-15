@@ -11,7 +11,7 @@ import com.atexpose.dispatcher.parser.urlparser.UrlParserWithGSuiteAuth;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.dispatcher.wrapper.WebWrapper;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.collections.namedvalues.ValuesWithKeys;
+import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 
 import java.util.HashMap;
 import java.util.Map;

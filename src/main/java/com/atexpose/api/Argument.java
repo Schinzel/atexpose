@@ -3,7 +3,7 @@ package com.atexpose.api;
 import com.atexpose.api.datatypes.AbstractDataType;
 import com.atexpose.api.datatypes.DataType;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.collections.namedvalues.IValueWithKey;
+import io.schinzel.basicutils.collections.valueswithkeys.IValueWithKey;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
