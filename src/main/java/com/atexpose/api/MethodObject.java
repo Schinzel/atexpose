@@ -7,7 +7,7 @@ import com.atexpose.errors.RuntimeError;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Thrower;
-import io.schinzel.basicutils.collections.namedvalues.IValueWithKey;
+import io.schinzel.basicutils.collections.valueswithkeys.IValueWithKey;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import io.schinzel.basicutils.str.Str;

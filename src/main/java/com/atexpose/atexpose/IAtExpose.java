@@ -2,7 +2,7 @@ package com.atexpose.atexpose;
 
 import com.atexpose.api.API;
 import com.atexpose.dispatcher.Dispatcher;
-import io.schinzel.basicutils.collections.namedvalues.ValuesWithKeys;
+import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 
 /**
  * This is the base interface.

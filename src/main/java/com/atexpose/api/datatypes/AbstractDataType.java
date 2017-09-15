@@ -1,7 +1,7 @@
 package com.atexpose.api.datatypes;
 
 import com.atexpose.errors.RuntimeError;
-import io.schinzel.basicutils.collections.namedvalues.IValueWithKey;
+import io.schinzel.basicutils.collections.valueswithkeys.IValueWithKey;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.AllArgsConstructor;

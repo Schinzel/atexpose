@@ -12,7 +12,7 @@ import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.util.ByteStorage;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.UTF8;
-import io.schinzel.basicutils.collections.namedvalues.IValueWithKey;
+import io.schinzel.basicutils.collections.valueswithkeys.IValueWithKey;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
@@ -42,7 +42,7 @@ import java.util.List;
  */
 @Accessors(prefix = "m")
 public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
-    /** The name as part of the INamedValue interface. Is the name of the Dispatchers. */
+    /** The name as part of the IValueWithKey interface. Is the name of the Dispatchers. */
     @Getter final String mKey;
     /** The API that is exposed. */
     private final API mAPI;
