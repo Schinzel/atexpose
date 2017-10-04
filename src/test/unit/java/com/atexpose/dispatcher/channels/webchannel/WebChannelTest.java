@@ -122,6 +122,9 @@ public class WebChannelTest {
         HttpRequest httpRequest = new HttpRequest(browserSyncRequest);
         String redirectResponse = webChannel.getDirectResponse(httpRequest);
         assertThat(redirectResponse).isEmpty();
+        webChannel.shutdown(Thread.currentThread());
+        //Snooze for tests to work on Travis
+        Sandman.snoozeMillis(10);
     }
 
 }
