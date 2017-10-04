@@ -35,7 +35,7 @@ class Help {
         }
         //Get the methods that match the argument search string, sorted
         Stream<MethodObject> methodStream = mAPI.getMethods()
-                .getUsingWildCards(searchString)
+                .getWithWildCards(searchString)
                 .stream()
                 .sorted();
         Stream<String> returnStream

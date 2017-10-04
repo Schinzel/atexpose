@@ -26,7 +26,7 @@ class HostRedirect implements IRedirect {
 
     @Override
     public boolean shouldRedirect(URI uri) {
-        return (uri.getHost().equalsIgnoreCase(this.from));
+        return uri.getHost() != null && (uri.getHost().equalsIgnoreCase(this.from));
     }
 
 

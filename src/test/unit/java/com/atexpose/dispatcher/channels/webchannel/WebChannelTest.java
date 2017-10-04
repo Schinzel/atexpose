@@ -13,6 +13,9 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.URI;
 
+import static org.assertj.core.api.Assertions.*;
+
+
 public class WebChannelTest {
 
 
@@ -43,8 +46,6 @@ public class WebChannelTest {
         //Snooze for tests to work on Travis
         Sandman.snoozeMillis(10);
     }
-
-
 
 
     @Test
@@ -90,4 +91,40 @@ public class WebChannelTest {
         //Snooze for tests to work on Travis
         Sandman.snoozeMillis(10);
     }
+
+
+    /**
+     * 2017-10-04 Test of real life issue. Below request is a request from browser sync. That
+     * caused an null pointer exception.
+     */
+    @Test
+    public void getDirectResponse_BrowserSyncRequest_EmptyString() {
+        String browserSyncRequest = "" +
+                "GET / HTTP/1.1\r\n" +
+                "upgrade-insecure-requests: 1\r\n" +
+                "connection: close\r\n" +
+                "cookie: _ga=GA1.1.1128886252.1505742355; __distillery=v20150227_357dec24-18f0-4a4f-bda6-7970b7774950; _gid=GA1.1.1317470888.1506937146\r\n" +
+                "accept-encoding: identity\r\n" +
+                "accept-language: sv-SE,sv;q=0.8,en-US;q=0.5,en;q=0.3\r\n" +
+                "accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n" +
+                "user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:56.0) Gecko/20100101 Firefox/56.0\r\n" +
+                "host: 192.168.136.105:5555\r\n" +
+                "agent: false\r\n" +
+                "\r\n";
+        Redirects redirects = Redirects.getBuilder()
+                .addHostRedirect("schinzel.io", "www.schinzel.io")
+                .build();
+        WebChannel webChannel = WebChannel.builder()
+                .port(5555)
+                .timeout(300)
+                .redirects(redirects)
+                .build();
+        HttpRequest httpRequest = new HttpRequest(browserSyncRequest);
+        String redirectResponse = webChannel.getDirectResponse(httpRequest);
+        assertThat(redirectResponse).isEmpty();
+        webChannel.shutdown(Thread.currentThread());
+        //Snooze for tests to work on Travis
+        Sandman.snoozeMillis(10);
+    }
+
 }
