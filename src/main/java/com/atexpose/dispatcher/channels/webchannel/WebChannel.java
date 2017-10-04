@@ -153,7 +153,7 @@ public class WebChannel implements IChannel {
      * @param httpRequest A http request
      * @return Empty string if no direct response is to be sent. Else the direct response to send.
      */
-    private String getDirectResponse(HttpRequest httpRequest) {
+    String getDirectResponse(HttpRequest httpRequest) {
         if (httpRequest.isGhostCall()) {
             return HttpResponseString.builder()
                     .body("Hi Ghost!")
