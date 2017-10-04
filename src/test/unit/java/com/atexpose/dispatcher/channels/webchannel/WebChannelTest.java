@@ -111,11 +111,7 @@ public class WebChannelTest {
                 "host: 192.168.136.105:5555\r\n" +
                 "agent: false\r\n" +
                 "\r\n";
-        HttpRequest httpRequest = new HttpRequest(browserSyncRequest);
-        String path = httpRequest.getURI().getHost();
-        System.out.println("path: " + path);
         Redirects redirects = Redirects.getBuilder()
-                .setHttpsRedirect()
                 .addHostRedirect("schinzel.io", "www.schinzel.io")
                 .build();
         WebChannel webChannel = WebChannel.builder()
@@ -123,6 +119,7 @@ public class WebChannelTest {
                 .timeout(300)
                 .redirects(redirects)
                 .build();
+        HttpRequest httpRequest = new HttpRequest(browserSyncRequest);
         String redirectResponse = webChannel.getDirectResponse(httpRequest);
         assertThat(redirectResponse).isEmpty();
     }
