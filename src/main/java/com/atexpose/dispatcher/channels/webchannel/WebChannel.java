@@ -46,7 +46,7 @@ public class WebChannel implements IChannel {
     //------------------------------------------------------------------------
     // CONSTRUCTORS AND SHUTDOWN
     //------------------------------------------------------------------------
-    @Builder
+    @Builder(builderClassName = "WebChannelBuilder", builderMethodName = "builder", buildMethodName = "build")
     WebChannel(int port, int timeout, Redirects redirects) {
         this(getServerSocket(port), redirects, timeout);
         Thrower.throwIfVarOutsideRange(port, "port", 1, 65535);
@@ -63,7 +63,7 @@ public class WebChannel implements IChannel {
     }
 
 
-    @Builder(builderMethodName = "cloneBuilder", buildMethodName = "buildClone")
+    @Builder(builderClassName = "WebChannelCloneBuilder", builderMethodName = "cloneBuilder", buildMethodName = "buildClone")
     private WebChannel(ServerSocket serverSocket, Redirects redirects, int timeout) {
         mServerSocket = serverSocket;
         mSocketTimeout = timeout;
