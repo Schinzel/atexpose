@@ -21,13 +21,14 @@ public interface IAtExposeScriptFile<T extends IAtExpose<T>> extends IAtExpose<T
         Dispatcher scriptFileDispatcher = Dispatcher.builder()
                 .name("ScriptFile")
                 .accessLevel(3)
+                .isSynchronized(true)
                 .channel(new ScriptFileChannel(fileName))
                 .parser(new TextParser())
                 .wrapper(new CsvWrapper())
                 .noOfThreads(1)
                 .api(this.getAPI())
                 .build();
-        return this.startDispatcher(scriptFileDispatcher, true, true);
+        return this.startDispatcher(scriptFileDispatcher, true);
     }
 
 }

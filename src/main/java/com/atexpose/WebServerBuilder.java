@@ -294,6 +294,7 @@ public class WebServerBuilder {
         Dispatcher dispatcher = Dispatcher.builder()
                 .name(webServerName)
                 .channel(webChannel)
+                .isSynchronized(false)
                 .parser(parser)
                 .wrapper(wrapper)
                 .accessLevel(mAccessLevel)
@@ -301,7 +302,7 @@ public class WebServerBuilder {
                 .api(mAPI)
                 .build();
         mDispatchers.add(dispatcher);
-        dispatcher.commenceMessaging(false);
+        dispatcher.commenceMessaging();
         return dispatcher;
     }
 
