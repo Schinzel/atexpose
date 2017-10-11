@@ -22,14 +22,13 @@ public class _Sample1_Expose {
 
 
     public static void main(String[] args) {
-        AtExpose atExpose = AtExpose.create();
-        atExpose.getAPI()
+        AtExpose.create()
                 //Expose static methods in a class
                 .expose(MyClass.class)
                 //Expose an instance
-                .expose(new MyObject());
-        //Start a command line interface
-        atExpose.startCLI();
+                .expose(new MyObject())
+                //Start a command line interface
+                .startCLI();
 
     }
 }

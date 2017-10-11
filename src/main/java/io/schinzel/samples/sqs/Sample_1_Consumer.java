@@ -19,7 +19,7 @@ import com.atexpose.util.sqs.SqsQueueType;
  * Instructions:
  * - Set access key, secret key and the queue url in class AWS.
  * - Run main
- * - Type close in CLI to quit.
+ * - Type "close" in CLI to quit.
  * <p>
  * Created by schinzel on 2017-07-06.
  */
