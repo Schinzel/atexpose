@@ -22,14 +22,13 @@ public class _Sample3_WebServer {
 
 
     public static void main(String[] args) {
-        AtExpose atExpose = AtExpose.create();
-        atExpose.getAPI()
+        AtExpose.create()
                 //Expose static methods in a class
                 .expose(MyClass.class)
                 //Expose an instance
-                .expose(new MyObject());
-        //Get web server builder
-        atExpose.getWebServerBuilder()
+                .expose(new MyObject())
+                //Get web server builder
+                .getWebServerBuilder()
                 //Set the dir from which requested file will be read
                 .webServerDir("web/sample3")
                 //Disable RAM cache so that changes to files made kicks through without restarting the web server
@@ -39,6 +38,7 @@ public class _Sample3_WebServer {
                 .addLogger(getEventLogger());
 
     }
+
 
     private static Logger getEventLogger() {
         return Logger.builder()

@@ -21,14 +21,13 @@ public class _Sample2_WebServer {
 
 
     public static void main(String[] args) {
-        AtExpose atExpose = AtExpose.create();
-        atExpose.getAPI()
+        AtExpose.create()
                 //Expose static methods in a class
                 .expose(MyClass.class)
                 //Expose an instance
-                .expose(new MyObject());
-        //Start a web server
-        atExpose.getWebServerBuilder().startWebServer();
+                .expose(new MyObject())
+                //Start a web server
+                .getWebServerBuilder().startWebServer();
 
 
     }
