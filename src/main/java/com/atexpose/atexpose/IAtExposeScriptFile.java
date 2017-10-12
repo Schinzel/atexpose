@@ -26,7 +26,6 @@ public interface IAtExposeScriptFile<T extends IAtExpose<T>> extends IAtExpose<T
                 .parser(new TextParser())
                 .wrapper(new CsvWrapper())
                 .noOfThreads(1)
-                .api(this.getAPI())
                 .build();
         return this.startDispatcher(scriptFileDispatcher, true);
     }

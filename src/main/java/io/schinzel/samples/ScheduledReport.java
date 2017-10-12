@@ -1,6 +1,9 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
+import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcherfactories.DispatcherFactory;
+import com.atexpose.dispatcherfactories.ScheduledReportFactory;
 
 /**
  * In this sample a scheduled report is set up. These are emailed once a day.
@@ -12,18 +15,29 @@ import com.atexpose.AtExpose;
  * 2) Set recipient email address
  * 3) Set the time to send to send the report in UTC, a min or two from now*.
  * <p>
- * * = If you are unsure about the time in UTC, just start this sample and write "time" in the terminal to get
+ * * = If you are unsure about the time in UTC, just start this sample and write "time" in the
+ * terminal to get
  * the current time in UTC.
  */
 class ScheduledReport {
 
     public static void main(String[] args) {
         AtExpose.create()
-                //Set your Gmail username and password
-                .setSMTPServerGmail("myusername@example.com", "mypassword")
-                //Set the the time to send in UTC a
-                .addScheduledReport("MyTask", "ping", "10:24", "UTC", "recipient@example.com", "Me")
-                //Start command line interface
-                .startCLI();
+                .startDispatcher(getScheduledReport())
+                .startDispatcher(DispatcherFactory.cliBuilder().build());
     }
+
+
+    private static Dispatcher getScheduledReport() {
+        return ScheduledReportFactory.builder()
+                .taskName("MyTask")
+                .request("ping")
+                .timeOfDay("10:24")
+                .recipient("recipient@example.com")
+                .fromName("Me")
+                .gmailUsername("user")
+                .gmailPassword("psw")
+                .build();
+    }
+
 }

@@ -45,7 +45,7 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
     /** The name as part of the IValueWithKey interface. Is the name of the Dispatchers. */
     @Getter final String mKey;
     /** The API that is exposed. */
-    private final API mAPI;
+    private API mAPI;
     /** Receives incoming messages and sends wrapped responses. */
     private final IChannel mChannel;
     /** Parses the incoming messages. */
@@ -85,7 +85,7 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
      * Sets up a dispatcher.
      */
     @Builder
-    private Dispatcher(String name, int noOfThreads, int accessLevel, boolean isSynchronized, IChannel channel, IParser parser, IWrapper wrapper, API api) {
+    private Dispatcher(String name, int noOfThreads, int accessLevel, boolean isSynchronized, IChannel channel, IParser parser, IWrapper wrapper) {
         mKey = name;
         Thrower.throwIfVarTooSmall(noOfThreads, "noOfThreads", 1);
         Thrower.throwIfVarEmpty(name, "name");
@@ -96,7 +96,6 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
         mChannel = channel;
         mParser = parser;
         mWrapper = wrapper;
-        mAPI = api;
         //If more than one dispatcher to set up
         if (mThreadNumber > 1) {
             //Set up the next dispatcher
@@ -108,7 +107,6 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
                     .parser(mParser.getClone())
                     .wrapper(mWrapper)
                     .noOfThreads(mThreadNumber - 1)
-                    .api(mAPI)
                     .build();
         }
     }
@@ -121,11 +119,12 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
      * Starts the messaging and tells the next dispatcher to start its messaging recursively until
      * all dispatchers of that a siblings to this have been started.
      */
-    public Dispatcher commenceMessaging() {
+    public Dispatcher commenceMessaging(API api) {
+        mAPI = api;
         //If there is a next dispatcher
         if (mNextDispatcher != null) {
             //Tell the next dispatcher to start its messaging.
-            mNextDispatcher.commenceMessaging();
+            mNextDispatcher.commenceMessaging(api);
         }
         //If this is a synchronized execution
         if (mIsSynchronized) {

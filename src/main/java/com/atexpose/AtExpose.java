@@ -1,7 +1,10 @@
 package com.atexpose;
 
 import com.atexpose.api.API;
-import com.atexpose.atexpose.*;
+import com.atexpose.atexpose.IAtExposeLog;
+import com.atexpose.atexpose.IAtExposeScriptFile;
+import com.atexpose.atexpose.IAtExposeSqs;
+import com.atexpose.atexpose.QueueProducerWrapper;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.mail.IEmailSender;
@@ -20,8 +23,8 @@ import lombok.experimental.Accessors;
  */
 @SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue", "UnusedReturnValue"})
 @Accessors(prefix = "m")
-public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeReports<AtExpose>,
-        IAtExposeScriptFile<AtExpose>, IAtExposeTasks<AtExpose>, IAtExposeLog<AtExpose>,
+public class AtExpose implements IStateNode,
+        IAtExposeScriptFile<AtExpose>, IAtExposeLog<AtExpose>,
         IAtExposeSqs<AtExpose> {
     /** Instance creation time. For status and debug purposes. */
     private final String mInstanceStartTime = DateTimeStrings.getDateTimeUTC();
@@ -63,22 +66,6 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
 
 
     /**
-     * @return A web server builder.
-     */
-    public WebServerBuilder getWebServerBuilder() {
-        return new WebServerBuilder(this.getAPI(), this.getDispatchers());
-    }
-
-
-    /**
-     * @return A SQS consumer builder
-     */
-    public DispatcherBuilder.SqsConsumerBuilder getSqsConsumerBuilder() {
-        return new DispatcherBuilder(this.getAPI(), this.getDispatchers()).sqsConsumerBuilder();
-    }
-
-
-    /**
      * Shuts down all dispatchers of this instance.
      *
      * @return This for chaining.
@@ -94,13 +81,6 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
 
     @Override
     public AtExpose getThis() {
-        return this;
-    }
-
-
-    @Override
-    public AtExpose setMailSender(IEmailSender emailSender) {
-        mMailSender = emailSender;
         return this;
     }
 

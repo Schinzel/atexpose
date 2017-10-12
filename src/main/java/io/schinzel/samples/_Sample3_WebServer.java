@@ -1,10 +1,12 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
+import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
+import com.atexpose.dispatcherfactories.WebServerBuilder;
 import io.schinzel.samples.auxiliary.MyClass;
 import io.schinzel.samples.auxiliary.MyObject;
 
@@ -27,16 +29,21 @@ public class _Sample3_WebServer {
                 .expose(MyClass.class)
                 //Expose an instance
                 .expose(new MyObject())
-                //Get web server builder
-                .getWebServerBuilder()
+                //Start web server
+                .startDispatcher(getWebServer());
+    }
+
+
+    private static Dispatcher getWebServer() {
+        return new WebServerBuilder()
                 //Set the dir from which requested file will be read
                 .webServerDir("web/sample3")
                 //Disable RAM cache so that changes to files made kicks through without restarting the web server
                 .cacheFilesInRAM(false)
-                //Start a web server
-                .startWebServer()
+                //Build web server
+                .build()
+                //Add a logger
                 .addLogger(getEventLogger());
-
     }
 
 

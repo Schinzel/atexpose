@@ -1,10 +1,13 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
+import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
+import com.atexpose.dispatcherfactories.DispatcherFactory;
+import com.atexpose.dispatcherfactories.WebServerBuilder;
 import io.schinzel.samples.auxiliary.MyClass;
 import io.schinzel.samples.auxiliary.MyObject;
 
@@ -23,10 +26,17 @@ public class Log {
                 .expose(MyClass.class)
                 //Expose an instance
                 .expose(new MyObject())
-                .startCLI()
                 //Start a web server
-                .getWebServerBuilder()
-                .startWebServer()
+                .startDispatcher(getWebServer())
+                //Start command line interface
+                .startDispatcher(DispatcherFactory.cliBuilder().build());
+    }
+
+
+    private static Dispatcher getWebServer() {
+        return new WebServerBuilder()
+                .build()
+                //Add a logger to web server
                 .addLogger(getWebServerLogger());
     }
 

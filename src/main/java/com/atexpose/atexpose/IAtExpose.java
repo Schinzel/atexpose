@@ -16,25 +16,27 @@ interface IAtExpose<T extends IAtExpose<T>> {
 
 
     /**
-     *
      * @return The API used by this instance.
      */
     API getAPI();
 
 
     /**
-     *
      * @return The collection with all dispatchers.
      */
     ValuesWithKeys<Dispatcher> getDispatchers();
 
 
     /**
-     * Exists for programming technical reasons only. Allows implementing classes and extending interfaces to return
-     * a "this" that refers to implementing class or extending interface, instead of the interface being implemented
-     * or extended. This as opposed to casting and/or overloading methods just to return the correct type.
+     * Exists for programming technical reasons only. Allows implementing classes and extending
+     * interfaces to return
+     * a "this" that refers to implementing class or extending interface, instead of the interface
+     * being implemented
+     * or extended. This as opposed to casting and/or overloading methods just to return the correct
+     * type.
      * <p>
-     * This should really be package private or protected. But as this is not an option, it has to be public.
+     * This should really be package private or protected. But as this is not an option, it has to
+     * be public.
      *
      * @return This for chaining.
      */
@@ -51,11 +53,24 @@ interface IAtExpose<T extends IAtExpose<T>> {
         return this.getThis();
     }
 
+
+    /**
+     * Central method for starting a dispatcher.
+     *
+     * @param dispatcher The dispatcher to start
+     * @return The dispatcher that was just started.
+     */
+    default T startDispatcher(Dispatcher dispatcher) {
+        return this.startDispatcher(dispatcher, false);
+    }
+
+
     /**
      * Central method for starting a dispatcher.
      *
      * @param dispatcher       The dispatcher to start
-     * @param oneOffDispatcher If true the dispatcher is a one-off that executes and then terminates. Is never added
+     * @param oneOffDispatcher If true the dispatcher is a one-off that executes and then
+     *                         terminates. Is never added
      *                         to the dispatcher collection.
      * @return The dispatcher that was just started.
      */
@@ -66,7 +81,7 @@ interface IAtExpose<T extends IAtExpose<T>> {
             this.getDispatchers().add(dispatcher);
         }
         //Start the messaging!
-        dispatcher.commenceMessaging();
+        dispatcher.commenceMessaging(this.getAPI());
         return this.getThis();
     }
 

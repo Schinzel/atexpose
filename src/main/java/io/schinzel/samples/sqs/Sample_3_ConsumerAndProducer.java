@@ -2,6 +2,8 @@ package io.schinzel.samples.sqs;
 
 import com.amazonaws.regions.Regions;
 import com.atexpose.AtExpose;
+import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcherfactories.DispatcherFactory;
 import com.atexpose.util.sqs.IQueueProducer;
 import com.atexpose.util.sqs.SqsProducer;
 import com.atexpose.util.sqs.SqsQueueType;
@@ -34,8 +36,13 @@ public class Sample_3_ConsumerAndProducer {
         AtExpose.create()
                 //Expose sample class
                 .expose(new JobClass())
-                //Set up SQS consumer
-                .getSqsConsumerBuilder()
+                //Start SQS consumer
+                .startDispatcher(getSqsConsumer());
+    }
+
+
+    private static Dispatcher getSqsConsumer() {
+        return DispatcherFactory.sqsConsumerBuilder()
                 .awsAccessKey(AWS.ACCESS_KEY)
                 .awsSecretKey(AWS.SECRET_KEY)
                 .queueUrl(AWS.QUEUE_URL)
@@ -43,7 +50,7 @@ public class Sample_3_ConsumerAndProducer {
                 .name("MyFirstSqsConsumer")
                 .noOfThreads(2)
                 .accessLevel(1)
-                .start();
+                .build();
     }
 
 
@@ -58,7 +65,7 @@ public class Sample_3_ConsumerAndProducer {
                 .build();
         AtExpose.create()
                 //Start a command line interface
-                .startCLI()
+                .startDispatcher(DispatcherFactory.cliBuilder().build())
                 //Add the queue producer to @Expose
                 .addQueueProducer("MyFirstSqsProducer", sqsProducer);
     }
