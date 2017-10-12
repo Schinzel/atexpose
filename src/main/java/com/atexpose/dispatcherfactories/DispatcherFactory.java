@@ -1,4 +1,4 @@
-package com.atexpose;
+package com.atexpose.dispatcherfactories;
 
 import com.amazonaws.regions.Regions;
 import com.atexpose.api.API;

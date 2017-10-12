@@ -1,4 +1,4 @@
-package com.atexpose;
+package com.atexpose.dispatcherfactories;
 
 import com.atexpose.api.API;
 import com.atexpose.dispatcher.Dispatcher;
