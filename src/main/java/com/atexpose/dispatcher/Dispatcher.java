@@ -64,6 +64,12 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
     /** The loggers assigned to this dispatcher. */
     private List<Logger> mLoggers = new ArrayList<>();
     /**
+     * If this dispatcher runs as a background services like a web server or it executes and then
+     * returns like a script file dispatcher. If true, the dispatcher is to run in the invoking
+     * thread. If false, the dispatcher will start a new thread and execute in this.
+     */
+    private final boolean mIsSynchronized;
+    /**
      * Contains a reference to the next dispatcher if this dispatcher is
      * multi-threaded. Multi-threaded dispatchers are stored as a linked-list.
      * This variable is a reference to the next dispatcher in the list. If it is
@@ -79,13 +85,14 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
      * Sets up a dispatcher.
      */
     @Builder
-    private Dispatcher(String name, int noOfThreads, int accessLevel, IChannel channel, IParser parser, IWrapper wrapper, API api) {
+    private Dispatcher(String name, int noOfThreads, int accessLevel, boolean isSynchronized, IChannel channel, IParser parser, IWrapper wrapper, API api) {
         mKey = name;
         Thrower.throwIfVarTooSmall(noOfThreads, "noOfThreads", 1);
         Thrower.throwIfVarEmpty(name, "name");
         Thrower.throwIfVarOutsideRange(accessLevel, "accessLevel", 1, 3);
         mThreadNumber = noOfThreads;
         mAccessLevel = accessLevel;
+        mIsSynchronized = isSynchronized;
         mChannel = channel;
         mParser = parser;
         mWrapper = wrapper;
@@ -96,6 +103,7 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
             mNextDispatcher = Dispatcher.builder()
                     .name(this.getKey())
                     .accessLevel(mAccessLevel)
+                    .isSynchronized(mIsSynchronized)
                     .channel(mChannel.getClone())
                     .parser(mParser.getClone())
                     .wrapper(mWrapper)
@@ -111,22 +119,16 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
 
     /**
      * Starts the messaging and tells the next dispatcher to start its messaging recursively until
-     * all dispatchers of
-     * that a siblings to this have been started.
-     *
-     * @param isSynchronized If true, the dispatcher is to run in the invoking thread. If false,
-     *                       the
-     *                       dispatcher
-     *                       will start a new thread and execute in this.
+     * all dispatchers of that a siblings to this have been started.
      */
-    public Dispatcher commenceMessaging(boolean isSynchronized) {
+    public Dispatcher commenceMessaging() {
         //If there is a next dispatcher
         if (mNextDispatcher != null) {
             //Tell the next dispatcher to start its messaging.
-            mNextDispatcher.commenceMessaging(isSynchronized);
+            mNextDispatcher.commenceMessaging();
         }
         //If this is a synchronized execution
-        if (isSynchronized) {
+        if (mIsSynchronized) {
             //Run in the requesting thread.
             this.run();
         }//Else, i.e. should run in a new separate thread.
@@ -262,7 +264,6 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
 
     /**
      * Removes all loggers from this dispatcher.
-     *
      */
     public void removeLoggers() {
         mLoggers = Collections.emptyList();

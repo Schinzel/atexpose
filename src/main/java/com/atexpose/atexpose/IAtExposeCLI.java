@@ -20,13 +20,14 @@ public interface IAtExposeCLI<T extends IAtExpose<T>> extends IAtExpose<T> {
         Dispatcher dispatcher = Dispatcher.builder()
                 .name("CommandLine")
                 .accessLevel(3)
+                .isSynchronized(false)
                 .channel(new CommandLineChannel())
                 .parser(new TextParser())
                 .wrapper(new CsvWrapper())
                 .noOfThreads(1)
                 .api(this.getAPI())
                 .build();
-        return this.startDispatcher(dispatcher, false, false);
+        return this.startDispatcher(dispatcher, false);
     }
 
 }

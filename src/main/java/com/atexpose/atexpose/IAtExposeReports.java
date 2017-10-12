@@ -86,6 +86,7 @@ public interface IAtExposeReports<T extends IAtExpose<T>> extends IAtExpose<T> {
         Dispatcher dispatcher = Dispatcher.builder()
                 .name(dispatcherName)
                 .accessLevel(3)
+                .isSynchronized(false)
                 .channel(scheduledReport)
                 .parser(parser)
                 .wrapper(new CsvWrapper())
@@ -98,7 +99,7 @@ public interface IAtExposeReports<T extends IAtExpose<T>> extends IAtExpose<T> {
                 .logWriter(LogWriterFactory.SYSTEM_OUT.create())
                 .build();
         dispatcher.addLogger(eventLogger);
-        return this.startDispatcher(dispatcher, false, false);
+        return this.startDispatcher(dispatcher, false);
     }
 
 }

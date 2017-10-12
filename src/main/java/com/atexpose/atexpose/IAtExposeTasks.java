@@ -57,7 +57,7 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
      * @param request    The request to execute. Examples: "time", "echo 123"
      * @param timeOfDay  TThe time of day in the argument time zone. Examples: "23:55" "07:05"
      * @param dayOfMonth The day of the month in the argument time zone.
-     * @param zoneId    The time zone. E.g. "UTC", "Europe/Stockholm"
+     * @param zoneId     The time zone. E.g. "UTC", "Europe/Stockholm"
      * @return This for chaining.
      */
     default T addMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId) {
@@ -89,6 +89,7 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
         Dispatcher dispatcher = Dispatcher.builder()
                 .name(dispatcherName)
                 .accessLevel(3)
+                .isSynchronized(false)
                 .channel(scheduledTask)
                 .parser(parser)
                 .wrapper(new CsvWrapper())
@@ -106,6 +107,6 @@ public interface IAtExposeTasks<T extends IAtExpose<T>> extends IAtExpose<T> {
                 .logWriter(LogWriterFactory.SYSTEM_OUT.create())
                 .build();
         dispatcher.addLogger(errorLogger).addLogger(eventLogger);
-        return this.startDispatcher(dispatcher, false, false);
+        return this.startDispatcher(dispatcher, false);
     }
 }

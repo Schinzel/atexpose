@@ -55,19 +55,18 @@ interface IAtExpose<T extends IAtExpose<T>> {
      * Central method for starting a dispatcher.
      *
      * @param dispatcher       The dispatcher to start
-     * @param isSynchronized   If true the dispatcher, is executed before this method returns.
      * @param oneOffDispatcher If true the dispatcher is a one-off that executes and then terminates. Is never added
      *                         to the dispatcher collection.
      * @return The dispatcher that was just started.
      */
-    default T startDispatcher(Dispatcher dispatcher, boolean isSynchronized, boolean oneOffDispatcher) {
+    default T startDispatcher(Dispatcher dispatcher, boolean oneOffDispatcher) {
         //If this is not a temporary dispatcher, i.e. a dispatcher that dies once it has read its requests and delivered its responses
         if (!oneOffDispatcher) {
             //Add the newly created dispatcher to the dispatcher collection
             this.getDispatchers().add(dispatcher);
         }
         //Start the messaging!
-        dispatcher.commenceMessaging(isSynchronized);
+        dispatcher.commenceMessaging();
         return this.getThis();
     }
 

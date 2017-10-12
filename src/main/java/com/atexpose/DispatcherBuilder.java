@@ -47,7 +47,7 @@ class DispatcherBuilder {
                 .api(mAPI)
                 .build();
         mDispatchers.add(dispatcher);
-        return dispatcher.commenceMessaging(false);
+        return dispatcher.commenceMessaging();
     }
 
 
