@@ -1,7 +1,7 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
-import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
@@ -33,7 +33,7 @@ public class Log {
     }
 
 
-    private static Dispatcher getWebServer() {
+    private static IDispatcher getWebServer() {
         return new WebServerBuilder()
                 .build()
                 //Add a logger to web server

@@ -1,7 +1,7 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
-import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcherfactories.DispatcherFactory;
 import com.atexpose.dispatcherfactories.ScheduledReportFactory;
 
@@ -28,7 +28,7 @@ class ScheduledReport {
     }
 
 
-    private static Dispatcher getScheduledReport() {
+    private static IDispatcher getScheduledReport() {
         return ScheduledReportFactory.builder()
                 .taskName("MyTask")
                 .request("ping")

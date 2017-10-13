@@ -1,7 +1,7 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
-import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcherfactories.DispatcherFactory;
 import com.atexpose.dispatcherfactories.WebServerBuilder;
 
@@ -22,12 +22,12 @@ class GSuiteAuth {
     }
 
 
-    private static Dispatcher getWebServerNoAuth() {
+    private static IDispatcher getWebServerNoAuth() {
         return new WebServerBuilder().build();
     }
 
 
-    private static Dispatcher getWebServerWithAuth() {
+    private static IDispatcher getWebServerWithAuth() {
         return new WebServerBuilder()
                 .port(5556)
                 .webServerDir("web/auth_sample")

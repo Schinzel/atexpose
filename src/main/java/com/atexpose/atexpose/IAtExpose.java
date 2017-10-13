@@ -1,7 +1,7 @@
 package com.atexpose.atexpose;
 
 import com.atexpose.api.API;
-import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 
 /**
@@ -24,7 +24,7 @@ interface IAtExpose<T extends IAtExpose<T>> {
     /**
      * @return The collection with all dispatchers.
      */
-    ValuesWithKeys<Dispatcher> getDispatchers();
+    ValuesWithKeys<IDispatcher> getDispatchers();
 
 
     /**
@@ -60,7 +60,7 @@ interface IAtExpose<T extends IAtExpose<T>> {
      * @param dispatcher The dispatcher to start
      * @return The dispatcher that was just started.
      */
-    default T startDispatcher(Dispatcher dispatcher) {
+    default T startDispatcher(IDispatcher dispatcher) {
         return this.startDispatcher(dispatcher, false);
     }
 
@@ -74,7 +74,7 @@ interface IAtExpose<T extends IAtExpose<T>> {
      *                         to the dispatcher collection.
      * @return The dispatcher that was just started.
      */
-    default T startDispatcher(Dispatcher dispatcher, boolean oneOffDispatcher) {
+    default T startDispatcher(IDispatcher dispatcher, boolean oneOffDispatcher) {
         //If this is not a temporary dispatcher, i.e. a dispatcher that dies once it has read its requests and delivered its responses
         if (!oneOffDispatcher) {
             //Add the newly created dispatcher to the dispatcher collection

@@ -1,9 +1,11 @@
 package com.atexpose;
 
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
+import com.atexpose.dispatcherfactories.DispatcherFactory;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.crypto.cipher.Aes256Gcm;
 import io.schinzel.basicutils.crypto.cipher.ICipher;
@@ -43,7 +45,10 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose"}
     )
     public String loadScriptFile(String fileName) {
-        this.getAtExpose().loadScriptFile(fileName);
+        IDispatcher scriptFileReader = DispatcherFactory.scriptFileReader()
+                .fileName(fileName)
+                .build();
+        this.getAtExpose().startDispatcher(scriptFileReader, true);
         return "Script file '" + fileName + "' loaded.";
     }
 
@@ -84,19 +89,6 @@ class ExposedAtExpose {
                 .build();
         this.getAtExpose().getDispatchers().get(dispatcherName).addLogger(logger);
         return "Dispatcher " + dispatcherName + " got an " + loggerType.name().toLowerCase() + " logger";
-    }
-
-
-    @Expose(
-            arguments = {"DispatcherName"},
-            requiredAccessLevel = 3,
-            description = "Removes all loggers from a dispatcher.",
-            labels = {"@Expose", "AtExpose", "Logs"},
-            requiredArgumentCount = 1
-    )
-    public String removeAllLoggers(String dispatcherName) {
-        this.getAtExpose().removeAllLoggers(dispatcherName);
-        return "Removed all loggers from dispatcher '" + dispatcherName + "'";
     }
 
 

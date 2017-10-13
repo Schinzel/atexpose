@@ -2,7 +2,7 @@ package io.schinzel.samples.sqs;
 
 import com.amazonaws.regions.Regions;
 import com.atexpose.AtExpose;
-import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcherfactories.DispatcherFactory;
 import com.atexpose.util.sqs.IQueueProducer;
 import com.atexpose.util.sqs.SqsProducer;
@@ -41,7 +41,7 @@ public class Sample_3_ConsumerAndProducer {
     }
 
 
-    private static Dispatcher getSqsConsumer() {
+    private static IDispatcher getSqsConsumer() {
         return DispatcherFactory.sqsConsumerBuilder()
                 .awsAccessKey(AWS.ACCESS_KEY)
                 .awsSecretKey(AWS.SECRET_KEY)

@@ -1,7 +1,7 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
-import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcherfactories.DispatcherFactory;
 import com.atexpose.dispatcherfactories.TaskFactory;
 
@@ -25,7 +25,7 @@ public class ScheduledTasks {
     }
 
 
-    private static Dispatcher getMinuteTask() {
+    private static IDispatcher getMinuteTask() {
         return TaskFactory.minuteTaskBuilder()
                 .taskName("MyTask1")
                 .request("time")
@@ -34,7 +34,7 @@ public class ScheduledTasks {
     }
 
 
-    private static Dispatcher getDailyTask() {
+    private static IDispatcher getDailyTask() {
         return TaskFactory.dailyTaskBuilder()
                 .taskName("MyTask2")
                 .request("echo hi")
@@ -44,7 +44,7 @@ public class ScheduledTasks {
     }
 
 
-    private static Dispatcher getMonthlyTask() {
+    private static IDispatcher getMonthlyTask() {
         return TaskFactory.monthlyTaskBuilder()
                 .taskName("MyTask3")
                 .request("ping")

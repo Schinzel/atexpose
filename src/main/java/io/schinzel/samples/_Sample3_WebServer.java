@@ -1,7 +1,7 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
-import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
@@ -34,7 +34,7 @@ public class _Sample3_WebServer {
     }
 
 
-    private static Dispatcher getWebServer() {
+    private static IDispatcher getWebServer() {
         return new WebServerBuilder()
                 //Set the dir from which requested file will be read
                 .webServerDir("web/sample3")
