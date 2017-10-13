@@ -2,7 +2,9 @@ package com.atexpose.dispatcherfactories;
 
 import com.amazonaws.regions.Regions;
 import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.channels.CommandLineChannel;
+import com.atexpose.dispatcher.channels.ScriptFileChannel;
 import com.atexpose.dispatcher.channels.SqsChannel;
 import com.atexpose.dispatcher.parser.JsonRpcParser;
 import com.atexpose.dispatcher.parser.TextParser;
@@ -15,7 +17,7 @@ public class DispatcherFactory {
 
 
     @Builder(builderMethodName = "cliBuilder", builderClassName = "CliBuilder")
-    static Dispatcher newCli(String name) {
+    static IDispatcher newCli(String name) {
         return Dispatcher.builder()
                 .name("CommandLine")
                 .accessLevel(3)
@@ -29,8 +31,8 @@ public class DispatcherFactory {
 
 
     @Builder(builderMethodName = "sqsConsumerBuilder", builderClassName = "SqsConsumerBuilder")
-    static Dispatcher newSqsConsumer(String name, String awsAccessKey, String awsSecretKey, Regions region,
-                                         String queueUrl, int accessLevel, int noOfThreads) {
+    static IDispatcher newSqsConsumer(String name, String awsAccessKey, String awsSecretKey, Regions region,
+                                      String queueUrl, int accessLevel, int noOfThreads) {
         if (Checker.isEmpty(name)) {
             name = "SqsConsumer";
         }
@@ -47,6 +49,20 @@ public class DispatcherFactory {
                 .wrapper(new CsvWrapper())
                 .accessLevel(accessLevel)
                 .noOfThreads(noOfThreads)
+                .build();
+    }
+
+
+    @Builder(builderMethodName = "scriptFileReader", builderClassName = "ScriptFileReaderBuilder")
+    static IDispatcher newScriptFileReader(String fileName) {
+        return Dispatcher.builder()
+                .name("ScriptFile")
+                .accessLevel(3)
+                .isSynchronized(true)
+                .channel(new ScriptFileChannel(fileName))
+                .parser(new TextParser())
+                .wrapper(new CsvWrapper())
+                .noOfThreads(1)
                 .build();
     }
 

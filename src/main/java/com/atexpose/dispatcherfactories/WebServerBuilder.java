@@ -1,6 +1,7 @@
 package com.atexpose.dispatcherfactories;
 
 import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.dispatcher.channels.webchannel.WebChannel;
 import com.atexpose.dispatcher.channels.webchannel.redirect.Redirects;
@@ -275,7 +276,7 @@ public class WebServerBuilder {
      *
      * @return Status of the operation message.
      */
-    public Dispatcher build() {
+    public IDispatcher build() {
         //Construct web server name
         String webServerName = "WebServer_" + mPort;
         IChannel webChannel = this.getChannel();

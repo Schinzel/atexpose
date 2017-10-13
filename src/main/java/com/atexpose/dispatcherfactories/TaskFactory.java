@@ -1,6 +1,7 @@
 package com.atexpose.dispatcherfactories;
 
 import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannel;
 import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelDaily;
 import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelMinute;
@@ -17,27 +18,27 @@ public class TaskFactory {
 
 
     @Builder(builderMethodName = "minuteTaskBuilder", builderClassName = "MinuteTaskBuilder")
-    static Dispatcher newMinuteTask(String taskName, String request, int minutes) {
+    static IDispatcher newMinuteTask(String taskName, String request, int minutes) {
         ScheduledTaskChannelMinute scheduledTaskChannel = new ScheduledTaskChannelMinute(taskName, request, minutes);
         return TaskFactory.addTask(taskName, scheduledTaskChannel);
     }
 
 
     @Builder(builderMethodName = "dailyTaskBuilder", builderClassName = "DailyTaskBuilder")
-    static Dispatcher newDailyTask(String taskName, String request, String timeOfDay, String zoneId) {
+    static IDispatcher newDailyTask(String taskName, String request, String timeOfDay, String zoneId) {
         ScheduledTaskChannelDaily scheduledTaskChannel = new ScheduledTaskChannelDaily(taskName, request, timeOfDay, zoneId);
         return TaskFactory.addTask(taskName, scheduledTaskChannel);
     }
 
 
     @Builder(builderMethodName = "monthlyTaskBuilder", builderClassName = "MonthlyTaskBuilder")
-    static Dispatcher newMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId) {
+    static IDispatcher newMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId) {
         ScheduledTaskChannelMonthly scheduledTaskChannel = new ScheduledTaskChannelMonthly(taskName, request, timeOfDay, dayOfMonth, zoneId);
         return TaskFactory.addTask(taskName, scheduledTaskChannel);
     }
 
 
-    static Dispatcher addTask(String taskName, ScheduledTaskChannel scheduledTask) {
+    static IDispatcher addTask(String taskName, ScheduledTaskChannel scheduledTask) {
         Logger errorLogger = Logger.builder()
                 .loggerType(LoggerType.ERROR)
                 .logFormatter(LogFormatterFactory.JSON.create())

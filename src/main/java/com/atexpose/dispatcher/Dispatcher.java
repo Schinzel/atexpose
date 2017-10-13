@@ -12,8 +12,6 @@ import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.util.ByteStorage;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.UTF8;
-import io.schinzel.basicutils.collections.valueswithkeys.IValueWithKey;
-import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,7 +39,7 @@ import java.util.List;
  * @author Schinzel
  */
 @Accessors(prefix = "m")
-public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
+public class Dispatcher implements Runnable, IDispatcher {
     /** The name as part of the IValueWithKey interface. Is the name of the Dispatchers. */
     @Getter final String mKey;
     /** The API that is exposed. */
@@ -264,11 +262,12 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
     /**
      * Removes all loggers from this dispatcher.
      */
-    public void removeLoggers() {
+    public Dispatcher removeLoggers() {
         mLoggers = Collections.emptyList();
         if (mNextDispatcher != null) {
             mNextDispatcher.removeLoggers();
         }
+        return this;
     }
 
 

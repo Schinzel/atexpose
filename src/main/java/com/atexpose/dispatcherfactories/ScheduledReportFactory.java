@@ -1,6 +1,7 @@
 package com.atexpose.dispatcherfactories;
 
 import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.channels.tasks.ScheduledReportChannel;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
@@ -31,9 +32,9 @@ public class ScheduledReportFactory {
      * @return Dispatcher
      */
     @Builder
-    static Dispatcher newScheduledReport(String taskName, String request, String timeOfDay,
-                                         String zoneId, String recipient, String fromName,
-                                         String gmailUsername, String gmailPassword) {
+    static IDispatcher newScheduledReport(String taskName, String request, String timeOfDay,
+                                          String zoneId, String recipient, String fromName,
+                                          String gmailUsername, String gmailPassword) {
         IEmailSender emailSender = new GmailEmailSender(gmailUsername, gmailPassword);
         ScheduledReportChannel scheduledReport = ScheduledReportChannel.builder()
                 .emailSender(emailSender)
