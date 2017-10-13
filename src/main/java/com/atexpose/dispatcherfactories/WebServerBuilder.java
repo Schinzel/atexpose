@@ -38,6 +38,12 @@ public class WebServerBuilder {
     private String mAuthDomain;
 
 
+    private WebServerBuilder(){}
+
+    public static WebServerBuilder create(){
+        return new WebServerBuilder();
+    }
+
     /**
      * Add redirect from a file path to another
      * Example

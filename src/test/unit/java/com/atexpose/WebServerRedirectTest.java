@@ -1,6 +1,7 @@
 package com.atexpose;
 
-import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
+import com.atexpose.dispatcherfactories.WebServerBuilder;
 import io.schinzel.basicutils.Sandman;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -10,7 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class WebServerRedirectTest {
-    Dispatcher mWebServer;
+    IDispatcher mWebServer;
 
 
     @After
@@ -23,10 +24,12 @@ public class WebServerRedirectTest {
 
     @Test
     public void WebServerRedirect_PageInRoot_ShouldRedirect() throws Exception {
-        mWebServer = AtExpose.create().getWebServerBuilder()
+        mWebServer = WebServerBuilder.create()
                 .numberOfThreads(5)
                 .addFileRedirect("src.html", "dest.html")
-                .startWebServer();
+                .build();
+        AtExpose.create()
+                .startDispatcher(mWebServer);
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/src.html")
                 .method(Connection.Method.GET)
@@ -39,6 +42,10 @@ public class WebServerRedirectTest {
 
     @Test
     public void WebServerRedirect_PageInSubDir_ShouldRedirect() throws Exception {
+        mWebServer = WebServerBuilder.create()
+                .numberOfThreads(5)
+                .addFileRedirect("dir1/dir2/src.html", "dirdest/dest.html")
+                .build();
         mWebServer = AtExpose.create().getWebServerBuilder()
                 .numberOfThreads(5)
                 .addFileRedirect("dir1/dir2/src.html", "dirdest/dest.html")

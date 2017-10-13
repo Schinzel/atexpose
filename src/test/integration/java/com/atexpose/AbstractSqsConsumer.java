@@ -7,6 +7,8 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.CreateQueueRequest;
+import com.atexpose.dispatcher.IDispatcher;
+import com.atexpose.dispatcherfactories.DispatcherFactory;
 import com.atexpose.util.sqs.SqsProducer;
 import com.atexpose.util.sqs.SqsQueueType;
 import io.schinzel.basicutils.RandomUtil;
@@ -33,6 +35,7 @@ public abstract class AbstractSqsConsumer {
     private final SqsQueueType mQueueType;
 
 
+
     AbstractSqsConsumer(SqsQueueType queueType, CreateQueueRequest createRequest) {
         mQueueType = queueType;
         AWSCredentials credentials = new BasicAWSCredentials(mAwsAccessKey, mAwsSecretKey);
@@ -53,9 +56,7 @@ public abstract class AbstractSqsConsumer {
 
     @Test
     public void consumerMessageFromSqsQueue() {
-        AtExpose.create()
-                //Set up SQS consumer
-                .getSqsConsumerBuilder()
+        IDispatcher sqsConsumer = DispatcherFactory.sqsConsumerBuilder()
                 .awsAccessKey(mAwsAccessKey)
                 .awsSecretKey(mAwsSecretKey)
                 .queueUrl(mQueueUrl)
@@ -63,7 +64,8 @@ public abstract class AbstractSqsConsumer {
                 .name("MyFirstSqsConsumer")
                 .noOfThreads(1)
                 .accessLevel(1)
-                .start();
+                .build();
+        AtExpose.create().startDispatcher(sqsConsumer);
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
         SqsProducer.builder()
