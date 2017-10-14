@@ -44,6 +44,16 @@ interface IAtExpose<T extends IAtExpose<T>> {
 
 
     /**
+     *
+     * @param dispatcherName The name of the dispatcher to return.
+     * @return The dispatcher with the argument name.
+     */
+    default IDispatcher getDispatcher(String dispatcherName) {
+        return this.getDispatchers().get(dispatcherName);
+    }
+
+
+    /**
      * @param dispatcherName The dispatcher to shutdown.
      * @return This for chaining.
      */

@@ -10,7 +10,7 @@ import lombok.Builder;
 public class CliFactory {
 
     @Builder(builderMethodName = "cliBuilder", builderClassName = "CliBuilder")
-    static IDispatcher newCli(String name) {
+    static IDispatcher newCli() {
         return Dispatcher.builder()
                 .name("CommandLine")
                 .accessLevel(3)

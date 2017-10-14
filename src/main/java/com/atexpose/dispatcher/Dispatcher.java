@@ -45,28 +45,29 @@ public class Dispatcher implements Runnable, IDispatcher {
     /** The API that is exposed. */
     private API mAPI;
     /** Receives incoming messages and sends wrapped responses. */
+    @Getter
     private final IChannel mChannel;
     /** Parses the incoming messages. */
-    private final IParser mParser;
+    @Getter private final IParser mParser;
     /** Wraps the responses to send. */
-    private final IWrapper mWrapper;
+    @Getter private final IWrapper mWrapper;
     /**
      * The access level of this dispatcher. The dispatcher can invoke methods with the same access
      * level or lower.
      **/
-    private final int mAccessLevel;
+    @Getter private final int mAccessLevel;
     /** Says which thread this object is. Useful for debugging and diagnostics. */
-    private final int mThreadNumber;
+    @Getter private final int mThreadNumber;
     /** The thread that this dispatcher executes in. */
     private Thread mThread;
     /** The loggers assigned to this dispatcher. */
-    private List<Logger> mLoggers = new ArrayList<>();
+    @Getter private List<Logger> mLoggers = new ArrayList<>();
     /**
      * If this dispatcher runs as a background services like a web server or it executes and then
      * returns like a script file dispatcher. If true, the dispatcher is to run in the invoking
      * thread. If false, the dispatcher will start a new thread and execute in this.
      */
-    private final boolean mIsSynchronized;
+    @Getter private final boolean mIsSynchronized;
     /**
      * Contains a reference to the next dispatcher if this dispatcher is
      * multi-threaded. Multi-threaded dispatchers are stored as a linked-list.
