@@ -6,6 +6,8 @@ import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import org.junit.Test;
 
+import java.util.Collections;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class CliFactoryTest {
@@ -59,12 +61,17 @@ public class CliFactoryTest {
 
 
     @Test
-    public void isSynchronized_DefaultSetUp_1() {
+    public void isSynchronized_DefaultSetUp_False() {
         Dispatcher cli = (Dispatcher) CliFactory.cliBuilder().build();
         assertThat(cli.isSynchronized())
                 .isEqualTo(false);
-
     }
 
+
+    @Test
+    public void getLoggers_DefaultSetUp_EmptyList() {
+        Dispatcher cli = (Dispatcher) CliFactory.cliBuilder().build();
+        assertThat(cli.getLoggers()).isEqualTo(Collections.EMPTY_LIST);
+    }
 
 }

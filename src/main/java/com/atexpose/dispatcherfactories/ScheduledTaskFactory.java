@@ -20,25 +20,25 @@ public class ScheduledTaskFactory {
     @Builder(builderMethodName = "minuteTaskBuilder", builderClassName = "MinuteTaskBuilder")
     static IDispatcher newMinuteTask(String taskName, String request, int minutes) {
         ScheduledTaskChannelMinute scheduledTaskChannel = new ScheduledTaskChannelMinute(taskName, request, minutes);
-        return ScheduledTaskFactory.addTask(taskName, scheduledTaskChannel);
+        return ScheduledTaskFactory.addTask(scheduledTaskChannel);
     }
 
 
     @Builder(builderMethodName = "dailyTaskBuilder", builderClassName = "DailyTaskBuilder")
     static IDispatcher newDailyTask(String taskName, String request, String timeOfDay, String zoneId) {
         ScheduledTaskChannelDaily scheduledTaskChannel = new ScheduledTaskChannelDaily(taskName, request, timeOfDay, zoneId);
-        return ScheduledTaskFactory.addTask(taskName, scheduledTaskChannel);
+        return ScheduledTaskFactory.addTask(scheduledTaskChannel);
     }
 
 
     @Builder(builderMethodName = "monthlyTaskBuilder", builderClassName = "MonthlyTaskBuilder")
     static IDispatcher newMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId) {
         ScheduledTaskChannelMonthly scheduledTaskChannel = new ScheduledTaskChannelMonthly(taskName, request, timeOfDay, dayOfMonth, zoneId);
-        return ScheduledTaskFactory.addTask(taskName, scheduledTaskChannel);
+        return ScheduledTaskFactory.addTask(scheduledTaskChannel);
     }
 
 
-    static IDispatcher addTask(String taskName, ScheduledTaskChannel scheduledTask) {
+    static IDispatcher addTask(ScheduledTaskChannel channel) {
         Logger errorLogger = Logger.builder()
                 .loggerType(LoggerType.ERROR)
                 .logFormatter(LogFormatterFactory.JSON.create())
@@ -50,10 +50,10 @@ public class ScheduledTaskFactory {
                 .logWriter(LogWriterFactory.SYSTEM_OUT.create())
                 .build();
         return Dispatcher.builder()
-                .name("ScheduledTask_" + taskName)
+                .name("ScheduledTask_" + channel.getTaskName())
                 .accessLevel(3)
                 .isSynchronized(false)
-                .channel(scheduledTask)
+                .channel(channel)
                 .parser(new TextParser())
                 .wrapper(new CsvWrapper())
                 .noOfThreads(1)
