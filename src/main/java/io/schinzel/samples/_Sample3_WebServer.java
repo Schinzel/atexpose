@@ -35,7 +35,7 @@ public class _Sample3_WebServer {
 
 
     private static IDispatcher getWebServer() {
-        return new WebServerBuilder()
+        return WebServerBuilder.create()
                 //Set the dir from which requested file will be read
                 .webServerDir("web/sample3")
                 //Disable RAM cache so that changes to files made kicks through without restarting the web server

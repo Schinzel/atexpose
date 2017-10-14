@@ -1,7 +1,5 @@
 package com.atexpose.dispatcherfactories;
 
-import com.atexpose.AtExpose;
-import com.atexpose.dispatcherfactories.WebServerBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +14,7 @@ public class WebServerBuilderTest {
 
     @Before
     public void before() {
-        mWsb = AtExpose.create().getWebServerBuilder();
+        mWsb = WebServerBuilder.create();
     }
 
 

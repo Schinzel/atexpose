@@ -1,6 +1,8 @@
 package com.atexpose;
 
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.PropertiesDispatcher;
+import com.atexpose.dispatcherfactories.WebServerBuilder;
 import io.schinzel.basicutils.FunnyChars;
 import io.schinzel.basicutils.Sandman;
 import org.jsoup.Connection;
@@ -19,7 +21,7 @@ import static org.junit.Assert.assertEquals;
  * @author Schinzel
  */
 public class WebServerTest {
-    AtExpose mAtExpose;
+    private AtExpose mAtExpose;
     private static final String LOCAL_HOST_IP = "127.0.0.1";
     private static final String URL = "http://" + LOCAL_HOST_IP + ":5555/call/";
 
@@ -27,10 +29,11 @@ public class WebServerTest {
     @Before
     public void before() {
         Sandman.snoozeMillis(10);
-        mAtExpose = AtExpose.create();
-        mAtExpose.getWebServerBuilder()
+        IDispatcher webServer = WebServerBuilder.create()
                 .numberOfThreads(5)
-                .startWebServer();
+                .build();
+        mAtExpose = AtExpose.create()
+                .startDispatcher(webServer);
     }
 
 

@@ -18,6 +18,6 @@ public class Main {
         AtExpose.create()
                 .expose(MyClass.class)
                 .startDispatcher(DispatcherFactory.cliBuilder().build())
-                .startDispatcher(new WebServerBuilder().build());
+                .startDispatcher(WebServerBuilder.create().build());
     }
 }

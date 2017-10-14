@@ -23,12 +23,12 @@ class GSuiteAuth {
 
 
     private static IDispatcher getWebServerNoAuth() {
-        return new WebServerBuilder().build();
+        return WebServerBuilder.create().build();
     }
 
 
     private static IDispatcher getWebServerWithAuth() {
-        return new WebServerBuilder()
+        return WebServerBuilder.create()
                 .port(5556)
                 .webServerDir("web/auth_sample")
                 .gSuiteAuth("bapp", "example.com")

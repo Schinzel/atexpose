@@ -34,7 +34,7 @@ public class Log {
 
 
     private static IDispatcher getWebServer() {
-        return new WebServerBuilder()
+        return WebServerBuilder.create()
                 .build()
                 //Add a logger to web server
                 .addLogger(getWebServerLogger());
