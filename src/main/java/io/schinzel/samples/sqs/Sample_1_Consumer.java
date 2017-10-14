@@ -3,6 +3,7 @@ package io.schinzel.samples.sqs;
 import com.amazonaws.regions.Regions;
 import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
+import com.atexpose.dispatcherfactories.CliFactory;
 import com.atexpose.dispatcherfactories.DispatcherFactory;
 import com.atexpose.util.sqs.SqsProducer;
 import com.atexpose.util.sqs.SqsQueueType;
@@ -42,7 +43,7 @@ public class Sample_1_Consumer {
                 //Expose a sample class
                 .expose(new JobClass())
                 //Start a command line interface
-                .startDispatcher(DispatcherFactory.cliBuilder().build())
+                .startDispatcher(CliFactory.cliBuilder().build())
                 //Start up SQS consumer
                 .startDispatcher(getConsumer());
     }

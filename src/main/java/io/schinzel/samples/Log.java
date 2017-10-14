@@ -6,7 +6,7 @@ import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
-import com.atexpose.dispatcherfactories.DispatcherFactory;
+import com.atexpose.dispatcherfactories.CliFactory;
 import com.atexpose.dispatcherfactories.WebServerBuilder;
 import io.schinzel.samples.auxiliary.MyClass;
 import io.schinzel.samples.auxiliary.MyObject;
@@ -29,7 +29,7 @@ public class Log {
                 //Start a web server
                 .startDispatcher(getWebServer())
                 //Start command line interface
-                .startDispatcher(DispatcherFactory.cliBuilder().build());
+                .startDispatcher(CliFactory.cliBuilder().build());
     }
 
 

@@ -3,7 +3,6 @@ package com.atexpose.dispatcherfactories;
 import com.amazonaws.regions.Regions;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcher.channels.CommandLineChannel;
 import com.atexpose.dispatcher.channels.ScriptFileChannel;
 import com.atexpose.dispatcher.channels.SqsChannel;
 import com.atexpose.dispatcher.parser.JsonRpcParser;
@@ -16,18 +15,6 @@ import lombok.Builder;
 public class DispatcherFactory {
 
 
-    @Builder(builderMethodName = "cliBuilder", builderClassName = "CliBuilder")
-    static IDispatcher newCli(String name) {
-        return Dispatcher.builder()
-                .name("CommandLine")
-                .accessLevel(3)
-                .isSynchronized(false)
-                .channel(new CommandLineChannel())
-                .parser(new TextParser())
-                .wrapper(new CsvWrapper())
-                .noOfThreads(1)
-                .build();
-    }
 
 
     @Builder(builderMethodName = "sqsConsumerBuilder", builderClassName = "SqsConsumerBuilder")

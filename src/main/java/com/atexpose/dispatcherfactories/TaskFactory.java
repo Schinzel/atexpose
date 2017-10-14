@@ -16,6 +16,11 @@ import lombok.Builder;
 
 public class TaskFactory {
 
+    @Builder(builderMethodName = "minuteTaskBuilder2", builderClassName = "MinuteTaskBuilder2")
+    IDispatcher newMinuteTask2(String taskName, String request, int minutes) {
+        ScheduledTaskChannelMinute scheduledTaskChannel = new ScheduledTaskChannelMinute(taskName, request, minutes);
+        return TaskFactory.addTask(taskName, scheduledTaskChannel);
+    }
 
     @Builder(builderMethodName = "minuteTaskBuilder", builderClassName = "MinuteTaskBuilder")
     static IDispatcher newMinuteTask(String taskName, String request, int minutes) {

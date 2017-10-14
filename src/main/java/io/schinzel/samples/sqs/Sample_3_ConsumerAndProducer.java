@@ -3,6 +3,7 @@ package io.schinzel.samples.sqs;
 import com.amazonaws.regions.Regions;
 import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
+import com.atexpose.dispatcherfactories.CliFactory;
 import com.atexpose.dispatcherfactories.DispatcherFactory;
 import com.atexpose.util.sqs.IQueueProducer;
 import com.atexpose.util.sqs.SqsProducer;
@@ -65,7 +66,7 @@ public class Sample_3_ConsumerAndProducer {
                 .build();
         AtExpose.create()
                 //Start a command line interface
-                .startDispatcher(DispatcherFactory.cliBuilder().build())
+                .startDispatcher(CliFactory.cliBuilder().build())
                 //Add the queue producer to @Expose
                 .addQueueProducer("MyFirstSqsProducer", sqsProducer);
     }

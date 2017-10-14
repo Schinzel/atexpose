@@ -2,7 +2,7 @@ package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcherfactories.DispatcherFactory;
+import com.atexpose.dispatcherfactories.CliFactory;
 import com.atexpose.dispatcherfactories.WebServerBuilder;
 
 /**
@@ -18,7 +18,7 @@ class GSuiteAuth {
                 //Start a web server that requires authentication
                 .startDispatcher(getWebServerWithAuth())
                 //Start command line interface
-                .startDispatcher(DispatcherFactory.cliBuilder().build());
+                .startDispatcher(CliFactory.cliBuilder().build());
     }
 
 
