@@ -14,27 +14,27 @@ import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import lombok.Builder;
 
-public class TaskFactory {
+public class ScheduledTaskFactory {
 
 
     @Builder(builderMethodName = "minuteTaskBuilder", builderClassName = "MinuteTaskBuilder")
     static IDispatcher newMinuteTask(String taskName, String request, int minutes) {
         ScheduledTaskChannelMinute scheduledTaskChannel = new ScheduledTaskChannelMinute(taskName, request, minutes);
-        return TaskFactory.addTask(taskName, scheduledTaskChannel);
+        return ScheduledTaskFactory.addTask(taskName, scheduledTaskChannel);
     }
 
 
     @Builder(builderMethodName = "dailyTaskBuilder", builderClassName = "DailyTaskBuilder")
     static IDispatcher newDailyTask(String taskName, String request, String timeOfDay, String zoneId) {
         ScheduledTaskChannelDaily scheduledTaskChannel = new ScheduledTaskChannelDaily(taskName, request, timeOfDay, zoneId);
-        return TaskFactory.addTask(taskName, scheduledTaskChannel);
+        return ScheduledTaskFactory.addTask(taskName, scheduledTaskChannel);
     }
 
 
     @Builder(builderMethodName = "monthlyTaskBuilder", builderClassName = "MonthlyTaskBuilder")
     static IDispatcher newMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId) {
         ScheduledTaskChannelMonthly scheduledTaskChannel = new ScheduledTaskChannelMonthly(taskName, request, timeOfDay, dayOfMonth, zoneId);
-        return TaskFactory.addTask(taskName, scheduledTaskChannel);
+        return ScheduledTaskFactory.addTask(taskName, scheduledTaskChannel);
     }
 
 
