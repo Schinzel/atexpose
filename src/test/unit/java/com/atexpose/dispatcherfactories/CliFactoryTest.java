@@ -11,7 +11,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class CliFactoryTest {
 
     @Test
-    public void getChannel_NormalSetUp_CommandLineChannel() {
+    public void getChannel_DefaultSetUp_CommandLineChannel() {
         Dispatcher cli = (Dispatcher) CliFactory.cliBuilder().build();
         assertThat(cli.getChannel().getClass())
                 .isEqualTo(CommandLineChannel.class);
@@ -19,7 +19,7 @@ public class CliFactoryTest {
 
 
     @Test
-    public void getParser_NormalSetUp_CommandLineChannel() {
+    public void getParser_DefaultSetUp_CommandLineChannel() {
         Dispatcher cli = (Dispatcher) CliFactory.cliBuilder().build();
         assertThat(cli.getParser().getClass())
                 .isEqualTo(TextParser.class);
@@ -27,7 +27,7 @@ public class CliFactoryTest {
 
 
     @Test
-    public void getWrapper_NormalSetUp_CsvWrapper() {
+    public void getWrapper_DefaultSetUp_CsvWrapper() {
         Dispatcher cli = (Dispatcher) CliFactory.cliBuilder().build();
         assertThat(cli.getWrapper().getClass())
                 .isEqualTo(CsvWrapper.class);
@@ -35,7 +35,7 @@ public class CliFactoryTest {
 
 
     @Test
-    public void accessLevel_NormalSetUp_3() {
+    public void accessLevel_DefaultSetUp_3() {
         Dispatcher cli = (Dispatcher) CliFactory.cliBuilder().build();
         assertThat(cli.getAccessLevel())
                 .isEqualTo(3);
@@ -43,7 +43,7 @@ public class CliFactoryTest {
 
 
     @Test
-    public void getKey_NormalSetUp_CommandLine() {
+    public void getKey_DefaultSetUp_CommandLine() {
         Dispatcher cli = (Dispatcher) CliFactory.cliBuilder().build();
         assertThat(cli.getKey())
                 .isEqualTo("CommandLine");
@@ -51,7 +51,7 @@ public class CliFactoryTest {
 
 
     @Test
-    public void threadCount_NormalSetUp_1() {
+    public void threadCount_DefaultSetUp_1() {
         Dispatcher cli = (Dispatcher) CliFactory.cliBuilder().build();
         assertThat(cli.getThreadNumber())
                 .isEqualTo(1);
@@ -59,7 +59,7 @@ public class CliFactoryTest {
 
 
     @Test
-    public void isSynchronized_NormalSetUp_1() {
+    public void isSynchronized_DefaultSetUp_1() {
         Dispatcher cli = (Dispatcher) CliFactory.cliBuilder().build();
         assertThat(cli.isSynchronized())
                 .isEqualTo(false);
