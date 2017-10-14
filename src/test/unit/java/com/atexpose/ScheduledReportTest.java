@@ -2,6 +2,7 @@ package com.atexpose;
 
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcherfactories.ScheduledReportFactory;
+import com.atexpose.util.mail.MockMailSender;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Rule;
@@ -25,8 +26,7 @@ public class ScheduledReportTest {
                 .request("ping")
                 .timeOfDay("14:30")
                 .zoneId("UTC")
-                .gmailUsername("monkey@example.com")
-                .gmailPassword("psw")
+                .emailSender(new MockMailSender())
                 .fromName("fromName")
                 .build();
         AtExpose atExpose = AtExpose.create()

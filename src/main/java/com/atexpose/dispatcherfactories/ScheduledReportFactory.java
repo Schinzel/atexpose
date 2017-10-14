@@ -9,7 +9,6 @@ import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
-import com.atexpose.util.mail.GmailEmailSender;
 import com.atexpose.util.mail.IEmailSender;
 import lombok.Builder;
 
@@ -20,22 +19,20 @@ public class ScheduledReportFactory {
      * sent to the argument
      * recipient.
      *
-     * @param taskName      The name of the report.
-     * @param request    The request to execute. Example: "echo hi"
-     * @param timeOfDay     The time of day in the argument time zone to run the report. Examples:
-     *                      "13:05" "07:55"
-     * @param zoneId        The time zone. E.g. "UTC", "Europe/Stockholm"
-     * @param recipient     The recipient email address.
-     * @param fromName      The name in the from field in the email
-     * @param gmailUsername Username for Gmail account the will send the reports.
-     * @param gmailPassword Username for Gmail account that will send the reports.
+     * @param taskName    The name of the report.
+     * @param request     The request to execute. Example: "echo hi"
+     * @param timeOfDay   The time of day in the argument time zone to run the report. Examples:
+     *                    "13:05" "07:55"
+     * @param zoneId      The time zone. E.g. "UTC", "Europe/Stockholm"
+     * @param recipient   The recipient email address.
+     * @param fromName    The name in the from field in the email
+     * @param emailSender Handles sending of emails
      * @return Dispatcher
      */
     @Builder
     static IDispatcher newScheduledReport(String taskName, String request, String timeOfDay,
                                           String zoneId, String recipient, String fromName,
-                                          String gmailUsername, String gmailPassword) {
-        IEmailSender emailSender = new GmailEmailSender(gmailUsername, gmailPassword);
+                                          IEmailSender emailSender) {
         ScheduledReportChannel scheduledReport = ScheduledReportChannel.builder()
                 .emailSender(emailSender)
                 .recipient(recipient)

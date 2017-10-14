@@ -4,6 +4,8 @@ import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcherfactories.CliFactory;
 import com.atexpose.dispatcherfactories.ScheduledReportFactory;
+import com.atexpose.util.mail.IEmailSender;
+import com.atexpose.util.mail.MockMailSender;
 
 /**
  * In this sample a scheduled report is set up. These are emailed once a day.
@@ -29,14 +31,15 @@ class ScheduledReport {
 
 
     private static IDispatcher getScheduledReport() {
+        //IEmailSender emailSender = new GmailEmailSender("user", "psw");
+        IEmailSender emailSender = new MockMailSender();
         return ScheduledReportFactory.builder()
                 .taskName("MyTask")
                 .request("ping")
                 .timeOfDay("10:24")
                 .recipient("recipient@example.com")
                 .fromName("Me")
-                .gmailUsername("user")
-                .gmailPassword("psw")
+                .emailSender(emailSender)
                 .build();
     }
 
