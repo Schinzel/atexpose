@@ -3,19 +3,14 @@ package com.atexpose.dispatcherfactories;
 import com.amazonaws.regions.Regions;
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcher.channels.ScriptFileChannel;
 import com.atexpose.dispatcher.channels.SqsChannel;
 import com.atexpose.dispatcher.parser.JsonRpcParser;
-import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import com.atexpose.util.sqs.SqsConsumer;
 import io.schinzel.basicutils.Checker;
 import lombok.Builder;
 
-public class DispatcherFactory {
-
-
-
+public class SqsConsumerFactory {
 
     @Builder(builderMethodName = "sqsConsumerBuilder", builderClassName = "SqsConsumerBuilder")
     static IDispatcher newSqsConsumer(String name, String awsAccessKey, String awsSecretKey, Regions region,
@@ -38,21 +33,4 @@ public class DispatcherFactory {
                 .noOfThreads(noOfThreads)
                 .build();
     }
-
-
-    @Builder(builderMethodName = "scriptFileReader", builderClassName = "ScriptFileReaderBuilder")
-    static IDispatcher newScriptFileReader(String fileName) {
-        return Dispatcher.builder()
-                .name("ScriptFile")
-                .accessLevel(3)
-                .isSynchronized(true)
-                .channel(new ScriptFileChannel(fileName))
-                .parser(new TextParser())
-                .wrapper(new CsvWrapper())
-                .noOfThreads(1)
-                .build();
-    }
-
-
 }
-

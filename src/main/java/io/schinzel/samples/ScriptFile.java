@@ -2,7 +2,7 @@ package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcherfactories.DispatcherFactory;
+import com.atexpose.dispatcherfactories.ScriptFileReaderFactory;
 
 /**
  * In this sample, a script file is loaded. The script file contains a set of requests to execute.
@@ -16,7 +16,7 @@ public class ScriptFile {
     }
 
     private static IDispatcher getScriptFileLoader(){
-        return DispatcherFactory.scriptFileReader()
+        return ScriptFileReaderFactory.scriptFileReader()
                 .fileName("script_file/scriptfile.txt")
                 .build();
     }

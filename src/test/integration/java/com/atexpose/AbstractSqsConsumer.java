@@ -8,7 +8,7 @@ import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.CreateQueueRequest;
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcherfactories.DispatcherFactory;
+import com.atexpose.dispatcherfactories.SqsConsumerFactory;
 import com.atexpose.util.sqs.SqsProducer;
 import com.atexpose.util.sqs.SqsQueueType;
 import io.schinzel.basicutils.RandomUtil;
@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 public abstract class AbstractSqsConsumer {
@@ -56,7 +56,7 @@ public abstract class AbstractSqsConsumer {
 
     @Test
     public void consumerMessageFromSqsQueue() {
-        IDispatcher sqsConsumer = DispatcherFactory.sqsConsumerBuilder()
+        IDispatcher sqsConsumer = SqsConsumerFactory.sqsConsumerBuilder()
                 .awsAccessKey(mAwsAccessKey)
                 .awsSecretKey(mAwsSecretKey)
                 .queueUrl(mQueueUrl)

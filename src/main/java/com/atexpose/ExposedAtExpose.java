@@ -5,7 +5,7 @@ import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
-import com.atexpose.dispatcherfactories.DispatcherFactory;
+import com.atexpose.dispatcherfactories.ScriptFileReaderFactory;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.crypto.cipher.Aes256Gcm;
 import io.schinzel.basicutils.crypto.cipher.ICipher;
@@ -45,7 +45,7 @@ class ExposedAtExpose {
             labels = {"@Expose", "AtExpose"}
     )
     public String loadScriptFile(String fileName) {
-        IDispatcher scriptFileReader = DispatcherFactory.scriptFileReader()
+        IDispatcher scriptFileReader = ScriptFileReaderFactory.scriptFileReader()
                 .fileName(fileName)
                 .build();
         this.getAtExpose().startDispatcher(scriptFileReader, true);

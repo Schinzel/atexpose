@@ -4,7 +4,7 @@ import com.amazonaws.regions.Regions;
 import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcherfactories.CliFactory;
-import com.atexpose.dispatcherfactories.DispatcherFactory;
+import com.atexpose.dispatcherfactories.SqsConsumerFactory;
 import com.atexpose.util.sqs.IQueueProducer;
 import com.atexpose.util.sqs.SqsProducer;
 import com.atexpose.util.sqs.SqsQueueType;
@@ -43,7 +43,7 @@ public class Sample_3_ConsumerAndProducer {
 
 
     private static IDispatcher getSqsConsumer() {
-        return DispatcherFactory.sqsConsumerBuilder()
+        return SqsConsumerFactory.sqsConsumerBuilder()
                 .awsAccessKey(AWS.ACCESS_KEY)
                 .awsSecretKey(AWS.SECRET_KEY)
                 .queueUrl(AWS.QUEUE_URL)
