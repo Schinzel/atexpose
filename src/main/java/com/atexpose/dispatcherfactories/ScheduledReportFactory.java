@@ -14,6 +14,8 @@ import lombok.Builder;
 
 public class ScheduledReportFactory {
 
+    ScheduledReportFactory(){}
+
     /**
      * Sets up a scheduled report. This is a scheduled task where the result of the operation is
      * sent to the argument

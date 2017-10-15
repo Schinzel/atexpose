@@ -56,7 +56,7 @@ public abstract class AbstractSqsConsumer {
 
     @Test
     public void consumerMessageFromSqsQueue() {
-        IDispatcher sqsConsumer = SqsConsumerFactory.sqsConsumerBuilder()
+        IDispatcher sqsConsumer = SqsConsumerFactory.builder()
                 .awsAccessKey(mAwsAccessKey)
                 .awsSecretKey(mAwsSecretKey)
                 .queueUrl(mQueueUrl)

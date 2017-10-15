@@ -11,8 +11,9 @@ import io.schinzel.basicutils.Checker;
 import lombok.Builder;
 
 public class SqsConsumerFactory {
+    SqsConsumerFactory(){}
 
-    @Builder(builderMethodName = "sqsConsumerBuilder", builderClassName = "SqsConsumerBuilder")
+    @Builder
     static IDispatcher newSqsConsumer(String name, String awsAccessKey, String awsSecretKey, Regions region,
                                       String queueUrl, int accessLevel, int noOfThreads) {
         if (Checker.isEmpty(name)) {

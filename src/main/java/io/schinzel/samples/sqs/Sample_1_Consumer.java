@@ -50,7 +50,7 @@ public class Sample_1_Consumer {
 
 
     private static IDispatcher getConsumer() {
-        return SqsConsumerFactory.sqsConsumerBuilder()
+        return SqsConsumerFactory.builder()
                 .awsAccessKey(AWS.ACCESS_KEY)
                 .awsSecretKey(AWS.SECRET_KEY)
                 .queueUrl(AWS.QUEUE_URL)
