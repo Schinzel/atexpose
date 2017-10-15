@@ -16,8 +16,6 @@ public class ScriptFile {
     }
 
     private static IDispatcher getScriptFileLoader(){
-        return ScriptFileReaderFactory.scriptFileReader()
-                .fileName("script_file/scriptfile.txt")
-                .build();
+        return ScriptFileReaderFactory.create("script_file/scriptfile.txt");
     }
 }

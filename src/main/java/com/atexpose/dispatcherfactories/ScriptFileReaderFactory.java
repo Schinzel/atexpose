@@ -5,7 +5,6 @@ import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.channels.ScriptFileChannel;
 import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
-import lombok.Builder;
 
 public class ScriptFileReaderFactory {
 
@@ -13,8 +12,7 @@ public class ScriptFileReaderFactory {
     }
 
 
-    @Builder(builderMethodName = "scriptFileReader", builderClassName = "ScriptFileReaderBuilder")
-    static IDispatcher newScriptFileReader(String fileName) {
+    public static IDispatcher create(String fileName) {
         return Dispatcher.builder()
                 .name("ScriptFile")
                 .accessLevel(3)
