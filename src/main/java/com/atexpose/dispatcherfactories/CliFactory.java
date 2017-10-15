@@ -5,7 +5,6 @@ import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.channels.CommandLineChannel;
 import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
-import lombok.Builder;
 
 public class CliFactory {
 
@@ -13,8 +12,7 @@ public class CliFactory {
     }
 
 
-    @Builder(builderMethodName = "cliBuilder", builderClassName = "CliBuilder")
-    static IDispatcher newCli() {
+    public static IDispatcher create() {
         return Dispatcher.builder()
                 .name("CommandLine")
                 .accessLevel(3)

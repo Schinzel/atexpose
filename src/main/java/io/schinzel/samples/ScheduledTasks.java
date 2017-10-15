@@ -21,7 +21,7 @@ public class ScheduledTasks {
                 .startDispatcher(getMinuteTask())
                 .startDispatcher(getDailyTask())
                 .startDispatcher(getMonthlyTask())
-                .startDispatcher(CliFactory.cliBuilder().build());
+                .startDispatcher(CliFactory.create());
     }
 
 

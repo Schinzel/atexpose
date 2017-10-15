@@ -17,7 +17,7 @@ public class Main {
     public static void main(String[] args) {
         AtExpose.create()
                 .expose(MyClass.class)
-                .startDispatcher(CliFactory.cliBuilder().build())
+                .startDispatcher(CliFactory.create())
                 .startDispatcher(WebServerBuilder.create().build());
     }
 }

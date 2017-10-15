@@ -18,7 +18,7 @@ class GSuiteAuth {
                 //Start a web server that requires authentication
                 .startDispatcher(getWebServerWithAuth())
                 //Start command line interface
-                .startDispatcher(CliFactory.cliBuilder().build());
+                .startDispatcher(CliFactory.create());
     }
 
 

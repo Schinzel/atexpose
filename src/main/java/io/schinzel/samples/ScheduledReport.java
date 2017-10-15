@@ -26,12 +26,11 @@ class ScheduledReport {
     public static void main(String[] args) {
         AtExpose.create()
                 .startDispatcher(getScheduledReport())
-                .startDispatcher(CliFactory.cliBuilder().build());
+                .startDispatcher(CliFactory.create());
     }
 
 
     private static IDispatcher getScheduledReport() {
-        //IEmailSender emailSender = new GmailEmailSender("user", "psw");
         IEmailSender emailSender = new MockMailSender();
         return ScheduledReportFactory.builder()
                 .taskName("MyTask")

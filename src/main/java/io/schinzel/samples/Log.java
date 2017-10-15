@@ -29,7 +29,7 @@ public class Log {
                 //Start a web server
                 .startDispatcher(getWebServer())
                 //Start command line interface
-                .startDispatcher(CliFactory.cliBuilder().build());
+                .startDispatcher(CliFactory.create());
     }
 
 

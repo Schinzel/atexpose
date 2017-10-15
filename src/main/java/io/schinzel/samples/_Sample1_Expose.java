@@ -29,7 +29,7 @@ public class _Sample1_Expose {
                 //Expose an instance
                 .expose(new MyObject())
                 //Start a command line interface
-                .startDispatcher(CliFactory.cliBuilder().build());
+                .startDispatcher(CliFactory.create());
 
     }
 }

@@ -9,6 +9,10 @@ import lombok.Builder;
 
 public class ScriptFileReaderFactory {
 
+    ScriptFileReaderFactory() {
+    }
+
+
     @Builder(builderMethodName = "scriptFileReader", builderClassName = "ScriptFileReaderBuilder")
     static IDispatcher newScriptFileReader(String fileName) {
         return Dispatcher.builder()
