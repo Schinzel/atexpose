@@ -10,7 +10,7 @@ import java.util.Collections;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class CliFactoryTest {
+public class CliFactoryTest extends CliFactory{
 
     @Test
     public void getChannel_DefaultSetUp_CommandLineChannel() {

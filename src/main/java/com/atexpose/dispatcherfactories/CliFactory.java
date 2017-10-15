@@ -9,6 +9,10 @@ import lombok.Builder;
 
 public class CliFactory {
 
+    CliFactory() {
+    }
+
+
     @Builder(builderMethodName = "cliBuilder", builderClassName = "CliBuilder")
     static IDispatcher newCli() {
         return Dispatcher.builder()

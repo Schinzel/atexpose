@@ -2,14 +2,52 @@ package com.atexpose.dispatcherfactories;
 
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannel;
+import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelDaily;
 import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelMinute;
+import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelMonthly;
 import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class ScheduledTaskFactoryTest {
+public class ScheduledTaskFactoryTest extends ScheduledTaskFactory {
+
+    @Test
+    public void getChannel_NewMinuteTask_ScheduledTaskChannelMinute() {
+        Dispatcher dispatcher = (Dispatcher) ScheduledTaskFactory.minuteTaskBuilder()
+                .taskName("MyTaskName")
+                .request("ping")
+                .minutes(1)
+                .build();
+        assertThat(dispatcher.getChannel()).isInstanceOf(ScheduledTaskChannelMinute.class);
+    }
+
+
+    @Test
+    public void getChannel_NewDailyTask_ScheduledTaskChannelMinute() {
+        Dispatcher dispatcher = (Dispatcher) ScheduledTaskFactory.dailyTaskBuilder()
+                .taskName("MyTaskName")
+                .request("ping")
+                .timeOfDay("14:15")
+                .zoneId("UTC")
+                .build();
+        assertThat(dispatcher.getChannel()).isInstanceOf(ScheduledTaskChannelDaily.class);
+    }
+
+
+    @Test
+    public void getChannel_NewMonthlyTask_ScheduledTaskChannelMinute() {
+        Dispatcher dispatcher = (Dispatcher) ScheduledTaskFactory.monthlyTaskBuilder()
+                .taskName("MyTaskName")
+                .request("ping")
+                .timeOfDay("14:15")
+                .dayOfMonth(5)
+                .zoneId("UTC")
+                .build();
+        assertThat(dispatcher.getChannel()).isInstanceOf(ScheduledTaskChannelMonthly.class);
+    }
+
 
     @Test
     public void getChannel_DefaultSetUp_ArgumentTaks() {
