@@ -1,7 +1,7 @@
 package com.atexpose.atexpose;
 
 import com.atexpose.api.API;
-import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.util.sqs.IQueueProducer;
 import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 import lombok.Getter;
@@ -15,7 +15,7 @@ public class IAtExposeSqsTest {
 
     private class AtExposeSqs implements IAtExposeSqs<AtExposeSqs> {
         @Getter ValuesWithKeys<QueueProducerWrapper> queueProducers = ValuesWithKeys.create("QueueProducers");
-        @Getter ValuesWithKeys<Dispatcher> dispatchers;
+        @Getter ValuesWithKeys<IDispatcher> dispatchers;
         @Getter API API;
 
 

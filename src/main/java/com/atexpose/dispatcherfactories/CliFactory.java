@@ -1,23 +1,19 @@
-package com.atexpose.atexpose;
+package com.atexpose.dispatcherfactories;
 
 import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.channels.CommandLineChannel;
 import com.atexpose.dispatcher.parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 
-/**
- * The purpose of this class is to start a command line interface.
- * <p>
- * Created by schinzel on 2017-04-16.
- */
-public interface IAtExposeCLI<T extends IAtExpose<T>> extends IAtExpose<T> {
+public class CliFactory {
+
+    CliFactory() {
+    }
 
 
-    /**
-     * Start command line interface.
-     */
-    default T startCLI() {
-        Dispatcher dispatcher = Dispatcher.builder()
+    public static IDispatcher create() {
+        return Dispatcher.builder()
                 .name("CommandLine")
                 .accessLevel(3)
                 .isSynchronized(false)
@@ -25,9 +21,7 @@ public interface IAtExposeCLI<T extends IAtExpose<T>> extends IAtExpose<T> {
                 .parser(new TextParser())
                 .wrapper(new CsvWrapper())
                 .noOfThreads(1)
-                .api(this.getAPI())
                 .build();
-        return this.startDispatcher(dispatcher, false);
     }
 
 }

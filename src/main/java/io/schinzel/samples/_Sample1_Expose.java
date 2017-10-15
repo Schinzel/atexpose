@@ -1,6 +1,7 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
+import com.atexpose.dispatcherfactories.CliFactory;
 import io.schinzel.samples.auxiliary.MyClass;
 import io.schinzel.samples.auxiliary.MyObject;
 
@@ -28,7 +29,7 @@ public class _Sample1_Expose {
                 //Expose an instance
                 .expose(new MyObject())
                 //Start a command line interface
-                .startCLI();
+                .startDispatcher(CliFactory.create());
 
     }
 }

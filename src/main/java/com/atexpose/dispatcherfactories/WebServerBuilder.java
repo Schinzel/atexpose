@@ -1,7 +1,7 @@
-package com.atexpose;
+package com.atexpose.dispatcherfactories;
 
-import com.atexpose.api.API;
 import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.dispatcher.channels.webchannel.WebChannel;
 import com.atexpose.dispatcher.channels.webchannel.redirect.Redirects;
@@ -11,7 +11,6 @@ import com.atexpose.dispatcher.parser.urlparser.UrlParserWithGSuiteAuth;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.dispatcher.wrapper.WebWrapper;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,17 +34,15 @@ public class WebServerBuilder {
     boolean mForceDefaultPage = false;
     private Map<String, String> mResponseHeaders = new HashMap<>();
     private Redirects.RedirectsBuilder mRedirectsBuilder = Redirects.getBuilder();
-    private final API mAPI;
     private String mAuthCookieName;
     private String mAuthDomain;
-    private final ValuesWithKeys<Dispatcher> mDispatchers;
 
 
-    WebServerBuilder(API api, ValuesWithKeys<Dispatcher> dispatchers) {
-        mAPI = api;
-        mDispatchers = dispatchers;
+    private WebServerBuilder(){}
+
+    public static WebServerBuilder create(){
+        return new WebServerBuilder();
     }
-
 
     /**
      * Add redirect from a file path to another
@@ -285,13 +282,13 @@ public class WebServerBuilder {
      *
      * @return Status of the operation message.
      */
-    public Dispatcher startWebServer() {
+    public IDispatcher build() {
         //Construct web server name
         String webServerName = "WebServer_" + mPort;
         IChannel webChannel = this.getChannel();
         IParser parser = this.getParser();
         IWrapper wrapper = this.getWrapper();
-        Dispatcher dispatcher = Dispatcher.builder()
+        return Dispatcher.builder()
                 .name(webServerName)
                 .channel(webChannel)
                 .isSynchronized(false)
@@ -299,11 +296,7 @@ public class WebServerBuilder {
                 .wrapper(wrapper)
                 .accessLevel(mAccessLevel)
                 .noOfThreads(mNoOfThreads)
-                .api(mAPI)
                 .build();
-        mDispatchers.add(dispatcher);
-        dispatcher.commenceMessaging();
-        return dispatcher;
     }
 
 }

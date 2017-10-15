@@ -1,8 +1,9 @@
 package com.atexpose;
 
 import com.atexpose.api.API;
-import com.atexpose.atexpose.*;
-import com.atexpose.dispatcher.Dispatcher;
+import com.atexpose.atexpose.IAtExposeSqs;
+import com.atexpose.atexpose.QueueProducerWrapper;
+import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.mail.IEmailSender;
 import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
@@ -20,9 +21,7 @@ import lombok.experimental.Accessors;
  */
 @SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue", "UnusedReturnValue"})
 @Accessors(prefix = "m")
-public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeReports<AtExpose>,
-        IAtExposeScriptFile<AtExpose>, IAtExposeTasks<AtExpose>, IAtExposeLog<AtExpose>,
-        IAtExposeSqs<AtExpose> {
+public class AtExpose implements IStateNode, IAtExposeSqs<AtExpose> {
     /** Instance creation time. For status and debug purposes. */
     private final String mInstanceStartTime = DateTimeStrings.getDateTimeUTC();
     /** Reference to the API. */
@@ -30,7 +29,7 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
     /** Holds an email sender instance if such has been set up. */
     @Getter private IEmailSender mMailSender;
     /** Holds the running dispatchers */
-    @Getter ValuesWithKeys<Dispatcher> mDispatchers = ValuesWithKeys.create("Dispatchers");
+    @Getter ValuesWithKeys<IDispatcher> mDispatchers = ValuesWithKeys.create("Dispatchers");
     /** Hold the SQS senders added to this instance. */
     @Getter ValuesWithKeys<QueueProducerWrapper> mQueueProducers = ValuesWithKeys.create("QueueProducers");
 
@@ -63,29 +62,13 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
 
 
     /**
-     * @return A web server builder.
-     */
-    public WebServerBuilder getWebServerBuilder() {
-        return new WebServerBuilder(this.getAPI(), this.getDispatchers());
-    }
-
-
-    /**
-     * @return A SQS consumer builder
-     */
-    public DispatcherBuilder.SqsConsumerBuilder getSqsConsumerBuilder() {
-        return new DispatcherBuilder(this.getAPI(), this.getDispatchers()).sqsConsumerBuilder();
-    }
-
-
-    /**
      * Shuts down all dispatchers of this instance.
      *
      * @return This for chaining.
      */
     public synchronized AtExpose shutdown() {
         //Shutdown all the dispatchers
-        this.getDispatchers().forEach(Dispatcher::shutdown);
+        this.getDispatchers().forEach(IDispatcher::shutdown);
         //Empty the dispatcher collection.
         this.getDispatchers().clear();
         return this;
@@ -94,13 +77,6 @@ public class AtExpose implements IStateNode, IAtExposeCLI<AtExpose>, IAtExposeRe
 
     @Override
     public AtExpose getThis() {
-        return this;
-    }
-
-
-    @Override
-    public AtExpose setMailSender(IEmailSender emailSender) {
-        mMailSender = emailSender;
         return this;
     }
 

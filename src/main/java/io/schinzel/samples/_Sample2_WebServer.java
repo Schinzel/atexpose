@@ -1,6 +1,7 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
+import com.atexpose.dispatcherfactories.WebServerBuilder;
 import io.schinzel.samples.auxiliary.MyClass;
 import io.schinzel.samples.auxiliary.MyObject;
 
@@ -27,8 +28,6 @@ public class _Sample2_WebServer {
                 //Expose an instance
                 .expose(new MyObject())
                 //Start a web server
-                .getWebServerBuilder().startWebServer();
-
-
+                .startDispatcher(WebServerBuilder.create().build());
     }
 }

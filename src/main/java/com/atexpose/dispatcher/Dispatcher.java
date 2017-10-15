@@ -12,8 +12,6 @@ import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.util.ByteStorage;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.UTF8;
-import io.schinzel.basicutils.collections.valueswithkeys.IValueWithKey;
-import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,34 +39,35 @@ import java.util.List;
  * @author Schinzel
  */
 @Accessors(prefix = "m")
-public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
+public class Dispatcher implements Runnable, IDispatcher {
     /** The name as part of the IValueWithKey interface. Is the name of the Dispatchers. */
     @Getter final String mKey;
     /** The API that is exposed. */
-    private final API mAPI;
+    private API mAPI;
     /** Receives incoming messages and sends wrapped responses. */
+    @Getter
     private final IChannel mChannel;
     /** Parses the incoming messages. */
-    private final IParser mParser;
+    @Getter private final IParser mParser;
     /** Wraps the responses to send. */
-    private final IWrapper mWrapper;
+    @Getter private final IWrapper mWrapper;
     /**
      * The access level of this dispatcher. The dispatcher can invoke methods with the same access
      * level or lower.
      **/
-    private final int mAccessLevel;
+    @Getter private final int mAccessLevel;
     /** Says which thread this object is. Useful for debugging and diagnostics. */
-    private final int mThreadNumber;
+    @Getter private final int mThreadNumber;
     /** The thread that this dispatcher executes in. */
     private Thread mThread;
     /** The loggers assigned to this dispatcher. */
-    private List<Logger> mLoggers = new ArrayList<>();
+    @Getter private List<Logger> mLoggers = new ArrayList<>();
     /**
      * If this dispatcher runs as a background services like a web server or it executes and then
      * returns like a script file dispatcher. If true, the dispatcher is to run in the invoking
      * thread. If false, the dispatcher will start a new thread and execute in this.
      */
-    private final boolean mIsSynchronized;
+    @Getter private final boolean mIsSynchronized;
     /**
      * Contains a reference to the next dispatcher if this dispatcher is
      * multi-threaded. Multi-threaded dispatchers are stored as a linked-list.
@@ -85,7 +84,7 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
      * Sets up a dispatcher.
      */
     @Builder
-    private Dispatcher(String name, int noOfThreads, int accessLevel, boolean isSynchronized, IChannel channel, IParser parser, IWrapper wrapper, API api) {
+    private Dispatcher(String name, int noOfThreads, int accessLevel, boolean isSynchronized, IChannel channel, IParser parser, IWrapper wrapper) {
         mKey = name;
         Thrower.throwIfVarTooSmall(noOfThreads, "noOfThreads", 1);
         Thrower.throwIfVarEmpty(name, "name");
@@ -96,7 +95,6 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
         mChannel = channel;
         mParser = parser;
         mWrapper = wrapper;
-        mAPI = api;
         //If more than one dispatcher to set up
         if (mThreadNumber > 1) {
             //Set up the next dispatcher
@@ -108,7 +106,6 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
                     .parser(mParser.getClone())
                     .wrapper(mWrapper)
                     .noOfThreads(mThreadNumber - 1)
-                    .api(mAPI)
                     .build();
         }
     }
@@ -121,11 +118,12 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
      * Starts the messaging and tells the next dispatcher to start its messaging recursively until
      * all dispatchers of that a siblings to this have been started.
      */
-    public Dispatcher commenceMessaging() {
+    public Dispatcher commenceMessaging(API api) {
+        mAPI = api;
         //If there is a next dispatcher
         if (mNextDispatcher != null) {
             //Tell the next dispatcher to start its messaging.
-            mNextDispatcher.commenceMessaging();
+            mNextDispatcher.commenceMessaging(api);
         }
         //If this is a synchronized execution
         if (mIsSynchronized) {
@@ -265,11 +263,12 @@ public class Dispatcher implements Runnable, IValueWithKey, IStateNode {
     /**
      * Removes all loggers from this dispatcher.
      */
-    public void removeLoggers() {
+    public Dispatcher removeLoggers() {
         mLoggers = Collections.emptyList();
         if (mNextDispatcher != null) {
             mNextDispatcher.removeLoggers();
         }
+        return this;
     }
 
 

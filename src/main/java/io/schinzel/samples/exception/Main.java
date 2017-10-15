@@ -1,6 +1,8 @@
 package io.schinzel.samples.exception;
 
 import com.atexpose.AtExpose;
+import com.atexpose.dispatcherfactories.CliFactory;
+import com.atexpose.dispatcherfactories.WebServerBuilder;
 import io.schinzel.samples.auxiliary.MyClass;
 
 /**
@@ -15,8 +17,7 @@ public class Main {
     public static void main(String[] args) {
         AtExpose.create()
                 .expose(MyClass.class)
-                .startCLI()
-                .getWebServerBuilder()
-                .startWebServer();
+                .startDispatcher(CliFactory.create())
+                .startDispatcher(WebServerBuilder.create().build());
     }
 }

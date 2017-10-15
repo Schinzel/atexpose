@@ -1,6 +1,9 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
+import com.atexpose.dispatcher.IDispatcher;
+import com.atexpose.dispatcherfactories.CliFactory;
+import com.atexpose.dispatcherfactories.WebServerBuilder;
 
 /**
  * This sample sets a web server that requires you to be logged in to the argument domain
@@ -9,18 +12,27 @@ import com.atexpose.AtExpose;
 class GSuiteAuth {
 
     public static void main(String[] args) {
-        AtExpose atExpose = AtExpose.create();
-        //Start a web server without authentication
-        atExpose.getWebServerBuilder()
-                .startWebServer();
-        //Start a web server that requires authentication
-        atExpose.getWebServerBuilder()
+        AtExpose.create()
+                //Start a web server without authentication
+                .startDispatcher(getWebServerNoAuth())
+                //Start a web server that requires authentication
+                .startDispatcher(getWebServerWithAuth())
+                //Start command line interface
+                .startDispatcher(CliFactory.create());
+    }
+
+
+    private static IDispatcher getWebServerNoAuth() {
+        return WebServerBuilder.create().build();
+    }
+
+
+    private static IDispatcher getWebServerWithAuth() {
+        return WebServerBuilder.create()
                 .port(5556)
                 .webServerDir("web/auth_sample")
                 .gSuiteAuth("bapp", "example.com")
-                .startWebServer();
-        //Start command line interface
-        atExpose.startCLI();
+                .build();
     }
 
 }

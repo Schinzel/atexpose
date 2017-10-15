@@ -2,6 +2,9 @@ package io.schinzel.samples.sqs;
 
 import com.amazonaws.regions.Regions;
 import com.atexpose.AtExpose;
+import com.atexpose.dispatcher.IDispatcher;
+import com.atexpose.dispatcherfactories.CliFactory;
+import com.atexpose.dispatcherfactories.SqsConsumerFactory;
 import com.atexpose.util.sqs.SqsProducer;
 import com.atexpose.util.sqs.SqsQueueType;
 
@@ -40,9 +43,14 @@ public class Sample_1_Consumer {
                 //Expose a sample class
                 .expose(new JobClass())
                 //Start a command line interface
-                .startCLI()
-                //Set up SQS consumer
-                .getSqsConsumerBuilder()
+                .startDispatcher(CliFactory.create())
+                //Start up SQS consumer
+                .startDispatcher(getConsumer());
+    }
+
+
+    private static IDispatcher getConsumer() {
+        return SqsConsumerFactory.builder()
                 .awsAccessKey(AWS.ACCESS_KEY)
                 .awsSecretKey(AWS.SECRET_KEY)
                 .queueUrl(AWS.QUEUE_URL)
@@ -50,7 +58,7 @@ public class Sample_1_Consumer {
                 .name("MyFirstSqsConsumer")
                 .noOfThreads(2)
                 .accessLevel(1)
-                .start();
+                .build();
     }
 
 

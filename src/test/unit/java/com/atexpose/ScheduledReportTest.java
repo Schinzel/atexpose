@@ -1,5 +1,8 @@
 package com.atexpose;
 
+import com.atexpose.dispatcher.IDispatcher;
+import com.atexpose.dispatcherfactories.ScheduledReportFactory;
+import com.atexpose.util.mail.MockMailSender;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Rule;
@@ -17,28 +20,20 @@ public class ScheduledReportTest {
 
 
     @Test
-    public void test_addScheduledReport_NO_SMTP() {
-        String taskName = "theTaskName";
-        String request = "ping";
-        String timeOfDay = "14:30";
-        AtExpose cc = new AtExpose();
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("You need to set SMTP settings");
-        cc.addScheduledReport(taskName, request, timeOfDay, "UTC", "monkey@example.com", "fromName");
-    }
-
-
-    @Test
     public void test_addScheduledReport() throws JSONException {
-        String taskName = "theTaskName";
-        String request = "ping";
-        String timeOfDay = "14:30";
-        AtExpose atExpose = AtExpose.create();
-        atExpose.setSMTPServerGmail("u1", "p1");
-        atExpose.addScheduledReport(taskName, request, timeOfDay, "UTC", "monkey@example.com", "fn1");
+        IDispatcher scheduledReport = ScheduledReportFactory.builder()
+                .taskName("theTaskName")
+                .request("ping")
+                .timeOfDay("14:30")
+                .zoneId("UTC")
+                .emailSender(new MockMailSender())
+                .fromName("fromName")
+                .build();
+        AtExpose atExpose = AtExpose.create()
+                .startDispatcher(scheduledReport);
         JSONObject jo = atExpose.getState().getJson();
         JSONObject joDispatcher = jo.getJSONArray("Dispatchers").getJSONObject(0);
-        assertEquals("ScheduledReport_" + taskName, joDispatcher.getString("Name"));
+        assertEquals("ScheduledReport_theTaskName", joDispatcher.getString("Name"));
     }
 
 

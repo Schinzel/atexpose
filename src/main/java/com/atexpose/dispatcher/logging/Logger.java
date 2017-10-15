@@ -9,6 +9,7 @@ import io.schinzel.basicutils.crypto.cipher.NoCipher;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.util.Map;
@@ -24,7 +25,7 @@ import java.util.Map;
 @Accessors(prefix = "m")
 public class Logger implements IStateNode {
     /** The type of the logger. E.g. error or event */
-    @Builder.Default
+    @Getter @Builder.Default
     LoggerType mLoggerType = LoggerType.EVENT;
     /** Handles the writing of log entries. */
     @Builder.Default

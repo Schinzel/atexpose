@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 @Accessors(prefix = "m")
 public class ScheduledTaskChannel implements IChannel {
     /** The name of this tasks. */
-    final String mTaskName;
+    @Getter final String mTaskName;
     /** The task to run. Is a request in the text format. E.g. "echo hi" */
     @Getter
     private final String mTaskRequest;
