@@ -20,24 +20,26 @@ public class ScheduledTaskFactoryTest extends ScheduledTaskFactory {
                 .request("ping")
                 .minutes(1)
                 .build();
-        assertThat(dispatcher.getChannel()).isInstanceOf(ScheduledTaskChannelMinute.class);
+        assertThat(dispatcher.getChannel())
+                .isInstanceOf(ScheduledTaskChannelMinute.class);
     }
 
 
     @Test
-    public void getChannel_NewDailyTask_ScheduledTaskChannelMinute() {
+    public void getChannel_NewDailyTask_ScheduledTaskChannelDaily() {
         Dispatcher dispatcher = (Dispatcher) ScheduledTaskFactory.dailyTaskBuilder()
                 .taskName("MyTaskName")
                 .request("ping")
                 .timeOfDay("14:15")
                 .zoneId("UTC")
                 .build();
-        assertThat(dispatcher.getChannel()).isInstanceOf(ScheduledTaskChannelDaily.class);
+        assertThat(dispatcher.getChannel())
+                .isInstanceOf(ScheduledTaskChannelDaily.class);
     }
 
 
     @Test
-    public void getChannel_NewMonthlyTask_ScheduledTaskChannelMinute() {
+    public void getChannel_NewMonthlyTask_ScheduledTaskChannelMonthly() {
         Dispatcher dispatcher = (Dispatcher) ScheduledTaskFactory.monthlyTaskBuilder()
                 .taskName("MyTaskName")
                 .request("ping")
@@ -45,25 +47,28 @@ public class ScheduledTaskFactoryTest extends ScheduledTaskFactory {
                 .dayOfMonth(5)
                 .zoneId("UTC")
                 .build();
-        assertThat(dispatcher.getChannel()).isInstanceOf(ScheduledTaskChannelMonthly.class);
+        assertThat(dispatcher.getChannel())
+                .isInstanceOf(ScheduledTaskChannelMonthly.class);
     }
 
 
     @Test
-    public void getChannel_DefaultSetUp_ArgumentTaks() {
+    public void getChannel_DefaultSetUp_ArgumentObject() {
         ScheduledTaskChannel scheduledTask =
                 new ScheduledTaskChannelMinute("MyTaskName", "ping", 1);
         Dispatcher dispatcher = (Dispatcher) ScheduledTaskFactory.addTask(scheduledTask);
-        assertThat(dispatcher.getChannel()).isEqualTo(scheduledTask);
+        assertThat(dispatcher.getChannel())
+                .isEqualTo(scheduledTask);
     }
 
 
     @Test
-    public void getParser_DefaultSetUp_CommandLineChannel() {
+    public void getParser_DefaultSetUp_TextParser() {
         ScheduledTaskChannel scheduledTask =
                 new ScheduledTaskChannelMinute("MyTaskName", "ping", 1);
         Dispatcher dispatcher = (Dispatcher) ScheduledTaskFactory.addTask(scheduledTask);
-        assertThat(dispatcher.getParser().getClass()).isEqualTo(TextParser.class);
+        assertThat(dispatcher.getParser())
+                .isInstanceOf(TextParser.class);
     }
 
 
@@ -72,8 +77,8 @@ public class ScheduledTaskFactoryTest extends ScheduledTaskFactory {
         ScheduledTaskChannel scheduledTask =
                 new ScheduledTaskChannelMinute("MyTaskName", "ping", 1);
         Dispatcher dispatcher = (Dispatcher) ScheduledTaskFactory.addTask(scheduledTask);
-        assertThat(dispatcher.getWrapper().getClass())
-                .isEqualTo(CsvWrapper.class);
+        assertThat(dispatcher.getWrapper())
+                .isInstanceOf(CsvWrapper.class);
     }
 
 
@@ -88,7 +93,7 @@ public class ScheduledTaskFactoryTest extends ScheduledTaskFactory {
 
 
     @Test
-    public void getKey_DefaultSetUp_CommandLine() {
+    public void getKey_DefaultSetUp_ScheduledTask_MyTaskName() {
         ScheduledTaskChannel scheduledTask =
                 new ScheduledTaskChannelMinute("MyTaskName", "ping", 1);
         Dispatcher dispatcher = (Dispatcher) ScheduledTaskFactory.addTask(scheduledTask);
@@ -126,10 +131,4 @@ public class ScheduledTaskFactoryTest extends ScheduledTaskFactory {
     }
 
 
-    @Test
-    public void getLoggers_DefaultSetUp_1EventLog() {
-        ScheduledTaskChannel scheduledTask =
-                new ScheduledTaskChannelMinute("MyTaskName", "ping", 1);
-        Dispatcher dispatcher = (Dispatcher) ScheduledTaskFactory.addTask(scheduledTask);
-    }
 }

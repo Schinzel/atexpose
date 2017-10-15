@@ -15,7 +15,7 @@ public class ScheduledReportFactoryTest extends ScheduledReportFactory {
 
 
     @Test
-    public void getChannel_DefaultSetUp_CommandLineChannel() {
+    public void getChannel_DefaultSetUp_ScheduledReportChannel() {
         Dispatcher dispatcher = (Dispatcher) ScheduledReportFactory.builder()
                 .taskName("MyTaskName")
                 .request("ping")
@@ -31,7 +31,7 @@ public class ScheduledReportFactoryTest extends ScheduledReportFactory {
 
 
     @Test
-    public void getParser_DefaultSetUp_CommandLineChannel() {
+    public void getParser_DefaultSetUp_TextParser() {
         Dispatcher dispatcher = (Dispatcher) ScheduledReportFactory.builder()
                 .taskName("MyTaskName")
                 .request("ping")
@@ -79,7 +79,7 @@ public class ScheduledReportFactoryTest extends ScheduledReportFactory {
 
 
     @Test
-    public void getKey_DefaultSetUp_CommandLine() {
+    public void getKey_DefaultSetUp_ScheduledReport_MyTaskName() {
         Dispatcher dispatcher = (Dispatcher) ScheduledReportFactory.builder()
                 .taskName("MyTaskName")
                 .request("ping")
@@ -127,7 +127,7 @@ public class ScheduledReportFactoryTest extends ScheduledReportFactory {
 
 
     @Test
-    public void getLoggers_DefaultSetUp_EmptyList() {
+    public void getLogger_DefaultSetUp_EventLogger() {
         Dispatcher dispatcher = (Dispatcher) ScheduledReportFactory.builder()
                 .taskName("MyTaskName")
                 .request("ping")

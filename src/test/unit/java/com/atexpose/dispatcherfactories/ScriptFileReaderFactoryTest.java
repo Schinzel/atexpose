@@ -11,8 +11,9 @@ import java.util.Collections;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class ScriptFileReaderFactoryTest extends ScriptFileReaderFactory {
+
     @Test
-    public void getChannel_DefaultSetUp_CommandLineChannel() {
+    public void getChannel_DefaultSetUp_ScriptFileChannel() {
         Dispatcher dispatcher = (Dispatcher) ScriptFileReaderFactory.create("testfiles/MyFile.txt");
         assertThat(dispatcher.getChannel())
                 .isInstanceOf(ScriptFileChannel.class);
@@ -20,7 +21,7 @@ public class ScriptFileReaderFactoryTest extends ScriptFileReaderFactory {
 
 
     @Test
-    public void getParser_DefaultSetUp_CommandLineChannel() {
+    public void getParser_DefaultSetUp_TextParser() {
         Dispatcher dispatcher = (Dispatcher) ScriptFileReaderFactory.create("testfiles/MyFile.txt");
         assertThat(dispatcher.getParser())
                 .isInstanceOf(TextParser.class);
@@ -60,7 +61,7 @@ public class ScriptFileReaderFactoryTest extends ScriptFileReaderFactory {
 
 
     @Test
-    public void isSynchronized_DefaultSetUp_False() {
+    public void isSynchronized_DefaultSetUp_True() {
         Dispatcher dispatcher = (Dispatcher) ScriptFileReaderFactory.create("testfiles/MyFile.txt");
         assertThat(dispatcher.isSynchronized())
                 .isEqualTo(true);

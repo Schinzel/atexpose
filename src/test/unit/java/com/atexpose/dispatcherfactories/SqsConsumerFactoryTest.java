@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SqsConsumerFactoryTest extends SqsConsumerFactory {
 
     @Test
-    public void getChannel_DefaultSetUp_ScheduledTaskChannelMinute() {
+    public void getChannel_DefaultSetUp_SqsChannel() {
         Dispatcher dispatcher = (Dispatcher) SqsConsumerFactory.builder()
                 .name("MyConsumerName")
                 .awsAccessKey("MyAwsKey")
