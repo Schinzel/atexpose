@@ -3,21 +3,19 @@ package com.atexpose.dispatcher.wrapper;
 import io.schinzel.basicutils.FunnyChars;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.Collections;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
+
 
 /**
  * @author schinzel
  */
 public class CsvWrapperTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
 
     @Test
@@ -79,10 +77,8 @@ public class CsvWrapperTest {
 
     @Test
     public void testWrapFile() throws JSONException {
-        CsvWrapper csvWrapper = new CsvWrapper();
-        exception.expect(UnsupportedOperationException.class);
-        exception.expectMessage("Not supported yet.");
-        csvWrapper.wrapFile("anyfile.txt");
-
+        assertThatExceptionOfType(UnsupportedOperationException.class)
+                .isThrownBy(() -> new CsvWrapper().wrapFile("anyfile.txt"))
+                .withMessageStartingWith("Not supported yet.");
     }
 }

@@ -1,23 +1,18 @@
 package com.atexpose;
 
-import com.atexpose.errors.RuntimeError;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.regex.Pattern;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author schinzel
  */
 public class MiscTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
 
     @Test
@@ -59,11 +54,9 @@ public class MiscTest {
 
     @Test
     public void testThrowError() {
-        Misc misc = new Misc();
-        exception.expect(RuntimeError.class);
-        exception.expectMessage("Requested error thrown");
-        misc.throwError();
-
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> new Misc().throwError())
+                .withMessageStartingWith("Requested error thrown");
     }
 
 }

@@ -1,22 +1,15 @@
 package com.atexpose.dispatcher.channels;
 
-import com.atexpose.errors.RuntimeError;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
 
-/**
- * @author Schinzel
- */
 public class CommandLineChannelTest {
-    CommandLineChannel cli;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    private CommandLineChannel cli;
 
 
     @After
@@ -29,9 +22,8 @@ public class CommandLineChannelTest {
     @Test
     public void testClone() {
         cli = new CommandLineChannel();
-        exception.expect(RuntimeError.class);
-        exception.expectMessage("The command line interface cannot be multi-threaded.");
-        cli.getClone();
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> cli.getClone());
     }
 
 

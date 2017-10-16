@@ -11,9 +11,9 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 /**
  * @author schinzel
@@ -71,9 +71,9 @@ public class WebWrapperTest {
         byte[] file = webWrapper.wrapFile("with_include_file.html");
         String fileAsString = UTF8.getString(file);
         //The include file command should not be in read file
-        assertThat(fileAsString, not(containsString("<!--#include file=\"inc_file.inc\" -->")));
+        assertThat(fileAsString).doesNotContain("<!--#include file=\"inc_file.inc\" -->");
         //The content of the include file should be in the read file
-        assertThat(fileAsString, containsString("<b>This is an include file</b>"));
+        assertThat(fileAsString).contains("<b>This is an include file</b>");
     }
 
 
@@ -91,9 +91,9 @@ public class WebWrapperTest {
         byte[] file = webWrapper.wrapFile("with_server_side_var.html");
         String fileAsString = UTF8.getString(file);
         //The server side variable reference should not be inte the file
-        assertThat(fileAsString, not(containsString("MY_VAR")));
+        assertThat(fileAsString).doesNotContain("MY_VAR");
         //The value of the server side value should be in the file
-        assertThat(fileAsString, containsString("this_is_an_inserted_value"));
+        assertThat(fileAsString).contains("this_is_an_inserted_value");
     }
 
 
@@ -113,9 +113,9 @@ public class WebWrapperTest {
         byte[] file = webWrapper.wrapFile("with_inc_file_which_has_vars.html");
         String fileAsString = UTF8.getString(file);
         //The server side variable reference should not be inte the file
-        assertThat(fileAsString, not(containsString("<!--#include file=\"inc_with_include_vars.inc\" -->")));
+        assertThat(fileAsString).doesNotContain("<!--#include file=\"inc_with_include_vars.inc\" -->");
         //The value of the server side value should be in the file
-        assertThat(fileAsString, containsString("#START#111222333#END#"));
+        assertThat(fileAsString).contains("#START#111222333#END#");
     }
 
 
