@@ -1,24 +1,24 @@
 package com.atexpose.errors;
 
 import org.junit.Test;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
- *
  * @author schinzel
  */
 public class FatalErrorTest {
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
 
     @Test
     public void testFatalError() {
-        exception.expect(FatalError.class);
-        exception.expectMessage("my error message");
-        throw new FatalError("my error message", false);
+        assertThatExceptionOfType(FatalError.class)
+                .isThrownBy(() -> doThrow())
+                .withMessageStartingWith("my error message");
     }
 
+
+    private static void doThrow() {
+        throw new FatalError("my error message", false);
+    }
 }

@@ -12,7 +12,7 @@ public class ScriptFile {
 
     public static void main(String[] args) {
         AtExpose.create()
-                .startDispatcher(getScriptFileLoader(), true);
+                .start(getScriptFileLoader(), true);
     }
 
     private static IDispatcher getScriptFileLoader(){

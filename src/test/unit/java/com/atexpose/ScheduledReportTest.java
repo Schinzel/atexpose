@@ -30,7 +30,7 @@ public class ScheduledReportTest {
                 .fromName("fromName")
                 .build();
         AtExpose atExpose = AtExpose.create()
-                .startDispatcher(scheduledReport);
+                .start(scheduledReport);
         JSONObject jo = atExpose.getState().getJson();
         JSONObject joDispatcher = jo.getJSONArray("Dispatchers").getJSONObject(0);
         assertEquals("ScheduledReport_theTaskName", joDispatcher.getString("Name"));

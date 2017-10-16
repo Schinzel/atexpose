@@ -1,35 +1,29 @@
 package com.atexpose.util.mail;
 
-import com.atexpose.errors.RuntimeError;
 import com.icegreen.greenmail.util.DummySSLSocketFactory;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
+import io.schinzel.basicutils.RandomUtil;
+import org.json.JSONObject;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.security.Security;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.security.Security;
 
-import org.json.JSONObject;
-import org.junit.After;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import io.schinzel.basicutils.RandomUtil;
 
 /**
  * @author Schinzel
  */
 public class GmailEmailSenderTest {
     GreenMail mGreenMail;
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
 
     @Before
@@ -90,9 +84,9 @@ public class GmailEmailSenderTest {
         String userName = RandomUtil.getRandomString(3) + "@domain.com";
         GmailEmailSender gms = new GmailEmailSender(userName, "thePassword",
                 "localhost", ServerSetupTest.SMTPS.getPort());
-        exception.expect(RuntimeError.class);
-        exception.expectMessage("'I_AM_AN_INVALID_EMAIL_ADDRESS' is not a valid");
-        gms.send("I_AM_AN_INVALID_EMAIL_ADDRESS", subject, body, "fromName");
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> gms.send("I_AM_AN_INVALID_EMAIL_ADDRESS", subject, body, "fromName"))
+                .withMessageStartingWith("'I_AM_AN_INVALID_EMAIL_ADDRESS' is not a valid");
     }
 
 

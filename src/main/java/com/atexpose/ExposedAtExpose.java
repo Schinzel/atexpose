@@ -46,7 +46,7 @@ class ExposedAtExpose {
     )
     public String loadScriptFile(String fileName) {
         IDispatcher scriptFileReader = ScriptFileReaderFactory.create(fileName);
-        this.getAtExpose().startDispatcher(scriptFileReader, true);
+        this.getAtExpose().start(scriptFileReader, true);
         return "Script file '" + fileName + "' loaded.";
     }
 

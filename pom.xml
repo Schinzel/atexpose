@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.atexpose</groupId>
     <artifactId>atexpose</artifactId>
-    <version>0.9.32-SNAPSHOT</version>
+    <version>0.9.33-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>@Expose</name>
-    <description>Exposes methods to invoked as AJAX request, via command line, as scheduled tasks
+    <description>Exposes methods to be invoked as AJAX request, via command line, as scheduled tasks
         and more.
     </description>
 

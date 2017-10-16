@@ -1,11 +1,10 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
 import com.atexpose.dispatcher.parser.Request;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 
 public class UrlParserWithGSuiteAuthTest {
@@ -34,8 +33,6 @@ public class UrlParserWithGSuiteAuthTest {
                     "Content-Length: 7\r\n" +
                     "\r\n" +
                     "String=";
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
 
     @Test
@@ -118,9 +115,9 @@ public class UrlParserWithGSuiteAuthTest {
         String authCookieValue = "dfsf";
         Mockito.when(mockGSuiteAuth.isUserLoggedIn(authCookieValue, "kollektiva.se")).thenReturn(true);
         urlParser.setGSuiteAuth(mockGSuiteAuth);
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("User was not logged in to the GSuite domain");
-        urlParser.getRequest(HTTP_HEADER_WITH_AUTH_COOKIES);
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> urlParser.getRequest(HTTP_HEADER_WITH_AUTH_COOKIES))
+                .withMessageStartingWith("User was not logged in to the GSuite domain");
     }
 
 }

@@ -28,6 +28,6 @@ public class _Sample2_WebServer {
                 //Expose an instance
                 .expose(new MyObject())
                 //Start a web server
-                .startDispatcher(WebServerBuilder.create().build());
+                .start(WebServerBuilder.create().build());
     }
 }

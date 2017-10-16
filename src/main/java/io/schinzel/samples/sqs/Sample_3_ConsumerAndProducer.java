@@ -38,7 +38,7 @@ public class Sample_3_ConsumerAndProducer {
                 //Expose sample class
                 .expose(new JobClass())
                 //Start SQS consumer
-                .startDispatcher(getSqsConsumer());
+                .start(getSqsConsumer());
     }
 
 
@@ -66,7 +66,7 @@ public class Sample_3_ConsumerAndProducer {
                 .build();
         AtExpose.create()
                 //Start a command line interface
-                .startDispatcher(CliFactory.create())
+                .start(CliFactory.create())
                 //Add the queue producer to @Expose
                 .addQueueProducer("MyFirstSqsProducer", sqsProducer);
     }

@@ -19,13 +19,16 @@ Clear and well documented samples included.
 
 ##### Intuitive to use
 ```
-AtExpose.create().getWebServerBuilder()
-        .port(8080)
-        .webServerDir("mydir")
-        .startWebServer();
+AtExpose.create()
+	//Expose static methods in a class
+	.expose(MyClass.class)
+	//Expose an instance
+	.expose(new MyObject())
+	//Start web server
+	.start(getWebServer())
+	//Start a command line interface
+	.start(CliFactory.create());
 
-Add a task that runs once per day:
-addDailyTask MyTaskName, 'downloadSomething', 11:40
 ```
 ##### A large degree freedom
 * You want ten different web servers, you got it. 

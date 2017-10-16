@@ -27,9 +27,9 @@ public class Log {
                 //Expose an instance
                 .expose(new MyObject())
                 //Start a web server
-                .startDispatcher(getWebServer())
+                .start(getWebServer())
                 //Start command line interface
-                .startDispatcher(CliFactory.create());
+                .start(CliFactory.create());
     }
 
 
