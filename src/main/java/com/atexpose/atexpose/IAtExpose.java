@@ -70,8 +70,8 @@ interface IAtExpose<T extends IAtExpose<T>> {
      * @param dispatcher The dispatcher to start
      * @return The dispatcher that was just started.
      */
-    default T startDispatcher(IDispatcher dispatcher) {
-        return this.startDispatcher(dispatcher, false);
+    default T start(IDispatcher dispatcher) {
+        return this.start(dispatcher, false);
     }
 
 
@@ -84,7 +84,7 @@ interface IAtExpose<T extends IAtExpose<T>> {
      *                         to the dispatcher collection.
      * @return The dispatcher that was just started.
      */
-    default T startDispatcher(IDispatcher dispatcher, boolean oneOffDispatcher) {
+    default T start(IDispatcher dispatcher, boolean oneOffDispatcher) {
         //If this is not a temporary dispatcher, i.e. a dispatcher that dies once it has read its requests and delivered its responses
         if (!oneOffDispatcher) {
             //Add the newly created dispatcher to the dispatcher collection

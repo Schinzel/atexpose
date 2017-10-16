@@ -43,9 +43,9 @@ public class Sample_1_Consumer {
                 //Expose a sample class
                 .expose(new JobClass())
                 //Start a command line interface
-                .startDispatcher(CliFactory.create())
+                .start(CliFactory.create())
                 //Start up SQS consumer
-                .startDispatcher(getConsumer());
+                .start(getConsumer());
     }
 
 

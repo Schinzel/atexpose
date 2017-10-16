@@ -65,7 +65,7 @@ public abstract class AbstractSqsConsumer {
                 .noOfThreads(1)
                 .accessLevel(1)
                 .build();
-        AtExpose.create().startDispatcher(sqsConsumer);
+        AtExpose.create().start(sqsConsumer);
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
         SqsProducer.builder()

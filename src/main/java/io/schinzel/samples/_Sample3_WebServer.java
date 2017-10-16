@@ -30,7 +30,7 @@ public class _Sample3_WebServer {
                 //Expose an instance
                 .expose(new MyObject())
                 //Start web server
-                .startDispatcher(getWebServer());
+                .start(getWebServer());
     }
 
 

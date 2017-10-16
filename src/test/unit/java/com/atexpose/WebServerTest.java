@@ -33,7 +33,7 @@ public class WebServerTest {
                 .numberOfThreads(5)
                 .build();
         mAtExpose = AtExpose.create()
-                .startDispatcher(webServer);
+                .start(webServer);
     }
 
 

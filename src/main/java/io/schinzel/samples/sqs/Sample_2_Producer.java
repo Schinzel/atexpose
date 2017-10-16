@@ -36,7 +36,7 @@ public class Sample_2_Producer {
                 .build();
         AtExpose.create()
                 //Start a command line interface
-                .startDispatcher(CliFactory.create())
+                .start(CliFactory.create())
                 //Add the SQS producer to @Expose
                 .addQueueProducer("MyFirstSqsProducer", sqsProducer);
     }

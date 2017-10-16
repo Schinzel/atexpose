@@ -14,11 +14,11 @@ class GSuiteAuth {
     public static void main(String[] args) {
         AtExpose.create()
                 //Start a web server without authentication
-                .startDispatcher(getWebServerNoAuth())
+                .start(getWebServerNoAuth())
                 //Start a web server that requires authentication
-                .startDispatcher(getWebServerWithAuth())
+                .start(getWebServerWithAuth())
                 //Start command line interface
-                .startDispatcher(CliFactory.create());
+                .start(CliFactory.create());
     }
 
 

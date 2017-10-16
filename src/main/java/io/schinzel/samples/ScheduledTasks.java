@@ -18,10 +18,10 @@ import com.atexpose.dispatcherfactories.ScheduledTaskFactory;
 public class ScheduledTasks {
     public static void main(String[] args) {
         AtExpose.create()
-                .startDispatcher(getMinuteTask())
-                .startDispatcher(getDailyTask())
-                .startDispatcher(getMonthlyTask())
-                .startDispatcher(CliFactory.create());
+                .start(getMinuteTask())
+                .start(getDailyTask())
+                .start(getMonthlyTask())
+                .start(CliFactory.create());
     }
 
 

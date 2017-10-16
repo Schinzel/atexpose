@@ -29,7 +29,7 @@ public class WebServerRedirectTest {
                 .addFileRedirect("src.html", "dest.html")
                 .build();
         AtExpose.create()
-                .startDispatcher(mWebServer);
+                .start(mWebServer);
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/src.html")
                 .method(Connection.Method.GET)
@@ -47,7 +47,7 @@ public class WebServerRedirectTest {
                 .addFileRedirect("dir1/dir2/src.html", "dirdest/dest.html")
                 .build();
         AtExpose.create()
-                .startDispatcher(mWebServer);
+                .start(mWebServer);
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/dir1/dir2/src.html")
                 .method(Connection.Method.GET)
@@ -65,7 +65,7 @@ public class WebServerRedirectTest {
                 .addFileRedirect("src.html", "dest.html")
                 .build();
         AtExpose.create()
-                .startDispatcher(mWebServer);
+                .start(mWebServer);
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/src.html?key1=val1")
                 .method(Connection.Method.GET)
@@ -83,7 +83,7 @@ public class WebServerRedirectTest {
                 .addFileRedirect("dir1/dir2/src.html", "dirdest/dest.html")
                 .build();
         AtExpose.create()
-                .startDispatcher(mWebServer);
+                .start(mWebServer);
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/dir1/dir2/src.html?key2=val2")
                 .method(Connection.Method.GET)
@@ -101,7 +101,7 @@ public class WebServerRedirectTest {
                 .addHostRedirect("127.0.0.1", "localhost")
                 .build();
         AtExpose.create()
-                .startDispatcher(mWebServer);
+                .start(mWebServer);
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/dir1/dir2/src.html?key2=val2")
                 .method(Connection.Method.GET)
@@ -120,7 +120,7 @@ public class WebServerRedirectTest {
                 .forceHttps(true)
                 .build();
         AtExpose.create()
-                .startDispatcher(mWebServer);
+                .start(mWebServer);
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/dir1/dir2/src.html?key2=val2")
                 .method(Connection.Method.GET)
@@ -141,7 +141,7 @@ public class WebServerRedirectTest {
                 .addFileRedirect("dir1/dir2/src.html", "dirdest/dest.html")
                 .build();
         AtExpose.create()
-                .startDispatcher(mWebServer);
+                .start(mWebServer);
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/dir1/dir2/src.html?key2=val2")
                 .method(Connection.Method.GET)
@@ -160,7 +160,7 @@ public class WebServerRedirectTest {
                 .setFailWhaleRedirect("monkey.html", false)
                 .build();
         AtExpose.create()
-                .startDispatcher(mWebServer);
+                .start(mWebServer);
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/index.html")
                 .method(Connection.Method.GET)
@@ -178,7 +178,7 @@ public class WebServerRedirectTest {
                 .forceDefaultPage(false)
                 .build();
         AtExpose.create()
-                .startDispatcher(mWebServer);
+                .start(mWebServer);
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/index.html")
                 .method(Connection.Method.GET)
@@ -199,7 +199,7 @@ public class WebServerRedirectTest {
                 .addFileRedirect("dir1/dir2/src.html", "dirdest/dest.html")
                 .build();
         AtExpose.create()
-                .startDispatcher(mWebServer);
+                .start(mWebServer);
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/dir1/dir2/src.html?key2=val2")
                 .method(Connection.Method.GET)
@@ -218,7 +218,7 @@ public class WebServerRedirectTest {
                 .addHostRedirect("127.0.0.1", "localhost")
                 .build();
         AtExpose.create()
-                .startDispatcher(mWebServer);
+                .start(mWebServer);
         Connection.Response response = Jsoup
                 .connect("http://127.0.0.1:5555/call/ping")
                 .method(Connection.Method.GET)

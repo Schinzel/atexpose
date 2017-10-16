@@ -25,8 +25,8 @@ class ScheduledReport {
 
     public static void main(String[] args) {
         AtExpose.create()
-                .startDispatcher(getScheduledReport())
-                .startDispatcher(CliFactory.create());
+                .start(getScheduledReport())
+                .start(CliFactory.create());
     }
 
 
