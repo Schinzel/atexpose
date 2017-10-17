@@ -12,7 +12,7 @@ import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
  * <p>
  * Created by schinzel on 2017-04-16.
  */
-interface IAtExpose<T extends IAtExpose<T>> {
+public interface IAtExpose<T extends IAtExpose<T>> {
 
 
     /**

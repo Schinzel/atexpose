@@ -1,8 +1,6 @@
 package io.schinzel.samples.sqs;
 
 import com.amazonaws.regions.Regions;
-import com.atexpose.AtExpose;
-import com.atexpose.dispatcherfactories.CliFactory;
 import com.atexpose.util.sqs.IQueueProducer;
 import com.atexpose.util.sqs.SqsProducer;
 import com.atexpose.util.sqs.SqsQueueType;
@@ -34,11 +32,6 @@ public class Sample_2_Producer {
                 .queueUrl(AWS.QUEUE_URL)
                 .sqsQueueType(SqsQueueType.FIFO)
                 .build();
-        AtExpose.create()
-                //Start a command line interface
-                .start(CliFactory.create())
-                //Add the SQS producer to @Expose
-                .addQueueProducer("MyFirstSqsProducer", sqsProducer);
     }
 
 }
