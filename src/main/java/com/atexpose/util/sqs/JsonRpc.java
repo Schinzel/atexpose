@@ -1,5 +1,7 @@
 package com.atexpose.util.sqs;
 
+import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.str.Str;
 import lombok.Builder;
 import lombok.Singular;
@@ -20,24 +22,40 @@ public class JsonRpc {
 
 
     /**
-     * @return A JSON RPC. Example: {"method": "doSomething", "params": {"para1": "val1", "para2": "val2"}}
+     * @return A JSON RPC. Example: {"method": "doSomething", "params": {"key1": "val1", "key2": "val2"}}
      */
     public String toString() {
-        //Convert arguments to: {"key1": "val1", "val1": "val2"}
-        String arguments = mArguments.entrySet()
-                .stream()
-                .map(entry -> '"' + entry.getKey() + "\": \"" + entry.getValue() + '"')
-                .collect(Collectors.joining(", "));
+        Thrower.throwIfVarEmpty(mMethodName, "MethodName");
+        String arguments = getArguments(mArguments);
         return Str.create()
                 .a("{")
                 .aq("method", '"')
                 .a(": ")
                 .aq(mMethodName, '"')
+                .ifTrue(Checker.isNotEmpty(mArguments))
                 .a(", ")
+                .a(arguments)
+                .endIf()
+                .a("}")
+                .toString();
+    }
+
+
+    /**
+     * @param arguments
+     * @return Example: "params": {"key1": "val1", "key2": "val2"}
+     */
+    static String getArguments(Map<String, String> arguments) {
+        Thrower.throwIfVarNull(arguments, "arguments");
+        //Get arguments as string: "key1": "val1", "key2": "val2"
+        String argumentAsString = arguments.entrySet()
+                .stream()
+                .map(entry -> '"' + entry.getKey() + "\": \"" + entry.getValue() + '"')
+                .collect(Collectors.joining(", "));
+        return Str.create()
                 .aq("params", '"')
                 .a(": ")
-                .aq(arguments, "{", "}")
-                .a("}")
+                .aq(argumentAsString, "{", "}")
                 .toString();
     }
 
