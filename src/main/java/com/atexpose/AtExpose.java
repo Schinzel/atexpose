@@ -1,8 +1,7 @@
 package com.atexpose;
 
 import com.atexpose.api.API;
-import com.atexpose.atexpose.IAtExposeSqs;
-import com.atexpose.atexpose.QueueProducerWrapper;
+import com.atexpose.atexpose.IAtExpose;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.mail.IEmailSender;
@@ -21,7 +20,7 @@ import lombok.experimental.Accessors;
  */
 @SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue", "UnusedReturnValue"})
 @Accessors(prefix = "m")
-public class AtExpose implements IStateNode, IAtExposeSqs<AtExpose> {
+public class AtExpose implements IAtExpose<AtExpose>, IStateNode {
     /** Instance creation time. For status and debug purposes. */
     private final String mInstanceStartTime = DateTimeStrings.getDateTimeUTC();
     /** Reference to the API. */
@@ -30,8 +29,6 @@ public class AtExpose implements IStateNode, IAtExposeSqs<AtExpose> {
     @Getter private IEmailSender mMailSender;
     /** Holds the running dispatchers */
     @Getter ValuesWithKeys<IDispatcher> mDispatchers = ValuesWithKeys.create("Dispatchers");
-    /** Hold the SQS senders added to this instance. */
-    @Getter ValuesWithKeys<QueueProducerWrapper> mQueueProducers = ValuesWithKeys.create("QueueProducers");
 
 
     /**
@@ -88,7 +85,6 @@ public class AtExpose implements IStateNode, IAtExposeSqs<AtExpose> {
                 .add("StartTime", mInstanceStartTime)
                 .addChild("EmailSender", this.getMailSender())
                 .addChildren(this.getDispatchers())
-                .addChildren(this.getQueueProducers())
                 .build();
     }
 

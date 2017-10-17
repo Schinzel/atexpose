@@ -14,7 +14,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 /**
@@ -131,20 +130,6 @@ class ExposedAtExpose {
     )
     public JSONObject status() {
         return this.getAtExpose().getState().getJson();
-    }
-
-
-    @Expose(
-            arguments = {"QueueProducerName", "Message"},
-            requiredAccessLevel = 3,
-            description = "Sends the argument message to a queue, e.g. AWS SQS. using the argument queue producer. "
-                    + "The producer has to have been added to @Expose using method addQueueProducer.",
-            labels = {"@Expose"}
-    )
-    public String sendToQueue(String queueProducerName, String message) {
-        this.getAtExpose().sendToQueue(queueProducerName, message);
-        return "Message sent. SqsSender: '" + queueProducerName + ". Message: '"
-                + StringUtils.abbreviate(message, 50) + "'";
     }
 
 

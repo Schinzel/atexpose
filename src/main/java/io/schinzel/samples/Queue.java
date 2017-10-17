@@ -1,22 +1,25 @@
-package io.schinzel.samples.sqs;
+package io.schinzel.samples;
 
 import com.amazonaws.regions.Regions;
 import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcherfactories.CliFactory;
 import com.atexpose.dispatcherfactories.SqsConsumerFactory;
+import com.atexpose.util.sqs.JsonRpc;
 import com.atexpose.util.sqs.SqsProducer;
 import com.atexpose.util.sqs.SqsQueueType;
+import io.schinzel.samples.auxiliary.MyObject;
+import io.schinzel.samples.auxiliary.AWS;
 
 /**
  * This sample sets up a consumer and consumes messages from a AWS SQS queue. The sample also
- * shows how to use the a utility class to put messages on an AWS SQS queue.
+ * shows how to use a utility class to put messages on an AWS SQS queue.
  * <p>
  * Sample produces (writes) a set of messages that are subsequently consumed
  * and the requests in the messages are executed.
  * <p>
  * Requirements:
- * - AWS credentials that can receive, send and delete messages.
+ * - AWS credentials that can receive, send and delete messages on an SQS queue.
  * - A fifo queue.
  * <p>
  * Instructions:
@@ -26,22 +29,22 @@ import com.atexpose.util.sqs.SqsQueueType;
  * <p>
  * Created by schinzel on 2017-07-06.
  */
-public class Sample_1_Consumer {
+public class Queue {
 
 
     public static void main(String[] args) {
-        typicalSetUp();
-        sampleCode();
+        startAtExposeWithConsumer();
+        sendRequestsWithProducer();
     }
 
 
     /**
      * Typical code to set up a SQS.
      */
-    static void typicalSetUp() {
+    static void startAtExposeWithConsumer() {
         AtExpose.create()
                 //Expose a sample class
-                .expose(new JobClass())
+                .expose(new MyObject())
                 //Start a command line interface
                 .start(CliFactory.create())
                 //Start up SQS consumer
@@ -65,8 +68,8 @@ public class Sample_1_Consumer {
     /**
      * Sample only code
      */
-    static void sampleCode() {
-        //Create object that can send messages to SQS.
+    static void sendRequestsWithProducer() {
+        //Create object that can add messages to the SQS queue
         SqsProducer sqsProducer = SqsProducer.builder()
                 .awsAccessKey(AWS.ACCESS_KEY)
                 .awsSecretKey(AWS.SECRET_KEY)
@@ -74,9 +77,14 @@ public class Sample_1_Consumer {
                 .region(Regions.EU_WEST_1)
                 .sqsQueueType(SqsQueueType.FIFO)
                 .build();
-        //Send 5 message to the SQS.
+        //Send 5 messages to SQS queue
         for (int i = 0; i < 5; i++) {
-            sqsProducer.send("{\"method\": \"doHeavyBackgroundJob\", \"params\": {\"Int\": " + (i + 1) + "}}");
+            String jsonRpc = JsonRpc.builder()
+                    .methodName("doHeavyBackgroundJob")
+                    .argument("Int", String.valueOf(i))
+                    .build()
+                    .toString();
+            sqsProducer.send(jsonRpc);
         }
     }
 
