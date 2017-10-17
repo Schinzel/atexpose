@@ -1,9 +1,10 @@
 package io.schinzel.samples.auxiliary;
 
 import com.atexpose.Expose;
+import io.schinzel.basicutils.Sandman;
 
 /**
- * The purpose of this class
+ * The purpose of this class is to hold sample method that will be exposed.
  * <p>
  * Created by Schinzel on 2017-03-06.
  */
@@ -29,5 +30,14 @@ public class MyObject {
         return mStr;
     }
 
+
+    @Expose(
+            requiredAccessLevel = 1,
+            arguments = {"Int"}
+    )
+    String doHeavyBackgroundJob(int count) {
+        Sandman.snoozeSeconds(1);
+        return "Phew, all done with heavy job " + count;
+    }
 
 }

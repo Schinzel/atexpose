@@ -3,7 +3,7 @@ package io.schinzel.samples.auxiliary;
 import com.atexpose.Expose;
 
 /**
- * The purpose of this class
+ * The purpose of this class it to hold sample static methods that will be exposed.
  */
 public class MyClass {
 
