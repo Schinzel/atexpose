@@ -4,6 +4,8 @@ import com.atexpose.errors.RuntimeError;
 import com.atexpose.util.DateTimeStrings;
 import io.schinzel.basicutils.Sandman;
 
+import java.time.Instant;
+
 /**
  * Miscellaneous utility methods.
  *
@@ -11,6 +13,9 @@ import io.schinzel.basicutils.Sandman;
  */
 @SuppressWarnings({"WeakerAccess", "SameParameterValue"})
 public class Misc {
+    /** The time the instance was started. */
+    private final Instant mInstanceStartTime = Instant.now();
+
 
     /**
      * @param s The string to return
@@ -37,11 +42,20 @@ public class Misc {
 
 
     @Expose(
-            description = "Returns the current server time.",
+            description = "Returns the current server time in UTC.",
             labels = {"@Expose", "Util"}
     )
     public String time() {
         return DateTimeStrings.getDateTimeUTC();
+    }
+
+
+    @Expose(
+            description = "Returns the time in UTC when the server was started.",
+            labels = {"@Expose", "Util"}
+    )
+    public String startTime() {
+        return DateTimeStrings.getDateTimeUTC(mInstanceStartTime);
     }
 
 
