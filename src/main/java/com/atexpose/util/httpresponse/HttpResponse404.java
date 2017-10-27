@@ -19,7 +19,6 @@ import java.util.Map;
 public class HttpResponse404 {
     @Getter
     private final byte[] mResponse;
-    private String mHtml;
 
 
     @Builder
