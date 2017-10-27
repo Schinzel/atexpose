@@ -11,6 +11,8 @@ import com.atexpose.dispatcher.parser.urlparser.UrlParserWithGSuiteAuth;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.dispatcher.wrapper.WebWrapper;
 import io.schinzel.basicutils.Checker;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,7 @@ import java.util.Map;
  * @author schinzel
  */
 @SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
+@Accessors(prefix = "m", fluent = true, chain = true)
 public class WebServerBuilder {
     int mPort = 5555;
     int mNoOfThreads = 10;
@@ -36,6 +39,8 @@ public class WebServerBuilder {
     private Redirects.RedirectsBuilder mRedirectsBuilder = Redirects.getBuilder();
     private String mAuthCookieName;
     private String mAuthDomain;
+    @Setter
+    private String mHtml404Page;
 
 
     private WebServerBuilder(){}
@@ -250,6 +255,7 @@ public class WebServerBuilder {
                 .cacheFilesInRam(mUseCachedFiles)
                 .serverSideVariables(mServerSideVariables)
                 .responseHeaders(mResponseHeaders)
+                .html404page(mHtml404Page)
                 .build();
     }
 

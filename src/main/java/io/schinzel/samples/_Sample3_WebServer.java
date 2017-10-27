@@ -22,6 +22,7 @@ import io.schinzel.samples.auxiliary.MyObject;
  * @author schinzel
  */
 public class _Sample3_WebServer {
+    private static final String HTML_404 = "<html><body><center>File not found :(</center><body></html>";
 
 
     public static void main(String[] args) {
@@ -43,6 +44,8 @@ public class _Sample3_WebServer {
                 .webServerDir("web/sample3")
                 //Disable RAM cache so that changes to files made kicks through without restarting the web server
                 .cacheFilesInRAM(false)
+                //Set custom 404 page
+                .html404Page(HTML_404)
                 //Build web server
                 .build()
                 //Add a logger
