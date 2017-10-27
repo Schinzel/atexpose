@@ -22,12 +22,12 @@ public class WebServerBuilderTest {
     public void testConstructor() {
         //Test default variables
         assertEquals(5555, mWsb.mPort);
-        assertEquals(10, mWsb.mNoOfThreads);
+        assertEquals(10, mWsb.mNumberOfThreads);
         assertEquals(1, mWsb.mAccessLevel);
         assertEquals("web", mWsb.mWebServerDir);
-        assertEquals(300, mWsb.mTimeout);
+        assertEquals(300, mWsb.mTimeoutInMillis);
         assertEquals(1200, mWsb.mBrowserCacheMaxAge);
-        assertEquals(true, mWsb.mUseCachedFiles);
+        assertEquals(true, mWsb.mCacheFilesInRAM);
         assertNotNull(mWsb.mServerSideVariables);
     }
 
@@ -42,7 +42,7 @@ public class WebServerBuilderTest {
     @Test
     public void testNumberOfThreads() {
         mWsb.numberOfThreads(66);
-        assertEquals(66, mWsb.mNoOfThreads);
+        assertEquals(66, mWsb.mNumberOfThreads);
     }
 
 
@@ -63,7 +63,7 @@ public class WebServerBuilderTest {
     @Test
     public void testTimeoutInMillis() {
         mWsb.timeoutInMillis(777);
-        assertEquals(777, mWsb.mTimeout);
+        assertEquals(777, mWsb.mTimeoutInMillis);
     }
 
 
@@ -77,11 +77,11 @@ public class WebServerBuilderTest {
     @Test
     public void testUseCachedFiles() {
         mWsb.cacheFilesInRAM(true);
-        assertEquals(true, mWsb.mUseCachedFiles);
+        assertEquals(true, mWsb.mCacheFilesInRAM);
         mWsb.cacheFilesInRAM(false);
-        assertEquals(false, mWsb.mUseCachedFiles);
+        assertEquals(false, mWsb.mCacheFilesInRAM);
         mWsb.cacheFilesInRAM(true);
-        assertEquals(true, mWsb.mUseCachedFiles);
+        assertEquals(true, mWsb.mCacheFilesInRAM);
     }
 
 

@@ -26,28 +26,47 @@ import java.util.Map;
 @SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
 @Accessors(prefix = "m", fluent = true, chain = true)
 public class WebServerBuilder {
-    int mPort = 5555;
-    int mNoOfThreads = 10;
-    String mWebServerDir = "web";
-    int mAccessLevel = 1;
-    int mTimeout = 300;
-    int mBrowserCacheMaxAge = 1200;
-    boolean mUseCachedFiles = true;
+    /** The port on which the web server will listen for incoming requests */
+    @Setter int mPort = 5555;
+    /** The number of thread the web server will have */
+    @Setter int mNumberOfThreads = 10;
+    /** The directory on drive in which the web server will look for static files to return */
+    @Setter String mWebServerDir = "web";
+    /**
+     * The access level this web server will have and as such which methods
+     * this web server can call. Available values are 1-3.
+     * 1 is the lowest access level. 3 is the highest.
+     */
+    @Setter int mAccessLevel = 1;
+    /**
+     * Sets the socket timeout. With this option set to a non-zero timeout,
+     * a read() call on the InputStream associated with this Socket will block
+     * for only this amount of time.
+     */
+    @Setter int mTimeoutInMillis = 300;
+    /** The cache max-age sent to the browser. */
+    @Setter int mBrowserCacheMaxAge = 1200;
+    /** If true files read from drive are cached in RAM for increased performance */
+    @Setter boolean mCacheFilesInRAM = true;
     Map<String, String> mServerSideVariables = new HashMap<>();
-    boolean mForceDefaultPage = false;
+    /** Indicates if the default page should be forced an all requests */
+    @Setter boolean mForceDefaultPage = false;
     private Map<String, String> mResponseHeaders = new HashMap<>();
     private Redirects.RedirectsBuilder mRedirectsBuilder = Redirects.getBuilder();
     private String mAuthCookieName;
     private String mAuthDomain;
-    @Setter
-    private String mHtml404Page;
+    /** Custom 404 page */
+    @Setter private String mHtml404Page;
 
 
-    private WebServerBuilder(){}
+    private WebServerBuilder() {
+    }
 
-    public static WebServerBuilder create(){
+
+    public static WebServerBuilder create() {
         return new WebServerBuilder();
     }
+
 
     /**
      * Add redirect from a file path to another
@@ -148,111 +167,11 @@ public class WebServerBuilder {
     }
 
 
-    /**
-     * The port on which the web server will listen for incoming requests.
-     *
-     * @param Port The port. Typical values are 8080, 5555.
-     * @return This for chaining.
-     */
-    public WebServerBuilder port(int Port) {
-        this.mPort = Port;
-        return this;
-    }
-
-
-    /**
-     * @param numberOfThreads The number of thread the web server will have.
-     * @return This for chaining.
-     */
-    public WebServerBuilder numberOfThreads(int numberOfThreads) {
-        this.mNoOfThreads = numberOfThreads;
-        return this;
-    }
-
-
-    /**
-     * The directory on drive in which the web server will look for static files
-     * to return.
-     *
-     * @param WebServerDir The name of the directory. Sample value "web/mysite".
-     * @return This for chaining.
-     */
-    public WebServerBuilder webServerDir(String WebServerDir) {
-        this.mWebServerDir = WebServerDir;
-        return this;
-    }
-
-
-    /**
-     * The access level this web server will have and as such which methods
-     * this web server can call. Available values are 1-3.
-     * 1 is the lowest access level. 3 is the highest.
-     *
-     * @param AccessLevel An access level 1-3.
-     * @return This for chaining.
-     */
-    public WebServerBuilder accessLevel(int AccessLevel) {
-        this.mAccessLevel = AccessLevel;
-        return this;
-    }
-
-
-    /**
-     * Sets the socket timeout. With this option set to a non-zero timeout,
-     * a read() call on the InputStream associated with this Socket will block
-     * for only this amount of time.
-     *
-     * @param Timeout Timeout in milliseconds
-     * @return This for chaining.
-     */
-    public WebServerBuilder timeoutInMillis(int Timeout) {
-        this.mTimeout = Timeout;
-        return this;
-    }
-
-
-    /**
-     * The cache max-age sent to the browser.
-     *
-     * @param cacheMaxAgeSeconds The browser cache instruction in seconds.
-     * @return This for chaining.
-     */
-    public WebServerBuilder browserCacheMaxAge(int cacheMaxAgeSeconds) {
-        this.mBrowserCacheMaxAge = cacheMaxAgeSeconds;
-        return this;
-    }
-
-
-    /**
-     * If true files read from drive are caches in RAM.
-     *
-     * @param useCachedFiles If true static web content such as HTML files
-     *                       will be cached in RAM for better performance.
-     * @return This for chaining.
-     */
-    public WebServerBuilder cacheFilesInRAM(boolean useCachedFiles) {
-        this.mUseCachedFiles = useCachedFiles;
-        return this;
-    }
-
-
-    /**
-     * Indicates if the default page should be forced an all requests
-     *
-     * @param forceDefaultPage If true, default is returned for a requests.
-     * @return This for chaining.
-     */
-    public WebServerBuilder forceDefaultPage(boolean forceDefaultPage) {
-        mForceDefaultPage = forceDefaultPage;
-        return this;
-    }
-
-
     private IWrapper getWrapper() {
         return WebWrapper.builder()
                 .webServerDir(mWebServerDir)
                 .browserCacheMaxAge(mBrowserCacheMaxAge)
-                .cacheFilesInRam(mUseCachedFiles)
+                .cacheFilesInRam(mCacheFilesInRAM)
                 .serverSideVariables(mServerSideVariables)
                 .responseHeaders(mResponseHeaders)
                 .html404page(mHtml404Page)
@@ -277,7 +196,7 @@ public class WebServerBuilder {
     private IChannel getChannel() {
         return WebChannel.builder()
                 .port(mPort)
-                .timeout(mTimeout)
+                .timeout(mTimeoutInMillis)
                 .redirects(mRedirectsBuilder.build())
                 .build();
     }
@@ -301,7 +220,7 @@ public class WebServerBuilder {
                 .parser(parser)
                 .wrapper(wrapper)
                 .accessLevel(mAccessLevel)
-                .noOfThreads(mNoOfThreads)
+                .noOfThreads(mNumberOfThreads)
                 .build();
     }
 
