@@ -36,7 +36,7 @@ public class HttpResponse404Test {
         String actual = SubString.create(httpResponse)
                 .startDelimiter("\r\n\r\n")
                 .toString();
-        String expected = "File 'monkey.txt' not found";
+        String expected = "<html><body><center>File 'monkey.txt' not found</center><body></html>";
         assertEquals(expected, actual);
     }
 
