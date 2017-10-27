@@ -56,11 +56,13 @@ public class WebWrapper implements IWrapper {
     private Map<String, String> mCustomResponseHeaders = new HashMap<>();
     @Getter(AccessLevel.PACKAGE)
     private Cache<String, byte[]> mFilesCache;
+    private final String mHtml404Page;
 
 
     @Builder
     WebWrapper(String webServerDir, int browserCacheMaxAge, boolean cacheFilesInRam,
-               Map<String, String> serverSideVariables, Map<String, String> responseHeaders) {
+               Map<String, String> serverSideVariables, Map<String, String> responseHeaders,
+               String html404page) {
         //If the last char is not a file separator, then add it
         mWebServerDir = (!webServerDir.endsWith(MyProperties.FILE_SEPARATOR)) ?
                 webServerDir + MyProperties.FILE_SEPARATOR : webServerDir;
@@ -74,6 +76,7 @@ public class WebWrapper implements IWrapper {
                 ? responseHeaders
                 : Collections.emptyMap();
         mFilesCache = new Cache<>();
+        mHtml404Page = html404page;
     }
 
 
@@ -128,6 +131,7 @@ public class WebWrapper implements IWrapper {
             return HttpResponse404.builder()
                     .customHeaders(this.getCustomResponseHeaders())
                     .filenameMissingFile(filename)
+                    .html(mHtml404Page)
                     .build()
                     .getResponse();
         } else {
@@ -186,6 +190,7 @@ public class WebWrapper implements IWrapper {
             return HttpResponse404.builder()
                     .customHeaders(this.getCustomResponseHeaders())
                     .filenameMissingFile(filename)
+                    .html(mHtml404Page)
                     .build()
                     .getResponse();
         } else {

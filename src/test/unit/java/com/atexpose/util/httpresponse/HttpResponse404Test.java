@@ -7,7 +7,8 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class HttpResponse404Test {
 
@@ -23,7 +24,7 @@ public class HttpResponse404Test {
                 .endDelimiter("\r\n")
                 .toString();
         String expected = HttpStatusCode.FILE_NOT_FOUND.getCode();
-        assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
     }
 
 
@@ -36,8 +37,23 @@ public class HttpResponse404Test {
         String actual = SubString.create(httpResponse)
                 .startDelimiter("\r\n\r\n")
                 .toString();
-        String expected = "File 'monkey.txt' not found";
-        assertEquals(expected, actual);
+        String expected = "<html><body><center>File 'monkey.txt' not found</center><body></html>";
+        assertThat(actual).isEqualTo(expected);
+    }
+
+
+    @Test
+    public void getResponse_Custom404Page_Custom404PageShould() {
+        String html404Page = "<html><body><center>Bummer! File not found :(</center><body></html>";
+        String httpResponse = UTF8.getString(HttpResponse404.builder()
+                .filenameMissingFile("monkey.txt")
+                .html(html404Page)
+                .build()
+                .getResponse());
+        String actual = SubString.create(httpResponse)
+                .startDelimiter("\r\n\r\n")
+                .toString();
+        assertThat(actual).isEqualTo(html404Page);
     }
 
 
@@ -56,6 +72,6 @@ public class HttpResponse404Test {
                 .endDelimiter("\r\n")
                 .toString();
         String expected = "val";
-        assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
     }
 }
