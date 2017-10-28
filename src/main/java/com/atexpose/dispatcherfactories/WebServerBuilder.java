@@ -31,7 +31,7 @@ public class WebServerBuilder {
     /** The number of thread the web server will have */
     @Setter int mNumberOfThreads = 10;
     /** The directory on drive in which the web server will look for static files to return */
-    @Setter String mWebServerDir = "web";
+    @Setter String mWebServerDir = "";
     /**
      * The access level this web server will have and as such which methods
      * this web server can call. Available values are 1-3.

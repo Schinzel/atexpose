@@ -103,9 +103,10 @@ public class WebWrapper implements IWrapper {
     @Override
     public byte[] wrapFile(String requestedFile) {
         String filename = this.getActualFilename(requestedFile);
-        return FileUtil.isTextFile(filename)
+        return this.getBapp(filename);
+        /*return FileUtil.isTextFile(filename)
                 ? this.getTextFileHeaderAndContent(filename)
-                : this.getStaticFileHeaderAndContent(filename);
+                : this.getStaticFileHeaderAndContent(filename);*/
     }
 
 
@@ -116,6 +117,48 @@ public class WebWrapper implements IWrapper {
                 .customHeaders(this.getCustomResponseHeaders())
                 .build()
                 .getResponse();
+    }
+
+
+    byte[] getBapp(String fileName) {
+        //If is to use cache AND there is the argument file is cached
+        if (mFilesCacheOn && mFilesCache.has(fileName)) {
+            //Return cached file
+            return mFilesCache.get(fileName);
+        }
+        byte[] abFileHeaderAndContent;
+        //If file doesn't exists
+        if (!FileRW.fileExists(fileName)) {
+            //Set 404 body, if a custom 404 page has been set
+            byte[] body404page = Checker.isNotEmpty(mFileName404Page)
+                    ? FileRW.readFileAsByteArray(this.getActualFilename(mFileName404Page))
+                    : null;
+            abFileHeaderAndContent = HttpResponse404.builder()
+                    .body(body404page)
+                    .customHeaders(this.getCustomResponseHeaders())
+                    .build()
+                    .getResponse();
+        } else {
+            byte[] abFileContent = FileRW.readFileAsByteArray(fileName);
+            if (FileUtil.isTextFile(fileName)) {
+                //Add server side include files
+                abFileContent = WebWrapper.setServerIncludeFiles(abFileContent, mWebServerDir);
+                //Add server side variables
+                abFileContent = WebWrapper.setServerSideVariables(abFileContent, mServerSideVariables);
+            }
+            abFileHeaderAndContent = HttpResponseFile.builder()
+                    .body(abFileContent)
+                    .customHeaders(this.getCustomResponseHeaders())
+                    .filename(fileName)
+                    .build()
+                    .getResponse();
+        }
+        //If is to use file cache
+        if (mFilesCacheOn) {
+            //Add file content to cache
+            mFilesCache.put(fileName, abFileHeaderAndContent);
+        }
+        return abFileHeaderAndContent;
     }
 
 

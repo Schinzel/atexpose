@@ -36,6 +36,7 @@ public class WebServerCustomTest {
         IDispatcher webServer = WebServerBuilder.create()
                 //Set custom 404 page
                 .fileName404Page("WebServerCustomTest_404Page.html")
+                .webServerDir("testfiles")
                 //Build web server
                 .build();
         mAtExpose = AtExpose.create()
@@ -47,7 +48,10 @@ public class WebServerCustomTest {
                 .ignoreHttpErrors(true)
                 .execute()
                 .body();
-        assertThat(result).isEqualTo("<html><body><center>File not found</center><body></html>");
+        assertThat(result).isEqualTo("<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<body><h1>Nooo! File not found</h1></body>\n" +
+                "</html>");
 
     }
 
