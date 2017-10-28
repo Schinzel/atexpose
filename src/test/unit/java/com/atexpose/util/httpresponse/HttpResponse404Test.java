@@ -1,5 +1,6 @@
 package com.atexpose.util.httpresponse;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.substring.SubString;
@@ -7,7 +8,8 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class HttpResponse404Test {
 
@@ -15,7 +17,6 @@ public class HttpResponse404Test {
     @Test
     public void getResponse_Default_HeaderShouldContainStatusCode404() {
         String httpResponse = UTF8.getString(HttpResponse404.builder()
-                .filenameMissingFile("monkey.txt")
                 .build()
                 .getResponse());
         String actual = SubString.create(httpResponse)
@@ -23,21 +24,34 @@ public class HttpResponse404Test {
                 .endDelimiter("\r\n")
                 .toString();
         String expected = HttpStatusCode.FILE_NOT_FOUND.getCode();
-        assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
     }
 
 
     @Test
     public void getResponse_Default_BodyShouldContainFileName() {
         String httpResponse = UTF8.getString(HttpResponse404.builder()
-                .filenameMissingFile("monkey.txt")
                 .build()
                 .getResponse());
         String actual = SubString.create(httpResponse)
                 .startDelimiter("\r\n\r\n")
                 .toString();
-        String expected = "File 'monkey.txt' not found";
-        assertEquals(expected, actual);
+        String expected = "<html><body><center>File not found</center><body></html>";
+        assertThat(actual).isEqualTo(expected);
+    }
+
+
+    @Test
+    public void getResponse_Custom404Page_Custom404PageShould() {
+        String html404Page = "<html><body><center>Bummer! File not found :(</center><body></html>";
+        String httpResponse = UTF8.getString(HttpResponse404.builder()
+                .body(html404Page.getBytes(Charsets.UTF_8))
+                .build()
+                .getResponse());
+        String actual = SubString.create(httpResponse)
+                .startDelimiter("\r\n\r\n")
+                .toString();
+        assertThat(actual).isEqualTo(html404Page);
     }
 
 
@@ -47,7 +61,6 @@ public class HttpResponse404Test {
                 .put("key", "val")
                 .build();
         String httpResponse = UTF8.getString(HttpResponse404.builder()
-                .filenameMissingFile("monkey.txt")
                 .customHeaders(map)
                 .build()
                 .getResponse());
@@ -56,6 +69,6 @@ public class HttpResponse404Test {
                 .endDelimiter("\r\n")
                 .toString();
         String expected = "val";
-        assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
     }
 }

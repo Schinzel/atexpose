@@ -43,6 +43,8 @@ public class _Sample3_WebServer {
                 .webServerDir("web/sample3")
                 //Disable RAM cache so that changes to files made kicks through without restarting the web server
                 .cacheFilesInRAM(false)
+                //Set custom 404 page
+                .fileName404Page("404page.html")
                 //Build web server
                 .build()
                 //Add a logger
