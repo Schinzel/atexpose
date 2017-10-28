@@ -3,18 +3,15 @@ package com.atexpose.util;
 import io.schinzel.basicutils.UTF8;
 import org.apache.commons.io.IOUtils;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *
  * @author Schinzel
  */
 public class FileRW {
 
     /**
-     *
      * @param fileName The name of the file to check
      * @return True if the argument file exits, else false.
      */
@@ -38,7 +35,6 @@ public class FileRW {
 
 
     /**
-     *
      * @param fileName The file to return an input stream from
      * @return An input stream from a file on the file system or from a JAR.
      * Returns null if no such file or it cannot be read,
@@ -65,6 +61,9 @@ public class FileRW {
         ByteStorage byteStorage = new ByteStorage();
         try {
             InputStream is = FileRW.getInputStream(fileName);
+            if (is == null) {
+                throw new RuntimeException("No such file '" + fileName + "'");
+            }
             //File will be read into this array
             byte[] bytes_from_file = new byte[512];
             //Indicates the number of bytes read
@@ -73,15 +72,11 @@ public class FileRW {
                 byteStorage.add(bytes_from_file, 0, no_of_bytes_read);
             }
             IOUtils.closeQuietly(is);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("No such file '" + fileName + "'");
         } catch (IOException e) {
             throw new RuntimeException("Error while reading file '" + fileName + "'. Java error message: " + e.getMessage());
         }
         return byteStorage.getBytes();
     }
-
-
 
 
 }

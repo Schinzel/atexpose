@@ -34,6 +34,8 @@ public class WebServerCustomTest {
     @Test
     public void requestPage_PageDoesNotExist_404() throws IOException {
         IDispatcher webServer = WebServerBuilder.create()
+                //Set dir where html and other files resides
+                .webServerDir("testfiles")
                 //Set custom 404 page
                 .fileName404Page("WebServerCustomTest_404Page.html")
                 //Build web server
@@ -47,7 +49,7 @@ public class WebServerCustomTest {
                 .ignoreHttpErrors(true)
                 .execute()
                 .body();
-        assertThat(result).isEqualTo("<html><body><center>File not found</center><body></html>");
+        assertThat(result).contains("Custom 404. File not found");
 
     }
 
