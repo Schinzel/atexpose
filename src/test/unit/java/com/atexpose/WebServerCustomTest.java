@@ -33,10 +33,9 @@ public class WebServerCustomTest {
 
     @Test
     public void requestPage_PageDoesNotExist_404() throws IOException {
-        String html404Page = "<html><body>Nothing here</body></html>";
         IDispatcher webServer = WebServerBuilder.create()
                 //Set custom 404 page
-                .html404Page(html404Page)
+                .fileName404Page("WebServerCustomTest_404Page.html")
                 //Build web server
                 .build();
         mAtExpose = AtExpose.create()
@@ -48,7 +47,8 @@ public class WebServerCustomTest {
                 .ignoreHttpErrors(true)
                 .execute()
                 .body();
-        assertThat(result).isEqualTo(html404Page);
+        assertThat(result).isEqualTo("<html><body><center>File not found</center><body></html>");
 
     }
+
 }

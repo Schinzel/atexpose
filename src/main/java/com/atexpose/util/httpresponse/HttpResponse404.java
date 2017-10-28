@@ -1,11 +1,11 @@
 package com.atexpose.util.httpresponse;
 
+import com.atexpose.util.ArrayUtil;
 import com.google.common.base.Charsets;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.UTF8;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.experimental.Accessors;
 
 import java.util.Map;
@@ -17,27 +17,27 @@ import java.util.Map;
  */
 @Accessors(prefix = "m")
 public class HttpResponse404 {
+    private static final byte[] DEFAULT_404 = "<html><body><center>File not found</center><body></html>"
+            .getBytes(Charsets.UTF_8);
     @Getter
     private final byte[] mResponse;
 
 
     @Builder
-    HttpResponse404(@NonNull String filenameMissingFile, Map<String, String> customHeaders, String html) {
+    HttpResponse404(Map<String, String> customHeaders, byte[] body) {
         //If no 404-page was supplied
-        if (Checker.isEmpty(html)) {
+        if (Checker.isEmpty(body)) {
             //Set 404-page to be default 404-page
-            html = "<html><body><center>File '" + filenameMissingFile + "' not found</center><body></html>";
+            body = DEFAULT_404;
         }
-        int contentLength = UTF8.getBytes(html).length;
-        HttpHeader header = HttpHeader.builder()
+        String header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.FILE_NOT_FOUND)
                 .customHeaders(customHeaders)
                 .contentType(ContentType.HTML)
-                .contentLength(contentLength)
-                .build();
-        mResponse = header.getHeader()
-                .a(html)
-                .getString()
-                .getBytes(Charsets.UTF_8);
+                .contentLength(body.length)
+                .build()
+                .getHeader()
+                .getString();
+        mResponse = ArrayUtil.concat(UTF8.getBytes(header), body);
     }
 }

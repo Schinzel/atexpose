@@ -56,13 +56,13 @@ public class WebWrapper implements IWrapper {
     private Map<String, String> mCustomResponseHeaders = new HashMap<>();
     @Getter(AccessLevel.PACKAGE)
     private Cache<String, byte[]> mFilesCache;
-    private final String mHtml404Page;
+    private final String mFileName404Page;
 
 
     @Builder
     WebWrapper(String webServerDir, int browserCacheMaxAge, boolean cacheFilesInRam,
                Map<String, String> serverSideVariables, Map<String, String> responseHeaders,
-               String html404page) {
+               String fileName404Page) {
         //If the last char is not a file separator, then add it
         mWebServerDir = (!webServerDir.endsWith(MyProperties.FILE_SEPARATOR)) ?
                 webServerDir + MyProperties.FILE_SEPARATOR : webServerDir;
@@ -76,7 +76,7 @@ public class WebWrapper implements IWrapper {
                 ? responseHeaders
                 : Collections.emptyMap();
         mFilesCache = new Cache<>();
-        mHtml404Page = html404page;
+        mFileName404Page = fileName404Page;
     }
 
 
@@ -128,12 +128,7 @@ public class WebWrapper implements IWrapper {
         byte[] abFileContent = this.getTextFileContent(filename);
         //If there was no such file
         if (abFileContent == null) {
-            return HttpResponse404.builder()
-                    .customHeaders(this.getCustomResponseHeaders())
-                    .filenameMissingFile(filename)
-                    .html(mHtml404Page)
-                    .build()
-                    .getResponse();
+            return get404Page();
         } else {
             //Add server side variables
             abFileContent = WebWrapper.setServerSideVariables(abFileContent, mServerSideVariables);
@@ -179,7 +174,6 @@ public class WebWrapper implements IWrapper {
      * @return The content of argument file including HTTP headers.
      */
     byte[] getStaticFileHeaderAndContent(String filename) {
-        byte[] abFileContent;
         //If is to use cache AND the argument file is cached
         if (mFilesCacheOn && mFilesCache.has(filename)) {
             //Return cached file
@@ -187,14 +181,9 @@ public class WebWrapper implements IWrapper {
         }
         //If file doesn't exists
         if (!FileRW.fileExists(filename)) {
-            return HttpResponse404.builder()
-                    .customHeaders(this.getCustomResponseHeaders())
-                    .filenameMissingFile(filename)
-                    .html(mHtml404Page)
-                    .build()
-                    .getResponse();
+            return get404Page();
         } else {
-            abFileContent = FileRW.readFileAsByteArray(filename);
+            byte[] abFileContent = FileRW.readFileAsByteArray(filename);
             byte[] abFileHeaderAndContent = HttpResponseFile.builder()
                     .body(abFileContent)
                     .customHeaders(this.getCustomResponseHeaders())
@@ -208,7 +197,22 @@ public class WebWrapper implements IWrapper {
             }
             return abFileHeaderAndContent;
         }
+    }
 
+
+    /**
+     * @return 404 page response.
+     */
+    byte[] get404Page() {
+        //Set 404 body, if a custom 404 page has been set
+        byte[] body404page = Checker.isNotEmpty(mFileName404Page)
+                ? this.getTextFileContent(this.getActualFilename(mFileName404Page))
+                : null;
+        return HttpResponse404.builder()
+                .customHeaders(this.getCustomResponseHeaders())
+                .body(body404page)
+                .build()
+                .getResponse();
     }
 
 

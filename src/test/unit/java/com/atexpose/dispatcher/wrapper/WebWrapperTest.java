@@ -359,7 +359,7 @@ public class WebWrapperTest {
                 .build();
         byte[] ab = webWrapper.getTextFileHeaderAndContent("nonexistingfile.html");
         String str = UTF8.getString(ab);
-        assertTrue(str.contains("File 'nonexistingfile.html' not found"));
+        assertThat(str).contains("<html><body><center>File not found</center><body></html>");
     }
 
 
@@ -384,7 +384,7 @@ public class WebWrapperTest {
                 .build();
         byte[] ab = webWrapper.getStaticFileHeaderAndContent("nonexistingfile.jpg");
         String str = UTF8.getString(ab);
-        assertTrue(str.contains("File 'nonexistingfile.jpg' not found"));
+        assertThat(str).contains("<html><body><center>File not found</center><body></html>");
     }
 
 

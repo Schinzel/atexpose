@@ -55,8 +55,8 @@ public class WebServerBuilder {
     private Redirects.RedirectsBuilder mRedirectsBuilder = Redirects.getBuilder();
     private String mAuthCookieName;
     private String mAuthDomain;
-    /** Custom 404 page */
-    @Setter private String mHtml404Page;
+    /** File name custom 404 page */
+    @Setter private String mFileName404Page;
 
 
     private WebServerBuilder() {
@@ -174,7 +174,7 @@ public class WebServerBuilder {
                 .cacheFilesInRam(mCacheFilesInRAM)
                 .serverSideVariables(mServerSideVariables)
                 .responseHeaders(mResponseHeaders)
-                .html404page(mHtml404Page)
+                .fileName404Page(mFileName404Page)
                 .build();
     }
 

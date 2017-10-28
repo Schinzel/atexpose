@@ -1,5 +1,6 @@
 package com.atexpose.util.httpresponse;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.substring.SubString;
@@ -16,7 +17,6 @@ public class HttpResponse404Test {
     @Test
     public void getResponse_Default_HeaderShouldContainStatusCode404() {
         String httpResponse = UTF8.getString(HttpResponse404.builder()
-                .filenameMissingFile("monkey.txt")
                 .build()
                 .getResponse());
         String actual = SubString.create(httpResponse)
@@ -31,13 +31,12 @@ public class HttpResponse404Test {
     @Test
     public void getResponse_Default_BodyShouldContainFileName() {
         String httpResponse = UTF8.getString(HttpResponse404.builder()
-                .filenameMissingFile("monkey.txt")
                 .build()
                 .getResponse());
         String actual = SubString.create(httpResponse)
                 .startDelimiter("\r\n\r\n")
                 .toString();
-        String expected = "<html><body><center>File 'monkey.txt' not found</center><body></html>";
+        String expected = "<html><body><center>File not found</center><body></html>";
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -46,8 +45,7 @@ public class HttpResponse404Test {
     public void getResponse_Custom404Page_Custom404PageShould() {
         String html404Page = "<html><body><center>Bummer! File not found :(</center><body></html>";
         String httpResponse = UTF8.getString(HttpResponse404.builder()
-                .filenameMissingFile("monkey.txt")
-                .html(html404Page)
+                .body(html404Page.getBytes(Charsets.UTF_8))
                 .build()
                 .getResponse());
         String actual = SubString.create(httpResponse)
@@ -63,7 +61,6 @@ public class HttpResponse404Test {
                 .put("key", "val")
                 .build();
         String httpResponse = UTF8.getString(HttpResponse404.builder()
-                .filenameMissingFile("monkey.txt")
                 .customHeaders(map)
                 .build()
                 .getResponse());
