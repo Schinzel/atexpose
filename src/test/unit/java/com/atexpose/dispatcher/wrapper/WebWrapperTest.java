@@ -5,14 +5,13 @@ import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.collections.Cache;
 import io.schinzel.basicutils.substring.SubString;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -23,15 +22,15 @@ public class WebWrapperTest {
     @Test
     public void testSetServerSideVariables() {
         String htmlPage = "<html><head><!--#echo var=\"VaRiAbLe\" --></head><body><!--#echo var=\"variable\" --><br><!--#echo var=\"VARIABLE\" --></body></html>";
-        String expected = "<html><head>var1</head><body>var2<br>var3</body></html>";
         byte[] htmlPageAsByteArr = UTF8.getBytes(htmlPage);
-        Map<String, String> ssv = new HashMap<>();
-        ssv.put("VaRiAbLe", "var1");
-        ssv.put("variable", "var2");
-        ssv.put("VARIABLE", "var3");
+        Map<String, String> ssv = ImmutableMap.<String, String>builder()
+                .put("VaRiAbLe", "var1")
+                .put("variable", "var2")
+                .put("VARIABLE", "var3")
+                .build();
         byte[] resultAsByteArr = WebWrapper.setServerSideVariables(htmlPageAsByteArr, ssv);
         String result = UTF8.getString(resultAsByteArr);
-        assertEquals(expected, result);
+        assertThat(result).isEqualTo("<html><head>var1</head><body>var2<br>var3</body></html>");
     }
 
 
@@ -40,13 +39,14 @@ public class WebWrapperTest {
         String htmlPage = "<!--#echo var=\"first\" --><html><head></head><body><!--#echo var=\"middle\" --></body></html><!--#echo var=\"last\" -->";
         String expected = "var1<html><head></head><body>var3</body></html>var2";
         byte[] htmlPageAsByteArr = UTF8.getBytes(htmlPage);
-        Map<String, String> ssv = new HashMap<>();
-        ssv.put("first", "var1");
-        ssv.put("last", "var2");
-        ssv.put("middle", "var3");
+        Map<String, String> ssv = ImmutableMap.<String, String>builder()
+                .put("first", "var1")
+                .put("last", "var2")
+                .put("middle", "var3")
+                .build();
         byte[] resultAsByteArr = WebWrapper.setServerSideVariables(htmlPageAsByteArr, ssv);
         String result = UTF8.getString(resultAsByteArr);
-        assertEquals(expected, result);
+        assertThat(result).isEqualTo(expected);
     }
 
 
@@ -57,7 +57,7 @@ public class WebWrapperTest {
         byte[] htmlPageAsByteArr = UTF8.getBytes(htmlPage);
         byte[] resultAsByteArr = WebWrapper.setServerIncludeFiles(htmlPageAsByteArr, "includefiles/");
         String result = UTF8.getString(resultAsByteArr);
-        assertEquals(expected, result);
+        assertThat(result).isEqualTo(expected);
     }
 
 
@@ -127,29 +127,27 @@ public class WebWrapperTest {
                 .cacheFilesInRam(true)
                 .build();
         Cache<String, byte[]> filesCache = webWrapper.getFilesCache();
-        assertEquals(0, filesCache.cacheHits());
-        assertEquals(0, filesCache.cacheSize());
+        assertThat(filesCache.cacheHits()).isEqualTo(0);
+        assertThat(filesCache.cacheSize()).isEqualTo(0);
         byte[] file1 = webWrapper.wrapFile("read_from_cache.html");
-        assertEquals(0, filesCache.cacheHits());
-        assertEquals(1, filesCache.cacheSize());
+        assertThat(filesCache.cacheHits()).isEqualTo(0);
+        assertThat(filesCache.cacheSize()).isEqualTo(1);
         byte[] file2 = webWrapper.wrapFile("read_from_cache.html");
-        assertEquals(1, filesCache.cacheHits());
-        assertEquals(1, filesCache.cacheSize());
+        assertThat(filesCache.cacheHits()).isEqualTo(1);
+        assertThat(filesCache.cacheSize()).isEqualTo(1);
         byte[] file3 = webWrapper.wrapFile("read_another_cached.html");
-        assertEquals(1, filesCache.cacheHits());
-        assertEquals(2, filesCache.cacheSize());
+        assertThat(filesCache.cacheHits()).isEqualTo(1);
+        assertThat(filesCache.cacheSize()).isEqualTo(2);
         byte[] file4 = webWrapper.wrapFile("read_another_cached.html");
-        assertEquals(2, filesCache.cacheHits());
-        assertEquals(2, filesCache.cacheSize());
-        String str2 = UTF8.getString(file2);
-        String str4 = UTF8.getString(file4);
-        assertTrue(str2.contains("<div>Hello</div>"));
-        assertTrue(str4.contains("<div>Hello</div>"));
-        Assert.assertArrayEquals(file1, file2);
-        Assert.assertArrayEquals(file3, file4);
+        assertThat(filesCache.cacheHits()).isEqualTo(2);
+        assertThat(filesCache.cacheSize()).isEqualTo(2);
+        assertThat(UTF8.getString(file2)).contains("<div>Hello</div>");
+        assertThat(UTF8.getString(file4)).contains("<div>Hello</div>");
+        assertThat(file2).isEqualTo(file1);
+        assertThat(file4).isEqualTo(file3);
         JSONObject statusAsJson = webWrapper.getState().getJson();
-        assertEquals("testfiles/", statusAsJson.getString("Directory"));
-        assertEquals(10, statusAsJson.getInt("BrowserCacheMaxAge"));
+        assertThat(statusAsJson.getString("Directory")).isEqualTo("testfiles/");
+        assertThat(statusAsJson.getInt("BrowserCacheMaxAge")).isEqualTo(10);
     }
 
 
@@ -247,7 +245,7 @@ public class WebWrapperTest {
                 + "Cache-Control: max-age=0\r\n"
                 + "Content-Length: 21\r\n\r\n"
                 + "{\"k1\":\"v1\",\"k2\":\"v2\"}\n\n";
-        assertEquals(expected, result);
+        assertThat(result).isEqualTo(expected);
     }
 
 
@@ -272,7 +270,7 @@ public class WebWrapperTest {
                 + "monkey: gibbon\r\n"
                 + "bear: kodiak\r\n\r\n"
                 + "{\"k1\":\"v1\",\"k2\":\"v2\"}\n\n";
-        assertEquals(expected, result);
+        assertThat(result).isEqualTo(expected);
     }
 
 
@@ -283,8 +281,8 @@ public class WebWrapperTest {
                 .cacheFilesInRam(true)
                 .build();
         webWrapper.wrapFile("somefile.html");
-        // should return the requested file and not the default index.html
-        assertTrue(webWrapper.getFilesCache().has("testfiles/somefile.html"));
+        assertThat(webWrapper.getFilesCache().has("testfiles/somefile.html"))
+                .isTrue();
     }
 
 
@@ -296,7 +294,8 @@ public class WebWrapperTest {
                 .build();
         webWrapper.wrapFile("somefile.js");
         // should return the requested file and not the default
-        assertTrue(webWrapper.getFilesCache().has("testfiles/somefile.js"));
+        assertThat(webWrapper.getFilesCache().has("testfiles/somefile.js"))
+                .isTrue();
     }
 
 
@@ -308,7 +307,8 @@ public class WebWrapperTest {
                 .build();
         webWrapper.wrapFile("index.html");
         // should return the default file
-        assertTrue(webWrapper.getFilesCache().has("testfiles/index.html"));
+        assertThat(webWrapper.getFilesCache().has("testfiles/index.html"))
+                .isTrue();
     }
 
 
@@ -320,7 +320,8 @@ public class WebWrapperTest {
                 .build();
         webWrapper.wrapFile("");
         // should return the default file
-        assertTrue(webWrapper.getFilesCache().has("testfiles/index.html"));
+        assertThat(webWrapper.getFilesCache().has("testfiles/index.html"))
+                .isTrue();
     }
 
 
@@ -333,7 +334,8 @@ public class WebWrapperTest {
                 .build();
         webWrapper.wrapFile("somefolder/");
         // should return the default file
-        assertTrue(webWrapper.getFilesCache().has("testfiles/somefolder/index.html"));
+        assertThat(webWrapper.getFilesCache().has("testfiles/somefolder/index.html"))
+                .isTrue();
     }
 
 
@@ -346,7 +348,8 @@ public class WebWrapperTest {
                 .build();
         webWrapper.wrapFile("somefolder");
         // should return the default file
-        assertTrue(webWrapper.getFilesCache().has("testfiles/somefolder/index.html"));
+        assertThat(webWrapper.getFilesCache().has("testfiles/somefolder/index.html"))
+                .isTrue();
     }
 
 
@@ -357,9 +360,9 @@ public class WebWrapperTest {
                 .browserCacheMaxAge(10)
                 .cacheFilesInRam(false)
                 .build();
-        byte[] ab = webWrapper.getTextFileHeaderAndContent("nonexistingfile.html");
-        String str = UTF8.getString(ab);
-        assertThat(str).contains("<html><body><center>File not found</center><body></html>");
+        byte[] html404PageAsBytes = webWrapper.getTextFileHeaderAndContent("nonexistingfile.html");
+        String html404Page = UTF8.getString(html404PageAsBytes);
+        assertThat(html404Page).contains("<html><body><center>File not found</center><body></html>");
     }
 
 
@@ -371,7 +374,7 @@ public class WebWrapperTest {
                 .cacheFilesInRam(false)
                 .build();
         byte[] ab = webWrapper.getTextFileContent("nonexistingfile.html");
-        Assert.assertNull(ab);
+        assertThat(ab).isNull();
     }
 
 
@@ -403,7 +406,7 @@ public class WebWrapperTest {
                 .startDelimiter("Content-Length: ")
                 .endDelimiter("\r\n")
                 .getString();
-        assertEquals("416176", contentLength);
+        assertThat(contentLength).isEqualTo("416176");
     }
 
 
@@ -421,7 +424,7 @@ public class WebWrapperTest {
                 .startDelimiter("Content-Length: ")
                 .endDelimiter("\r\n")
                 .getString();
-        assertEquals("416176", contentLength);
+        assertThat(contentLength).isEqualTo("416176");
     }
 
 }
