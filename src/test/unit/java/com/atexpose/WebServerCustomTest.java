@@ -32,8 +32,10 @@ public class WebServerCustomTest {
 
 
     @Test
-    public void requestPage_PageDoesNotExist_404() throws IOException {
+    public void requestPage_PageDoesNotExistCustom404_Custom404() throws IOException {
         IDispatcher webServer = WebServerBuilder.create()
+                //Set dir where html and other files resides
+                .webServerDir("testfiles")
                 //Set custom 404 page
                 .fileName404Page("WebServerCustomTest_404Page.html")
                 .webServerDir("testfiles")
@@ -48,11 +50,26 @@ public class WebServerCustomTest {
                 .ignoreHttpErrors(true)
                 .execute()
                 .body();
-        assertThat(result).isEqualTo("<!DOCTYPE html>\n" +
-                "<html>\n" +
-                "<body><h1>Nooo! File not found</h1></body>\n" +
-                "</html>");
-
+        assertThat(result).contains("Custom 404. File not found");
     }
 
+
+    @Test
+    public void requestPage_PageDoesNotExistNotCustom404_Default404() throws IOException {
+        IDispatcher webServer = WebServerBuilder.create()
+                //Set dir where html and other files resides
+                .webServerDir("testfiles")
+                //Build web server
+                .build();
+        mAtExpose = AtExpose.create()
+                //Start web server
+                .start(webServer);
+        String result = Jsoup
+                .connect("http://127.0.0.1:5555/noSuchFile.html")
+                .method(Connection.Method.GET)
+                .ignoreHttpErrors(true)
+                .execute()
+                .body();
+        assertThat(result).contains("<html><body><center>File not found</center><body></html>");
+    }
 }
