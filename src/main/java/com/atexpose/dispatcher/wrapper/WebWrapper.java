@@ -15,7 +15,6 @@ import lombok.experimental.Accessors;
 import org.json.JSONObject;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,11 +50,11 @@ public class WebWrapper implements IWrapper {
     private final int mBrowserCacheMaxAge;
     private final Map<String, String> mServerSideVariables;
     //If true, files read - e.g. HTML files - will be cached in RAM.
-    private boolean mFilesCacheOn = true;
+    private final boolean mFileCacheOn;
     @Getter(AccessLevel.PACKAGE)
-    private Map<String, String> mCustomResponseHeaders = new HashMap<>();
+    private final Map<String, String> mCustomResponseHeaders;
     @Getter(AccessLevel.PACKAGE)
-    private Cache<String, byte[]> mFilesCache;
+    private final Cache<String, byte[]> mFileCache;
     private final String mFileName404Page;
 
 
@@ -64,10 +63,10 @@ public class WebWrapper implements IWrapper {
                Map<String, String> serverSideVariables, Map<String, String> responseHeaders,
                String fileName404Page) {
         //If the last char is not a file separator, then add it
-        mWebServerDir = (!webServerDir.endsWith(MyProperties.FILE_SEPARATOR)) ?
-                webServerDir + MyProperties.FILE_SEPARATOR : webServerDir;
+        mWebServerDir = !webServerDir.endsWith(MyProperties.FILE_SEPARATOR)
+                ? webServerDir + MyProperties.FILE_SEPARATOR
+                : webServerDir;
         mBrowserCacheMaxAge = browserCacheMaxAge;
-        mFilesCacheOn = cacheFilesInRam;
         mServerSideVariables = (serverSideVariables != null)
                 ? serverSideVariables
                 : Collections.emptyMap();
@@ -75,7 +74,8 @@ public class WebWrapper implements IWrapper {
         mCustomResponseHeaders = (responseHeaders != null)
                 ? responseHeaders
                 : Collections.emptyMap();
-        mFilesCache = new Cache<>();
+        mFileCacheOn = cacheFilesInRam;
+        mFileCache = new Cache<>();
         mFileName404Page = fileName404Page;
     }
 
@@ -101,15 +101,6 @@ public class WebWrapper implements IWrapper {
 
 
     @Override
-    public byte[] wrapFile(String requestedFile) {
-        String filename = this.getActualFilename(requestedFile);
-        return FileUtil.isTextFile(filename)
-                ? this.getTextFileHeaderAndContent(filename)
-                : this.getStaticFileHeaderAndContent(filename);
-    }
-
-
-    @Override
     public String wrapJSON(JSONObject response) {
         return HttpResponseJson.builder()
                 .body(response)
@@ -119,98 +110,48 @@ public class WebWrapper implements IWrapper {
     }
 
 
-    /**
-     * @param filename The name of the file
-     * @return The content of argument file including HTTP headers.
-     */
-    byte[] getTextFileHeaderAndContent(String filename) {
-        //Get the text file
-        byte[] abFileContent = this.getTextFileContent(filename);
-        //If there was no such file
-        if (abFileContent == null) {
-            return get404Page();
-        } else {
-            //Add server side variables
-            abFileContent = WebWrapper.setServerSideVariables(abFileContent, mServerSideVariables);
-            return HttpResponseFile.builder()
-                    .body(abFileContent)
-                    .customHeaders(this.getCustomResponseHeaders())
-                    .filename(filename)
-                    .build()
-                    .getResponse();
-        }
-    }
-
-
-    /**
-     * @param filename The name of the file to return
-     * @return The content of the argument file. Null if there was no such file.
-     */
-    byte[] getTextFileContent(String filename) {
-        //If is to use cache AND there is the argument file is cached
-        if (mFilesCacheOn && mFilesCache.has(filename)) {
-            //Return cached file
-            return mFilesCache.get(filename);
-        }
-        //If file does not exist
-        if (!FileRW.fileExists(filename)) {
-            return null;
-        }
-        //Read file
-        byte[] abFileContent = FileRW.readFileAsByteArray(filename);
-        //Add server side include files
-        abFileContent = WebWrapper.setServerIncludeFiles(abFileContent, mWebServerDir);
-        //If is to use file cache
-        if (mFilesCacheOn) {
-            //Add file content to cache
-            mFilesCache.put(filename, abFileContent);
-        }
-        return abFileContent;
-    }
-
-
-    /**
-     * @param filename The name of the file
-     * @return The content of argument file including HTTP headers.
-     */
-    byte[] getStaticFileHeaderAndContent(String filename) {
+    @Override
+    public byte[] wrapFile(String requestedFile) {
+        String fileName = this.getFullFileName(requestedFile);
         //If is to use cache AND the argument file is cached
-        if (mFilesCacheOn && mFilesCache.has(filename)) {
+        if (mFileCacheOn && mFileCache.has(fileName)) {
             //Return cached file
-            return mFilesCache.get(filename);
+            return mFileCache.get(fileName);
         }
-        //If file doesn't exists
-        if (!FileRW.fileExists(filename)) {
-            return get404Page();
-        } else {
-            byte[] abFileContent = FileRW.readFileAsByteArray(filename);
-            byte[] abFileHeaderAndContent = HttpResponseFile.builder()
-                    .body(abFileContent)
-                    .customHeaders(this.getCustomResponseHeaders())
-                    .filename(filename)
-                    .build()
-                    .getResponse();
-            //If is to use file cache
-            if (mFilesCacheOn) {
-                //Add file header and content to cache
-                this.mFilesCache.put(filename, abFileHeaderAndContent);
-            }
-            return abFileHeaderAndContent;
-        }
+        byte[] abFileHeaderAndContent = FileRW.fileExists(fileName)
+                ? getFileHeaderAndContent(fileName)
+                : get404headerAndContent();
+        return mFileCacheOn
+                ? mFileCache.putAndGet(fileName, abFileHeaderAndContent)
+                : abFileHeaderAndContent;
     }
 
 
-    /**
-     * @return 404 page response.
-     */
-    byte[] get404Page() {
+    byte[] get404headerAndContent() {
         //Set 404 body, if a custom 404 page has been set
         byte[] body404page = Checker.isNotEmpty(mFileName404Page)
-                ? this.getTextFileContent(this.getActualFilename(mFileName404Page))
+                ? FileRW.readFileAsByteArray(this.getFullFileName(mFileName404Page))
                 : null;
         return HttpResponse404.builder()
-                .customHeaders(this.getCustomResponseHeaders())
                 .body(body404page)
+                .customHeaders(this.getCustomResponseHeaders())
+                .build()
+                .getResponse();
+    }
+
+
+    byte[] getFileHeaderAndContent(String fileName) {
+        byte[] abFileContent = FileRW.readFileAsByteArray(fileName);
+        if (FileUtil.isTextFile(fileName)) {
+            //Add server side include files
+            abFileContent = WebWrapper.setServerIncludeFiles(abFileContent, mWebServerDir);
+            //Add server side variables
+            abFileContent = WebWrapper.setServerSideVariables(abFileContent, mServerSideVariables);
+        }
+        return HttpResponseFile.builder()
+                .body(abFileContent)
+                .customHeaders(this.getCustomResponseHeaders())
+                .filename(fileName)
                 .build()
                 .getResponse();
     }
@@ -231,7 +172,7 @@ public class WebWrapper implements IWrapper {
      * @param requestedFile The requested file
      * @return The name of the actual file to return
      */
-    String getActualFilename(String requestedFile) {
+    String getFullFileName(String requestedFile) {
         // if filename is empty
         if (Checker.isEmpty(requestedFile)) {
             requestedFile = DEFAULT_PAGE;
@@ -335,7 +276,7 @@ public class WebWrapper implements IWrapper {
         return State.getBuilder()
                 .add("Directory", mWebServerDir)
                 .add("BrowserCacheMaxAge", mBrowserCacheMaxAge)
-                .add("FilesInRamCache", mFilesCacheOn)
+                .add("FilesInRamCache", mFileCacheOn)
                 .build();
     }
 

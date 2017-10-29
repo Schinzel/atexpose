@@ -38,6 +38,7 @@ public class WebServerCustomTest {
                 .webServerDir("testfiles")
                 //Set custom 404 page
                 .fileName404Page("WebServerCustomTest_404Page.html")
+                .webServerDir("testfiles")
                 //Build web server
                 .build();
         mAtExpose = AtExpose.create()
