@@ -2,7 +2,6 @@ package com.atexpose.dispatcher.wrapper;
 
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.UTF8;
-import io.schinzel.basicutils.collections.Cache;
 import io.schinzel.basicutils.substring.SubString;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -11,7 +10,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -120,111 +118,59 @@ public class WebWrapperTest {
 
 
     @Test
-    public void testCache() {
+    public void wrapFile__CacheEnabledRequestDefaultFile3Times_CacheHas2Hits() {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
-                .browserCacheMaxAge(10)
                 .cacheFilesInRam(true)
                 .build();
-        Cache<String, byte[]> filesCache = webWrapper.getFileCache();
-        assertThat(filesCache.cacheHits()).isEqualTo(0);
-        assertThat(filesCache.cacheSize()).isEqualTo(0);
-        byte[] file1 = webWrapper.wrapFile("read_from_cache.html");
-        assertThat(filesCache.cacheHits()).isEqualTo(0);
-        assertThat(filesCache.cacheSize()).isEqualTo(1);
-        byte[] file2 = webWrapper.wrapFile("read_from_cache.html");
-        assertThat(filesCache.cacheHits()).isEqualTo(1);
-        assertThat(filesCache.cacheSize()).isEqualTo(1);
-        byte[] file3 = webWrapper.wrapFile("read_another_cached.html");
-        assertThat(filesCache.cacheHits()).isEqualTo(1);
-        assertThat(filesCache.cacheSize()).isEqualTo(2);
-        byte[] file4 = webWrapper.wrapFile("read_another_cached.html");
-        assertThat(filesCache.cacheHits()).isEqualTo(2);
-        assertThat(filesCache.cacheSize()).isEqualTo(2);
-        assertThat(UTF8.getString(file2)).contains("<div>Hello</div>");
-        assertThat(UTF8.getString(file4)).contains("<div>Hello</div>");
-        assertThat(file2).isEqualTo(file1);
-        assertThat(file4).isEqualTo(file3);
-        JSONObject statusAsJson = webWrapper.getState().getJson();
-        assertThat(statusAsJson.getString("Directory")).isEqualTo("testfiles/");
-        assertThat(statusAsJson.getInt("BrowserCacheMaxAge")).isEqualTo(10);
-    }
-
-
-    @Test
-    public void testCacheDefault() {
-        WebWrapper webWrapper = WebWrapper.builder()
-                .webServerDir("testfiles/")
-                .browserCacheMaxAge(10)
-                .cacheFilesInRam(true)
-                .build();
-        Cache<String, byte[]> filesCache = webWrapper.getFileCache();
-        assertEquals(0, filesCache.cacheHits());
-        assertEquals(0, filesCache.cacheSize());
-        //These should hit index.html every time
         webWrapper.wrapFile("");
-        assertEquals(0, filesCache.cacheHits());
-        assertEquals(1, filesCache.cacheSize());
-        webWrapper.wrapFile(null);
-        assertEquals(1, filesCache.cacheHits());
-        assertEquals(1, filesCache.cacheSize());
         webWrapper.wrapFile("");
-        assertEquals(2, filesCache.cacheHits());
-        assertEquals(1, filesCache.cacheSize());
-        webWrapper.wrapFile(null);
-        assertEquals(3, filesCache.cacheHits());
-        assertEquals(1, filesCache.cacheSize());
+        webWrapper.wrapFile("");
+        long cacheHits = webWrapper.getFileCache().cacheHits();
+        assertThat(cacheHits).isEqualTo(2);
     }
 
 
     @Test
-    public void testCacheDefault_staticFiles() {
+    public void wrapFile__CacheEnabledRequestSameFile3Times_CacheHas2Hits() {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
-                .browserCacheMaxAge(10)
                 .cacheFilesInRam(true)
                 .build();
-        Cache<String, byte[]> filesCache = webWrapper.getFileCache();
-        assertEquals(0, filesCache.cacheHits());
-        assertEquals(0, filesCache.cacheSize());
-        //These should hit index.html every time
-        webWrapper.wrapFile("monkey.jpg");
-        assertEquals(0, filesCache.cacheHits());
-        assertEquals(1, filesCache.cacheSize());
-        webWrapper.wrapFile("monkey.jpg");
-        assertEquals(1, filesCache.cacheHits());
-        assertEquals(1, filesCache.cacheSize());
-        webWrapper.wrapFile("monkey.jpg");
-        assertEquals(2, filesCache.cacheHits());
-        assertEquals(1, filesCache.cacheSize());
-        webWrapper.wrapFile("monkey.jpg");
-        assertEquals(3, filesCache.cacheHits());
-        assertEquals(1, filesCache.cacheSize());
+        webWrapper.wrapFile("somefile.html");
+        webWrapper.wrapFile("somefile.html");
+        webWrapper.wrapFile("somefile.html");
+        long cacheHits = webWrapper.getFileCache().cacheHits();
+        assertThat(cacheHits).isEqualTo(2);
     }
 
 
     @Test
-    public void testNoCache() {
+    public void wrapFile__CacheEnabledRequest3DifferentFiles_CacheHas3Files() {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
-                .browserCacheMaxAge(10)
+                .cacheFilesInRam(true)
+                .build();
+        webWrapper.wrapFile("somefile.html");
+        webWrapper.wrapFile("somefile.html");
+        webWrapper.wrapFile("somefile.js");
+        webWrapper.wrapFile("monkey.jpg");
+        int cacheSize = webWrapper.getFileCache().cacheSize();
+        assertThat(cacheSize).isEqualTo(3);
+    }
+
+
+    @Test
+    public void wrapFile__CacheDisabled_CacheEmpty() {
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
                 .cacheFilesInRam(false)
                 .build();
-        Cache<String, byte[]> filesCache = webWrapper.getFileCache();
-        assertEquals(0, filesCache.cacheHits());
-        assertEquals(0, filesCache.cacheSize());
-        webWrapper.wrapFile("read_from_cache.html");
-        assertEquals(0, filesCache.cacheHits());
-        assertEquals(0, filesCache.cacheSize());
-        webWrapper.wrapFile(null);
-        assertEquals(0, filesCache.cacheHits());
-        assertEquals(0, filesCache.cacheSize());
-        webWrapper.wrapFile("read_another_cached.html");
-        assertEquals(0, filesCache.cacheHits());
-        assertEquals(0, filesCache.cacheSize());
-        webWrapper.wrapFile("");
-        assertEquals(0, filesCache.cacheHits());
-        assertEquals(0, filesCache.cacheSize());
+        webWrapper.wrapFile("somefile.html");
+        webWrapper.wrapFile("somefile.js");
+        webWrapper.wrapFile("monkey.jpg");
+        int cacheSize = webWrapper.getFileCache().cacheSize();
+        assertThat(cacheSize).isZero();
     }
 
 
@@ -235,7 +181,6 @@ public class WebWrapperTest {
                 .put("k2", "v2");
         String response = WebWrapper.builder()
                 .webServerDir("testfiles/")
-                .browserCacheMaxAge(10)
                 .cacheFilesInRam(false)
                 .build()
                 .wrapJSON(json);
@@ -262,6 +207,17 @@ public class WebWrapperTest {
                 .endDelimiter("\r\n\r\n")
                 .toString();
         assertThat(header).contains("bear: kodiak");
+    }
+
+
+    @Test
+    public void getFileHeaderAndContent_NonExistingFile_Expcetion() {
+        WebWrapper webWrapper = WebWrapper.builder()
+                .webServerDir("testfiles/")
+                .build();
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
+                webWrapper.getFileHeaderAndContent("nonexistingfile.html")
+        );
     }
 
 
@@ -340,17 +296,6 @@ public class WebWrapperTest {
         String html404Page = UTF8.getString(html404PageAsBytes);
         assertThat(html404Page)
                 .contains("<html><body><center>File not found</center><body></html>");
-    }
-
-
-    @Test
-    public void getFileHeaderAndContent_NonExistingFile_Expcetion() {
-        WebWrapper webWrapper = WebWrapper.builder()
-                .webServerDir("testfiles/")
-                .build();
-        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                webWrapper.getFileHeaderAndContent("nonexistingfile.html")
-        );
     }
 
 
