@@ -2,6 +2,7 @@ package com.atexpose.atexpose;
 
 import com.atexpose.api.API;
 import com.atexpose.dispatcher.IDispatcher;
+import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 
 /**
@@ -16,24 +17,22 @@ public interface IAtExpose<T extends IAtExpose<T>> {
 
 
     /**
-     * @return The API used by this instance.
+     * @return The API used by this instance
      */
     API getAPI();
 
 
     /**
-     * @return The collection with all dispatchers.
+     * @return The collection with all dispatchers
      */
     ValuesWithKeys<IDispatcher> getDispatchers();
 
 
     /**
      * Exists for programming technical reasons only. Allows implementing classes and extending
-     * interfaces to return
-     * a "this" that refers to implementing class or extending interface, instead of the interface
-     * being implemented
-     * or extended. This as opposed to casting and/or overloading methods just to return the correct
-     * type.
+     * interfaces to return a "this" that refers to implementing class or extending interface,
+     * instead of the interface being implemented or extended. This as opposed to casting and/or
+     * overloading methods just to return the correct type.
      * <p>
      * This should really be package private or protected. But as this is not an option, it has to
      * be public.
@@ -44,9 +43,8 @@ public interface IAtExpose<T extends IAtExpose<T>> {
 
 
     /**
-     *
-     * @param dispatcherName The name of the dispatcher to return.
-     * @return The dispatcher with the argument name.
+     * @param dispatcherName The name of the dispatcher to return
+     * @return The dispatcher with the argument name
      */
     default IDispatcher getDispatcher(String dispatcherName) {
         return this.getDispatchers().get(dispatcherName);
@@ -55,7 +53,7 @@ public interface IAtExpose<T extends IAtExpose<T>> {
 
     /**
      * @param dispatcherName The dispatcher to shutdown.
-     * @return This for chaining.
+     * @return This for chaining
      */
     default T closeDispatcher(String dispatcherName) {
         this.getDispatchers().get(dispatcherName).shutdown();
@@ -65,10 +63,10 @@ public interface IAtExpose<T extends IAtExpose<T>> {
 
 
     /**
-     * Central method for starting a dispatcher.
+     * Central method for starting a dispatcher
      *
      * @param dispatcher The dispatcher to start
-     * @return The dispatcher that was just started.
+     * @return This for chaining
      */
     default T start(IDispatcher dispatcher) {
         return this.start(dispatcher, false);
@@ -76,13 +74,26 @@ public interface IAtExpose<T extends IAtExpose<T>> {
 
 
     /**
-     * Central method for starting a dispatcher.
+     * Starts a collection of dispatchers
+     *
+     * @param dispatchers The dispatchers to start
+     * @return This for chaining
+     */
+    default T start(Iterable<IDispatcher> dispatchers) {
+        if (Checker.isNotEmpty(dispatchers)) {
+            dispatchers.forEach(d -> this.start(d));
+        }
+        return this.getThis();
+    }
+
+
+    /**
+     * Central method for starting a dispatcher
      *
      * @param dispatcher       The dispatcher to start
      * @param oneOffDispatcher If true the dispatcher is a one-off that executes and then
-     *                         terminates. Is never added
-     *                         to the dispatcher collection.
-     * @return The dispatcher that was just started.
+     *                         terminates. Is never added to the dispatcher collection.
+     * @return This for chaining
      */
     default T start(IDispatcher dispatcher, boolean oneOffDispatcher) {
         //If this is not a temporary dispatcher, i.e. a dispatcher that dies once it has read its requests and delivered its responses
