@@ -39,7 +39,7 @@ public class ScheduledTasks {
                 .taskName("MyTask2")
                 .request("echo hi")
                 .timeOfDay("20:55")
-                .zoneId("UTC")
+                .timeZone("UTC")
                 .build();
     }
 
@@ -50,7 +50,7 @@ public class ScheduledTasks {
                 .request("ping")
                 .timeOfDay("07:00")
                 .dayOfMonth(14)
-                .zoneId("America/New_York\"")
+                .timeZone("America/New_York\"")
                 .build();
 
     }
