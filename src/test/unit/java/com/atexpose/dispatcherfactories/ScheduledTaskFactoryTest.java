@@ -31,7 +31,7 @@ public class ScheduledTaskFactoryTest extends ScheduledTaskFactory {
                 .taskName("MyTaskName")
                 .request("ping")
                 .timeOfDay("14:15")
-                .zoneId("UTC")
+                .timeZone("UTC")
                 .build();
         assertThat(dispatcher.getChannel())
                 .isInstanceOf(ScheduledTaskChannelDaily.class);
@@ -45,7 +45,7 @@ public class ScheduledTaskFactoryTest extends ScheduledTaskFactory {
                 .request("ping")
                 .timeOfDay("14:15")
                 .dayOfMonth(5)
-                .zoneId("UTC")
+                .timeZone("UTC")
                 .build();
         assertThat(dispatcher.getChannel())
                 .isInstanceOf(ScheduledTaskChannelMonthly.class);

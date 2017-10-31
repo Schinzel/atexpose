@@ -25,7 +25,7 @@ public class ScheduledReportTest {
                 .taskName("theTaskName")
                 .request("ping")
                 .timeOfDay("14:30")
-                .zoneId("UTC")
+                .timeZone("UTC")
                 .emailSender(new MockMailSender())
                 .fromName("fromName")
                 .build();
