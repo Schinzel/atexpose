@@ -14,7 +14,9 @@ import lombok.Builder;
 
 public class ScheduledReportFactory {
 
-    ScheduledReportFactory(){}
+    ScheduledReportFactory() {
+    }
+
 
     /**
      * Sets up a scheduled report. This is a scheduled task where the result of the operation is
@@ -25,7 +27,7 @@ public class ScheduledReportFactory {
      * @param request     The request to execute. Example: "echo hi"
      * @param timeOfDay   The time of day in the argument time zone to run the report. Examples:
      *                    "13:05" "07:55"
-     * @param zoneId      The time zone. E.g. "UTC", "Europe/Stockholm"
+     * @param timeZone    The time zone. E.g. "UTC", "Europe/Stockholm"
      * @param recipient   The recipient email address.
      * @param fromName    The name in the from field in the email
      * @param emailSender Handles sending of emails
@@ -33,7 +35,7 @@ public class ScheduledReportFactory {
      */
     @Builder
     static IDispatcher newScheduledReport(String taskName, String request, String timeOfDay,
-                                          String zoneId, String recipient, String fromName,
+                                          String timeZone, String recipient, String fromName,
                                           IEmailSender emailSender) {
         ScheduledReportChannel scheduledReport = ScheduledReportChannel.builder()
                 .emailSender(emailSender)
@@ -41,7 +43,7 @@ public class ScheduledReportFactory {
                 .request(request)
                 .taskName(taskName)
                 .timeOfDay(timeOfDay)
-                .zoneId(zoneId)
+                .zoneId(timeZone)
                 .fromName(fromName)
                 .build();
         Logger eventLogger = Logger.builder()

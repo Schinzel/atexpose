@@ -29,15 +29,15 @@ public class ScheduledTaskFactory {
 
 
     @Builder(builderMethodName = "dailyTaskBuilder", builderClassName = "DailyTaskBuilder")
-    static IDispatcher newDailyTask(String taskName, String request, String timeOfDay, String zoneId) {
-        ScheduledTaskChannelDaily scheduledTaskChannel = new ScheduledTaskChannelDaily(taskName, request, timeOfDay, zoneId);
+    static IDispatcher newDailyTask(String taskName, String request, String timeOfDay, String timeZone) {
+        ScheduledTaskChannelDaily scheduledTaskChannel = new ScheduledTaskChannelDaily(taskName, request, timeOfDay, timeZone);
         return ScheduledTaskFactory.addTask(scheduledTaskChannel);
     }
 
 
     @Builder(builderMethodName = "monthlyTaskBuilder", builderClassName = "MonthlyTaskBuilder")
-    static IDispatcher newMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, String zoneId) {
-        ScheduledTaskChannelMonthly scheduledTaskChannel = new ScheduledTaskChannelMonthly(taskName, request, timeOfDay, dayOfMonth, zoneId);
+    static IDispatcher newMonthlyTask(String taskName, String request, String timeOfDay, int dayOfMonth, String timeZone) {
+        ScheduledTaskChannelMonthly scheduledTaskChannel = new ScheduledTaskChannelMonthly(taskName, request, timeOfDay, dayOfMonth, timeZone);
         return ScheduledTaskFactory.addTask(scheduledTaskChannel);
     }
 
