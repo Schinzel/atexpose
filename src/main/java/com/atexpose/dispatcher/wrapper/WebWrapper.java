@@ -9,9 +9,7 @@ import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.collections.Cache;
 import io.schinzel.basicutils.state.State;
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.json.JSONObject;
 
@@ -29,7 +27,7 @@ import java.util.regex.Pattern;
  * 1) Text files. Examples: html and text.
  * 2) Static files. Examples: jpg and pdf.
  * <p>
- * Text files support two types of server side includes
+ * Text files support two types of server side includes:
  * 1) Files <!--#include file="header.html" -->
  * 2) Variables <!--#echo var="my_var" -->
  * The format is according to SSI: https://en.wikipedia.org/wiki/Server_Side_Includes
@@ -45,19 +43,20 @@ public class WebWrapper implements IWrapper {
     private static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<!--#echo var=\"([a-zA-Z1-9_]{3,25})\" -->");
     /** Pattern for server side include files. Example: <!--#include file="header.html" --> */
     private static final Pattern INCLUDE_FILE_PATTERN = Pattern.compile("<!--#include file=\"([\\w,/]+\\.[A-Za-z]{2,4})\" -->");
-    /** The default to return if no page was specified. */
+    /** The default to return if no page was specified */
     private static final String DEFAULT_PAGE = "index.html";
     /** Where the files to server resides on the hard drive **/
     private final String mWebServerDir;
     /** Browser cache age instruction. **/
     private final int mBrowserCacheMaxAge;
+    /** Variables to inject to the page */
     private final Map<String, String> mServerSideVariables;
-    /** If true, files read - e.g. HTML files - will be cached in RAM */
+    /** If true, files read will be cached in RAM */
     private final boolean mFileCacheOn;
-    @Getter(AccessLevel.PACKAGE)
+    /** Custom response headers to add to response header */
     private final Map<String, String> mCustomResponseHeaders;
-    @Getter(AccessLevel.PACKAGE)
-    private final Cache<String, byte[]> mFileCache;
+    /** Files read from drive stored in RAM */
+    final Cache<String, byte[]> mFileCache;
     /** 404 page to return of a requested file does not exist */
     private final byte[] m404Page;
 
@@ -71,18 +70,18 @@ public class WebWrapper implements IWrapper {
                 ? webServerDir + MyProperties.FILE_SEPARATOR
                 : webServerDir;
         mBrowserCacheMaxAge = browserCacheMaxAge;
-        mServerSideVariables = (serverSideVariables != null)
-                ? serverSideVariables
-                : Collections.emptyMap();
+        mServerSideVariables = Checker.isEmpty(serverSideVariables)
+                ? Collections.emptyMap()
+                : serverSideVariables;
         Thrower.throwIfVarOutsideRange(browserCacheMaxAge, "browserCacheMaxAge", 0, 604800);
-        mCustomResponseHeaders = (responseHeaders != null)
-                ? responseHeaders
-                : Collections.emptyMap();
+        mCustomResponseHeaders = Checker.isEmpty(responseHeaders)
+                ? Collections.emptyMap()
+                : responseHeaders;
         mFileCacheOn = cacheFilesInRam;
         mFileCache = new Cache<>();
-        m404Page = Checker.isNotEmpty(fileName404Page)
-                ? FileRW.readFileAsByteArray(this.getFullFileName(fileName404Page))
-                : DEFAULT_404_PAGE;
+        m404Page = Checker.isEmpty(fileName404Page)
+                ? DEFAULT_404_PAGE
+                : FileRW.readFileAsByteArray(this.getFullFileName(fileName404Page));
     }
 
 
@@ -90,7 +89,7 @@ public class WebWrapper implements IWrapper {
     public String wrapResponse(String methodReturn) {
         return HttpResponseString.builder()
                 .body(methodReturn)
-                .customHeaders(this.getCustomResponseHeaders())
+                .customHeaders(mCustomResponseHeaders)
                 .build()
                 .getResponse();
     }
@@ -100,7 +99,7 @@ public class WebWrapper implements IWrapper {
     public String wrapError(Map<String, String> properties) {
         return HttpResponse500.builder()
                 .body(new JSONObject(properties))
-                .customHeaders(this.getCustomResponseHeaders())
+                .customHeaders(mCustomResponseHeaders)
                 .build()
                 .getResponse();
     }
@@ -110,7 +109,7 @@ public class WebWrapper implements IWrapper {
     public String wrapJSON(JSONObject response) {
         return HttpResponseJson.builder()
                 .body(response)
-                .customHeaders(this.getCustomResponseHeaders())
+                .customHeaders(mCustomResponseHeaders)
                 .build()
                 .getResponse();
     }
@@ -136,7 +135,7 @@ public class WebWrapper implements IWrapper {
     private byte[] get404headerAndContent() {
         return HttpResponse404.builder()
                 .body(m404Page)
-                .customHeaders(this.getCustomResponseHeaders())
+                .customHeaders(mCustomResponseHeaders)
                 .build()
                 .getResponse();
     }
@@ -152,7 +151,7 @@ public class WebWrapper implements IWrapper {
         }
         return HttpResponseFile.builder()
                 .body(abFileContent)
-                .customHeaders(this.getCustomResponseHeaders())
+                .customHeaders(mCustomResponseHeaders)
                 .filename(fileName)
                 .build()
                 .getResponse();
@@ -191,9 +190,6 @@ public class WebWrapper implements IWrapper {
         requestedFile = mWebServerDir + requestedFile;
         return requestedFile;
     }
-    // ------------------------------------
-    // - SERVER SIDE INCLUDES
-    // ------------------------------------
 
 
     /**

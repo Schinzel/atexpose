@@ -126,7 +126,7 @@ public class WebWrapperTest {
         webWrapper.wrapFile("");
         webWrapper.wrapFile("");
         webWrapper.wrapFile("");
-        long cacheHits = webWrapper.getFileCache().cacheHits();
+        long cacheHits = webWrapper.mFileCache.cacheHits();
         assertThat(cacheHits).isEqualTo(2);
     }
 
@@ -140,7 +140,7 @@ public class WebWrapperTest {
         webWrapper.wrapFile("somefile.html");
         webWrapper.wrapFile("somefile.html");
         webWrapper.wrapFile("somefile.html");
-        long cacheHits = webWrapper.getFileCache().cacheHits();
+        long cacheHits = webWrapper.mFileCache.cacheHits();
         assertThat(cacheHits).isEqualTo(2);
     }
 
@@ -155,7 +155,7 @@ public class WebWrapperTest {
         webWrapper.wrapFile("somefile.html");
         webWrapper.wrapFile("somefile.js");
         webWrapper.wrapFile("monkey.jpg");
-        int cacheSize = webWrapper.getFileCache().cacheSize();
+        int cacheSize = webWrapper.mFileCache.cacheSize();
         assertThat(cacheSize).isEqualTo(3);
     }
 
@@ -169,7 +169,7 @@ public class WebWrapperTest {
         webWrapper.wrapFile("somefile.html");
         webWrapper.wrapFile("somefile.js");
         webWrapper.wrapFile("monkey.jpg");
-        int cacheSize = webWrapper.getFileCache().cacheSize();
+        int cacheSize = webWrapper.mFileCache.cacheSize();
         assertThat(cacheSize).isZero();
     }
 
