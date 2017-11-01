@@ -3,6 +3,7 @@ package com.atexpose.dispatcher.wrapper;
 import com.atexpose.MyProperties;
 import com.atexpose.util.FileRW;
 import com.atexpose.util.httpresponse.*;
+import com.google.common.base.Charsets;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.UTF8;
@@ -38,9 +39,11 @@ import java.util.regex.Pattern;
  */
 @Accessors(prefix = "m")
 public class WebWrapper implements IWrapper {
-    //Pattern for server side variables. Example: <!--#echo var="my_var" -->
+    /** The default 404 page */
+    private static final byte[] DEFAULT_404_PAGE = "<html><body><center>File not found</center><body></html>".getBytes(Charsets.UTF_8);
+    /** Pattern for server side variables. Example: <!--#echo var="my_var" --> */
     private static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<!--#echo var=\"([a-zA-Z1-9_]{3,25})\" -->");
-    //Pattern for server side include files. Example: <!--#include file="header.html" -->
+    /** Pattern for server side include files. Example: <!--#include file="header.html" --> */
     private static final Pattern INCLUDE_FILE_PATTERN = Pattern.compile("<!--#include file=\"([\\w,/]+\\.[A-Za-z]{2,4})\" -->");
     /** The default to return if no page was specified. */
     private static final String DEFAULT_PAGE = "index.html";
@@ -49,13 +52,14 @@ public class WebWrapper implements IWrapper {
     /** Browser cache age instruction. **/
     private final int mBrowserCacheMaxAge;
     private final Map<String, String> mServerSideVariables;
-    //If true, files read - e.g. HTML files - will be cached in RAM.
+    /** If true, files read - e.g. HTML files - will be cached in RAM */
     private final boolean mFileCacheOn;
     @Getter(AccessLevel.PACKAGE)
     private final Map<String, String> mCustomResponseHeaders;
     @Getter(AccessLevel.PACKAGE)
     private final Cache<String, byte[]> mFileCache;
-    private final String mFileName404Page;
+    /** 404 page to return of a requested file does not exist */
+    private final byte[] m404Page;
 
 
     @Builder
@@ -76,7 +80,9 @@ public class WebWrapper implements IWrapper {
                 : Collections.emptyMap();
         mFileCacheOn = cacheFilesInRam;
         mFileCache = new Cache<>();
-        mFileName404Page = fileName404Page;
+        m404Page = Checker.isNotEmpty(fileName404Page)
+                ? FileRW.readFileAsByteArray(this.getFullFileName(fileName404Page))
+                : DEFAULT_404_PAGE;
     }
 
 
@@ -127,13 +133,9 @@ public class WebWrapper implements IWrapper {
     }
 
 
-    byte[] get404headerAndContent() {
-        //Set 404 body, if a custom 404 page has been set
-        byte[] body404page = Checker.isNotEmpty(mFileName404Page)
-                ? FileRW.readFileAsByteArray(this.getFullFileName(mFileName404Page))
-                : null;
+    private byte[] get404headerAndContent() {
         return HttpResponse404.builder()
-                .body(body404page)
+                .body(m404Page)
                 .customHeaders(this.getCustomResponseHeaders())
                 .build()
                 .getResponse();
@@ -172,7 +174,7 @@ public class WebWrapper implements IWrapper {
      * @param requestedFile The requested file
      * @return The name of the actual file to return
      */
-    String getFullFileName(String requestedFile) {
+    private String getFullFileName(String requestedFile) {
         // if filename is empty
         if (Checker.isEmpty(requestedFile)) {
             requestedFile = DEFAULT_PAGE;
