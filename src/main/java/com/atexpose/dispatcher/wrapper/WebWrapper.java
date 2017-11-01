@@ -30,6 +30,8 @@ import java.util.regex.Pattern;
  * Text files support two types of server side includes:
  * 1) Files <!--#include file="header.html" -->
  * 2) Variables <!--#echo var="my_var" -->
+ * Include files can contain other include files which in turn can contain other include files and
+ * so on.
  * The format is according to SSI: https://en.wikipedia.org/wiki/Server_Side_Includes
  * First are files in included and after that the variables are inserted in the resulting file.
  *
