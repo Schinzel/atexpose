@@ -16,7 +16,9 @@ public class HttpResponse404Test {
 
     @Test
     public void getResponse_Default_HeaderShouldContainStatusCode404() {
+        String html404Page = "<html><body><center>Bummer! File not found :(</center><body></html>";
         String httpResponse = UTF8.getString(HttpResponse404.builder()
+                .body(html404Page.getBytes(Charsets.UTF_8))
                 .build()
                 .getResponse());
         String actual = SubString.create(httpResponse)
@@ -28,21 +30,9 @@ public class HttpResponse404Test {
     }
 
 
-    @Test
-    public void getResponse_Default_BodyShouldContainFileName() {
-        String httpResponse = UTF8.getString(HttpResponse404.builder()
-                .build()
-                .getResponse());
-        String actual = SubString.create(httpResponse)
-                .startDelimiter("\r\n\r\n")
-                .toString();
-        String expected = "<html><body><center>File not found</center><body></html>";
-        assertThat(actual).isEqualTo(expected);
-    }
-
 
     @Test
-    public void getResponse_Custom404Page_Custom404PageShould() {
+    public void getResponse_Custom404Page_Custom404Page() {
         String html404Page = "<html><body><center>Bummer! File not found :(</center><body></html>";
         String httpResponse = UTF8.getString(HttpResponse404.builder()
                 .body(html404Page.getBytes(Charsets.UTF_8))
@@ -57,10 +47,12 @@ public class HttpResponse404Test {
 
     @Test
     public void getResponse_CustomHeader_HeaderShouldContainCustomHeader() {
+        String html404Page = "<html><body><center>Bummer! File not found :(</center><body></html>";
         Map<String, String> map = ImmutableMap.<String, String>builder()
                 .put("key", "val")
                 .build();
         String httpResponse = UTF8.getString(HttpResponse404.builder()
+                .body(html404Page.getBytes(Charsets.UTF_8))
                 .customHeaders(map)
                 .build()
                 .getResponse());
