@@ -1,10 +1,10 @@
 package com.atexpose;
 
 import com.atexpose.api.API;
-import com.atexpose.atexpose.IAtExpose;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.mail.IEmailSender;
+import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
  */
 @SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue", "UnusedReturnValue"})
 @Accessors(prefix = "m")
-public class AtExpose implements IAtExpose<AtExpose>, IStateNode {
+public class AtExpose implements IStateNode {
     /** Instance creation time. For status and debug purposes. */
     private final String mInstanceStartTime = DateTimeStrings.getDateTimeUTC();
     /** Reference to the API. */
@@ -72,8 +72,67 @@ public class AtExpose implements IAtExpose<AtExpose>, IStateNode {
     }
 
 
-    @Override
-    public AtExpose getThis() {
+    /**
+     * @param dispatcherName The name of the dispatcher to return
+     * @return The dispatcher with the argument name
+     */
+    public IDispatcher getDispatcher(String dispatcherName) {
+        return this.getDispatchers().get(dispatcherName);
+    }
+
+
+    /**
+     * @param dispatcherName The dispatcher to shutdown.
+     * @return This for chaining
+     */
+    public AtExpose closeDispatcher(String dispatcherName) {
+        this.getDispatchers().get(dispatcherName).shutdown();
+        this.getDispatchers().remove(dispatcherName);
+        return this;
+    }
+
+
+    /**
+     * Central method for starting a dispatcher
+     *
+     * @param dispatcher The dispatcher to start
+     * @return This for chaining
+     */
+    public AtExpose start(IDispatcher dispatcher) {
+        return this.start(dispatcher, false);
+    }
+
+
+    /**
+     * Starts a collection of dispatchers
+     *
+     * @param dispatchers The dispatchers to start
+     * @return This for chaining
+     */
+    public AtExpose start(Iterable<IDispatcher> dispatchers) {
+        if (Checker.isNotEmpty(dispatchers)) {
+            dispatchers.forEach(d -> this.start(d));
+        }
+        return this;
+    }
+
+
+    /**
+     * Central method for starting a dispatcher
+     *
+     * @param dispatcher       The dispatcher to start
+     * @param oneOffDispatcher If true the dispatcher is a one-off that executes and then
+     *                         terminates. Is never added to the dispatcher collection.
+     * @return This for chaining
+     */
+    public AtExpose start(IDispatcher dispatcher, boolean oneOffDispatcher) {
+        //If this is not a temporary dispatcher, i.e. a dispatcher that dies once it has read its requests and delivered its responses
+        if (!oneOffDispatcher) {
+            //Add the newly created dispatcher to the dispatcher collection
+            this.getDispatchers().add(dispatcher);
+        }
+        //Start the messaging!
+        dispatcher.commenceMessaging(this.getAPI());
         return this;
     }
 
