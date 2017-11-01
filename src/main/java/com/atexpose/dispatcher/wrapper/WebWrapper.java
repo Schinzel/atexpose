@@ -240,10 +240,10 @@ public class WebWrapper implements IWrapper {
     static byte[] setServerIncludeFiles(byte[] fileContent, String directory) {
         //Create a string from the file content
         String mainFileContent = UTF8.getString(fileContent);
-        //Create holder of return string
-        StringBuffer fileContentReturn = new StringBuffer();
         //While there are include files
         while (INCLUDE_FILE_PATTERN.matcher(mainFileContent).find()) {
+            //Create holder of return string
+            StringBuffer fileContentReturn = new StringBuffer();
             ///Create a matcher for the include file tags on the file content
             Matcher includeFileMatcher = INCLUDE_FILE_PATTERN.matcher(mainFileContent);
             //Go through all include file tags in the file

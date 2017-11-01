@@ -1,0 +1,1 @@
+222 <!--#include file="inc1.inc" --> <!--#include file="inc2.inc" --> <!--#include file="include_with_include.inc" --> 222

@@ -49,9 +49,30 @@ public class WebWrapperTest {
 
 
     @Test
-    public void setServerIncludeFiles() {
+    public void setServerIncludeFiles_TwoIncludes_IncludesAdded() {
         String htmlPage = "<html><head><!--#include file=\"inc1.inc\" --></head><body><!--#include file=\"inc2.inc\" --><br></body></html>";
         String expected = "<html><head>ThisIsIncludeFile1</head><body>ThisIsIncludeFile2<br></body></html>";
+        byte[] htmlPageAsByteArr = UTF8.getBytes(htmlPage);
+        byte[] resultAsByteArr = WebWrapper.setServerIncludeFiles(htmlPageAsByteArr, "includefiles/");
+        String result = UTF8.getString(resultAsByteArr);
+        assertThat(result).isEqualTo(expected);
+    }
+
+
+    @Test
+    public void setServerIncludeFiles_NoIncludes_IncludesAdded() {
+        String htmlPage = "<html><head></head><body><h1>Header</h1><br></body></html>";
+        byte[] htmlPageAsByteArr = UTF8.getBytes(htmlPage);
+        byte[] resultAsByteArr = WebWrapper.setServerIncludeFiles(htmlPageAsByteArr, "includefiles/");
+        String result = UTF8.getString(resultAsByteArr);
+        assertThat(result).isEqualTo(htmlPage);
+    }
+
+
+    @Test
+    public void setServerIncludeFiles_IncludesWithIncludes_IncludesAdded() {
+        String htmlPage = "111 <!--#include file=\"include_with_includes.inc\" --> 111";
+        String expected = "111 222 ThisIsIncludeFile1 ThisIsIncludeFile2 333 ThisIsIncludeFile2 333 222 111";
         byte[] htmlPageAsByteArr = UTF8.getBytes(htmlPage);
         byte[] resultAsByteArr = WebWrapper.setServerIncludeFiles(htmlPageAsByteArr, "includefiles/");
         String result = UTF8.getString(resultAsByteArr);
