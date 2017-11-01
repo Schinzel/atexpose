@@ -242,30 +242,28 @@ public class WebWrapper implements IWrapper {
         String mainFileContent = UTF8.getString(fileContent);
         //Create holder of return string
         StringBuffer fileContentReturn = new StringBuffer();
-        ///Create a matcher for the include file tags on the file content
-        Matcher includeFileMatcher = INCLUDE_FILE_PATTERN.matcher(mainFileContent);
-        //Go through all include file tags in the file
-        while (includeFileMatcher.find()) {
-            //Get the name of the include file
-            String includeFilename = includeFileMatcher.group(1);
-            //Add directory to file name
-            includeFilename = directory + includeFilename;
-            String includeFileContent;
-            if (FileRW.fileExists(includeFilename)) {
-                //Get include file content
-                includeFileContent = FileRW.readFileAsString(includeFilename);
-            } else {
-                includeFileContent = "Include file '" + includeFilename + "' not found";
+        //While there are include files
+        while (INCLUDE_FILE_PATTERN.matcher(mainFileContent).find()) {
+            ///Create a matcher for the include file tags on the file content
+            Matcher includeFileMatcher = INCLUDE_FILE_PATTERN.matcher(mainFileContent);
+            //Go through all include file tags in the file
+            while (includeFileMatcher.find()) {
+                //Get the name of the include file and add directory to file name
+                String includeFileName = directory + includeFileMatcher.group(1);
+                String includeFileContent = FileRW.fileExists(includeFileName)
+                        ? FileRW.readFileAsString(includeFileName)
+                        : "Include file '" + includeFileName + "' not found";
+                //Replace all $ with \$. This as dollar sign has a special meaning in Matcher.appendReplacement
+                includeFileContent = includeFileContent.replaceAll("\\$", "\\\\\\$");
+                //Add content up until include file and replace include file reference with include file content
+                includeFileMatcher.appendReplacement(fileContentReturn, includeFileContent);
             }
-            //Replace all $ with \$. This as dollar sign has a special meaning in Matcher.appendReplacement
-            includeFileContent = includeFileContent.replaceAll("\\$", "\\\\\\$");
-            //Add content up until include file and replace include file reference with include file content
-            includeFileMatcher.appendReplacement(fileContentReturn, includeFileContent);
+            //Add the end of the file to return string
+            includeFileMatcher.appendTail(fileContentReturn);
+            mainFileContent = fileContentReturn.toString();
         }
-        //Add the end of the file to return string
-        includeFileMatcher.appendTail(fileContentReturn);
         //Create byte array and return
-        return UTF8.getBytes(fileContentReturn.toString());
+        return UTF8.getBytes(mainFileContent);
     }
 
 
