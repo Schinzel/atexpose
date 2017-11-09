@@ -14,7 +14,6 @@ import java.io.IOException;
  * Created by schinzel on 2017-04-27.
  */
 class GSuiteAuth {
-    private static String GOOGLE_AUTH_URL = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=";
 
 
     /**
@@ -38,9 +37,10 @@ class GSuiteAuth {
      * @param token Token to send as query param to Google.
      * @return The email address of the user making a request.
      */
-    String requestUsersEmail(String token) {
+    private String requestUsersEmail(String token) {
         //Create URL with argument token as query string parameter.
-        String url = Str.create().a(GOOGLE_AUTH_URL).a(token).toString();
+        String googleAuthUrl = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=";
+        String url = Str.create().a(googleAuthUrl).a(token).toString();
         try {
             //Make request to google.
             Connection.Response response = Jsoup

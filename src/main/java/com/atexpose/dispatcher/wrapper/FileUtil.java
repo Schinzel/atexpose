@@ -11,7 +11,7 @@ import java.util.Locale;
  * Created by schinzel on 2017-06-03.
  */
 class FileUtil {
-    static ImmutableSet<String> TEXT_FILE = new ImmutableSet.Builder<String>()
+    private static ImmutableSet<String> TEXT_FILE = new ImmutableSet.Builder<String>()
             .add("css")
             .add("html")
             .add("htm")
@@ -30,7 +30,7 @@ class FileUtil {
 
     /**
      *
-     * @param filename
+     * @param filename The name of the file to check
      * @return True if the argument file name has a text file extension
      */
     static boolean isTextFile(String filename) {
@@ -45,7 +45,7 @@ class FileUtil {
     /**
      * Method to test if request is for a file or folder
      *
-     * @param fileOrPath
+     * @param fileOrPath The string to check
      * @return True if the argument is a path to a dir
      */
     static boolean isDirPath(String fileOrPath) {

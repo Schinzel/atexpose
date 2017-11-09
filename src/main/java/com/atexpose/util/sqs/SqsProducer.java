@@ -60,7 +60,7 @@ public class SqsProducer implements IQueueProducer {
     /**
      * @return A unique id.
      */
-    static String getUniqueId() {
+    private static String getUniqueId() {
         return String.valueOf(System.nanoTime()) + "_" + RandomUtil.getRandomString(10);
     }
 
