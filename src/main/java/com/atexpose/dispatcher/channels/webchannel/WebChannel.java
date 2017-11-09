@@ -12,6 +12,7 @@ import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 import lombok.experimental.Accessors;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -187,12 +188,9 @@ public class WebChannel implements IChannel {
                 throw new RuntimeException("Error while writing to socket " + ioe.getMessage());
             }
         } finally {
-            try {
-                //Close the client connection.
-                mClientSocket.close();
-                mResponseWriteTime = (System.currentTimeMillis() - mResponseWriteTime);
-            } catch (IOException e) {
-            }
+            //Close the client connection.
+            IOUtils.closeQuietly(mClientSocket);
+            mResponseWriteTime = (System.currentTimeMillis() - mResponseWriteTime);
         }
     }
 

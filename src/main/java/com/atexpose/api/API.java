@@ -74,14 +74,8 @@ public class API implements IStateNode {
     }
 
 
-    private API addPrimitiveDataType(AbstractDataType adt) {
+    private void addPrimitiveDataType(AbstractDataType adt) {
         mDataTypes.add(adt);
-        return this;
-    }
-
-
-    public boolean methodExits(String methodName) {
-        return (this.getMethodObject(methodName) != null);
     }
 
 
@@ -119,14 +113,6 @@ public class API implements IStateNode {
     }
 
 
-    public API addArgument(String name, DataType dataType, String description) {
-        Argument argument = Argument.builder()
-                .name(name)
-                .dataType(dataType)
-                .description(description)
-                .build();
-        return this.addArgument(argument);
-    }
 
 
     public API addArgument(Argument arg) {
