@@ -29,7 +29,7 @@ public class SqsConsumer {
     @Getter boolean mAllSystemsWorking = true;
 
 
-    SqsConsumer(AmazonSQS sqsClient, String queueUrl) {
+    private SqsConsumer(AmazonSQS sqsClient, String queueUrl) {
         mSqsClient = sqsClient;
         mQueueUrl = queueUrl;
     }

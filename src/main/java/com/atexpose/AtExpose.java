@@ -111,7 +111,7 @@ public class AtExpose implements IStateNode {
      */
     public AtExpose start(Iterable<IDispatcher> dispatchers) {
         if (Checker.isNotEmpty(dispatchers)) {
-            dispatchers.forEach(d -> this.start(d));
+            dispatchers.forEach(this::start);
         }
         return this;
     }

@@ -54,14 +54,14 @@ class StringSplitter {
     }
 
 
-    static String scrubQualifiers(String value, char qualifier) {
+    private static String scrubQualifiers(String value, char qualifier) {
         return (isSurroundedByQualifiers(value, qualifier))
                 ? value.substring(1, value.length() - 1)
                 : value;
     }
 
 
-    static boolean isSurroundedByQualifiers(String value, char qualifier) {
+    private static boolean isSurroundedByQualifiers(String value, char qualifier) {
         return (value.length() > 1 && value.charAt(0) == qualifier && value.charAt(value.length() - 1) == qualifier);
     }
 }

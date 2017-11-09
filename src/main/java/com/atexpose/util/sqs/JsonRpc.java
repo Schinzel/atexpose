@@ -42,8 +42,8 @@ public class JsonRpc {
 
 
     /**
-     * @param arguments
-     * @return Example: "params": {"key1": "val1", "key2": "val2"}
+     * @param arguments Arguments to convert to string
+     * @return The argument map as a string. Example: "params": {"key1": "val1", "key2": "val2"}
      */
     static String getArguments(Map<String, String> arguments) {
         Thrower.throwIfVarNull(arguments, "arguments");

@@ -74,7 +74,7 @@ class ExposedAtExpose {
     }
 
 
-    String addLogger(String dispatcherName, String logFormatter, String logWriter, String cryptoKey, LoggerType loggerType) {
+    private String addLogger(String dispatcherName, String logFormatter, String logWriter, String cryptoKey, LoggerType loggerType) {
         ICipher crypto = Checker.isEmpty(cryptoKey)
                 ? new NoCipher()
                 : new Aes256Gcm(cryptoKey);
