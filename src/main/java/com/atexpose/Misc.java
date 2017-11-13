@@ -54,7 +54,7 @@ public class Misc {
 
 
     @Expose(
-            description = "Returns the time in UTC when the server was started.",
+            description = "Returns the time when the server was started",
             labels = {"@Expose", "Util"}
     )
     public String startTime() {
