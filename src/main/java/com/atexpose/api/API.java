@@ -113,11 +113,19 @@ public class API implements IStateNode {
     }
 
 
-
-
     public API addArgument(Argument arg) {
         mArguments.add(arg);
         return this;
+    }
+
+
+    public API addArgument(String name, DataType dataType, String description) {
+        Argument argument = Argument.builder()
+                .name(name)
+                .dataType(dataType)
+                .description(description)
+                .build();
+        return this.addArgument(argument);
     }
     // ------------------------------------
     // - EXPOSE
