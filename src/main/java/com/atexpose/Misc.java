@@ -5,6 +5,9 @@ import com.atexpose.util.DateTimeStrings;
 import io.schinzel.basicutils.Sandman;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Miscellaneous utility methods.
@@ -55,7 +58,10 @@ public class Misc {
             labels = {"@Expose", "Util"}
     )
     public String startTime() {
-        return DateTimeStrings.getDateTimeUTC(mInstanceStartTime);
+        DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String utcTime = LocalDateTime.ofInstant(mInstanceStartTime, ZoneId.of("UTC")).format(dateTimeFormat);
+        String swedishTime = LocalDateTime.ofInstant(mInstanceStartTime, ZoneId.of("Europe/Stockholm")).format(dateTimeFormat);
+        return "SWE:" + swedishTime + "  UTC:" + utcTime;
     }
 
 

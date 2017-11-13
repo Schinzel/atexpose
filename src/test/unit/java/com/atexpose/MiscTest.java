@@ -6,8 +6,6 @@ import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -20,9 +18,8 @@ public class MiscTest {
 
     @Test
     public void testEcho() {
-        Misc misc = new Misc();
-        String result = misc.echo("monkey");
-        assertEquals("monkey", result);
+        String result = new Misc().echo("monkey");
+        assertThat(result).isEqualTo("monkey");
     }
 
 
@@ -30,23 +27,23 @@ public class MiscTest {
     public void testPing() {
         Misc misc = new Misc();
         String result = misc.ping();
-        assertEquals("pong", result);
+        assertThat(result).isEqualTo("pong");
     }
 
 
     @Test
     public void testTime() {
         String result = new Misc().time();
-        boolean matches = DATE_TIME_PATTERN.matcher(result).matches();
-        assertTrue(matches);
+        assertThat(result).matches(DATE_TIME_PATTERN);
     }
 
 
     @Test
     public void startTime_NormalCase_CorrectDateTimeFormat() {
+        Pattern pattern = Pattern.compile("20[0-9][0-9]-[01][0-9]-[0-3][0-9] " +
+                "[012][0-9]:[0-5][0-9]:[0-5][0-9]");
         String result = new Misc().startTime();
-        boolean matches = DATE_TIME_PATTERN.matcher(result).matches();
-        assertTrue(matches);
+        assertThat(result).containsPattern(pattern);
     }
 
 
