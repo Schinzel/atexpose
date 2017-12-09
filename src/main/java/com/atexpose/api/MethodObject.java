@@ -28,11 +28,14 @@ import java.util.*;
  */
 @Accessors(prefix = "m")
 public class MethodObject implements IValueWithKey, IStateNode {
+    //The key of this object. Used in ValuesWithKeys collections.
     @Getter final String mKey;
     //The type of the return of the method as defined by the static variables.
     @Getter private final AbstractDataType mReturnDataType;
     //The access level required to use this method.
     @Getter private final int mAccessLevelRequiredToUseThisMethod;
+    //Flag which indicates if this method requires user to be authenticated to invoke this method
+    @Getter private final boolean mAuthRequired;
     //The object that is to be invoked
     private final Object mObject;
     //The method that this object defines
@@ -42,14 +45,13 @@ public class MethodObject implements IValueWithKey, IStateNode {
     //How many of the arguments are required.
     private final int mNoOfRequiredArguments;
     //Holds the arguments of this object.
-    private List<Argument> mArguments = Collections.emptyList();
+    private List<Argument> mArguments;
     //A list of labels to which this method belongs.
     private List<Label> mLabels;
+    //Alias, i.e. alternate method names for this method.
     private List<Alias> mAliases = new ArrayList<>();
     //A collection for CPU efficient up look of argument position.
-    private final HashMap<String, Integer> mArgumentPositions = new HashMap<>(20);
-
-    @Getter private final boolean mAuthRequired;
+    private final Map<String, Integer> mArgumentPositions = new HashMap<>(20);
     // ---------------------------------
     // - CONSTRUCTOR  -
     // ---------------------------------
@@ -59,11 +61,16 @@ public class MethodObject implements IValueWithKey, IStateNode {
     private MethodObject(Object theObject, Method method, String description, int noOfRequiredArguments,
                          List<Argument> arguments, int accessLevel, List<Label> labels,
                          AbstractDataType returnDataType, List<Alias> aliases, boolean requireAuthentication) {
+        Thrower.throwIfVarNull(theObject, "theObject");
+        Thrower.throwIfVarNull(method, "method");
+        Thrower.throwIfVarNull(description, "description");
+        Thrower.throwIfVarNull(returnDataType, "returnDataType");
+        Thrower.throwIfTrue(noOfRequiredArguments > arguments.size())
+                .message("Number of required arguments is higher than the actual number of arguments");
         String methodName = method.getName();
         this.mKey = methodName;
         mObject = theObject;
         mMethod = method;
-        Thrower.throwIfVarNull(mMethod, "Error in setting up method '" + theObject.getClass().getName() + "." + methodName + "'. Class not found.");
         mDescription = description;
         mMethod.setAccessible(true);
         mReturnDataType = returnDataType;
