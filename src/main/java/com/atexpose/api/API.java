@@ -99,7 +99,7 @@ public class API implements IStateNode {
             for (String name : names) {
                 Alias alias = new Alias(name);
                 aliases.add(alias);
-                this.mAliases.add(alias);
+                mAliases.add(alias);
             }
         }
         return aliases;
@@ -140,8 +140,7 @@ public class API implements IStateNode {
      * @return This for chaining.
      */
     public API expose(Object theObject) {
-        expose(theObject.getClass(), theObject);
-        return this;
+        return this.expose(theObject.getClass(), theObject);
     }
 
 
@@ -160,20 +159,19 @@ public class API implements IStateNode {
         } catch (IllegalAccessException ex) {
             throw new SetUpError("Could not access the class '" + theClass.getSimpleName() + "'");
         }
-        expose(theClass, theObject);
-        return this;
+        return this.expose(theClass, theObject);
     }
 
 
-    private void expose(Class theClass, Object theObject) {
+    private API expose(Class theClass, Object theObject) {
         Method[] methods = theClass.getDeclaredMethods();
         for (Method method : methods) {
             Expose expose = method.getAnnotation(Expose.class);
             if (expose != null) {
                 try {
-                    List<Argument> arguments = this.mArguments.get(Arrays.asList(expose.arguments()));
-                    List<Label> labels = this.mLabels.get(Arrays.asList(expose.labels()));
-                    List<Alias> aliases = addAliases(expose.aliases());
+                    List<Argument> arguments = mArguments.get(Arrays.asList(expose.arguments()));
+                    List<Label> labels = mLabels.get(Arrays.asList(expose.labels()));
+                    List<Alias> aliases = this.addAliases(expose.aliases());
                     AbstractDataType returnDataType = mDataTypes.get(method.getReturnType().getSimpleName());
                     MethodObject methodObject = MethodObject.builder()
                             .theObject(theObject)
@@ -192,6 +190,7 @@ public class API implements IStateNode {
                 }
             }
         }
+        return this;
     }
 
 
