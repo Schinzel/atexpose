@@ -5,7 +5,6 @@ import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
-import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.HashMap;
@@ -20,7 +19,6 @@ import java.util.Map;
  */
 class MethodArguments implements IStateNode {
     //Holds the arguments of this object
-    @Getter
     private final ImmutableList<Argument> mArguments;
     //A collection for CPU efficient up look of argument position
     private final Map<String, Integer> mArgumentPositions = new HashMap<>(20);
