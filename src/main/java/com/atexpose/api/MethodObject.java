@@ -98,8 +98,8 @@ public class MethodObject implements IValueWithKey, IStateNode {
     // - INVOKING  -
     // ---------------------------------
     public Object invoke(List<String> argumentValuesAsStrings, List<String> argumentNames, int dispatcherAccessLevel) throws ExposedInvocationException {
-        this.validateNumberOfArguments(argumentValuesAsStrings);
-        this.validateAccessLevel(dispatcherAccessLevel);
+        validateArgumentCount(argumentValuesAsStrings, mNoOfRequiredArguments, mMethodArguments.size());
+        validateAccessLevel(dispatcherAccessLevel, this.mAccessLevelRequiredToUseThisMethod);
         Object[] argumentValuesAsObjects = RequestArguments.builder()
                 .methodArguments(mMethodArguments)
                 .argumentValuesAsStrings(argumentValuesAsStrings)
@@ -135,47 +135,19 @@ public class MethodObject implements IValueWithKey, IStateNode {
     }
 
 
-    // ---------------------------------
-    // - ARGUMENT HANDLING  -
-    // ---------------------------------
-    private void validateNumberOfArguments(List<String> arguments) {
-        int noOfArgumentsInCall = 0;
-        if (!Checker.isEmpty(arguments)) {
-            noOfArgumentsInCall = arguments.size();
-        }
-        StringBuilder errorText = new StringBuilder();
-        String argumentSingular = "argument";
-        String argumentPlural = "arguments";
-        if (noOfArgumentsInCall < this.mNoOfRequiredArguments) {
-            errorText.append("Too few arguments. Was ").append(noOfArgumentsInCall).append(" and method ")
-                    .append(this.getKey()).append(" requires a minimum of ").append(this.mNoOfRequiredArguments).append(" ");
-            if (this.mNoOfRequiredArguments == 1) {
-                errorText.append(argumentSingular);
-            } else {
-                errorText.append(argumentPlural);
-            }
-            errorText.append(".");
-        }
-        if (noOfArgumentsInCall > this.mMethodArguments.size()) {
-            errorText.append("Too many arguments. Was ").append(noOfArgumentsInCall).append(" and method ")
-                    .append(this.getKey()).append(" takes a maximum of ").append(this.mMethodArguments.size()).append(" ");
-            if (this.mMethodArguments.size() == 1) {
-                errorText.append(argumentSingular);
-            } else {
-                errorText.append(argumentPlural);
-            }
-            errorText.append(".");
-        }
-        if (!errorText.toString().isEmpty()) {
-            throw new RuntimeError(errorText.toString());
-        }
+    private static void validateArgumentCount(List<String> arguments, int minNumOfArgs, int maxNumOfArgs) {
+        int noOfArgumentsInCall = Checker.isEmpty(arguments) ? 0 : arguments.size();
+        boolean tooFewArguments = noOfArgumentsInCall < minNumOfArgs;
+        boolean tooManyArguments = noOfArgumentsInCall > maxNumOfArgs;
+        Thrower.throwIfTrue(tooFewArguments || tooManyArguments)
+                .message("Incorrect number of arguments. Was " + noOfArgumentsInCall + ". Min is " + minNumOfArgs + " and max is " + maxNumOfArgs + ".");
     }
 
 
-    private void validateAccessLevel(int accessLevelOfDispatcher) {
-        if (accessLevelOfDispatcher < this.mAccessLevelRequiredToUseThisMethod) {
+    private void validateAccessLevel(int accessLevelOfDispatcher, int requiredAccessLevel) {
+        if (accessLevelOfDispatcher < requiredAccessLevel) {
             throw new RuntimeException("The method '" + this.getKey()
-                    + "' has access level " + this.mAccessLevelRequiredToUseThisMethod
+                    + "' has access level " + requiredAccessLevel
                     + ". The Dispatcher used only has access to level " + accessLevelOfDispatcher
                     + " methods and below.");
         }
