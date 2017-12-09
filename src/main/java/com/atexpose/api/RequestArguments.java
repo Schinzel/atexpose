@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Purpose of this class is to represent the request arguments as objects.
  * <p>
- * An instance of this class transforms the request arguments from string to objects,
+ * An instance of this class transforms the request arguments from strings to objects.
  * And also sets the missing arguments to their default values.
  * <p>
  * Created by Schinzel on 2017-12-09
