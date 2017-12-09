@@ -28,6 +28,7 @@ import java.util.*;
  */
 @Accessors(prefix = "m")
 public class MethodObject implements IValueWithKey, IStateNode {
+    //The key of this object. Used in ValuesWithKeys collections.
     @Getter final String mKey;
     //The type of the return of the method as defined by the static variables.
     @Getter private final AbstractDataType mReturnDataType;
@@ -45,6 +46,7 @@ public class MethodObject implements IValueWithKey, IStateNode {
     private List<Argument> mArguments = Collections.emptyList();
     //A list of labels to which this method belongs.
     private List<Label> mLabels;
+    //Alias, i.e. alternate method names for this method.
     private List<Alias> mAliases = new ArrayList<>();
     //A collection for CPU efficient up look of argument position.
     private final HashMap<String, Integer> mArgumentPositions = new HashMap<>(20);
