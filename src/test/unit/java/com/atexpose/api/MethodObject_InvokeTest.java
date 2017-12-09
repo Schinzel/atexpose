@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 
-public class MethodObjectTest {
+public class MethodObject_InvokeTest {
 
 
     @Test

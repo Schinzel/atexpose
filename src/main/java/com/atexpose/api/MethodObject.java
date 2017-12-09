@@ -61,7 +61,10 @@ public class MethodObject implements IValueWithKey, IStateNode {
     private MethodObject(Object theObject, Method method, String description, int noOfRequiredArguments,
                          List<Argument> arguments, int accessLevel, List<Label> labels,
                          AbstractDataType returnDataType, List<Alias> aliases, boolean requireAuthentication) {
+        Thrower.throwIfVarNull(theObject, "theObject");
         Thrower.throwIfVarNull(method, "method");
+        Thrower.throwIfVarNull(description, "description");
+        Thrower.throwIfVarNull(returnDataType, "returnDataType");
         Thrower.throwIfTrue(noOfRequiredArguments > arguments.size())
                 .message("Number of required arguments is higher than the actual number of arguments");
         String methodName = method.getName();
