@@ -47,7 +47,7 @@ public class MethodObject implements IValueWithKey, IStateNode {
     //How many of the arguments are required.
     private final int mNoOfRequiredArguments;
     //Holds the arguments of this method
-    private MethodArguments mArguments;
+    private MethodArguments mMethodArguments;
     //A list of labels to which this method belongs.
     private List<Label> mLabels;
     //Alias, i.e. alternate method names for this method.
@@ -75,7 +75,7 @@ public class MethodObject implements IValueWithKey, IStateNode {
         mReturnDataType = returnDataType;
         mNoOfRequiredArguments = noOfRequiredArguments;
         mAccessLevelRequiredToUseThisMethod = accessLevel;
-        mArguments = new MethodArguments(arguments);
+        mMethodArguments = new MethodArguments(arguments);
         mAuthRequired = requireAuthentication;
         if (!Checker.isEmpty(aliases)) {
             mAliases = aliases;
@@ -97,11 +97,15 @@ public class MethodObject implements IValueWithKey, IStateNode {
     // ---------------------------------
     // - INVOKING  -
     // ---------------------------------
-    public Object invoke(List<String> argumentValues, List<String> argumentNames, int dispatcherAccessLevel) throws ExposedInvocationException {
-        this.checkNumberOfArguments(argumentValues);
-        this.checkAccessLevel(dispatcherAccessLevel);
-        Object[] argumentValuesAsObjects = this.castArgumentValuesToUse(argumentValues, argumentNames);
-        argumentValuesAsObjects = this.setDefaultArgumentValues(argumentValuesAsObjects, argumentNames);
+    public Object invoke(List<String> argumentValuesAsStrings, List<String> argumentNames, int dispatcherAccessLevel) throws ExposedInvocationException {
+        this.validateNumberOfArguments(argumentValuesAsStrings);
+        this.validateAccessLevel(dispatcherAccessLevel);
+        Object[] argumentValuesAsObjects = RequestArguments.builder()
+                .methodArguments(mMethodArguments)
+                .argumentValuesAsStrings(argumentValuesAsStrings)
+                .argumentNames(argumentNames)
+                .build()
+                .getMArgumentValuesAsObjects();
         return MethodObject.invoke(mMethod, mObject, argumentValuesAsObjects);
     }
 
@@ -134,10 +138,10 @@ public class MethodObject implements IValueWithKey, IStateNode {
     // ---------------------------------
     // - ARGUMENT HANDLING  -
     // ---------------------------------
-    private void checkNumberOfArguments(List<String> argumentValues) {
+    private void validateNumberOfArguments(List<String> arguments) {
         int noOfArgumentsInCall = 0;
-        if (!Checker.isEmpty(argumentValues)) {
-            noOfArgumentsInCall = argumentValues.size();
+        if (!Checker.isEmpty(arguments)) {
+            noOfArgumentsInCall = arguments.size();
         }
         StringBuilder errorText = new StringBuilder();
         String argumentSingular = "argument";
@@ -152,10 +156,10 @@ public class MethodObject implements IValueWithKey, IStateNode {
             }
             errorText.append(".");
         }
-        if (noOfArgumentsInCall > this.mArguments.size()) {
+        if (noOfArgumentsInCall > this.mMethodArguments.size()) {
             errorText.append("Too many arguments. Was ").append(noOfArgumentsInCall).append(" and method ")
-                    .append(this.getKey()).append(" takes a maximum of ").append(this.mArguments.size()).append(" ");
-            if (this.mArguments.size() == 1) {
+                    .append(this.getKey()).append(" takes a maximum of ").append(this.mMethodArguments.size()).append(" ");
+            if (this.mMethodArguments.size() == 1) {
                 errorText.append(argumentSingular);
             } else {
                 errorText.append(argumentPlural);
@@ -168,54 +172,7 @@ public class MethodObject implements IValueWithKey, IStateNode {
     }
 
 
-    private Object[] castArgumentValuesToUse(List<String> argumentValuesAsStrings, List<String> argumentNames) {
-        Object[] argumentValuesAsObjects = null;
-        if (argumentValuesAsStrings != null && argumentValuesAsStrings.size() > 0) {
-            argumentValuesAsObjects = new Object[argumentValuesAsStrings.size()];
-            AbstractDataType dataType;
-            for (int i = 0; i < argumentValuesAsStrings.size(); i++) {
-                if (Checker.isEmpty(argumentNames)) {
-                    dataType = mArguments.getArgument(i).getDataType();
-                } else {
-                    dataType = mArguments.getArgument(argumentNames.get(i)).getDataType();
-                    if (dataType == null) {
-                        throw new RuntimeError("Unknown data type '" + argumentNames.get(i) + "'");
-                    }
-                }
-                argumentValuesAsObjects[i] = dataType.convertFromStringToDataType(argumentValuesAsStrings.get(i));
-            }
-        }
-        return argumentValuesAsObjects;
-    }
-
-
-    private Object[] setDefaultArgumentValues(Object[] argumentValues, List<String> argumentNames) {
-        // Get a copy of the argument values
-        Object[] argumentDefaultValues = mArguments.getCopyOfArgumentDefaultValues();
-        // If no argument names were supplied
-        if (Checker.isEmpty(argumentNames)) {
-            // If argument values where supplied
-            if (argumentValues != null) {
-                System.arraycopy(argumentValues, 0, argumentDefaultValues, 0, argumentValues.length);
-            }
-        }// else, i.e. argument names were supplied
-        else {
-            // Get the argument positions
-            int[] argumentPositions = mArguments.getArgumentPositions(argumentNames);
-            Object inputArgumentValue;
-            int positionInputArgument;
-            // Go through the arguments array as set values
-            for (int i = 0; i < argumentNames.size(); i++) {
-                positionInputArgument = argumentPositions[i];
-                inputArgumentValue = argumentValues[i];
-                argumentDefaultValues[positionInputArgument] = inputArgumentValue;
-            }
-        }
-        return argumentDefaultValues;
-    }
-
-
-    private void checkAccessLevel(int accessLevelOfDispatcher) {
+    private void validateAccessLevel(int accessLevelOfDispatcher) {
         if (accessLevelOfDispatcher < this.mAccessLevelRequiredToUseThisMethod) {
             throw new RuntimeException("The method '" + this.getKey()
                     + "' has access level " + this.mAccessLevelRequiredToUseThisMethod
@@ -234,15 +191,15 @@ public class MethodObject implements IValueWithKey, IStateNode {
     String getSyntax() {
         Str str = Str.create().asp(mReturnDataType.getKey())
                 .a(this.getKey()).a("(");
-        for (int i = 0; i < mArguments.size(); i++) {
+        for (int i = 0; i < mMethodArguments.size(); i++) {
             if (i > 0) {
                 str.a(", ");
             }
             if (i >= this.mNoOfRequiredArguments) {
                 str.a('[');
             }
-            str.asp(mArguments.getArgument(i).getDataType().getKey());
-            str.a(mArguments.getArgument(i).getKey());
+            str.asp(mMethodArguments.getArgument(i).getDataType().getKey());
+            str.a(mMethodArguments.getArgument(i).getKey());
             if (i >= this.mNoOfRequiredArguments) {
                 str.a(']');
             }
@@ -261,7 +218,7 @@ public class MethodObject implements IValueWithKey, IStateNode {
                 .add("AccessLevelRequired", this.getAccessLevelRequiredToUseThisMethod())
                 .add("RequiredArgumentsCount", mNoOfRequiredArguments)
                 .add("JavaClass", mObject.getClass().getCanonicalName())
-                .addChild("Arguments", mArguments)
+                .addChild("Arguments", mMethodArguments)
                 .addChildren("Aliases", mAliases)
                 .addChildren("Labels", mLabels)
                 .build();
