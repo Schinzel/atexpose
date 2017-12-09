@@ -61,11 +61,13 @@ public class MethodObject implements IValueWithKey, IStateNode {
     private MethodObject(Object theObject, Method method, String description, int noOfRequiredArguments,
                          List<Argument> arguments, int accessLevel, List<Label> labels,
                          AbstractDataType returnDataType, List<Alias> aliases, boolean requireAuthentication) {
+        Thrower.throwIfVarNull(method, "method");
+        Thrower.throwIfTrue(noOfRequiredArguments > arguments.size())
+                .message("Number of required arguments is higher than the actual number of arguments");
         String methodName = method.getName();
         this.mKey = methodName;
         mObject = theObject;
         mMethod = method;
-        Thrower.throwIfVarNull(mMethod, "Error in setting up method '" + theObject.getClass().getName() + "." + methodName + "'. Class not found.");
         mDescription = description;
         mMethod.setAccessible(true);
         mReturnDataType = returnDataType;
