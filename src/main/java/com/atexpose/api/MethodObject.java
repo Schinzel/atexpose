@@ -14,11 +14,13 @@ import io.schinzel.basicutils.str.Str;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The definition of a method. Used to invoke methods. This object can be seen
@@ -44,14 +46,12 @@ public class MethodObject implements IValueWithKey, IStateNode {
     private final String mDescription;
     //How many of the arguments are required.
     private final int mNoOfRequiredArguments;
-    //Holds the arguments of this object.
-    private List<Argument> mArguments;
+    //Holds the arguments of this method
+    private MethodArguments mArguments;
     //A list of labels to which this method belongs.
     private List<Label> mLabels;
     //Alias, i.e. alternate method names for this method.
     private List<Alias> mAliases = new ArrayList<>();
-    //A collection for CPU efficient up look of argument position.
-    private final Map<String, Integer> mArgumentPositions = new HashMap<>(20);
     // ---------------------------------
     // - CONSTRUCTOR  -
     // ---------------------------------
@@ -67,8 +67,7 @@ public class MethodObject implements IValueWithKey, IStateNode {
         Thrower.throwIfVarNull(returnDataType, "returnDataType");
         Thrower.throwIfTrue(noOfRequiredArguments > arguments.size())
                 .message("Number of required arguments is higher than the actual number of arguments");
-        String methodName = method.getName();
-        this.mKey = methodName;
+        this.mKey = method.getName();
         mObject = theObject;
         mMethod = method;
         mDescription = description;
@@ -76,19 +75,8 @@ public class MethodObject implements IValueWithKey, IStateNode {
         mReturnDataType = returnDataType;
         mNoOfRequiredArguments = noOfRequiredArguments;
         mAccessLevelRequiredToUseThisMethod = accessLevel;
-        mArguments = arguments;
+        mArguments = new MethodArguments(arguments);
         mAuthRequired = requireAuthentication;
-        //Put arguments and its aliases in a hash map for quick up look of argument position
-        int argumentPosition = 0;
-        for (Argument argument : mArguments) {
-            mArgumentPositions.put(argument.getKey(), argumentPosition);
-            if (!Checker.isEmpty(mAliases)) {
-                for (String alias : argument.getAliases()) {
-                    mArgumentPositions.put(alias, argumentPosition);
-                }
-            }
-            argumentPosition++;
-        }
         if (!Checker.isEmpty(aliases)) {
             mAliases = aliases;
             for (Alias alias : mAliases) {
@@ -186,10 +174,10 @@ public class MethodObject implements IValueWithKey, IStateNode {
             argumentValuesAsObjects = new Object[argumentValuesAsStrings.size()];
             AbstractDataType dataType;
             for (int i = 0; i < argumentValuesAsStrings.size(); i++) {
-                if (argumentNames == null || argumentNames.size() == 0) {
-                    dataType = this.getArgument(i).getDataType();
+                if (Checker.isEmpty(argumentNames)) {
+                    dataType = mArguments.getArgument(i).getDataType();
                 } else {
-                    dataType = this.getArgument(argumentNames.get(i)).getDataType();
+                    dataType = mArguments.getArgument(argumentNames.get(i)).getDataType();
                     if (dataType == null) {
                         throw new RuntimeError("Unknown data type '" + argumentNames.get(i) + "'");
                     }
@@ -203,7 +191,7 @@ public class MethodObject implements IValueWithKey, IStateNode {
 
     private Object[] setDefaultArgumentValues(Object[] argumentValues, List<String> argumentNames) {
         // Get a copy of the argument values
-        Object[] argumentDefaultValues = this.getCopyOfArgumentDefaultValues();
+        Object[] argumentDefaultValues = mArguments.getCopyOfArgumentDefaultValues();
         // If no argument names were supplied
         if (Checker.isEmpty(argumentNames)) {
             // If argument values where supplied
@@ -213,7 +201,7 @@ public class MethodObject implements IValueWithKey, IStateNode {
         }// else, i.e. argument names were supplied
         else {
             // Get the argument positions
-            int[] argumentPositions = this.getArgumentPositions(argumentNames);
+            int[] argumentPositions = mArguments.getArgumentPositions(argumentNames);
             Object inputArgumentValue;
             int positionInputArgument;
             // Go through the arguments array as set values
@@ -224,56 +212,6 @@ public class MethodObject implements IValueWithKey, IStateNode {
             }
         }
         return argumentDefaultValues;
-    }
-
-
-    private Argument getArgument(String argName) {
-        return mArguments.get(getArgumentPosition(argName));
-    }
-
-
-    private Argument getArgument(int pos) {
-        return mArguments.get(pos);
-    }
-
-
-    /**
-     * Return the positions of a set of argument names in the method call of the
-     * held method.
-     */
-    private int[] getArgumentPositions(List<String> argumentNames) {
-        int[] argPositions = new int[argumentNames.size()];
-        for (int i = 0; i < argumentNames.size(); i++) {
-            argPositions[i] = this.getArgumentPosition(argumentNames.get(i));
-        }
-        return argPositions;
-    }
-
-
-    /**
-     * Return the position of a single argument name.
-     */
-    private int getArgumentPosition(String argumentName) {
-        Thrower.throwIfFalse(mArgumentPositions.containsKey(argumentName), "No such argument named '" + argumentName + "' in method " + this.getKey());
-        return mArgumentPositions.get(argumentName);
-    }
-
-
-    /**
-     * Returns a copy if the default values.
-     */
-    private Object[] getCopyOfArgumentDefaultValues() {
-        if (Checker.isEmpty(mArguments)) {
-            return ArrayUtils.EMPTY_OBJECT_ARRAY;
-        } else {
-            Object[] returnObjects;
-            returnObjects = new Object[mArguments.size()];
-            for (int i = 0; i < mArguments.size(); i++) {
-                returnObjects[i] = mArguments.get(i).getDefaultValue();
-
-            }
-            return returnObjects;
-        }
     }
 
 
@@ -303,8 +241,8 @@ public class MethodObject implements IValueWithKey, IStateNode {
             if (i >= this.mNoOfRequiredArguments) {
                 str.a('[');
             }
-            str.asp(mArguments.get(i).getDataType().getKey());
-            str.a(mArguments.get(i).getKey());
+            str.asp(mArguments.getArgument(i).getDataType().getKey());
+            str.a(mArguments.getArgument(i).getKey());
             if (i >= this.mNoOfRequiredArguments) {
                 str.a(']');
             }
@@ -323,8 +261,8 @@ public class MethodObject implements IValueWithKey, IStateNode {
                 .add("AccessLevelRequired", this.getAccessLevelRequiredToUseThisMethod())
                 .add("RequiredArgumentsCount", mNoOfRequiredArguments)
                 .add("JavaClass", mObject.getClass().getCanonicalName())
+                .addChild("Arguments", mArguments)
                 .addChildren("Aliases", mAliases)
-                .addChildren("Arguments", mArguments)
                 .addChildren("Labels", mLabels)
                 .build();
     }
