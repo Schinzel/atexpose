@@ -2,6 +2,7 @@ package com.atexpose.api;
 
 import com.atexpose.api.datatypes.DataType;
 import com.google.common.collect.ImmutableList;
+import io.schinzel.basicutils.state.State;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -16,16 +17,19 @@ public class MethodArgumentsTest {
     private MethodArguments getThreeArguments() {
         Argument argument1 = Argument.builder()
                 .name("arg1")
+                .alias("arg1Alias")
                 .dataType(DataType.STRING)
                 .defaultValue("my_default_value")
                 .build();
         Argument argument2 = Argument.builder()
                 .name("arg2")
+                .alias("arg2Alias")
                 .dataType(DataType.INT)
                 .defaultValue("1234")
                 .build();
         Argument argument3 = Argument.builder()
                 .name("arg3")
+                .alias("arg3Alias")
                 .dataType(DataType.BOOLEAN)
                 .defaultValue("true")
                 .build();
@@ -86,6 +90,13 @@ public class MethodArgumentsTest {
     @Test
     public void getArgument_ExistingArgumentName_ArgumentWithRequestedName() {
         Argument argument = this.getThreeArguments().getArgument("arg2");
+        assertThat(argument.getKey()).isEqualToIgnoringCase("arg2");
+    }
+
+
+    @Test
+    public void getArgument_ArgumentNameAlias_ArgumentWithRequestedAlias() {
+        Argument argument = this.getThreeArguments().getArgument("arg2Alias");
         assertThat(argument.getKey()).isEqualToIgnoringCase("arg2");
     }
 
@@ -187,6 +198,14 @@ public class MethodArgumentsTest {
 
 
     @Test
+    public void getArgumentPositions__3Arguments_arg3Alias_arg2Alias_arg1Alias__Array_2_1_0() {
+        List<String> list = ImmutableList.of("arg3Alias", "arg2Alias", "arg1Alias");
+        int[] argumentPositions = this.getThreeArguments().getArgumentPositions(list);
+        assertThat(argumentPositions).containsExactly(2, 1, 0);
+    }
+
+
+    @Test
     public void getCopyOfArgumentDefaultValues_NullConstructorArgument_EmptyArray() {
         Object[] copyOfArgumentDefaultValues = MethodArguments.create(null).getCopyOfArgumentDefaultValues();
         assertThat(copyOfArgumentDefaultValues).isEmpty();
@@ -195,9 +214,16 @@ public class MethodArgumentsTest {
 
 
     @Test
-    public void getCopyOfArgumentDefaultValues_3Arguments_() {
+    public void getCopyOfArgumentDefaultValues_3Arguments_DefaultValuesInCorrectDataTypes() {
         Object[] copyOfArgumentDefaultValues = this.getThreeArguments().getCopyOfArgumentDefaultValues();
         assertThat(copyOfArgumentDefaultValues)
                 .containsExactly("my_default_value", 1234, true);
+    }
+
+
+    @Test
+    public void getState_3Arguments_Arguments() {
+        State state = this.getThreeArguments().getState();
+        assertThat(state.getString()).contains("Arguments");
     }
 }
