@@ -63,7 +63,7 @@ public class MethodArguments implements IStateNode {
     }
 
 
-    int size() {
+    public int size() {
         return mArguments.size();
     }
 

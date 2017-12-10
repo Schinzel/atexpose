@@ -1,4 +1,4 @@
-package com.atexpose.api.requestarguments;
+package com.atexpose.dispatcher.invocation;
 
 /**
  * Purpose of this interface is to represent the request arguments.

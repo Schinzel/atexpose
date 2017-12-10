@@ -1,13 +1,6 @@
 package com.atexpose.api;
 
 import com.atexpose.api.datatypes.AbstractDataType;
-import com.atexpose.api.requestarguments.IRequestArguments;
-import com.atexpose.api.requestarguments.RequestArgumentsNamed;
-import com.atexpose.api.requestarguments.RequestArgumentsUnnamed;
-import com.atexpose.errors.ExposedInvocationException;
-import com.atexpose.errors.IExceptionProperties;
-import com.atexpose.errors.RuntimeError;
-import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.collections.valueswithkeys.IValueWithKey;
@@ -18,12 +11,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The definition of a method. Used to invoke methods. This class can be seen
@@ -42,15 +33,15 @@ public class MethodObject implements IValueWithKey, IStateNode {
     //Flag which indicates if this method requires user to be authenticated to invoke this method
     @Getter private final boolean mAuthRequired;
     //The object that is to be invoked
-    private final Object mObject;
+    @Getter private final Object mObject;
     //The method that this object defines
-    private final Method mMethod;
+    @Getter private final Method mMethod;
     //Holds a description of the method.
     private final String mDescription;
     //How many of the arguments are required.
-    private final int mNoOfRequiredArguments;
+    @Getter private final int mNoOfRequiredArguments;
     //Holds the arguments of this method
-    private MethodArguments mMethodArguments;
+    @Getter private final MethodArguments mMethodArguments;
     //A list of labels to which this method belongs.
     private List<Label> mLabels;
     //Alias, i.e. alternate method names for this method.
@@ -91,66 +82,6 @@ public class MethodObject implements IValueWithKey, IStateNode {
             }
             Collections.sort(mLabels);
         }
-    }
-
-
-    /**
-     * @param requestArgumentValues The argument values of the request.
-     * @param requestArgumentNames  The names of the arguments in the request. Is empty if unnamed arguments
-     *                              are used. If is not empty is synced with the argument values.
-     * @return The response of the invoked method
-     * @throws ExposedInvocationException Exception thrown if invoked method throws an error
-     */
-    public Object invoke(List<String> requestArgumentValues, List<String> requestArgumentNames) throws ExposedInvocationException {
-        validateArgumentCount(requestArgumentValues, mNoOfRequiredArguments, mMethodArguments.size());
-        IRequestArguments requestArguments = Checker.isEmpty(requestArgumentNames)
-                ?
-                RequestArgumentsUnnamed.builder()
-                        .methodArguments(mMethodArguments)
-                        .argumentValuesAsStrings(requestArgumentValues)
-                        .build()
-                :
-                RequestArgumentsNamed.builder()
-                        .methodArguments(mMethodArguments)
-                        .argumentValuesAsStrings(requestArgumentValues)
-                        .argumentNames(requestArgumentNames)
-                        .build();
-        Object[] argumentValuesAsObjects = requestArguments.getArgumentValuesAsObjects();
-        return MethodObject.invoke(mMethod, mObject, argumentValuesAsObjects);
-    }
-
-
-    static Object invoke(Method method, Object object, Object[] argumentValuesAsObjects) throws ExposedInvocationException {
-        try {
-            return method.invoke(object, argumentValuesAsObjects);
-        } catch (InvocationTargetException ite) {
-            Throwable cause = ite.getCause();
-            StackTraceElement ste = cause.getStackTrace()[0];
-            Map<String, String> properties = ImmutableMap.<String, String>builder()
-                    .put("ErrorMessage", cause.getMessage())
-                    .put("Method", ste.getMethodName())
-                    .put("Class", ste.getClassName())
-                    .put("LineNumber", String.valueOf(ste.getLineNumber()))
-                    .build();
-            if (ite.getCause() instanceof IExceptionProperties) {
-                properties = ImmutableMap.<String, String>builder()
-                        .putAll(properties)
-                        .putAll(((IExceptionProperties) cause).getProperties())
-                        .build();
-            }
-            throw new ExposedInvocationException(properties);
-        } catch (IllegalAccessException iae) {
-            throw new RuntimeError("Access error " + iae.toString());
-        }
-    }
-
-
-    private static void validateArgumentCount(List<String> arguments, int minNumOfArgs, int maxNumOfArgs) {
-        int noOfArgumentsInCall = Checker.isEmpty(arguments) ? 0 : arguments.size();
-        boolean tooFewArguments = noOfArgumentsInCall < minNumOfArgs;
-        boolean tooManyArguments = noOfArgumentsInCall > maxNumOfArgs;
-        Thrower.throwIfTrue(tooFewArguments || tooManyArguments)
-                .message("Incorrect number of arguments. Was " + noOfArgumentsInCall + ". Min is " + minNumOfArgs + " and max is " + maxNumOfArgs + ".");
     }
 
 

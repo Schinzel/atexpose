@@ -1,4 +1,4 @@
-package com.atexpose.api.requestarguments;
+package com.atexpose.dispatcher.invocation;
 
 import com.atexpose.api.MethodArguments;
 import com.atexpose.api.datatypes.AbstractDataType;
