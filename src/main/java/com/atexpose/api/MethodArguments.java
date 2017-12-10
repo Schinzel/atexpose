@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Purpose of this class is hold the name and the order of the arguments
- * of a methods.
+ * Purpose of this class is hold the names and the order of the arguments of a method.
  * <p>
  * Created by Schinzel on 2017-12-09
  */

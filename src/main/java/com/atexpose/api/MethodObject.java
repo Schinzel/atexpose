@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The definition of a method. Used to invoke methods. This object can be seen
+ * The definition of a method. Used to invoke methods. This class can be seen
  * as an extension "java.lang.reflect.Method". Holds the name of the method, the
  * argument names, the default values of the arguments, the return type and
  * meta-data.
@@ -52,9 +52,6 @@ public class MethodObject implements IValueWithKey, IStateNode {
     private List<Label> mLabels;
     //Alias, i.e. alternate method names for this method.
     private List<Alias> mAliases = new ArrayList<>();
-    // ---------------------------------
-    // - CONSTRUCTOR  -
-    // ---------------------------------
 
 
     @Builder
@@ -94,12 +91,17 @@ public class MethodObject implements IValueWithKey, IStateNode {
     }
 
 
-    // ---------------------------------
-    // - INVOKING  -
-    // ---------------------------------
+    /**
+     * @param argumentValuesAsStrings The argument values of the request.
+     * @param argumentNames           The names of the arguments in the request. Is empty if unnamed arguments
+     *                                are used. If is not empty is synced with the argument values.
+     * @param dispatcherAccessLevel   The access level of the dispatcher which is invoking this method
+     * @return The response of the invoked method
+     * @throws ExposedInvocationException Exception thrown if invoked method throws an error
+     */
     public Object invoke(List<String> argumentValuesAsStrings, List<String> argumentNames, int dispatcherAccessLevel) throws ExposedInvocationException {
         validateArgumentCount(argumentValuesAsStrings, mNoOfRequiredArguments, mMethodArguments.size());
-        validateAccessLevel(dispatcherAccessLevel, this.mAccessLevelRequiredToUseThisMethod);
+        validateAccessLevel(dispatcherAccessLevel, this.mAccessLevelRequiredToUseThisMethod, mKey);
         Object[] argumentValuesAsObjects = RequestArguments.builder()
                 .methodArguments(mMethodArguments)
                 .argumentValuesAsStrings(argumentValuesAsStrings)
@@ -144,13 +146,11 @@ public class MethodObject implements IValueWithKey, IStateNode {
     }
 
 
-    private void validateAccessLevel(int accessLevelOfDispatcher, int requiredAccessLevel) {
-        if (accessLevelOfDispatcher < requiredAccessLevel) {
-            throw new RuntimeException("The method '" + this.getKey()
-                    + "' has access level " + requiredAccessLevel
-                    + ". The Dispatcher used only has access to level " + accessLevelOfDispatcher
-                    + " methods and below.");
-        }
+    private static void validateAccessLevel(int accessLevelOfDispatcher, int requiredAccessLevel, String methodName) {
+        Thrower.throwIfTrue(accessLevelOfDispatcher < requiredAccessLevel)
+                .message("The method '" + methodName + "' has access level " + requiredAccessLevel
+                        + ". The Dispatcher used only has access to level " + accessLevelOfDispatcher
+                        + " methods and below.");
     }
 
 
