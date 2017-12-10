@@ -29,7 +29,7 @@ public class Invocation {
 
 
     @Builder
-    public Invocation(MethodObject methodObject, List<String> requestArgumentValues, List<String> requestArgumentNames) throws ExposedInvocationException {
+    Invocation(MethodObject methodObject, List<String> requestArgumentValues, List<String> requestArgumentNames) throws ExposedInvocationException {
         MethodArguments methodArguments = methodObject.getMethodArguments();
         validateArgumentCount(requestArgumentValues, methodObject.getNoOfRequiredArguments(), methodArguments.size());
         IRequestArguments requestArguments = Checker.isEmpty(requestArgumentNames)

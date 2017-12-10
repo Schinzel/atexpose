@@ -5,6 +5,6 @@ package com.atexpose.dispatcher.invocation;
  * <p>
  * Created by Schinzel on 2017-12-10
  */
-public interface IRequestArguments {
+interface IRequestArguments {
     Object[] getArgumentValuesAsObjects();
 }

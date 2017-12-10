@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Schinzel on 2017-12-10
  */
 @Accessors(prefix = "m")
-public class RequestArgumentsNamed implements IRequestArguments {
+class RequestArgumentsNamed implements IRequestArguments {
     /** The request argument values as object. */
     @Getter private final Object[] mArgumentValuesAsObjects;
 
