@@ -49,28 +49,29 @@ class RequestArguments {
     }
 
 
-    private static Object[] setDefaultArgumentValues(MethodArguments methodArguments, Object[] argumentValues, List<String> argumentNames) {
+    private static Object[] setDefaultArgumentValues(MethodArguments methodArguments, Object[] requestArgumentValues, List<String> requestArgumentNames) {
         // Get a copy of the argument values
-        Object[] argumentDefaultValues = methodArguments.getCopyOfArgumentDefaultValues();
+        Object[] argumentValues = methodArguments.getCopyOfArgumentDefaultValues();
         // If no argument names were supplied
-        if (Checker.isEmpty(argumentNames)) {
+        if (Checker.isEmpty(requestArgumentNames)) {
             // If argument values where supplied
-            if (argumentValues != null) {
-                System.arraycopy(argumentValues, 0, argumentDefaultValues, 0, argumentValues.length);
+            if (requestArgumentValues != null) {
+                //Overwrite the default argument values with the a many argument values as were present in the request
+                System.arraycopy(requestArgumentValues, 0, argumentValues, 0, requestArgumentValues.length);
             }
         }// else, i.e. argument names were supplied
         else {
             // Get the argument positions
-            int[] argumentPositions = methodArguments.getArgumentPositions(argumentNames);
+            int[] argumentPositions = methodArguments.getArgumentPositions(requestArgumentNames);
             Object inputArgumentValue;
             int positionInputArgument;
             // Go through the arguments array as set values
-            for (int i = 0; i < argumentNames.size(); i++) {
+            for (int i = 0; i < requestArgumentNames.size(); i++) {
                 positionInputArgument = argumentPositions[i];
-                inputArgumentValue = argumentValues[i];
-                argumentDefaultValues[positionInputArgument] = inputArgumentValue;
+                inputArgumentValue = requestArgumentValues[i];
+                argumentValues[positionInputArgument] = inputArgumentValue;
             }
         }
-        return argumentDefaultValues;
+        return argumentValues;
     }
 }

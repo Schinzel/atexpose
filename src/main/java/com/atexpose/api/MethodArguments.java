@@ -41,14 +41,13 @@ class MethodArguments implements IStateNode {
 
 
     /**
-     * Returns a copy if the default values.
+     * @return A copy if the default values
      */
     Object[] getCopyOfArgumentDefaultValues() {
         if (Checker.isEmpty(mArguments)) {
             return ArrayUtils.EMPTY_OBJECT_ARRAY;
         } else {
-            Object[] returnObjects;
-            returnObjects = new Object[mArguments.size()];
+            Object[] returnObjects = new Object[mArguments.size()];
             for (int i = 0; i < mArguments.size(); i++) {
                 returnObjects[i] = mArguments.get(i).getDefaultValue();
 
