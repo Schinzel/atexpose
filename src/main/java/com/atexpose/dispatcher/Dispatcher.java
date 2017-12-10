@@ -187,8 +187,7 @@ public class Dispatcher implements Runnable, IDispatcher {
                     MethodObject methodObject = mAPI.getMethodObject(request.getMethodName());
                     // is the dispatcher authorized to access this method
                     checkAccessLevel(methodObject.getAccessLevelRequiredToUseThisMethod());
-                    responseAsObjects = methodObject.invoke(request.getArgumentValues(),
-                            request.getArgumentNames(), mAccessLevel);
+                    responseAsObjects = methodObject.invoke(request.getArgumentValues(), request.getArgumentNames());
                     //If return type is Json
                     if (methodObject.getReturnDataType().isJson()) {
                         //Do json wrapping

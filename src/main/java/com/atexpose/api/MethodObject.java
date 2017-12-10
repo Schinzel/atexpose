@@ -98,13 +98,11 @@ public class MethodObject implements IValueWithKey, IStateNode {
      * @param requestArgumentValues The argument values of the request.
      * @param requestArgumentNames  The names of the arguments in the request. Is empty if unnamed arguments
      *                              are used. If is not empty is synced with the argument values.
-     * @param dispatcherAccessLevel The access level of the dispatcher which is invoking this method
      * @return The response of the invoked method
      * @throws ExposedInvocationException Exception thrown if invoked method throws an error
      */
-    public Object invoke(List<String> requestArgumentValues, List<String> requestArgumentNames, int dispatcherAccessLevel) throws ExposedInvocationException {
+    public Object invoke(List<String> requestArgumentValues, List<String> requestArgumentNames) throws ExposedInvocationException {
         validateArgumentCount(requestArgumentValues, mNoOfRequiredArguments, mMethodArguments.size());
-        validateAccessLevel(dispatcherAccessLevel, this.mAccessLevelRequiredToUseThisMethod, mKey);
         IRequestArguments requestArguments = Checker.isEmpty(requestArgumentNames)
                 ?
                 RequestArgumentsUnnamed.builder()
@@ -153,14 +151,6 @@ public class MethodObject implements IValueWithKey, IStateNode {
         boolean tooManyArguments = noOfArgumentsInCall > maxNumOfArgs;
         Thrower.throwIfTrue(tooFewArguments || tooManyArguments)
                 .message("Incorrect number of arguments. Was " + noOfArgumentsInCall + ". Min is " + minNumOfArgs + " and max is " + maxNumOfArgs + ".");
-    }
-
-
-    private static void validateAccessLevel(int accessLevelOfDispatcher, int requiredAccessLevel, String methodName) {
-        Thrower.throwIfTrue(accessLevelOfDispatcher < requiredAccessLevel)
-                .message("The method '" + methodName + "' has access level " + requiredAccessLevel
-                        + ". The Dispatcher used only has access to level " + accessLevelOfDispatcher
-                        + " methods and below.");
     }
 
 
