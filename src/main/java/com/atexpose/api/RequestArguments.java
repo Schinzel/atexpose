@@ -1,7 +1,6 @@
 package com.atexpose.api;
 
 import com.atexpose.api.datatypes.AbstractDataType;
-import com.atexpose.errors.RuntimeError;
 import io.schinzel.basicutils.Checker;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,16 +31,10 @@ class RequestArguments {
         Object[] argumentValuesAsObjects = null;
         if (argumentValuesAsStrings != null && argumentValuesAsStrings.size() > 0) {
             argumentValuesAsObjects = new Object[argumentValuesAsStrings.size()];
-            AbstractDataType dataType;
             for (int i = 0; i < argumentValuesAsStrings.size(); i++) {
-                if (Checker.isEmpty(argumentNames)) {
-                    dataType = methodArguments.getArgument(i).getDataType();
-                } else {
-                    dataType = methodArguments.getArgument(argumentNames.get(i)).getDataType();
-                    if (dataType == null) {
-                        throw new RuntimeError("Unknown data type '" + argumentNames.get(i) + "'");
-                    }
-                }
+                AbstractDataType dataType = Checker.isEmpty(argumentNames)
+                        ? methodArguments.getArgument(i).getDataType()
+                        : methodArguments.getArgument(argumentNames.get(i)).getDataType();
                 argumentValuesAsObjects[i] = dataType.convertFromStringToDataType(argumentValuesAsStrings.get(i));
             }
         }
