@@ -72,7 +72,7 @@ public class MethodObject implements IValueWithKey, IStateNode {
         mReturnDataType = returnDataType;
         mNoOfRequiredArguments = noOfRequiredArguments;
         mAccessLevelRequiredToUseThisMethod = accessLevel;
-        mMethodArguments = new MethodArguments(arguments);
+        mMethodArguments = MethodArguments.create(arguments);
         mAuthRequired = requireAuthentication;
         if (!Checker.isEmpty(aliases)) {
             mAliases = aliases;

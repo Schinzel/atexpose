@@ -7,9 +7,7 @@ import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Purpose of this class is hold the names and the order of the arguments of a method.
@@ -21,9 +19,17 @@ class MethodArguments implements IStateNode {
     private final ImmutableList<Argument> mArguments;
     //A collection for CPU efficient up look of argument position
     private final Map<String, Integer> mArgumentPositions = new HashMap<>(20);
+    private static final MethodArguments EMPTY = new MethodArguments(Collections.emptyList());
 
 
-    MethodArguments(List<Argument> arguments) {
+    static MethodArguments create(List<Argument> arguments) {
+        return Checker.isEmpty(arguments)
+                ? EMPTY
+                : new MethodArguments(arguments);
+    }
+
+
+    private MethodArguments(List<Argument> arguments) {
         Thrower.throwIfVarNull(arguments, "arguments");
         //Put arguments and its aliases in a hash map for quick up look of argument position
         int argumentPosition = 0;
@@ -76,6 +82,9 @@ class MethodArguments implements IStateNode {
      * @return Argument with the argument position
      */
     Argument getArgument(int argumentPosition) {
+        Thrower.throwIfTrue(argumentPosition < 0 || argumentPosition > mArguments.size())
+                .message("Requested argument position '" + argumentPosition + "' is out of bounds. " +
+                        "Position has to be between 0 and " + mArguments.size());
         return mArguments.get(argumentPosition);
     }
 
@@ -84,7 +93,8 @@ class MethodArguments implements IStateNode {
      * @param argumentName The name of the argument
      * @return The position of an argument with the argument name
      */
-    private int getArgumentPosition(String argumentName) {
+    int getArgumentPosition(String argumentName) {
+        Thrower.throwIfVarEmpty(argumentName, "argumentName");
         Thrower.throwIfFalse(mArgumentPositions.containsKey(argumentName))
                 .message("No argument named '" + argumentName + "'");
         return mArgumentPositions.get(argumentName);
@@ -92,10 +102,15 @@ class MethodArguments implements IStateNode {
 
 
     /**
-     * Return the positions of a set of argument names in the method call of the
+     * @param argumentNames A list of argument names.
+     * @return The positions of a set of argument names in the method call of the
      * held method.
      */
     int[] getArgumentPositions(List<String> argumentNames) {
+        Thrower.throwIfVarNull(argumentNames, "argumentNames");
+        if (argumentNames.isEmpty()) {
+            return ArrayUtils.EMPTY_INT_ARRAY;
+        }
         int[] argPositions = new int[argumentNames.size()];
         for (int i = 0; i < argumentNames.size(); i++) {
             argPositions[i] = this.getArgumentPosition(argumentNames.get(i));
