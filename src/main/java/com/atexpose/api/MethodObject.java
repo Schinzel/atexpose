@@ -1,6 +1,9 @@
 package com.atexpose.api;
 
 import com.atexpose.api.datatypes.AbstractDataType;
+import com.atexpose.api.requestarguments.IRequestArguments;
+import com.atexpose.api.requestarguments.RequestArgumentsNamed;
+import com.atexpose.api.requestarguments.RequestArgumentsUnnamed;
 import com.atexpose.errors.ExposedInvocationException;
 import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.errors.RuntimeError;
@@ -92,22 +95,29 @@ public class MethodObject implements IValueWithKey, IStateNode {
 
 
     /**
-     * @param argumentValuesAsStrings The argument values of the request.
-     * @param argumentNames           The names of the arguments in the request. Is empty if unnamed arguments
-     *                                are used. If is not empty is synced with the argument values.
-     * @param dispatcherAccessLevel   The access level of the dispatcher which is invoking this method
+     * @param requestArgumentValues The argument values of the request.
+     * @param requestArgumentNames  The names of the arguments in the request. Is empty if unnamed arguments
+     *                              are used. If is not empty is synced with the argument values.
+     * @param dispatcherAccessLevel The access level of the dispatcher which is invoking this method
      * @return The response of the invoked method
      * @throws ExposedInvocationException Exception thrown if invoked method throws an error
      */
-    public Object invoke(List<String> argumentValuesAsStrings, List<String> argumentNames, int dispatcherAccessLevel) throws ExposedInvocationException {
-        validateArgumentCount(argumentValuesAsStrings, mNoOfRequiredArguments, mMethodArguments.size());
+    public Object invoke(List<String> requestArgumentValues, List<String> requestArgumentNames, int dispatcherAccessLevel) throws ExposedInvocationException {
+        validateArgumentCount(requestArgumentValues, mNoOfRequiredArguments, mMethodArguments.size());
         validateAccessLevel(dispatcherAccessLevel, this.mAccessLevelRequiredToUseThisMethod, mKey);
-        Object[] argumentValuesAsObjects = RequestArguments.builder()
-                .methodArguments(mMethodArguments)
-                .argumentValuesAsStrings(argumentValuesAsStrings)
-                .argumentNames(argumentNames)
-                .build()
-                .getMArgumentValuesAsObjects();
+        IRequestArguments requestArguments = Checker.isEmpty(requestArgumentNames)
+                ?
+                RequestArgumentsUnnamed.builder()
+                        .methodArguments(mMethodArguments)
+                        .argumentValuesAsStrings(requestArgumentValues)
+                        .build()
+                :
+                RequestArgumentsNamed.builder()
+                        .methodArguments(mMethodArguments)
+                        .argumentValuesAsStrings(requestArgumentValues)
+                        .argumentNames(requestArgumentNames)
+                        .build();
+        Object[] argumentValuesAsObjects = requestArguments.getArgumentValuesAsObjects();
         return MethodObject.invoke(mMethod, mObject, argumentValuesAsObjects);
     }
 

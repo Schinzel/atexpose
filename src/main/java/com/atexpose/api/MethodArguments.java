@@ -14,7 +14,7 @@ import java.util.*;
  * <p>
  * Created by Schinzel on 2017-12-09
  */
-class MethodArguments implements IStateNode {
+public class MethodArguments implements IStateNode {
     //Holds the arguments of this object
     private final ImmutableList<Argument> mArguments;
     //A collection for CPU efficient up look of argument position
@@ -49,7 +49,7 @@ class MethodArguments implements IStateNode {
     /**
      * @return A copy if the default values
      */
-    Object[] getCopyOfArgumentDefaultValues() {
+    public Object[] getCopyOfArgumentDefaultValues() {
         if (Checker.isEmpty(mArguments)) {
             return ArrayUtils.EMPTY_OBJECT_ARRAY;
         } else {
@@ -72,7 +72,7 @@ class MethodArguments implements IStateNode {
      * @param argumentName The name of the argument of return
      * @return Argument with the argument name
      */
-    Argument getArgument(String argumentName) {
+    public Argument getArgument(String argumentName) {
         return mArguments.get(this.getArgumentPosition(argumentName));
     }
 
@@ -81,7 +81,7 @@ class MethodArguments implements IStateNode {
      * @param argumentPosition The position the argument name in the method signature.
      * @return Argument with the argument position
      */
-    Argument getArgument(int argumentPosition) {
+    public Argument getArgument(int argumentPosition) {
         Thrower.throwIfTrue(argumentPosition < 0 || argumentPosition > mArguments.size())
                 .message("Requested argument position '" + argumentPosition + "' is out of bounds. " +
                         "Position has to be between 0 and " + mArguments.size());
@@ -106,7 +106,7 @@ class MethodArguments implements IStateNode {
      * @return The positions of a set of argument names in the method call of the
      * held method.
      */
-    int[] getArgumentPositions(List<String> argumentNames) {
+    public int[] getArgumentPositions(List<String> argumentNames) {
         Thrower.throwIfVarNull(argumentNames, "argumentNames");
         if (argumentNames.isEmpty()) {
             return ArrayUtils.EMPTY_INT_ARRAY;
