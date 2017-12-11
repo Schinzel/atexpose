@@ -22,7 +22,7 @@ public class MethodArguments implements IStateNode {
     private static final MethodArguments EMPTY = new MethodArguments(Collections.emptyList());
 
 
-    static MethodArguments create(List<Argument> arguments) {
+    public static MethodArguments create(List<Argument> arguments) {
         return Checker.isEmpty(arguments)
                 ? EMPTY
                 : new MethodArguments(arguments);
@@ -56,7 +56,6 @@ public class MethodArguments implements IStateNode {
             Object[] returnObjects = new Object[mArguments.size()];
             for (int i = 0; i < mArguments.size(); i++) {
                 returnObjects[i] = mArguments.get(i).getDefaultValue();
-
             }
             return returnObjects;
         }

@@ -26,12 +26,17 @@ class RequestArgumentsUnnamed implements IRequestArguments {
 
     @Builder
     RequestArgumentsUnnamed(MethodArguments methodArguments, List<String> argumentValuesAsStrings) {
-        Object[] argumentValuesAsObjects = castArgumentValuesToUse(methodArguments, argumentValuesAsStrings);
-        mArgumentValuesAsObjects = setDefaultArgumentValues(methodArguments, argumentValuesAsObjects);
+        Object[] argumentValuesAsObjects = castArgumentValues(argumentValuesAsStrings, methodArguments);
+        mArgumentValuesAsObjects = setDefaultArgumentValues(argumentValuesAsObjects, methodArguments);
     }
 
 
-    private static Object[] castArgumentValuesToUse(MethodArguments methodArguments, List<String> argumentValuesAsStrings) {
+    /**
+     * @param argumentValuesAsStrings The strings to cast
+     * @param methodArguments         The method arguments which stipulate the data type
+     * @return The argument string values cast to the data type of the corresponding method argument.
+     */
+    static Object[] castArgumentValues(List<String> argumentValuesAsStrings, MethodArguments methodArguments) {
         Object[] argumentValuesAsObjects = ArrayUtils.EMPTY_OBJECT_ARRAY;
         if (Checker.isNotEmpty(argumentValuesAsStrings)) {
             argumentValuesAsObjects = new Object[argumentValuesAsStrings.size()];
@@ -44,11 +49,18 @@ class RequestArgumentsUnnamed implements IRequestArguments {
     }
 
 
-    private static Object[] setDefaultArgumentValues(MethodArguments methodArguments, Object[] requestArgumentValues) {
+    /**
+     * Sets the method argument default values for the request arguments that are not present.
+     *
+     * @param requestArgumentValues The request argument values
+     * @param methodArguments       The arguments of the method
+     * @return All the arguments of a method
+     */
+    static Object[] setDefaultArgumentValues(Object[] requestArgumentValues, MethodArguments methodArguments) {
         // Get a copy of the argument values
         Object[] argumentValues = methodArguments.getCopyOfArgumentDefaultValues();
         // If argument values where supplied
-        if (requestArgumentValues != null) {
+        if (Checker.isNotEmpty(requestArgumentValues)) {
             //Overwrite the default argument values with the a many argument values as were present in the request
             System.arraycopy(requestArgumentValues, 0, argumentValues, 0, requestArgumentValues.length);
         }
