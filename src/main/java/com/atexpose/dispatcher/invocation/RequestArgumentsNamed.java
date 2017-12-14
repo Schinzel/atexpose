@@ -1,6 +1,7 @@
 package com.atexpose.dispatcher.invocation;
 
 import com.atexpose.api.MethodArguments;
+import io.schinzel.basicutils.Thrower;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -28,8 +29,9 @@ class RequestArgumentsNamed implements IRequestArguments {
     }
 
 
-
-    private static Object[] castArgumentValuesToUse(MethodArguments methodArguments, List<String> argumentValuesAsStrings, List<String> argumentNames) {
+    private static Object[] castArgumentValuesToUse(MethodArguments methodArguments,
+                                                    List<String> argumentValuesAsStrings,
+                                                    List<String> argumentNames) {
         Object[] argumentValuesAsObjects = null;
         if (argumentValuesAsStrings != null && argumentValuesAsStrings.size() > 0) {
             argumentValuesAsObjects = new Object[argumentValuesAsStrings.size()];
@@ -44,7 +46,13 @@ class RequestArgumentsNamed implements IRequestArguments {
     }
 
 
-    private static Object[] setDefaultArgumentValues(MethodArguments methodArguments, Object[] requestArgumentValues, List<String> requestArgumentNames) {
+    static Object[] setDefaultArgumentValues(MethodArguments methodArguments,
+                                             Object[] requestArgumentValues,
+                                             List<String> requestArgumentNames) {
+        Thrower.throwIfNull(requestArgumentValues, "requestArgumentValues");
+        Thrower.throwIfNull(requestArgumentNames, "requestArgumentNames");
+        Thrower.throwIfTrue(requestArgumentValues.length != requestArgumentNames.size())
+                .message("The number of request argument values and names must be equal.");
         // Get a copy of the argument values
         Object[] argumentValues = methodArguments.getCopyOfArgumentDefaultValues();
         // Get the argument positions
