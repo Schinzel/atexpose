@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 /**
  * Purpose of this class is ...
@@ -29,22 +30,21 @@ public class Invocation {
 
 
     @Builder
-    Invocation(MethodObject methodObject, List<String> requestArgumentValues, List<String> requestArgumentNames) throws ExposedInvocationException {
+    Invocation(MethodObject methodObject, List<String> requestArgumentValuesAsStrings, List<String> requestArgumentNames) throws ExposedInvocationException {
         MethodArguments methodArguments = methodObject.getMethodArguments();
-        validateArgumentCount(requestArgumentValues, methodObject.getNoOfRequiredArguments(), methodArguments.size());
-        IRequestArguments requestArguments = Checker.isEmpty(requestArgumentNames)
-                ?
-                RequestArgumentsUnnamed.builder()
-                        .methodArguments(methodArguments)
-                        .argumentValuesAsStrings(requestArgumentValues)
-                        .build()
-                :
-                RequestArgumentsNamed.builder()
-                        .methodArguments(methodArguments)
-                        .argumentValuesAsStrings(requestArgumentValues)
-                        .argumentNames(requestArgumentNames)
-                        .build();
-        Object[] argumentValuesAsObjects = requestArguments.getArgumentValuesAsObjects();
+        validateArgumentCount(requestArgumentValuesAsStrings, methodObject.getNoOfRequiredArguments(), methodArguments.size());
+        Object[] requestArgumentValues = Checker.isEmpty(requestArgumentNames)
+                ? methodArguments.cast(requestArgumentValuesAsStrings)
+                : methodArguments.cast(requestArgumentValuesAsStrings, requestArgumentNames);
+        int[] argumentPositions = Checker.isEmpty(requestArgumentNames)
+                ? methodArguments.getArgumentPositions(requestArgumentNames)
+                : IntStream.range(0, requestArgumentValues.length).toArray();
+        Object[] argumentValuesAsObjects = R2.builder()
+                .defaultArgumentValues(methodArguments.getCopyOfArgumentDefaultValues())
+                .requestArgumentValues(requestArgumentValues)
+                .argumentPositions(argumentPositions)
+                .build()
+                .getMArgumentValuesAsObjects();
         mResponse = Invocation.invoke(methodObject.getMethod(), methodObject.getObject(), argumentValuesAsObjects);
     }
 

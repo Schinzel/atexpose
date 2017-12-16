@@ -1,5 +1,6 @@
 package com.atexpose.api;
 
+import com.atexpose.api.datatypes.AbstractDataType;
 import com.google.common.collect.ImmutableList;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Thrower;
@@ -7,7 +8,10 @@ import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Purpose of this class is hold the names and the order of the arguments of a method.
@@ -64,6 +68,34 @@ public class MethodArguments implements IStateNode {
 
     public int size() {
         return mArguments.size();
+    }
+
+
+    public Object[] cast(List<String> argumentValues) {
+        Object[] argumentValuesAsObjects = ArrayUtils.EMPTY_OBJECT_ARRAY;
+        if (Checker.isNotEmpty(argumentValues)) {
+            argumentValuesAsObjects = new Object[argumentValues.size()];
+            for (int i = 0; i < argumentValues.size(); i++) {
+                AbstractDataType dataType = this.getArgument(i).getDataType();
+                argumentValuesAsObjects[i] = dataType.convertFromStringToDataType(argumentValues.get(i));
+            }
+        }
+        return argumentValuesAsObjects;
+    }
+
+
+    public Object[] cast(List<String> argumentValues, List<String> argumentNames) {
+        Object[] argumentValuesAsObjects = null;
+        if (argumentValues != null && argumentValues.size() > 0) {
+            argumentValuesAsObjects = new Object[argumentValues.size()];
+            for (int i = 0; i < argumentValues.size(); i++) {
+                argumentValuesAsObjects[i] = this
+                        .getArgument(argumentNames.get(i))
+                        .getDataType()
+                        .convertFromStringToDataType(argumentValues.get(i));
+            }
+        }
+        return argumentValuesAsObjects;
     }
 
 
