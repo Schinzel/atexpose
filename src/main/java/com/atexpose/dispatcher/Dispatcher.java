@@ -4,6 +4,7 @@ import com.atexpose.api.API;
 import com.atexpose.api.MethodObject;
 import com.atexpose.dispatcher.channels.IChannel;
 import com.atexpose.dispatcher.invocation.Invocation;
+import com.atexpose.dispatcher.invocation.RequestArguments;
 import com.atexpose.dispatcher.logging.LogEntry;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.parser.IParser;
@@ -187,10 +188,15 @@ public class Dispatcher implements Runnable, IDispatcher {
                     MethodObject methodObject = mAPI.getMethodObject(request.getMethodName());
                     // is the dispatcher authorized to access this method
                     checkAccessLevel(methodObject.getAccessLevelRequiredToUseThisMethod());
+                    Object[] requestArgumentValues = RequestArguments.builder()
+                            .methodArguments(methodObject.getMethodArguments())
+                            .requestArgumentValuesAsStrings(request.getArgumentValues())
+                            .requestArgumentNames(request.getArgumentNames())
+                            .build()
+                            .getArgumentValuesAsObjects();
                     Object responseAsObject = Invocation.builder()
                             .methodObject(methodObject)
-                            .requestArgumentValues(request.getArgumentValues())
-                            .requestArgumentNames(request.getArgumentNames())
+                            .argumentValuesAsObjects(requestArgumentValues)
                             .build()
                             .getResponse();
                     //If return type is Json

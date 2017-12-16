@@ -1,22 +1,17 @@
 package com.atexpose.dispatcher.invocation;
 
-import com.atexpose.api.MethodArguments;
 import com.atexpose.api.MethodObject;
 import com.atexpose.errors.ExposedInvocationException;
 import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.errors.RuntimeError;
 import com.google.common.collect.ImmutableMap;
-import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.Thrower;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 /**
  * Purpose of this class is ...
@@ -30,21 +25,7 @@ public class Invocation {
 
 
     @Builder
-    Invocation(MethodObject methodObject, List<String> requestArgumentValuesAsStrings, List<String> requestArgumentNames) throws ExposedInvocationException {
-        MethodArguments methodArguments = methodObject.getMethodArguments();
-        validateArgumentCount(requestArgumentValuesAsStrings, methodObject.getNoOfRequiredArguments(), methodArguments.size());
-        Object[] requestArgumentValues = Checker.isEmpty(requestArgumentNames)
-                ? methodArguments.cast(requestArgumentValuesAsStrings)
-                : methodArguments.cast(requestArgumentValuesAsStrings, requestArgumentNames);
-        int[] argumentPositions = Checker.isEmpty(requestArgumentNames)
-                ? methodArguments.getArgumentPositions(requestArgumentNames)
-                : IntStream.range(0, requestArgumentValues.length).toArray();
-        Object[] argumentValuesAsObjects = R2.builder()
-                .defaultArgumentValues(methodArguments.getCopyOfArgumentDefaultValues())
-                .requestArgumentValues(requestArgumentValues)
-                .argumentPositions(argumentPositions)
-                .build()
-                .getMArgumentValuesAsObjects();
+    Invocation(MethodObject methodObject, Object[] argumentValuesAsObjects) throws ExposedInvocationException {
         mResponse = Invocation.invoke(methodObject.getMethod(), methodObject.getObject(), argumentValuesAsObjects);
     }
 
@@ -74,11 +55,5 @@ public class Invocation {
     }
 
 
-    private static void validateArgumentCount(List<String> arguments, int minNumOfArgs, int maxNumOfArgs) {
-        int noOfArgumentsInCall = Checker.isEmpty(arguments) ? 0 : arguments.size();
-        boolean tooFewArguments = noOfArgumentsInCall < minNumOfArgs;
-        boolean tooManyArguments = noOfArgumentsInCall > maxNumOfArgs;
-        Thrower.throwIfTrue(tooFewArguments || tooManyArguments)
-                .message("Incorrect number of arguments. Was " + noOfArgumentsInCall + ". Min is " + minNumOfArgs + " and max is " + maxNumOfArgs + ".");
-    }
+
 }
