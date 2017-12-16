@@ -1,13 +1,10 @@
 package com.atexpose.dispatcher.invocation;
 
-import com.atexpose.api.MethodObject;
 import com.atexpose.errors.ExposedInvocationException;
 import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.errors.RuntimeError;
 import com.google.common.collect.ImmutableMap;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.experimental.Accessors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,20 +16,13 @@ import java.util.Map;
  * Created by Schinzel on 2017-12-10
  */
 
-@Accessors(prefix = "m")
 public class Invocation {
-    @Getter private final Object mResponse;
 
 
-    @Builder
-    Invocation(MethodObject methodObject, Object[] argumentValuesAsObjects) throws ExposedInvocationException {
-        mResponse = Invocation.invoke(methodObject.getMethod(), methodObject.getObject(), argumentValuesAsObjects);
-    }
-
-
-    static Object invoke(Method method, Object object, Object[] argumentValuesAsObjects) throws ExposedInvocationException {
+    @Builder(builderMethodName = "invokeBuilder", buildMethodName = "invoke")
+    static Object invoke(Method method, Object targetObject, Object[] argumentValuesAsObjects) throws ExposedInvocationException {
         try {
-            return method.invoke(object, argumentValuesAsObjects);
+            return method.invoke(targetObject, argumentValuesAsObjects);
         } catch (InvocationTargetException ite) {
             Throwable cause = ite.getCause();
             StackTraceElement ste = cause.getStackTrace()[0];
@@ -53,7 +43,6 @@ public class Invocation {
             throw new RuntimeError("Access error " + iae.toString());
         }
     }
-
 
 
 }

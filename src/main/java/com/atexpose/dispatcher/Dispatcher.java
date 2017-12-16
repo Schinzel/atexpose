@@ -194,11 +194,11 @@ public class Dispatcher implements Runnable, IDispatcher {
                             .requestArgumentNames(request.getArgumentNames())
                             .build()
                             .getArgumentValuesAsObjects();
-                    Object responseAsObject = Invocation.builder()
-                            .methodObject(methodObject)
+                    Object responseAsObject = Invocation.invokeBuilder()
+                            .method(methodObject.getMethod())
+                            .targetObject(methodObject.getObject())
                             .argumentValuesAsObjects(requestArgumentValues)
-                            .build()
-                            .getResponse();
+                            .invoke();
                     //If return type is Json
                     if (methodObject.getReturnDataType().isJson()) {
                         //Do json wrapping
