@@ -100,15 +100,6 @@ public class MethodArguments implements IStateNode {
 
 
     /**
-     * @param argumentName The name of the argument of return
-     * @return Argument with the argument name
-     */
-    public Argument getArgument(String argumentName) {
-        return mArguments.get(this.getArgumentPosition(argumentName));
-    }
-
-
-    /**
      * @param argumentPosition The position the argument name in the method signature.
      * @return Argument with the argument position
      */
@@ -117,6 +108,15 @@ public class MethodArguments implements IStateNode {
                 .message("Requested argument position '" + argumentPosition + "' is out of bounds. " +
                         "Position has to be between 0 and " + mArguments.size());
         return mArguments.get(argumentPosition);
+    }
+
+
+    /**
+     * @param argumentName The name of the argument of return
+     * @return Argument with the argument name
+     */
+    Argument getArgument(String argumentName) {
+        return mArguments.get(this.getArgumentPosition(argumentName));
     }
 
 
