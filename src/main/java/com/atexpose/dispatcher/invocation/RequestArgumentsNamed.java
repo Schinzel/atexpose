@@ -29,6 +29,13 @@ class RequestArgumentsNamed implements IRequestArguments {
     }
 
 
+    /**
+     *
+     * @param methodArguments Arguments of the method
+     * @param argumentValuesAsStrings Request argument values
+     * @param argumentNames Request argument values
+     * @return The request argument values cast to their respective data types.
+     */
     private static Object[] castArgumentValuesToUse(MethodArguments methodArguments,
                                                     List<String> argumentValuesAsStrings,
                                                     List<String> argumentNames) {
@@ -46,6 +53,14 @@ class RequestArgumentsNamed implements IRequestArguments {
     }
 
 
+    /**
+     * Sets the default argument values for the arguments not present in the request arguments.
+     *
+     * @param methodArguments       Arguments of the method
+     * @param requestArgumentValues Request argument values
+     * @param requestArgumentNames  Request argument names
+     * @return The full set of arguments, i.e. the combined request and default argument values.
+     */
     static Object[] setDefaultArgumentValues(MethodArguments methodArguments,
                                              Object[] requestArgumentValues,
                                              List<String> requestArgumentNames) {
