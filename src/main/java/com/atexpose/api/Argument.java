@@ -2,15 +2,14 @@ package com.atexpose.api;
 
 import com.atexpose.api.datatypes.AbstractDataType;
 import com.atexpose.api.datatypes.DataType;
-import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.valueswithkeys.IValueWithKey;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Singular;
 import lombok.experimental.Accessors;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class Argument implements IValueWithKey, IStateNode {
     //The data type of the argument
     @Getter private final AbstractDataType mDataType;
     // Holds the aliases for this argument.
-    @Getter private List<String> mAliases = Collections.emptyList();
+    @Getter private List<String> mAliases;
     // Holds the default value for this argument.
     @Getter private Object mDefaultValue = null;
     // Holds the string representation of the default value for this argument.
@@ -29,14 +28,12 @@ public class Argument implements IValueWithKey, IStateNode {
 
 
     @Builder
-    Argument(String name, String description, DataType dataType, String defaultValue, String... aliases) {
+    Argument(String name, String description, DataType dataType, String defaultValue, @Singular List<String> aliases) {
         this.mKey = name;
         this.mDescription = description;
         mDataType = dataType.getInstance();
-        if (!Checker.isEmpty(aliases)) {
-            mAliases = Arrays.asList(aliases);
-            Collections.sort(mAliases);
-        }
+        mAliases = aliases;
+        Collections.sort(mAliases);
         if (defaultValue == null) {
             mDefaultValueAsString = "";
         } else {

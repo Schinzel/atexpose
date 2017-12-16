@@ -3,6 +3,8 @@ package com.atexpose.dispatcher;
 import com.atexpose.api.API;
 import com.atexpose.api.MethodObject;
 import com.atexpose.dispatcher.channels.IChannel;
+import com.atexpose.dispatcher.invocation.Invocation;
+import com.atexpose.dispatcher.invocation.RequestArguments;
 import com.atexpose.dispatcher.logging.LogEntry;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.parser.IParser;
@@ -161,7 +163,6 @@ public class Dispatcher implements Runnable, IDispatcher {
     public void run() {
         ByteStorage incomingRequest = new ByteStorage();
         String decodedIncomingRequest;
-        Object responseAsObjects;
         Object responseAsStrings;
         String wrappedResponse;
         byte[] wrappedResponseAsUtf8ByteArray;
@@ -187,14 +188,23 @@ public class Dispatcher implements Runnable, IDispatcher {
                     MethodObject methodObject = mAPI.getMethodObject(request.getMethodName());
                     // is the dispatcher authorized to access this method
                     checkAccessLevel(methodObject.getAccessLevelRequiredToUseThisMethod());
-                    responseAsObjects = methodObject.invoke(request.getArgumentValues(),
-                            request.getArgumentNames(), mAccessLevel);
+                    Object[] requestArgumentValues = RequestArguments.builder()
+                            .methodArguments(methodObject.getMethodArguments())
+                            .requestArgumentValuesAsStrings(request.getArgumentValues())
+                            .requestArgumentNames(request.getArgumentNames())
+                            .build()
+                            .getArgumentValuesAsObjects();
+                    Object responseAsObject = Invocation.invokeBuilder()
+                            .method(methodObject.getMethod())
+                            .targetObject(methodObject.getObject())
+                            .argumentValuesAsObjects(requestArgumentValues)
+                            .invoke();
                     //If return type is Json
                     if (methodObject.getReturnDataType().isJson()) {
                         //Do json wrapping
-                        wrappedResponse = mWrapper.wrapJSON((JSONObject) responseAsObjects);
+                        wrappedResponse = mWrapper.wrapJSON((JSONObject) responseAsObject);
                     } else {
-                        responseAsStrings = methodObject.getReturnDataType().convertFromDataTypeToString(responseAsObjects);
+                        responseAsStrings = methodObject.getReturnDataType().convertFromDataTypeToString(responseAsObject);
                         wrappedResponse = mWrapper.wrapResponse((String) responseAsStrings);
                     }
                     wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);

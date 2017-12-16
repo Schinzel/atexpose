@@ -1,5 +1,6 @@
-package com.atexpose.api;
+package com.atexpose.dispatcher.invocation;
 
+import com.atexpose.api.ExposedClassUtil;
 import com.atexpose.errors.ExposedInvocationException;
 import org.junit.Test;
 
@@ -7,17 +8,17 @@ import java.lang.reflect.Method;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-
-public class MethodObject_InvokeTest {
-
-
+/**
+ * Created by Schinzel on 2017-12-10
+ */
+public class InvocationTest {
     @Test
     public void invoke_InvokeMethodThrowsException_ThrowsException() throws Exception {
         Method method = ExposedClassUtil.class.getMethod("doIt");
         Object object = new ExposedClassUtil();
         Object[] argumentValuesAsObjects = new Object[]{};
         assertThatExceptionOfType(ExposedInvocationException.class).isThrownBy(() ->
-                MethodObject.invoke(method, object, argumentValuesAsObjects)
+                Invocation.invoke(method, object, argumentValuesAsObjects)
         );
     }
 
@@ -28,7 +29,7 @@ public class MethodObject_InvokeTest {
         Object object = new ExposedClassUtil();
         Object[] argumentValuesAsObjects = new Object[]{};
         assertThatExceptionOfType(ExposedInvocationException.class).isThrownBy(() -> {
-            MethodObject.invoke(method, object, argumentValuesAsObjects);
+            Invocation.invoke(method, object, argumentValuesAsObjects);
         }).withMessageContaining("Method:doAnOperation");
     }
 
@@ -39,7 +40,7 @@ public class MethodObject_InvokeTest {
         Object object = new ExposedClassUtil();
         Object[] argumentValuesAsObjects = new Object[]{};
         assertThatExceptionOfType(ExposedInvocationException.class).isThrownBy(() -> {
-            MethodObject.invoke(method, object, argumentValuesAsObjects);
+            Invocation.invoke(method, object, argumentValuesAsObjects);
         }).withMessageContaining("LineNumber:");
     }
 
@@ -50,7 +51,7 @@ public class MethodObject_InvokeTest {
         Object object = new ExposedClassUtil();
         Object[] argumentValuesAsObjects = new Object[]{};
         assertThatExceptionOfType(ExposedInvocationException.class).isThrownBy(() -> {
-            MethodObject.invoke(method, object, argumentValuesAsObjects);
+            Invocation.invoke(method, object, argumentValuesAsObjects);
         }).withMessageContaining("ErrorMessage:Something went wrong!");
     }
 
