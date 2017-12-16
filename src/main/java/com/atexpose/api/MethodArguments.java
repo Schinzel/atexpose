@@ -71,28 +71,33 @@ public class MethodArguments implements IStateNode {
     }
 
 
+    /**
+     * @param argumentValues A list of argument values as strings
+     * @return The argument values cast to to the arguments' data types
+     */
     public Object[] cast(List<String> argumentValues) {
-        Object[] argumentValuesAsObjects = ArrayUtils.EMPTY_OBJECT_ARRAY;
-        if (Checker.isNotEmpty(argumentValues)) {
-            argumentValuesAsObjects = new Object[argumentValues.size()];
-            for (int i = 0; i < argumentValues.size(); i++) {
-                AbstractDataType dataType = this.getArgument(i).getDataType();
-                argumentValuesAsObjects[i] = dataType.convertFromStringToDataType(argumentValues.get(i));
-            }
-        }
-        return argumentValuesAsObjects;
+        return this.cast(argumentValues, Collections.emptyList());
     }
 
 
+    /**
+     * @param argumentValues A list of argument values as strings
+     * @param argumentNames  The names fo the argument values
+     * @return The argument values cast to to the arguments' data types
+     */
     public Object[] cast(List<String> argumentValues, List<String> argumentNames) {
-        Object[] argumentValuesAsObjects = null;
+        Thrower.throwIfVarNull(argumentValues, "argumentValues");
+        Thrower.throwIfVarNull(argumentNames, "argumentNames");
+        Thrower.throwIfTrue(argumentValues.isEmpty() && argumentValues.size() != argumentNames.size())
+                .message("ArgumentValues and ArgumentNames need to be of same size");
+        Object[] argumentValuesAsObjects = ArrayUtils.EMPTY_OBJECT_ARRAY;
         if (argumentValues != null && argumentValues.size() > 0) {
             argumentValuesAsObjects = new Object[argumentValues.size()];
             for (int i = 0; i < argumentValues.size(); i++) {
-                argumentValuesAsObjects[i] = this
-                        .getArgument(argumentNames.get(i))
-                        .getDataType()
-                        .convertFromStringToDataType(argumentValues.get(i));
+                AbstractDataType dataType = Checker.isEmpty(argumentNames)
+                        ? mArguments.get(i).getDataType()
+                        : this.getArgument(argumentNames.get(i)).getDataType();
+                argumentValuesAsObjects[i] = dataType.convertFromStringToDataType(argumentValues.get(i));
             }
         }
         return argumentValuesAsObjects;
