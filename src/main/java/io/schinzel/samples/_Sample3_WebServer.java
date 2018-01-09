@@ -1,6 +1,7 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
+import com.atexpose.api.datatypes.DataType;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
@@ -9,10 +10,11 @@ import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import com.atexpose.dispatcherfactories.CliFactory;
 import com.atexpose.dispatcherfactories.WebServerBuilder;
 import io.schinzel.samples.auxiliary.MyClass;
-import io.schinzel.samples.auxiliary.MyObject;
+import io.schinzel.samples.auxiliary.MyObjectWithCustomArgument;
 
 /**
  * This sample exposes a class and an object.
+ * Also a more advanced web server configuration is used.
  * A command line interface and a web server is started
  * The web server serves files from the directory "web/sample3"
  * <p>
@@ -25,11 +27,15 @@ public class _Sample3_WebServer {
 
 
     public static void main(String[] args) {
-        AtExpose.create()
+        AtExpose atExpose = AtExpose.create();
+        //Add a custom argument
+        atExpose.getAPI()
+                .addArgument("Price", DataType.INT, "A price");
+        atExpose
                 //Expose static methods in a class
                 .expose(MyClass.class)
                 //Expose an instance
-                .expose(new MyObject())
+                .expose(new MyObjectWithCustomArgument())
                 //Start web server
                 .start(getWebServer())
                 //Start a command line interface

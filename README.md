@@ -11,25 +11,71 @@ Put differently: It should be the web server that distracts you the least from s
 
 There are other frameworks and projects that offers similar functionality to
 @Expose. Many of them are a lot more well used and tested than @Expose. Notable
-examples are GlassFish and Jetty. If in doubt use these instead. 
+examples are GlassFish, Netty and Jetty. If in doubt use these instead. 
 
 
-##### Easy to get started
-Clear and well documented samples included.
 
-##### Intuitive to use
+
+##### Getting started
+Include the following in your POM:
+```xml
+<repositories>
+    <repository>
+        <id>maven-repo.atexpose.com</id>
+        <url>http://maven-repo.atexpose.com/release</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>com.atexpose</groupId>
+        <artifactId>atexpose</artifactId>
+        <version>0.9.36</version>
+    </dependency>
+</dependencies>
 ```
+
+Create a sample class:
+
+```java
+public class MyClass {
+
+    @Expose
+    public String myMethod(){
+        return "My method says hello!";
+    }
+    
+    
+    @Expose(
+            arguments = {"String"}
+    )
+    public String setTheThing(String str) {
+        return "The thing was set to '" + str + "'.";
+    }    
+}
+```
+
+
+Start @Expose:
+```java
 AtExpose.create()
 	//Expose static methods in a class
-	.expose(MyClass.class)
-	//Expose an instance
-	.expose(new MyObject())
+	.expose(new MyClass())
 	//Start web server
-	.start(getWebServer())
-	//Start a command line interface
-	.start(CliFactory.create());
+	.start(WebServerBuilder.create().build());
+
 
 ```
+
+To invoke call the following URL in a browser.
+
+<http://localhost:5555/call/myMethod>
+
+
+##### Samples
+Samples found [here](https://github.com/Schinzel/atexpose/tree/master/src/main/java/io/schinzel/samples)
+
+
 ##### A large degree freedom
 * You want ten different web servers, you got it. 
 * Extensible. You can build you own custom parsers, wrappers, channels and more.  
