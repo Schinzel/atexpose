@@ -44,6 +44,14 @@ public class MyClass {
     public String myMethod(){
         return "My method says hello!";
     }
+    
+    
+    @Expose(
+            arguments = {"String"}
+    )
+    public String setTheThing(String str) {
+        return "The thing was set to '" + str + "'.";
+    }    
 }
 ```
 
@@ -55,6 +63,8 @@ AtExpose.create()
 	.expose(new MyClass())
 	//Start web server
 	.start(WebServerBuilder.create().build());
+
+
 ```
 
 To invoke call the following URL in a browser.
