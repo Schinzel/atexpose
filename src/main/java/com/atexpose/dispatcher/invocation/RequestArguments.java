@@ -28,8 +28,8 @@ public class RequestArguments {
                 ? methodArguments.cast(requestArgumentValuesAsStrings)
                 : methodArguments.cast(requestArgumentValuesAsStrings, requestArgumentNames);
         int[] argumentPositions = Checker.isEmpty(requestArgumentNames)
-                ? methodArguments.getArgumentPositions(requestArgumentNames)
-                : IntStream.range(0, requestArgumentValues.length).toArray();
+                ? IntStream.range(0, requestArgumentValuesAsStrings.size()).toArray()
+                : methodArguments.getArgumentPositions(requestArgumentNames);
         mArgumentValuesAsObjects = getArgValues(
                 methodArguments.getCopyOfArgumentDefaultValues(),
                 requestArgumentValues,
