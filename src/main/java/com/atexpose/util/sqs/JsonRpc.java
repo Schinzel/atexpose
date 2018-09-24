@@ -19,8 +19,7 @@ public class JsonRpc {
     private final String mMethodName;
     @Singular
     private Map<String, String> mArguments;
-
-
+    
     /**
      * @return A JSON RPC. Example: {"method": "doSomething", "params": {"key1": "val1", "key2": "val2"}}
      */
