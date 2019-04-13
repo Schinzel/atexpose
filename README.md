@@ -5,9 +5,12 @@ running that can serve static file content such as HTML-files and handle proprie
 
 Put differently: It should be the web server that distracts you the least from solving the actual problem you are working on.
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/20d9426304f246c18f22402af9cb22bb)](https://www.codacy.com/app/henrik-schinzel/atexpose?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Schinzel/atexpose&amp;utm_campaign=Badge_Grade)
-[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/20d9426304f246c18f22402af9cb22bb)](https://www.codacy.com/app/henrik-schinzel/atexpose?utm_source=github.com&utm_medium=referral&utm_content=Schinzel/atexpose&utm_campaign=Badge_Coverage)
 [![Build Status](https://travis-ci.org/Schinzel/atexpose.svg?branch=master)](https://travis-ci.org/Schinzel/atexpose)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Schinzel_atexpose&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Schinzel_atexpose)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Schinzel_atexpose&metric=coverage)](https://sonarcloud.io/dashboard?id=Schinzel_atexpose)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Schinzel_atexpose&metric=security_rating)](https://sonarcloud.io/dashboard?id=Schinzel_atexpose)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=Schinzel_atexpose&metric=sqale_index)](https://sonarcloud.io/dashboard?id=Schinzel_atexpose)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=Schinzel_atexpose&metric=ncloc)](https://sonarcloud.io/dashboard?id=Schinzel_atexpose)
 
 There are other frameworks and projects that offers similar functionality to
 @Expose. Many of them are a lot more well used and tested than @Expose. Notable
