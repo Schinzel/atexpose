@@ -2,8 +2,8 @@ package com.atexpose.dispatcher.logging;
 
 import com.atexpose.util.DateTimeStrings;
 import com.google.common.collect.ImmutableMap;
-import io.schinzel.basicutils.Thrower;
-import io.schinzel.basicutils.crypto.cipher.ICipher;
+import io.schinzel.basicutils.thrower.Thrower;
+import io.schinzel.crypto.cipher.ICipher;
 import lombok.*;
 
 import java.time.Instant;

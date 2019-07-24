@@ -2,7 +2,7 @@ package com.atexpose.dispatcher.channels.tasks;
 
 import com.atexpose.util.watch.IWatch;
 import com.atexpose.util.watch.Watch;
-import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.thrower.Thrower;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

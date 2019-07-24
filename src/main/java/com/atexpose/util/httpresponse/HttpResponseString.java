@@ -28,7 +28,7 @@ public class HttpResponseString {
                 .build();
         response = header.getHeader()
                 .a(body)
-                .getString();
+                .asString();
     }
 
 

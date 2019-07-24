@@ -1,7 +1,7 @@
 package com.atexpose.dispatcher.logging;
 
 import com.google.common.collect.ImmutableList;
-import io.schinzel.basicutils.crypto.cipher.ICipher;
+import io.schinzel.crypto.cipher.ICipher;
 import org.junit.Test;
 
 import java.time.Instant;

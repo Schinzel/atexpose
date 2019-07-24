@@ -7,7 +7,7 @@ import com.atexpose.util.ByteStorage;
 import com.atexpose.util.httpresponse.HttpResponse302;
 import com.atexpose.util.httpresponse.HttpResponseString;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.thrower.Thrower;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;

@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.logging;
 
-import io.schinzel.basicutils.crypto.cipher.ICipher;
+import io.schinzel.crypto.cipher.ICipher;
 
 import java.util.Map;
 

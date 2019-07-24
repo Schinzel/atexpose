@@ -30,7 +30,7 @@ public class HttpResponse302 {
                 .contentType(ContentType.TEXT)
                 .build()
                 .getHeader()
-                .getString();
+                .asString();
     }
 
 }

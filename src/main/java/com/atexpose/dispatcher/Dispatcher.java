@@ -12,7 +12,7 @@ import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.util.ByteStorage;
-import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.thrower.Thrower;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;

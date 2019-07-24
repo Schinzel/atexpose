@@ -1,7 +1,7 @@
 package com.atexpose.util.httpresponse;
 
 import com.google.common.collect.ImmutableMap;
-import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.thrower.Thrower;
 import org.apache.commons.io.FilenameUtils;
 
 import java.util.Map;

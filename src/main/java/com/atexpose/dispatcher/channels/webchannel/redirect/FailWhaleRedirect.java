@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel.redirect;
 
-import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.thrower.Thrower;
 import lombok.SneakyThrows;
 import org.apache.http.client.utils.URIBuilder;
 
