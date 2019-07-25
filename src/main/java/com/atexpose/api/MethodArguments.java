@@ -3,7 +3,7 @@ package com.atexpose.api;
 import com.atexpose.api.datatypes.AbstractDataType;
 import com.google.common.collect.ImmutableList;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.thrower.Thrower;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import org.apache.commons.lang3.ArrayUtils;

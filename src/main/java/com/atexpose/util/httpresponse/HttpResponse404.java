@@ -28,7 +28,7 @@ public class HttpResponse404 {
                 .contentLength(body.length)
                 .build()
                 .getHeader()
-                .getString();
+                .asString();
         mResponse = ArrayUtil.concat(UTF8.getBytes(header), body);
     }
 }

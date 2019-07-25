@@ -1,7 +1,7 @@
 package com.atexpose.util.sqs;
 
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.thrower.Thrower;
 import io.schinzel.basicutils.str.Str;
 import lombok.Builder;
 import lombok.Singular;

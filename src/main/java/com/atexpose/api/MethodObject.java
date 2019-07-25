@@ -2,11 +2,11 @@ package com.atexpose.api;
 
 import com.atexpose.api.datatypes.AbstractDataType;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.Thrower;
 import io.schinzel.basicutils.collections.valueswithkeys.IValueWithKey;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import io.schinzel.basicutils.str.Str;
+import io.schinzel.basicutils.thrower.Thrower;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -108,7 +108,7 @@ public class MethodObject implements IValueWithKey, IStateNode {
             }
         }
         str.a(")");
-        return str.getString();
+        return str.asString();
     }
 
 

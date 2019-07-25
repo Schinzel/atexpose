@@ -1,7 +1,7 @@
 package com.atexpose.dispatcher.parser;
 
 import com.google.common.collect.Lists;
-import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.thrower.Thrower;
 import io.schinzel.basicutils.state.State;
 import org.json.JSONObject;
 

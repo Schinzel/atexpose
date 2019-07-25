@@ -2,7 +2,7 @@ package com.atexpose.dispatcher.parser.urlparser.httprequest;
 
 import com.google.common.base.Splitter;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.thrower.Thrower;
 import io.schinzel.basicutils.substring.SubString;
 import lombok.Getter;
 import lombok.SneakyThrows;

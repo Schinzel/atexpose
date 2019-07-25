@@ -3,7 +3,7 @@ package com.atexpose.dispatcher.logging;
 import com.atexpose.dispatcher.logging.format.JsonFormatter;
 import com.atexpose.dispatcher.logging.writer.SystemOutLogWriter;
 import com.atexpose.dispatcher.logging.writer.TestLogWriter;
-import io.schinzel.basicutils.crypto.cipher.NoCipher;
+import io.schinzel.crypto.cipher.NoCipher;
 import org.junit.Test;
 import org.mockito.Mockito;
 

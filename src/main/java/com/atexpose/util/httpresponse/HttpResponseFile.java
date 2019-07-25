@@ -27,7 +27,7 @@ public class HttpResponseFile {
                 .contentLength(body.length)
                 .build()
                 .getHeader()
-                .getString();
+                .asString();
         response = ArrayUtil.concat(UTF8.getBytes(header), body);
     }
 

@@ -18,7 +18,7 @@ public class HttpHeaderTest {
                 .contentLength(123)
                 .build()
                 .getHeader()
-                .getString();
+                .asString();
         String actual = SubString.create(header)
                 .startDelimiter("HTTP/1.1 ")
                 .endDelimiter("\r\n")
@@ -36,7 +36,7 @@ public class HttpHeaderTest {
                 .contentLength(123)
                 .build()
                 .getHeader()
-                .getString();
+                .asString();
         String actual = SubString.create(header)
                 .startDelimiter("Content-Type: ")
                 .endDelimiter("\r\n")
@@ -55,7 +55,7 @@ public class HttpHeaderTest {
                 .browserCacheMaxAgeInSeconds(567)
                 .build()
                 .getHeader()
-                .getString();
+                .asString();
         String actual = SubString.create(header)
                 .startDelimiter("Cache-Control: max-age=")
                 .endDelimiter("\r\n")
@@ -74,7 +74,7 @@ public class HttpHeaderTest {
                 .browserCacheMaxAgeInSeconds(567)
                 .build()
                 .getHeader()
-                .getString();
+                .asString();
         String actual = SubString.create(header)
                 .startDelimiter("Content-Length: ")
                 .endDelimiter("\r\n")
@@ -98,7 +98,7 @@ public class HttpHeaderTest {
                 .browserCacheMaxAgeInSeconds(567)
                 .build()
                 .getHeader()
-                .getString();
+                .asString();
         String actual = SubString.create(header)
                 .startDelimiter("Key1: ")
                 .endDelimiter("\r\n")
@@ -122,7 +122,7 @@ public class HttpHeaderTest {
                 .browserCacheMaxAgeInSeconds(567)
                 .build()
                 .getHeader()
-                .getString();
+                .asString();
         String actual = SubString.create(header)
                 .startDelimiter("Key2: ")
                 .endDelimiter("\r\n")

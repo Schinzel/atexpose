@@ -5,7 +5,7 @@ import com.atexpose.util.FileRW;
 import com.atexpose.util.httpresponse.*;
 import com.google.common.base.Charsets;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.Thrower;
+import io.schinzel.basicutils.thrower.Thrower;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.collections.Cache;
 import io.schinzel.basicutils.state.State;

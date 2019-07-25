@@ -32,6 +32,6 @@ public class HttpResponseJson {
                 .a(bodyAsString)
                 //The two extra new-lines needs to be there for Safari to be able to parse the JSON.
                 .a("\n\n")
-                .getString();
+                .asString();
     }
 }
