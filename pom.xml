@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.atexpose</groupId>
     <artifactId>atexpose</artifactId>
-    <version>0.9.37</version>
+    <version>0.9.38</version>
     <packaging>jar</packaging>
 
     <name>@Expose</name>
@@ -200,20 +200,21 @@
 
 
     <dependencies>
+        <!-- RUNTIME DEPENDENCIES -->
         <dependency>
             <groupId>io.schinzel</groupId>
             <artifactId>basic-utils</artifactId>
-            <version>1.38</version>
+            <version>1.39</version>
         </dependency>
         <dependency>
             <groupId>io.schinzel</groupId>
             <artifactId>crypto</artifactId>
-            <version>1.2</version>
+            <version>1.2.1</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-sqs</artifactId>
-            <version>1.11.596</version>
+            <version>1.11.699</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
@@ -239,13 +240,14 @@
             <!-- Added for URIBuilder -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.9</version>
+            <version>4.5.10</version>
         </dependency>
         <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
             <version>1.6</version>
         </dependency>
+        <!-- DEV DEPENDENCIES -->
         <dependency>
             <!-- Annotations that generates getters, setters and more that
             are not visible in source code.
