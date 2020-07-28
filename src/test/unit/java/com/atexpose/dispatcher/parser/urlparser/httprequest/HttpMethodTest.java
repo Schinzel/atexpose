@@ -30,7 +30,7 @@ public class HttpMethodTest {
 
     @Test
     public void getRequestMethod_PostRequest_Post() {
-        String httpRequest = "POST /call/getDataFromPM HTTP/1.1\r\n"
+        String httpRequest = "POST /api/getDataFromPM HTTP/1.1\r\n"
                 + "Host: 127.0.0.1:5555\r\n"
                 + "Connection: keep-alive\r\n"
                 + "Content-Length: 18\r\n"

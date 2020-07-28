@@ -7,7 +7,7 @@ import java.util.Map;
  * time,Write time,Method name,Arguments,Filename,Response,Request
  * '2014-11-29
  * 17:56:31','127.0.0.1:49818','4','2','2','-1','throwError','-','','Error:
- * Requested error thrown','GET /call/throwError HTTP/1.1 Host:
+ * Requested error thrown','GET /api/throwError HTTP/1.1 Host:
  * 127.0.0.1:5555 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10;
  * rv:33.0) Gecko/20100101 Firefox/33.0 Accept:
  * text/html,application/xhtml+xml,application/xml;q=0.9,;q=0.8 Accept-Language:

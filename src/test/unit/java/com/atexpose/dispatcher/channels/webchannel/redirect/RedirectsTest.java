@@ -72,7 +72,7 @@ public class RedirectsTest {
                 .addFileRedirect("a/b/c/source.html", "q/r/s/dest.html")
                 .setHttpsRedirect()
                 .build();
-        URI uri = new URI("http://example.com/call/time");
+        URI uri = new URI("http://example.com/api/time");
         Assert.assertEquals("https://www.schinzel.io/bapp.html", redirects.getNewLocation(uri).toString());
     }
 
@@ -85,7 +85,7 @@ public class RedirectsTest {
 
     @Test
     public void testIsMethodCall_methodCall() throws Exception {
-        URI uri = new URI("https://www.example.com/call/time");
+        URI uri = new URI("https://www.example.com/api/time");
         Assert.assertTrue(Redirects.isMethodCall(uri));
     }
 

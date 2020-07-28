@@ -31,7 +31,7 @@ class HttpRequestsUtil {
             + "\r\n"
             + "The body\r\n";
 
-    static final String GET_REQUEST_ONE_VARIABLE = "GET /call/getDataFromPM?SSN=197107282222 HTTP/1.1\r\n"
+    static final String GET_REQUEST_ONE_VARIABLE = "GET /api/getDataFromPM?SSN=197107282222 HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Accept: */*\r\n"
@@ -43,7 +43,7 @@ class HttpRequestsUtil {
             + "Cookie: db=19710728; ci=+46733759593; _gat=1; cp=1; _ga=GA1.1.957030889.1423688797; ptl=2; undefined=1\r\n"
             + "";
 
-    static final String POST_REQUEST_NORMAL = "POST /call/getDataFromPM HTTP/1.1\r\n"
+    static final String POST_REQUEST_NORMAL = "POST /api/getDataFromPM HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"
@@ -59,7 +59,7 @@ class HttpRequestsUtil {
             + "\r\n"
             + "name=John&time=2pm";
 
-    static final String POST_REQUEST_SHORT_METHOD_NAME = "POST /call/a HTTP/1.1\r\n"
+    static final String POST_REQUEST_SHORT_METHOD_NAME = "POST /api/a HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"
@@ -75,7 +75,7 @@ class HttpRequestsUtil {
             + "\r\n"
             + "name=John&time=2pm";
 
-    static final String POST_REQUEST_LONG_METHOD_NAME = "POST /call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz HTTP/1.1\r\n"
+    static final String POST_REQUEST_LONG_METHOD_NAME = "POST /api/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"
@@ -91,7 +91,7 @@ class HttpRequestsUtil {
             + "\r\n"
             + "name=John&time=2pm";
 
-    static final String POST_REQUEST_NO_ARGS = "POST /call/a HTTP/1.1\r\n"
+    static final String POST_REQUEST_NO_ARGS = "POST /api/a HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"
@@ -107,7 +107,7 @@ class HttpRequestsUtil {
             + "\r\n"
             + "";
 
-    static final String GET_REQUEST_NORMAL = "GET /call/getDataFromPM?SSN=197107282222&Pin=88889 HTTP/1.1\r\n"
+    static final String GET_REQUEST_NORMAL = "GET /api/getDataFromPM?SSN=197107282222&Pin=88889 HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Accept: */*\r\n"
@@ -119,7 +119,7 @@ class HttpRequestsUtil {
             + "Cookie: db=19710728; ci=+46733759593; _gat=1; cp=1; _ga=GA1.1.957030889.1423688797; ptl=2; undefined=1\r\n"
             + "";
 
-    static final String GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK = "GET /call/getDataFromPM? HTTP/1.1\r\n"
+    static final String GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK = "GET /api/getDataFromPM? HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Accept: */*\r\n"
@@ -131,7 +131,7 @@ class HttpRequestsUtil {
             + "Cookie: db=19710728; ci=+46733759593; _gat=1; cp=1; _ga=GA1.1.957030889.1423688797; ptl=2; undefined=1\r\n"
             + "";
 
-    static final String GET_REQUEST_SHORT_METHODNAME = "GET /call/a?SSN=197107282222 HTTP/1.1\r\n"
+    static final String GET_REQUEST_SHORT_METHODNAME = "GET /api/a?SSN=197107282222 HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Accept: */*\r\n"
@@ -143,7 +143,7 @@ class HttpRequestsUtil {
             + "Cookie: db=19710728; ci=+46733759593; _gat=1; cp=1; _ga=GA1.1.957030889.1423688797; ptl=2; undefined=1\r\n"
             + "";
 
-    static final String GET_REQUEST_LONG_METHODNAME = "GET /call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz?SSN=197107282222 HTTP/1.1\r\n"
+    static final String GET_REQUEST_LONG_METHODNAME = "GET /api/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz?SSN=197107282222 HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Accept: */*\r\n"
@@ -155,7 +155,7 @@ class HttpRequestsUtil {
             + "Cookie: db=19710728; ci=+46733759593; _gat=1; cp=1; _ga=GA1.1.957030889.1423688797; ptl=2; undefined=1\r\n"
             + "";
 
-    static final String POST_REQUEST_ONE_LINEBREAK = "POST /call/a HTTP/1.1\r\n"
+    static final String POST_REQUEST_ONE_LINEBREAK = "POST /api/a HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"
@@ -170,7 +170,7 @@ class HttpRequestsUtil {
             + "Cookie: db=19710728; ci=+46733759593; _ga=GA1.1.957030889.1423688797; _gat=1; cp=1; ptl=2; undefined=1\r\n"
             + "";
 
-    static final String POST_REQUEST_NO_LINE_BREAKS = "POST /call/a HTTP/1.1\r\n"
+    static final String POST_REQUEST_NO_LINE_BREAKS = "POST /api/a HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"

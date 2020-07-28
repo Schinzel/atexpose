@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 
 public class UrlParserWithGSuiteAuthTest {
     private String HTTP_HEADER_WITH_AUTH_COOKIES =
-            "POST /call/encryptSSN HTTP/1.1\r\r\n" +
+            "POST /api/encryptSSN HTTP/1.1\r\r\n" +
                     "Host: kollektiva-admin.herokuapp.com\r\r\n" +
                     "Connection: close\r\n" +
                     "Accept: */*\r\n" +

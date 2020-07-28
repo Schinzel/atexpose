@@ -220,7 +220,7 @@ public class WebServerRedirectTest {
         AtExpose.create()
                 .start(mWebServer);
         Connection.Response response = Jsoup
-                .connect("http://127.0.0.1:5555/call/ping")
+                .connect("http://127.0.0.1:5555/api/ping")
                 .method(Connection.Method.GET)
                 .followRedirects(false)
                 .execute();

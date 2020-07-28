@@ -72,7 +72,7 @@ AtExpose.create()
 
 To invoke call the following URL in a browser.
 
-<http://localhost:5555/call/myMethod>
+<http://localhost:5555/api/myMethod>
 
 
 ##### Samples

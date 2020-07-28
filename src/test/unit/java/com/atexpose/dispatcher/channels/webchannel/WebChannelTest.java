@@ -49,7 +49,7 @@ public class WebChannelTest {
 
 
     @Test
-    public void getRequest_MethodCall_SrouldNotRedirect() throws Exception {
+    public void getRequest_MethodCall_ShouldNotRedirect() throws Exception {
         Redirects redirects = Redirects.getBuilder()
                 .setHttpsRedirect()
                 .build();
@@ -63,7 +63,7 @@ public class WebChannelTest {
             try {
                 //Send request
                 Connection.Response response = Jsoup
-                        .connect("http://127.0.0.1:5555/call/ping")
+                        .connect("http://127.0.0.1:5555/api/ping")
                         .followRedirects(false)
                         .execute();
             } catch (IOException e) {
@@ -86,7 +86,7 @@ public class WebChannelTest {
                 + "pong";
         webChannel.writeResponse(UTF8.getBytes(httpResponse));
         URI uri = new HttpRequest(byteStorage.getAsString()).getURI();
-        Assert.assertEquals("http://127.0.0.1:5555/call/ping", uri.toString());
+        Assert.assertEquals("http://127.0.0.1:5555/api/ping", uri.toString());
         webChannel.shutdown(Thread.currentThread());
         //Snooze for tests to work on Travis
         Sandman.snoozeMillis(10);

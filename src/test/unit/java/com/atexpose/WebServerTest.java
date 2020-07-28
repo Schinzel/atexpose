@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 public class WebServerTest {
     private AtExpose mAtExpose;
     private static final String LOCAL_HOST_IP = "127.0.0.1";
-    private static final String URL = "http://" + LOCAL_HOST_IP + ":5555/call/";
+    private static final String URL = "http://" + LOCAL_HOST_IP + ":5555/api/";
 
 
     @Before

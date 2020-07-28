@@ -16,7 +16,7 @@
             //Make a post request
             $.ajax({
                 type: "POST",
-                url: "/call/" + input,
+                url: "/api/" + input,
                 contentType: "application/json; charset=utf-8",
                 success: setOutput
             }).fail(function (jqXHR) {

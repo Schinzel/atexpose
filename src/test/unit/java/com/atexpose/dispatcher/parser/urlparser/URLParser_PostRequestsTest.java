@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class URLParser_PostRequestsTest {
 
-    private static final String POST_REQUEST_ONE_SHORT_VARIABLE = "POST /call/getDataFromPM HTTP/1.1\r\n"
+    private static final String POST_REQUEST_ONE_SHORT_VARIABLE = "POST /api/getDataFromPM HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"
@@ -26,7 +26,7 @@ public class URLParser_PostRequestsTest {
             + "\r\n"
             + "a=1";
 
-    private static final String POST_REQUEST_SHORT_METHODNAME = "POST /call/a HTTP/1.1\r\n"
+    private static final String POST_REQUEST_SHORT_METHODNAME = "POST /api/a HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"
@@ -43,7 +43,7 @@ public class URLParser_PostRequestsTest {
             + "name=John&time=2pm";
 
 
-    private static final String POST_REQUEST_NO_ARGS = "POST /call/a HTTP/1.1\r\n"
+    private static final String POST_REQUEST_NO_ARGS = "POST /api/a HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"
@@ -59,7 +59,7 @@ public class URLParser_PostRequestsTest {
             + "\r\n"
             + "";
 
-    private static final String POST_REQUEST_ONE_LINEBREAK = "POST /call/a HTTP/1.1\r\n"
+    private static final String POST_REQUEST_ONE_LINEBREAK = "POST /api/a HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"
@@ -74,7 +74,7 @@ public class URLParser_PostRequestsTest {
             + "Cookie: db=19710728; ci=+46733759593; _ga=GA1.1.957030889.1423688797; _gat=1; cp=1; ptl=2; undefined=1\r\n"
             + "";
 
-    private static final String POST_REQUEST_NO_LINEBREAKS = "POST /call/a HTTP/1.1\r\n"
+    private static final String POST_REQUEST_NO_LINEBREAKS = "POST /api/a HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Content-Length: 18\r\n"

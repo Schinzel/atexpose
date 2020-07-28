@@ -15,7 +15,7 @@ import io.schinzel.samples.auxiliary.MyObject;
  * This sample adds logs to dispatchers
  * <p>
  * Request the below URL in a browser and observe the log in the terminal
- * http://127.0.0.1:5555/call/doubleIt?Int=55
+ * http://127.0.0.1:5555/api/doubleIt?Int=55
  * <p>
  * Add a log
  */

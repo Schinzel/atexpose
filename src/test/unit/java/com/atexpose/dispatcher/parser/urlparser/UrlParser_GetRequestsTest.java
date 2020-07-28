@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class UrlParser_GetRequestsTest {
 
 
-    private static final String GET_REQUEST_NORMAL = "GET /call/getDataFromPM?SSN=197107282222&Pin=88889 HTTP/1.1\r\n"
+    private static final String GET_REQUEST_NORMAL = "GET /api/getDataFromPM?SSN=197107282222&Pin=88889 HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Accept: */*\r\n"
@@ -23,7 +23,7 @@ public class UrlParser_GetRequestsTest {
             + "Cookie: db=19710728; ci=+46733759593; _gat=1; cp=1; _ga=GA1.1.957030889.1423688797; ptl=2; undefined=1\r\n"
             + "";
 
-    private static final String GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK = "GET /call/getDataFromPM? HTTP/1.1\r\n"
+    private static final String GET_REQUEST_NO_VARIABLES_BUT_WITH_QUESTION_MARK = "GET /api/getDataFromPM? HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Accept: */*\r\n"
@@ -36,7 +36,7 @@ public class UrlParser_GetRequestsTest {
             + "";
 
 
-    private static final String GET_REQUEST_ONE_VARIABLE = "GET /call/getDataFromPM?SSN=197107282222 HTTP/1.1\r\n"
+    private static final String GET_REQUEST_ONE_VARIABLE = "GET /api/getDataFromPM?SSN=197107282222 HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Accept: */*\r\n"
@@ -48,7 +48,7 @@ public class UrlParser_GetRequestsTest {
             + "Cookie: db=19710728; ci=+46733759593; _gat=1; cp=1; _ga=GA1.1.957030889.1423688797; ptl=2; undefined=1\r\n"
             + "";
 
-    private static final String GET_REQUEST_SHORT_METHODNAME = "GET /call/a?SSN=197107282222 HTTP/1.1\r\n"
+    private static final String GET_REQUEST_SHORT_METHODNAME = "GET /api/a?SSN=197107282222 HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Accept: */*\r\n"
@@ -60,7 +60,7 @@ public class UrlParser_GetRequestsTest {
             + "Cookie: db=19710728; ci=+46733759593; _gat=1; cp=1; _ga=GA1.1.957030889.1423688797; ptl=2; undefined=1\r\n"
             + "";
 
-    private static final String GET_REQUEST_LONG_METHODNAME = "GET /call/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz?SSN=197107282222 HTTP/1.1\r\n"
+    private static final String GET_REQUEST_LONG_METHODNAME = "GET /api/abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz_abcdefghijklmonpqrstuvxyz?SSN=197107282222 HTTP/1.1\r\n"
             + "Host: 127.0.0.1:5555\r\n"
             + "Connection: keep-alive\r\n"
             + "Accept: */*\r\n"

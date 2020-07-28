@@ -36,7 +36,7 @@ public class UrlParser implements IParser {
         mCallType = CallType.UNKNOWN;
         mHttpRequest = new HttpRequest(incomingRequest);
         String url = mHttpRequest.getURL();
-        //If is command call
+        //If is api call
         if (url.contains(PropertiesDispatcher.COMMAND_REQUEST_MARKER)) {
             mCallType = CallType.COMMAND;
             Map<String, String> map = mHttpRequest.getVariables();
