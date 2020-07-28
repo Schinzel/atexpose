@@ -11,29 +11,29 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 /**
  * @author schinzel
  */
-public class NativeMethodsTest {
+public class NativeUtilMethodsTest {
     Pattern DATE_TIME_PATTERN = Pattern.compile("20[0-9][0-9]-[01][0-9]-[0-3][0-9] " +
             "[012][0-9]:[0-5][0-9]:[0-5][0-9].[0-9]{3}");
 
 
     @Test
     public void testEcho() {
-        String result = new NativeMethods().echo("monkey");
+        String result = new NativeUtilMethods().echo("monkey");
         assertThat(result).isEqualTo("monkey");
     }
 
 
     @Test
     public void testPing() {
-        NativeMethods nativeMethods = new NativeMethods();
-        String result = nativeMethods.ping();
+        NativeUtilMethods nativeUtilMethods = new NativeUtilMethods();
+        String result = nativeUtilMethods.ping();
         assertThat(result).isEqualTo("pong");
     }
 
 
     @Test
     public void testTime() {
-        String result = new NativeMethods().time();
+        String result = new NativeUtilMethods().time();
         assertThat(result).matches(DATE_TIME_PATTERN);
     }
 
@@ -42,7 +42,7 @@ public class NativeMethodsTest {
     public void startTime_NormalCase_CorrectDateTimeFormat() {
         Pattern pattern = Pattern.compile("20[0-9][0-9]-[01][0-9]-[0-3][0-9] " +
                 "[012][0-9]:[0-5][0-9]:[0-5][0-9]");
-        String result = new NativeMethods().startTime();
+        String result = new NativeUtilMethods().startTime();
         assertThat(result).containsPattern(pattern);
     }
 
@@ -50,7 +50,7 @@ public class NativeMethodsTest {
     @Test
     public void snooze_snooze20ms_shouldSnoozeBetween20And30ms() {
         long start = System.nanoTime();
-        new NativeMethods().snooze(20);
+        new NativeUtilMethods().snooze(20);
         //Calc the time to do all iterations
         long executionTimeInMS = (System.nanoTime() - start) / 1000000;
         assertThat(executionTimeInMS).isBetween(20L, 30L);
@@ -60,7 +60,7 @@ public class NativeMethodsTest {
     @Test
     public void testThrowError() {
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> new NativeMethods().throwError())
+                .isThrownBy(() -> new NativeUtilMethods().throwError())
                 .withMessageStartingWith("Requested error thrown");
     }
 

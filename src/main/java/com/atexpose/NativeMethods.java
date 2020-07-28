@@ -1,90 +1,135 @@
 package com.atexpose;
 
-import com.atexpose.errors.RuntimeError;
-import com.atexpose.util.DateTimeStrings;
-import io.schinzel.basicutils.Sandman;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import com.atexpose.dispatcher.IDispatcher;
+import com.atexpose.dispatcher.logging.Logger;
+import com.atexpose.dispatcher.logging.LoggerType;
+import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
+import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
+import com.atexpose.dispatcherfactories.ScriptFileReaderFactory;
+import io.schinzel.basicutils.Checker;
+import io.schinzel.crypto.cipher.Aes256Gcm;
+import io.schinzel.crypto.cipher.ICipher;
+import io.schinzel.crypto.cipher.NoCipher;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+import org.json.JSONObject;
 
 /**
- * Miscellaneous utility methods native to @expose
- *
- * @author Schinzel
+ * The purpose of this class is to expose @Expose and allow string returns that contain status of
+ * the operation
+ * messages.
+ * <p>
+ * Created by schinzel on 2017-04-16.
  */
-@SuppressWarnings({"WeakerAccess", "SameParameterValue", "UnusedReturnValue"})
-public class NativeMethods {
-    /** The time the instance was started. */
-    private final Instant mInstanceStartTime = Instant.now();
+@SuppressWarnings("unused")
+@Accessors(prefix = "m")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+class NativeMethods {
+    @Getter(AccessLevel.PACKAGE)
+    private final AtExpose mAtExpose;
 
 
-    /**
-     * @param s The string to return
-     * @return Returns the argument string.
-     */
-    @Expose(
-            arguments = {"String"},
-            description = "Returns the argument string. Util method for testing.",
-            labels = {"@Expose", "Util"},
-            requiredArgumentCount = 1
-    )
-    public String echo(String s) {
-        return s;
+    static NativeMethods create(AtExpose atExpose) {
+        return new NativeMethods(atExpose);
     }
 
 
     @Expose(
-            description = "Simply returns the string \"pong\". Util method for testing.",
-            labels = {"@Expose", "Util"}
-    )
-    public String ping() {
-        return "pong";
-    }
-
-
-    @Expose(
-            description = "Returns the current server time in UTC.",
-            labels = {"@Expose", "Util"}
-    )
-    public String time() {
-        return DateTimeStrings.getDateTimeUTC();
-    }
-
-
-    @Expose(
-            description = "Returns the time when the server was started",
-            labels = {"@Expose", "Util"}
-    )
-    public String startTime() {
-        DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String utcTime = LocalDateTime.ofInstant(mInstanceStartTime, ZoneId.of("UTC")).format(dateTimeFormat);
-        String swedishTime = LocalDateTime.ofInstant(mInstanceStartTime, ZoneId.of("Europe/Stockholm")).format(dateTimeFormat);
-        return "SWE:" + swedishTime + "  UTC:" + utcTime;
-    }
-
-
-    @Expose(
+            arguments = {"FileName"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 1,
-            arguments = {"Int"},
-            description = "Put the invoking thread to sleep for the argument amount of milliseconds.",
-            labels = {"@Expose", "Util"}
+            description = "Reads and executes the argument script file. Useful for setting up settings, scheduled tasks and so on.",
+            labels = {"@Expose", "AtExpose"}
     )
-    public String snooze(int timeInMilliseconds) {
-        Sandman.snoozeMillis(timeInMilliseconds);
-        return "Good morning! Slept for " + timeInMilliseconds + " milliseconds";
+    public String loadScriptFile(String fileName) {
+        IDispatcher scriptFileReader = ScriptFileReaderFactory.create(fileName);
+        this.getAtExpose().start(scriptFileReader, true);
+        return "Script file '" + fileName + "' loaded.";
     }
 
 
     @Expose(
-            description = "Throws an error. Useful for testing.",
+            arguments = {"DispatcherName", "LogFormatter", "LogWriter", "CryptoKey"},
             requiredAccessLevel = 3,
-            labels = {"@Expose", "Util"}
+            description = "Adds an event logger to a dispatcher.",
+            labels = {"@Expose", "AtExpose", "Logs"},
+            requiredArgumentCount = 1
     )
-    public String throwError() {
-        throw new RuntimeError("Requested error thrown");
+    public String addEventLogger(String dispatcherName, String logFormatter, String logWriter, String cryptoKey) {
+        return this.addLogger(dispatcherName, logFormatter, logWriter, cryptoKey, LoggerType.EVENT);
+    }
+
+
+    @Expose(
+            arguments = {"DispatcherName", "LogFormatter", "LogWriter", "CryptoKey"},
+            requiredAccessLevel = 3,
+            description = "Adds an error logger to a dispatcher.",
+            labels = {"@Expose", "AtExpose", "Logs"},
+            requiredArgumentCount = 1
+    )
+    public String addErrorLogger(String dispatcherName, String logFormatter, String logWriter, String cryptoKey) {
+        return this.addLogger(dispatcherName, logFormatter, logWriter, cryptoKey, LoggerType.ERROR);
+    }
+
+
+    private String addLogger(String dispatcherName, String logFormatter, String logWriter, String cryptoKey, LoggerType loggerType) {
+        ICipher crypto = Checker.isEmpty(cryptoKey)
+                ? new NoCipher()
+                : new Aes256Gcm(cryptoKey);
+        Logger logger = Logger.builder()
+                .loggerType(LoggerType.EVENT)
+                .logFormatter(LogFormatterFactory.get(logFormatter).create())
+                .logWriter(LogWriterFactory.get(logWriter).create())
+                .cipher(crypto)
+                .build();
+        this.getAtExpose().getDispatchers().get(dispatcherName).addLogger(logger);
+        return "Dispatcher " + dispatcherName + " got an " + loggerType.name().toLowerCase() + " logger";
+    }
+
+
+    @Expose(
+            description = "Shuts down the system",
+            requiredAccessLevel = 3,
+            aliases = {"close", "bye", "exit"},
+            labels = {"@Expose"}
+    )
+    public synchronized String shutdown() {
+        this.getAtExpose().shutdown();
+        return "Shutting down...";
+    }
+
+
+    @Expose(
+            arguments = {"DispatcherName"},
+            requiredAccessLevel = 3,
+            description = "Closes the argument dispatcher.",
+            labels = {"@Expose"}
+    )
+    public String closeDispatcher(String name) {
+        this.getAtExpose().closeDispatcher(name);
+        return "Dispatcher " + name + " has been closed";
+    }
+
+
+    @Expose(
+            description = "Returns the API.",
+            requiredAccessLevel = 2,
+            labels = {"@Expose"}
+    )
+    public JSONObject api() {
+        return this.getAtExpose().getAPI().getState().getJson();
+    }
+
+
+    @Expose(
+            description = "Returns the current @Expose state.",
+            requiredAccessLevel = 2,
+            labels = {"@Expose"}
+    )
+    public JSONObject status() {
+        return this.getAtExpose().getState().getJson();
     }
 
 

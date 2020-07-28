@@ -42,7 +42,7 @@ public class AtExpose implements IStateNode {
     AtExpose() {
         mAPI = new API();
         NativeSetup.setUp(this.getAPI());
-        this.getAPI().expose(ExposedAtExpose.create(this));
+        this.getAPI().expose(NativeMethods.create(this));
     }
 
 
