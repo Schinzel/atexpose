@@ -194,6 +194,6 @@ class NativeSetup {
 
 
     private static void setUpMethods(API api) {
-        api.expose(new Misc());
+        api.expose(new NativeMethods());
     }
 }

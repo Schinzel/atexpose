@@ -10,12 +10,12 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Miscellaneous utility methods.
+ * Miscellaneous utility methods native to @expose
  *
  * @author Schinzel
  */
-@SuppressWarnings({"WeakerAccess", "SameParameterValue"})
-public class Misc {
+@SuppressWarnings({"WeakerAccess", "SameParameterValue", "UnusedReturnValue"})
+public class NativeMethods {
     /** The time the instance was started. */
     private final Instant mInstanceStartTime = Instant.now();
 
