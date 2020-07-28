@@ -1,11 +1,12 @@
 package com.atexpose;
 
 /**
- * Module wide properties.
+ * The purpose of this class is to hold properties used throughout the project.
  *
  * @author Schinzel
  */
-public class MyProperties {
+public class ProjectProperties {
+    private ProjectProperties(){}
     /**
      * The line separator of the operating system that this code runs on.
      */

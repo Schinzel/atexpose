@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.wrapper;
 
-import com.atexpose.MyProperties;
+import com.atexpose.ProjectProperties;
 import com.atexpose.util.FileRW;
 import com.atexpose.util.httpresponse.*;
 import com.google.common.base.Charsets;
@@ -68,8 +68,8 @@ public class WebWrapper implements IWrapper {
                Map<String, String> serverSideVariables, Map<String, String> responseHeaders,
                String fileName404Page) {
         //If the last char is not a file separator, then add it
-        mWebServerDir = !webServerDir.endsWith(MyProperties.FILE_SEPARATOR)
-                ? webServerDir + MyProperties.FILE_SEPARATOR
+        mWebServerDir = !webServerDir.endsWith(ProjectProperties.FILE_SEPARATOR)
+                ? webServerDir + ProjectProperties.FILE_SEPARATOR
                 : webServerDir;
         mBrowserCacheMaxAge = browserCacheMaxAge;
         mServerSideVariables = Checker.isEmpty(serverSideVariables)

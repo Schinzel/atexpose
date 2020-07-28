@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.channels;
 
-import com.atexpose.MyProperties;
+import com.atexpose.ProjectProperties;
 import com.atexpose.errors.RuntimeError;
 import com.atexpose.util.ByteStorage;
 import io.schinzel.basicutils.Checker;
@@ -83,7 +83,7 @@ public class CommandLineChannel implements IChannel {
         if (response != null && response.length > 0) {
             try {
                 System.out.write(response);
-                System.out.write(UTF8.getBytes(MyProperties.OS_LINE_SEPARATOR));
+                System.out.write(UTF8.getBytes(ProjectProperties.OS_LINE_SEPARATOR));
             } catch (IOException e) {
                 throw new RuntimeError("Error while writing to prompt.");
             }
