@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,14 +43,12 @@ public class MethodObject implements IValueWithKey, IStateNode {
     @Getter private final MethodArguments mMethodArguments;
     //A list of labels to which this method belongs.
     private List<Label> mLabels;
-    //Alias, i.e. alternate method names for this method.
-    private List<Alias> mAliases = new ArrayList<>();
 
 
     @Builder
     private MethodObject(Object theObject, Method method, String description, int noOfRequiredArguments,
                          List<Argument> arguments, int accessLevel, List<Label> labels,
-                         AbstractDataType returnDataType, List<Alias> aliases, boolean requireAuthentication) {
+                         AbstractDataType returnDataType, boolean requireAuthentication) {
         Thrower.throwIfVarNull(theObject, "theObject");
         Thrower.throwIfVarNull(method, "method");
         Thrower.throwIfVarNull(description, "description");
@@ -68,13 +65,6 @@ public class MethodObject implements IValueWithKey, IStateNode {
         mAccessLevelRequiredToUseThisMethod = accessLevel;
         mMethodArguments = MethodArguments.create(arguments);
         mAuthRequired = requireAuthentication;
-        if (!Checker.isEmpty(aliases)) {
-            mAliases = aliases;
-            for (Alias alias : mAliases) {
-                alias.setMethod(this);
-            }
-            Collections.sort(mAliases);
-        }
         if (!Checker.isEmpty(labels)) {
             mLabels = labels;
             for (Label label : labels) {
@@ -122,7 +112,6 @@ public class MethodObject implements IValueWithKey, IStateNode {
                 .add("RequiredArgumentsCount", mNoOfRequiredArguments)
                 .add("JavaClass", mObject.getClass().getCanonicalName())
                 .addChild("Arguments", mMethodArguments)
-                .addChildren("Aliases", mAliases)
                 .addChildren("Labels", mLabels)
                 .build();
     }

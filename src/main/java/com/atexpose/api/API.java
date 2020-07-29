@@ -4,7 +4,6 @@ import com.atexpose.Expose;
 import com.atexpose.api.datatypes.AbstractDataType;
 import com.atexpose.api.datatypes.DataType;
 import com.atexpose.errors.SetUpError;
-import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
@@ -13,7 +12,6 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,7 +24,6 @@ public class API implements IStateNode {
     @Getter private final ValuesWithKeys<MethodObject> mMethods = ValuesWithKeys.create("Methods");
     @Getter private final ValuesWithKeys<Argument> mArguments = ValuesWithKeys.create("Arguments");
     @Getter(AccessLevel.PACKAGE) final ValuesWithKeys<Label> mLabels = ValuesWithKeys.create("Labels");
-    @Getter(AccessLevel.PACKAGE) private final ValuesWithKeys<Alias> mAliases = ValuesWithKeys.create("Aliases");
     private final ValuesWithKeys<AbstractDataType> mDataTypes = ValuesWithKeys.create("DataTypes");
 
 
@@ -83,26 +80,10 @@ public class API implements IStateNode {
         MethodObject methodObject;
         if (mMethods.has(methodName)) {
             methodObject = mMethods.get(methodName);
-        }//If no method by argument name was found
-        else if (mAliases.has(methodName)) {
-            methodObject = mAliases.get(methodName).getMethod();
         } else {
             throw new RuntimeException("No such method '" + methodName + "'");
         }
         return methodObject;
-    }
-
-
-    private List<Alias> addAliases(String[] names) {
-        List<Alias> aliases = new ArrayList<>();
-        if (!Checker.isEmpty(names)) {
-            for (String name : names) {
-                Alias alias = new Alias(name);
-                aliases.add(alias);
-                mAliases.add(alias);
-            }
-        }
-        return aliases;
     }
 
 
@@ -171,7 +152,6 @@ public class API implements IStateNode {
                 try {
                     List<Argument> arguments = mArguments.get(Arrays.asList(expose.arguments()));
                     List<Label> labels = mLabels.get(Arrays.asList(expose.labels()));
-                    List<Alias> aliases = this.addAliases(expose.aliases());
                     AbstractDataType returnDataType = mDataTypes.get(method.getReturnType().getSimpleName());
                     MethodObject methodObject = MethodObject.builder()
                             .theObject(theObject)
@@ -182,7 +162,6 @@ public class API implements IStateNode {
                             .accessLevel(expose.requiredAccessLevel())
                             .labels(labels)
                             .returnDataType(returnDataType)
-                            .aliases(aliases)
                             .build();
                     mMethods.add(methodObject);
                 } catch (Exception e) {

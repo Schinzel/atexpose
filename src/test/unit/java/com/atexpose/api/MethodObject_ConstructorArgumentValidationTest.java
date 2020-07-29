@@ -21,7 +21,6 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .accessLevel(1)
                         .labels(Collections.emptyList())
                         .returnDataType(DataType.INT.getInstance())
-                        .aliases(Collections.emptyList())
                         .build()
         ).withMessageContaining("theObject");
     }
@@ -39,7 +38,6 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .accessLevel(1)
                         .labels(Collections.emptyList())
                         .returnDataType(DataType.INT.getInstance())
-                        .aliases(Collections.emptyList())
                         .build()
         ).withMessageContaining("method");
     }
@@ -57,7 +55,6 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .accessLevel(1)
                         .labels(Collections.emptyList())
                         .returnDataType(DataType.INT.getInstance())
-                        .aliases(Collections.emptyList())
                         .build()
         ).withMessageContaining("description");
     }
@@ -75,7 +72,6 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .accessLevel(1)
                         .labels(Collections.emptyList())
                         .returnDataType(null)
-                        .aliases(Collections.emptyList())
                         .build()
         ).withMessageContaining("returnDataType");
     }
@@ -93,7 +89,6 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .accessLevel(1)
                         .labels(Collections.emptyList())
                         .returnDataType(DataType.INT.getInstance())
-                        .aliases(Collections.emptyList())
                         .build()
         ).withMessageContaining("Number of required arguments is higher than the actual number of arguments");
     }
