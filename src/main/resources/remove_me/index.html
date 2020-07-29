@@ -15,6 +15,14 @@
         async doit(){
             let apa =  await new ServerCaller().time();
             console.log("apa "+ apa);
+
+            let a = await new ServerCaller()
+            .echo('hej');
+            console.log("a " + a);
+
+            let b = await new ServerCaller()
+            .concat('bear', 77);
+            console.log('b ' + b);
         }
     }
 

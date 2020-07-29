@@ -1,7 +1,16 @@
 export class ServerCaller {
-    async echo(){
+    async concat(String = '',Int = '0'){
+        return await new ServerCallerInt()
+            .setPath('/api/concat')
+            .addArg('String', String)
+            .addArg('Int', Int)
+            .callWithPromise();
+    }
+
+    async echo(String = ''){
         return await new ServerCallerInt()
             .setPath('/api/echo')
+            .addArg('String', String)
             .callWithPromise();
     }
 

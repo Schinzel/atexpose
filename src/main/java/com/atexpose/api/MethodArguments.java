@@ -3,9 +3,12 @@ package com.atexpose.api;
 import com.atexpose.api.datatypes.AbstractDataType;
 import com.google.common.collect.ImmutableList;
 import io.schinzel.basicutils.Checker;
+import io.schinzel.basicutils.EmptyObjects;
 import io.schinzel.basicutils.thrower.Thrower;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Collections;
@@ -18,8 +21,10 @@ import java.util.Map;
  * <p>
  * Created by Schinzel on 2017-12-09
  */
+@Accessors(prefix = "m")
 public class MethodArguments implements IStateNode {
     //Holds the arguments of this object
+    @Getter
     private final ImmutableList<Argument> mArguments;
     //A collection for CPU efficient up look of argument position
     private final Map<String, Integer> mArgumentPositions = new HashMap<>(20);

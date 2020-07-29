@@ -4,6 +4,7 @@ import com.atexpose.api.MethodObject;
 import io.schinzel.basicutils.file.FileWriter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class JsClientGenerator implements IGenerator {
     private final String mFilePath;
@@ -19,10 +20,28 @@ public class JsClientGenerator implements IGenerator {
         for (MethodObject method : methods) {
             if (method.getAccessLevelRequiredToUseThisMethod() == 1) {
                 String methodName = method.getMethod().getName();
+                String arguments = method
+                        .getMethodArguments()
+                        .getArguments()
+                        .stream()
+                        .map(n -> n.getKey() + " = '" + n.getDefaultValueAsString() + "'")
+                        .collect(Collectors.joining(","));
+
+                 String setServerCallerArguments = method
+                        .getMethodArguments()
+                        .getArguments()
+                        .stream()
+                        .map(n -> "            .addArg('" + n.getKey() + "', " + n.getKey() + ")")
+                        .collect(Collectors.joining("\n"));
+                 if (!setServerCallerArguments.isEmpty()){
+                     setServerCallerArguments = setServerCallerArguments + "\n";
+                 }
+
                 String str = ""
-                        + "    async " + methodName + "(){\n"
+                        + "    async " + methodName + "(" + arguments + "){\n"
                         + "        return await new ServerCallerInt()\n"
-                        + "            .setPath('/api/"+methodName+"')\n"
+                        + "            .setPath('/api/" + methodName + "')\n"
+                        + setServerCallerArguments
                         + "            .callWithPromise();\n"
                         + "    }\n\n";
                 sb.append(str);
