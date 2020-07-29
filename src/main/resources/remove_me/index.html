@@ -7,13 +7,25 @@
 </head>
 <body>
 <h1>TEMP FILE</h1>
+
 <script type="module">
     import {ServerCaller} from "./ServerCaller.js";
 
-    let apa = new ServerCaller().time();
+    class Apa{
+        async doit(){
+            let apa =  await new ServerCaller().time();
+            console.log("apa "+ apa);
+        }
+    }
 
-    console.log(apa);
+    async function ppp() {
+        let apa =  await new ServerCaller().startTime();
+        console.log("apa "+ apa);
 
+    }
+
+    new Apa().doit();
+    ppp();
 </script>
 
 </body>

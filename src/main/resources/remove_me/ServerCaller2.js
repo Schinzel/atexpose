@@ -1,27 +1,31 @@
 export class ServerCaller {
-	async echo(){
-		return await new ServerCallerInt()
-			.setPath('/api/echo')
-			.callWithPromise();
-	}
+    async echo(){
+        await new ServerCallerInt()
+            .setPath('/api/echo')
+            .callWithPromise();
+    }
 
-	async ping(){
-		return await new ServerCallerInt()
-			.setPath('/api/ping')
-			.callWithPromise();
-	}
+    async ping(){
+        await new ServerCallerInt()
+            .setPath('/api/ping')
+            .callWithPromise();
+    }
 
-	async startTime(){
-		return await new ServerCallerInt()
-			.setPath('/api/startTime')
-			.callWithPromise();
-	}
+    async startTime(){
+        return await new ServerCallerInt()
+            .setPath('/api/startTime')
+            .callWithPromise();
+    }
 
-	async time(){
-		return await new ServerCallerInt()
-			.setPath('/api/time')
-			.callWithPromise();
-	}
+    time(){
+        return new Promise((resolve, reject) => {
+            new ServerCallerInt()
+                .setPath('/api/time')
+                .setSuccessCallback(resolve)
+                .setFailCallback(reject)
+                .call();
+        });
+    }
 
 }
 

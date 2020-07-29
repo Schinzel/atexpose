@@ -20,7 +20,7 @@ public class JsClientGenerator implements IGenerator {
             if (method.getAccessLevelRequiredToUseThisMethod() == 1) {
                 String methodName = method.getMethod().getName();
                 String str = "\tasync " + methodName + "(){\n"
-                        + "\t\tawait new ServerCallerInt()\n"
+                        + "\t\treturn await new ServerCallerInt()\n"
                         + "\t\t\t.setPath('/api/"+methodName+"')\n"
                         + "\t\t\t.callWithPromise();\n"
                         + "\t}\n\n";
@@ -149,7 +149,6 @@ public class JsClientGenerator implements IGenerator {
             "            processData: this._processData\n" +
             "        })\n" +
             "            .done((response) => {\n" +
-            "                console.log(response);\n" +
             "                let responseAsJson = toJSON(response);\n" +
             "                this._successCallback(responseAsJson);\n" +
             "            })\n" +
