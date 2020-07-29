@@ -25,19 +25,22 @@ public class JsClientGenerator implements IGenerator {
                         .getArguments()
                         .stream()
                         .map(n -> n.getKey() + " = '" + n.getDefaultValueAsString() + "'")
-                        .collect(Collectors.joining(","));
+                        .collect(Collectors.joining(", "));
 
-                 String setServerCallerArguments = method
+                String setServerCallerArguments = method
                         .getMethodArguments()
                         .getArguments()
                         .stream()
                         .map(n -> "            .addArg('" + n.getKey() + "', " + n.getKey() + ")")
                         .collect(Collectors.joining("\n"));
-                 if (!setServerCallerArguments.isEmpty()){
-                     setServerCallerArguments = setServerCallerArguments + "\n";
-                 }
+                if (!setServerCallerArguments.isEmpty()) {
+                    setServerCallerArguments = setServerCallerArguments + "\n";
+                }
 
                 String str = ""
+                        + "    /**\n"
+                        + "     * " + method.getDescription() + "\n"
+                        + "     */\n"
                         + "    async " + methodName + "(" + arguments + "){\n"
                         + "        return await new ServerCallerInt()\n"
                         + "            .setPath('/api/" + methodName + "')\n"

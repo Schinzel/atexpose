@@ -1,5 +1,8 @@
 export class ServerCaller {
-    async concat(String = '',Int = '0'){
+    /**
+     * No description available
+     */
+    async concat(String = '', Int = '0'){
         return await new ServerCallerInt()
             .setPath('/api/concat')
             .addArg('String', String)
@@ -7,6 +10,9 @@ export class ServerCaller {
             .callWithPromise();
     }
 
+    /**
+     * Returns the argument string. Util method for testing.
+     */
     async echo(String = ''){
         return await new ServerCallerInt()
             .setPath('/api/echo')
@@ -14,18 +20,27 @@ export class ServerCaller {
             .callWithPromise();
     }
 
+    /**
+     * Simply returns the string "pong". Util method for testing.
+     */
     async ping(){
         return await new ServerCallerInt()
             .setPath('/api/ping')
             .callWithPromise();
     }
 
+    /**
+     * Returns the time when the server was started
+     */
     async startTime(){
         return await new ServerCallerInt()
             .setPath('/api/startTime')
             .callWithPromise();
     }
 
+    /**
+     * Returns the current server time in UTC.
+     */
     async time(){
         return await new ServerCallerInt()
             .setPath('/api/time')
