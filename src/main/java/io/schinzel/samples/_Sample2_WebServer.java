@@ -2,6 +2,7 @@ package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
 import com.atexpose.dispatcherfactories.WebServerBuilder;
+import com.atexpose.generator.JsClientGenerator;
 import io.schinzel.samples.auxiliary.MyClass;
 import io.schinzel.samples.auxiliary.MyObject;
 
@@ -28,6 +29,7 @@ public class _Sample2_WebServer {
                 //Expose an instance
                 .expose(new MyObject())
                 //Start a web server
-                .start(WebServerBuilder.create().build());
+                .start(WebServerBuilder.create().build())
+                .generate(new JsClientGenerator("src/main/resources/ServerCaller.js"));
     }
 }

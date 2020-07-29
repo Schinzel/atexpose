@@ -1,7 +1,11 @@
 package com.atexpose;
 
 import com.atexpose.api.API;
+import com.atexpose.api.MethodObject;
 import com.atexpose.dispatcher.IDispatcher;
+import com.atexpose.dispatcherfactories.CliFactory;
+import com.atexpose.dispatcherfactories.WebServerBuilder;
+import com.atexpose.generator.IGenerator;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.mail.IEmailSender;
 import io.schinzel.basicutils.Checker;
@@ -10,6 +14,9 @@ import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The central class that is the spider in the web.
@@ -58,6 +65,13 @@ public class AtExpose implements IStateNode {
     }
 
 
+    public AtExpose generate(IGenerator generator) {
+        List<MethodObject> methodObjects = new ArrayList<>(mAPI.getMethods().values());
+        generator.generate(methodObjects);
+        return this;
+    }
+
+
     /**
      * Shuts down all dispatchers of this instance.
      *
@@ -88,6 +102,45 @@ public class AtExpose implements IStateNode {
     public AtExpose closeDispatcher(String dispatcherName) {
         this.getDispatchers().get(dispatcherName).shutdown();
         this.getDispatchers().remove(dispatcherName);
+        return this;
+    }
+
+
+    /**
+     * Starts a command line interface
+     *
+     * @return This for chaining
+     */
+    public AtExpose startCLI() {
+        this.start(CliFactory.create());
+        return this;
+    }
+
+
+    /**
+     * Starts a web server on port 5555
+     *
+     * @param webServerDir Path to web server dir
+     * @return This for chaining
+     */
+    public AtExpose startWebServer(String webServerDir) {
+        return this.startWebServer(webServerDir, 5555);
+    }
+
+
+    /**
+     * Starts a web server
+     *
+     * @param webServerDir Path to web server dir
+     * @param port         Port to start web server on
+     * @return This for chaining
+     */
+    public AtExpose startWebServer(String webServerDir, int port) {
+        IDispatcher webServer = WebServerBuilder.create()
+                .webServerDir(webServerDir)
+                .port(port)
+                .build();
+        this.start(webServer, false);
         return this;
     }
 

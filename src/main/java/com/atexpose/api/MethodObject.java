@@ -37,7 +37,7 @@ public class MethodObject implements IValueWithKey, IStateNode {
     //The method that this object defines
     @Getter private final Method mMethod;
     //Holds a description of the method.
-    private final String mDescription;
+    @Getter private final String mDescription;
     //How many of the arguments are required.
     @Getter private final int mNoOfRequiredArguments;
     //Holds the arguments of this method
