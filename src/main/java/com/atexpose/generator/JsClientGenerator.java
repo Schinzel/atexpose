@@ -19,11 +19,12 @@ public class JsClientGenerator implements IGenerator {
         for (MethodObject method : methods) {
             if (method.getAccessLevelRequiredToUseThisMethod() == 1) {
                 String methodName = method.getMethod().getName();
-                String str = "\tasync " + methodName + "(){\n"
-                        + "\t\treturn await new ServerCallerInt()\n"
-                        + "\t\t\t.setPath('/api/"+methodName+"')\n"
-                        + "\t\t\t.callWithPromise();\n"
-                        + "\t}\n\n";
+                String str = ""
+                        + "    async " + methodName + "(){\n"
+                        + "        return await new ServerCallerInt()\n"
+                        + "            .setPath('/api/"+methodName+"')\n"
+                        + "            .callWithPromise();\n"
+                        + "    }\n\n";
                 sb.append(str);
             }
         }
