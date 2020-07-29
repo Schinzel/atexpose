@@ -14,7 +14,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.json.JSONObject;
 
 /**
  * The purpose of this class is to expose @Expose and allow string returns that contain status of
@@ -118,8 +117,8 @@ class NativeMethods {
             requiredAccessLevel = 2,
             labels = {"@Expose"}
     )
-    public JSONObject api() {
-        return this.getAtExpose().getAPI().getState().getJson();
+    public String api() {
+        return this.getAtExpose().getAPI().getState().getJson().toString();
     }
 
 
@@ -128,8 +127,8 @@ class NativeMethods {
             requiredAccessLevel = 2,
             labels = {"@Expose"}
     )
-    public JSONObject status() {
-        return this.getAtExpose().getState().getJson();
+    public String status() {
+        return this.getAtExpose().getState().toString();
     }
 
 

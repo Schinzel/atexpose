@@ -33,7 +33,7 @@ public class APITest {
                 .expose(ExposedClass.class);
         Help help = new Help(api);
         String methodHelp = help.help("exposedMethod", "");
-        assertEquals("String exposedMethod(String String)", methodHelp);
+        assertEquals("string exposedMethod(string String)", methodHelp);
         String argsMissing = help.help("Chimp", "");
         assertEquals("No matches found for 'Chimp'", argsMissing);
     }
@@ -41,7 +41,7 @@ public class APITest {
 
     @Test
     public void addArgument_ArgumentAdded_ExistsArgumentWithSetDescription() {
-        API api = new API().addArgument("MyName", DataType.JSON, "My description");
+        API api = new API().addArgument("MyName", DataType.STRING, "My description");
         Argument argument = api.getArguments()
                 .get("MyName");
         assertThat(argument.getDescription()).isEqualTo("My description");

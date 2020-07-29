@@ -6,11 +6,9 @@ package com.atexpose.api.datatypes;
  * @author schinzel
  */
 public enum DataType {
-    ALPHNUMSTRING(new AlphNumStringDT()),
+    ALPHA_NUMERIC_STRING(new AlphNumStringDT()),
     BOOLEAN(new BooleanDT()),
-    FLOAT(new FloatDT()),
     INT(new IntDT()),
-    JSON(new JsonObjectDT()),
     STRING(new StringDT());
 
     private final AbstractDataType mAdt;

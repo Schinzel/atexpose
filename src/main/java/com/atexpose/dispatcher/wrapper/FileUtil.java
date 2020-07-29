@@ -11,7 +11,7 @@ import java.util.Locale;
  * Created by schinzel on 2017-06-03.
  */
 class FileUtil {
-    private static ImmutableSet<String> TEXT_FILE = new ImmutableSet.Builder<String>()
+    private static final ImmutableSet<String> TEXT_FILE = new ImmutableSet.Builder<String>()
             .add("css")
             .add("html")
             .add("htm")

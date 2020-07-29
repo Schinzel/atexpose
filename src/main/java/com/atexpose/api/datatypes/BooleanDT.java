@@ -7,7 +7,7 @@ package com.atexpose.api.datatypes;
 public class BooleanDT extends AbstractDataType {
 
     BooleanDT() {
-        super("Boolean",
+        super("boolean",
                 "Allowed values are the strings 'true' or 'false'. The matching is case-insensitive.");
     }
 

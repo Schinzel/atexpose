@@ -10,7 +10,7 @@ public class StringDT extends AbstractDataType {
 
 
     StringDT() {
-        super("String",
+        super("string",
                 "Allowed values are arbitrary characters. Reserved value is the null value '" + STRING_REPRESENTATION_OF_NULL + "'. "
                 + "The maximum length is " + MAX_LENGTH + " characters.");
     }

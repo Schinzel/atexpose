@@ -34,16 +34,6 @@ public class API implements IStateNode {
         //Set up the basic arguments.
         this
                 .addArgument(Argument.builder()
-                        .name("Float")
-                        .dataType(DataType.FLOAT)
-                        .description("A float.")
-                        .build())
-                .addArgument(Argument.builder()
-                        .name("Json")
-                        .dataType(DataType.JSON)
-                        .description("JSON.")
-                        .build())
-                .addArgument(Argument.builder()
                         .name("Int")
                         .dataType(DataType.INT)
                         .description("An integer.")
