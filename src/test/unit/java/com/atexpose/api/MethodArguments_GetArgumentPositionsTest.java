@@ -20,19 +20,16 @@ public class MethodArguments_GetArgumentPositionsTest {
     private MethodArguments getThreeArguments() {
         Argument argument1 = Argument.builder()
                 .name("arg1")
-                .alias("arg1_alias")
                 .dataType(DataTypeEnum.STRING)
                 .defaultValue("my_default_value")
                 .build();
         Argument argument2 = Argument.builder()
                 .name("arg2")
-                .alias("arg2_alias")
                 .dataType(DataTypeEnum.INT)
                 .defaultValue("1234")
                 .build();
         Argument argument3 = Argument.builder()
                 .name("arg3")
-                .alias("arg3_alias")
                 .dataType(DataTypeEnum.BOOLEAN)
                 .defaultValue("true")
                 .build();
@@ -113,14 +110,6 @@ public class MethodArguments_GetArgumentPositionsTest {
     @Test
     public void getArgumentPositions__3Arguments_arg3_arg2_arg1__Array_2_1_0() {
         List<String> list = ImmutableList.of("arg3", "arg2", "arg1");
-        int[] argumentPositions = this.getThreeArguments().getArgumentPositions(list);
-        assertThat(argumentPositions).containsExactly(2, 1, 0);
-    }
-
-
-    @Test
-    public void getArgumentPositions__3Arguments_arg3Alias_arg2Alias_arg1Alias__Array_2_1_0() {
-        List<String> list = ImmutableList.of("arg3_alias", "arg2_alias", "arg1_alias");
         int[] argumentPositions = this.getThreeArguments().getArgumentPositions(list);
         assertThat(argumentPositions).containsExactly(2, 1, 0);
     }

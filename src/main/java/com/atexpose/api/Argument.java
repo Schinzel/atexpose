@@ -7,11 +7,7 @@ import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Singular;
 import lombok.experimental.Accessors;
-
-import java.util.Collections;
-import java.util.List;
 
 @Accessors(prefix = "m")
 public class Argument implements IValueWithKey, IStateNode {
@@ -19,8 +15,6 @@ public class Argument implements IValueWithKey, IStateNode {
     @Getter private final String mDescription;
     //The data type of the argument
     @Getter private final AbstractDataType mDataType;
-    // Holds the aliases for this argument.
-    @Getter private List<String> mAliases;
     // Holds the default value for this argument.
     @Getter private Object mDefaultValue = null;
     // Holds the string representation of the default value for this argument.
@@ -28,12 +22,10 @@ public class Argument implements IValueWithKey, IStateNode {
 
 
     @Builder
-    Argument(String name, String description, DataTypeEnum dataType, String defaultValue, @Singular List<String> aliases) {
+    Argument(String name, String description, DataTypeEnum dataType, String defaultValue) {
         this.mKey = name;
         this.mDescription = description;
         mDataType = dataType.getInstance();
-        mAliases = aliases;
-        Collections.sort(mAliases);
         if (defaultValue == null) {
             mDefaultValueAsString = "";
         } else {

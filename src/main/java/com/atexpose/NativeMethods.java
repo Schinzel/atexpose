@@ -91,7 +91,6 @@ class NativeMethods {
     @Expose(
             description = "Shuts down the system",
             requiredAccessLevel = 3,
-            aliases = {"close", "bye", "exit"},
             labels = {"@Expose"}
     )
     public synchronized String shutdown() {

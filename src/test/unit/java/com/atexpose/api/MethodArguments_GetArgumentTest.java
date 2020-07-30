@@ -16,19 +16,16 @@ public class MethodArguments_GetArgumentTest {
     private MethodArguments getThreeArguments() {
         Argument argument1 = Argument.builder()
                 .name("arg1")
-                .alias("arg1Alias")
                 .dataType(DataTypeEnum.STRING)
                 .defaultValue("my_default_value")
                 .build();
         Argument argument2 = Argument.builder()
                 .name("arg2")
-                .alias("arg2Alias")
                 .dataType(DataTypeEnum.INT)
                 .defaultValue("1234")
                 .build();
         Argument argument3 = Argument.builder()
                 .name("arg3")
-                .alias("arg3_alias")
                 .dataType(DataTypeEnum.BOOLEAN)
                 .defaultValue("true")
                 .build();
@@ -68,13 +65,6 @@ public class MethodArguments_GetArgumentTest {
     @Test
     public void getArgument_ExistingArgumentName_ArgumentWithRequestedName() {
         Argument argument = this.getThreeArguments().getArgument("arg2");
-        assertThat(argument.getKey()).isEqualToIgnoringCase("arg2");
-    }
-
-
-    @Test
-    public void getArgument_ArgumentNameAlias_ArgumentWithRequestedAlias() {
-        Argument argument = this.getThreeArguments().getArgument("arg2Alias");
         assertThat(argument.getKey()).isEqualToIgnoringCase("arg2");
     }
 

@@ -15,19 +15,16 @@ public class MethodArgumentsTest {
     private MethodArguments getThreeArguments() {
         Argument argument1 = Argument.builder()
                 .name("arg1")
-                .alias("arg1Alias")
                 .dataType(DataTypeEnum.STRING)
                 .defaultValue("my_default_value")
                 .build();
         Argument argument2 = Argument.builder()
                 .name("arg2")
-                .alias("arg2Alias")
                 .dataType(DataTypeEnum.INT)
                 .defaultValue("1234")
                 .build();
         Argument argument3 = Argument.builder()
                 .name("arg3")
-                .alias("arg3Alias")
                 .dataType(DataTypeEnum.BOOLEAN)
                 .defaultValue("true")
                 .build();
@@ -43,14 +40,14 @@ public class MethodArgumentsTest {
     @Test
     public void size_NullArgumentList_0() {
         int size = MethodArguments.create(null).size();
-        assertThat(size).isEqualTo(0);
+        assertThat(size).isZero();
     }
 
 
     @Test
     public void size_EmptyArgumentList_0() {
         int size = MethodArguments.create(Collections.emptyList()).size();
-        assertThat(size).isEqualTo(0);
+        assertThat(size).isZero();
     }
 
 

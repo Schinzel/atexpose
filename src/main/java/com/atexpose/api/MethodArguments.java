@@ -3,10 +3,9 @@ package com.atexpose.api;
 import com.atexpose.api.datatypes.AbstractDataType;
 import com.google.common.collect.ImmutableList;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.EmptyObjects;
-import io.schinzel.basicutils.thrower.Thrower;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
+import io.schinzel.basicutils.thrower.Thrower;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.ArrayUtils;
@@ -40,15 +39,10 @@ public class MethodArguments implements IStateNode {
 
     private MethodArguments(List<Argument> arguments) {
         Thrower.throwIfVarNull(arguments, "arguments");
-        //Put arguments and its aliases in a hash map for quick up look of argument position
+        //Put arguments in a hash map for quick up look of argument position
         int argumentPosition = 0;
         for (Argument argument : arguments) {
             mArgumentPositions.put(argument.getKey(), argumentPosition);
-            if (!Checker.isEmpty(argument.getAliases())) {
-                for (String argumentAlias : argument.getAliases()) {
-                    mArgumentPositions.put(argumentAlias, argumentPosition);
-                }
-            }
             argumentPosition++;
         }
         mArguments = ImmutableList.copyOf(arguments);
