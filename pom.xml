@@ -247,6 +247,12 @@
             <artifactId>commons-validator</artifactId>
             <version>1.6</version>
         </dependency>
+        <dependency>
+            <!-- Serializes json strings and deserializes objects -->
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-modules-java8</artifactId>
+            <version>2.11.1</version>
+        </dependency>
         <!-- DEV DEPENDENCIES -->
         <dependency>
             <!-- Annotations that generates getters, setters and more that

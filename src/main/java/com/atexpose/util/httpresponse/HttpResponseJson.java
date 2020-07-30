@@ -4,7 +4,6 @@ import io.schinzel.basicutils.UTF8;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -19,9 +18,8 @@ public class HttpResponseJson {
 
 
     @Builder
-    HttpResponseJson(@NonNull JSONObject body, Map<String, String> customHeaders) {
-        String bodyAsString = body.toString();
-        int contentLength = UTF8.getBytes(bodyAsString).length;
+    HttpResponseJson(@NonNull String body, Map<String, String> customHeaders) {
+        int contentLength = UTF8.getBytes(body).length;
         HttpHeader header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.OK)
                 .customHeaders(customHeaders)
@@ -29,7 +27,7 @@ public class HttpResponseJson {
                 .contentLength(contentLength)
                 .build();
         response = header.getHeader()
-                .a(bodyAsString)
+                .a(body)
                 //The two extra new-lines needs to be there for Safari to be able to parse the JSON.
                 .a("\n\n")
                 .asString();

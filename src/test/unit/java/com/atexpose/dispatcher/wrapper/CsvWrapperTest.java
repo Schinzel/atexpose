@@ -49,14 +49,14 @@ public class CsvWrapperTest {
         //
         jo = new JSONObject();
         jo.put("a", "b");
-        result = csvWrapper.wrapJSON(jo);
+        result = csvWrapper.wrapJSON(jo.toString());
         assertEquals("{\"a\": \"b\"}", result);
         //
         jo = new JSONObject();
         jo.put("a", "1");
         jo.put("b", "2");
         jo.put("c", "3");
-        result = csvWrapper.wrapJSON(jo);
+        result = csvWrapper.wrapJSON(jo.toString());
         assertEquals("{\n"
                 + "   \"a\": \"1\",\n"
                 + "   \"b\": \"2\",\n"

@@ -15,7 +15,7 @@ public class HttpResponseJsonTest {
         JSONObject json = new JSONObject(new LinkedHashMap<>());
         json.put("key1", "val1").put("key2", "val2");
         String response = HttpResponseJson.builder()
-                .body(json)
+                .body(json.toString())
                 .build()
                 .getResponse();
         String body = SubString.create(response)
@@ -30,7 +30,7 @@ public class HttpResponseJsonTest {
         JSONObject json = new JSONObject(new LinkedHashMap<>());
         json.put("key1", "val1").put("key2", "val2");
         String response = HttpResponseJson.builder()
-                .body(json)
+                .body(json.toString())
                 .build()
                 .getResponse();
         String body = SubString.create(response)
@@ -48,7 +48,7 @@ public class HttpResponseJsonTest {
         JSONObject json = new JSONObject(new LinkedHashMap<>());
         json.put("key1", "val1").put("key2", "val2");
         String response = HttpResponseJson.builder()
-                .body(json)
+                .body(json.toString())
                 .customHeaders(customHeaders)
                 .build()
                 .getResponse();
@@ -67,7 +67,7 @@ public class HttpResponseJsonTest {
         JSONObject json = new JSONObject(new LinkedHashMap<>());
         json.put("key1", "val1").put("key2", "val2");
         String response = HttpResponseJson.builder()
-                .body(json)
+                .body(json.toString())
                 .customHeaders(customHeaders)
                 .build()
                 .getResponse();

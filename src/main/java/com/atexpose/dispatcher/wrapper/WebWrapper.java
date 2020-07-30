@@ -108,7 +108,7 @@ public class WebWrapper implements IWrapper {
 
 
     @Override
-    public String wrapJSON(JSONObject response) {
+    public String wrapJSON(String response) {
         return HttpResponseJson.builder()
                 .body(response)
                 .customHeaders(mCustomResponseHeaders)

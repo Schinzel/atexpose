@@ -204,7 +204,7 @@ public class WebWrapperTest {
                 .webServerDir("testfiles/")
                 .cacheFilesInRam(false)
                 .build()
-                .wrapJSON(json);
+                .wrapJSON(json.toString());
         String body = SubString.create(response)
                 .startDelimiter("\r\n\r\n")
                 .toString();
@@ -223,7 +223,7 @@ public class WebWrapperTest {
                 .webServerDir("testfiles/")
                 .responseHeaders(customHeaders)
                 .build()
-                .wrapJSON(jo);
+                .wrapJSON(jo.toString());
         String header = SubString.create(response)
                 .endDelimiter("\r\n\r\n")
                 .toString();

@@ -39,6 +39,15 @@ export class ServerCaller {
     }
 
     /**
+     * No description available
+     */
+    async test_it(){
+        return await new ServerCallerInt()
+            .setPath('/api/test_it')
+            .callWithPromise();
+    }
+
+    /**
      * Returns the current server time in UTC.
      */
     async time(){

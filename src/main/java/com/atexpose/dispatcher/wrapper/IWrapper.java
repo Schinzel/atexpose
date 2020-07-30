@@ -19,6 +19,6 @@ public interface IWrapper extends IStateNode {
     String wrapError(Map<String, String> properties);
 
 
-    String wrapJSON(JSONObject response);
+    String wrapJSON(String response);
 
 }

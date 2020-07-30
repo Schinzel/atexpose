@@ -12,14 +12,13 @@ import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.util.ByteStorage;
-import io.schinzel.basicutils.thrower.Thrower;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
+import io.schinzel.basicutils.thrower.Thrower;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -163,7 +162,7 @@ public class Dispatcher implements Runnable, IDispatcher {
     public void run() {
         ByteStorage incomingRequest = new ByteStorage();
         String decodedIncomingRequest;
-        Object responseAsStrings;
+        String responseAsString;
         String wrappedResponse;
         byte[] wrappedResponseAsUtf8ByteArray;
         while (true) {
@@ -199,14 +198,13 @@ public class Dispatcher implements Runnable, IDispatcher {
                             .targetObject(methodObject.getObject())
                             .argumentValuesAsObjects(requestArgumentValues)
                             .invoke();
+                    responseAsString = methodObject
+                            .getReturnDataType()
+                            .convertFromDataTypeToString(responseAsObject);
                     //If return type is Json
-                    if (methodObject.getReturnDataType().isJson()) {
-                        //Do json wrapping
-                        wrappedResponse = mWrapper.wrapJSON((JSONObject) responseAsObject);
-                    } else {
-                        responseAsStrings = methodObject.getReturnDataType().convertFromDataTypeToString(responseAsObject);
-                        wrappedResponse = mWrapper.wrapResponse((String) responseAsStrings);
-                    }
+                    wrappedResponse = (methodObject.getReturnDataType().isJson())
+                            ? mWrapper.wrapJSON(responseAsString)
+                            : mWrapper.wrapResponse(responseAsString);
                     wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
                 }
             } catch (Exception e) {

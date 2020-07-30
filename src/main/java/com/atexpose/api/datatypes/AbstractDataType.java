@@ -13,8 +13,12 @@ import lombok.NonNull;
  */
 @AllArgsConstructor
 public abstract class AbstractDataType implements IValueWithKey, IStateNode {
-    @Getter @NonNull final String key;
-    @Getter @NonNull final String allowedValueDesc;
+    @Getter
+    @NonNull
+    final String key;
+    @Getter
+    @NonNull
+    final String allowedValueDesc;
     // ----------------------------------------------------------------
     // ABSTRACT METHODS
     // ----------------------------------------------------------------
@@ -65,7 +69,7 @@ public abstract class AbstractDataType implements IValueWithKey, IStateNode {
      * @param value The value to convert to string
      * @return The argument value as string
      */
-    public Object convertFromDataTypeToString(Object value) {
+    public String convertFromDataTypeToString(Object value) {
         return value.toString();
     }
     // ----------------------------------------------------------------

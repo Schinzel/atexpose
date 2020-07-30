@@ -2,7 +2,6 @@ package com.atexpose.dispatcher.wrapper;
 
 import com.google.common.base.Joiner;
 import io.schinzel.basicutils.state.State;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -33,12 +32,8 @@ public class CsvWrapper implements IWrapper {
 
 
     @Override
-    public String wrapJSON(JSONObject response) {
-        try {
-            return response.toString(3);
-        } catch (JSONException ex) {
-            throw new RuntimeException(ex.getMessage());
-        }
+    public String wrapJSON(String response) {
+        return new JSONObject(response).toString(3);
     }
 
 

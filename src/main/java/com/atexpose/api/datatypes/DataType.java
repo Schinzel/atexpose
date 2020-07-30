@@ -9,7 +9,8 @@ public enum DataType {
     ALPHA_NUMERIC_STRING(new AlphNumStringDT()),
     BOOLEAN(new BooleanDT()),
     INT(new IntDT()),
-    STRING(new StringDT());
+    STRING(new StringDT()),
+    OBJECT(new ObjectDT());
 
     private final AbstractDataType mAdt;
 
