@@ -25,7 +25,7 @@ public class Argument implements IValueWithKey, IStateNode {
     Argument(String name, String description, DataTypeEnum dataType, String defaultValue) {
         this.mKey = name;
         this.mDescription = description;
-        mDataType = dataType.getInstance();
+        mDataType = dataType.getDataType();
         if (defaultValue == null) {
             mDefaultValueAsString = "";
         } else {

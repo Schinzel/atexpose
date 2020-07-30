@@ -20,7 +20,7 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .arguments(Collections.emptyList())
                         .accessLevel(1)
                         .labels(Collections.emptyList())
-                        .returnDataType(DataTypeEnum.INT.getInstance())
+                        .returnDataType(DataTypeEnum.INT.getDataType())
                         .build()
         ).withMessageContaining("theObject");
     }
@@ -37,7 +37,7 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .arguments(Collections.emptyList())
                         .accessLevel(1)
                         .labels(Collections.emptyList())
-                        .returnDataType(DataTypeEnum.INT.getInstance())
+                        .returnDataType(DataTypeEnum.INT.getDataType())
                         .build()
         ).withMessageContaining("method");
     }
@@ -54,7 +54,7 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .arguments(Collections.emptyList())
                         .accessLevel(1)
                         .labels(Collections.emptyList())
-                        .returnDataType(DataTypeEnum.INT.getInstance())
+                        .returnDataType(DataTypeEnum.INT.getDataType())
                         .build()
         ).withMessageContaining("description");
     }
@@ -88,7 +88,7 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .arguments(Collections.emptyList())
                         .accessLevel(1)
                         .labels(Collections.emptyList())
-                        .returnDataType(DataTypeEnum.INT.getInstance())
+                        .returnDataType(DataTypeEnum.INT.getDataType())
                         .build()
         ).withMessageContaining("Number of required arguments is higher than the actual number of arguments");
     }

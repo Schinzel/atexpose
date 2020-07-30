@@ -1,10 +1,16 @@
 package com.atexpose.api.datatypes;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+
 /**
  * The purpose of this enum is to provide the available data types.
  *
  * @author schinzel
  */
+@Accessors(prefix = "m")
+@AllArgsConstructor
 public enum DataTypeEnum {
     ALPHA_NUMERIC_STRING(new AlphNumStringDT()),
     BOOLEAN(new BooleanDT()),
@@ -12,23 +18,8 @@ public enum DataTypeEnum {
     STRING(new StringDT()),
     OBJECT(new ObjectDT());
 
-    private final AbstractDataType mAdt;
+    @Getter
+    private final AbstractDataType mDataType;
+    
 
-
-    DataTypeEnum(AbstractDataType adt) {
-        mAdt = adt;
-    }
-
-
-    public AbstractDataType getInstance() {
-        return mAdt;
-    }
-
-
-    /**
-     * @return The name of the data type.
-     */
-    public String getName() {
-        return this.getInstance().getKey();
-    }
 }

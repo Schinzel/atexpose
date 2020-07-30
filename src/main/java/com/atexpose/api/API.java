@@ -29,7 +29,7 @@ public class API implements IStateNode {
 
     public API() {
         for (DataTypeEnum datatype : DataTypeEnum.values()) {
-            this.addPrimitiveDataType(datatype.getInstance());
+            this.addPrimitiveDataType(datatype.getDataType());
         }
         //Set up the basic arguments.
         this
