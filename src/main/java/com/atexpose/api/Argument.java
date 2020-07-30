@@ -1,7 +1,7 @@
 package com.atexpose.api;
 
 import com.atexpose.api.datatypes.AbstractDataType;
-import com.atexpose.api.datatypes.DataType;
+import com.atexpose.api.datatypes.DataTypeEnum;
 import io.schinzel.basicutils.collections.valueswithkeys.IValueWithKey;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
@@ -28,7 +28,7 @@ public class Argument implements IValueWithKey, IStateNode {
 
 
     @Builder
-    Argument(String name, String description, DataType dataType, String defaultValue, @Singular List<String> aliases) {
+    Argument(String name, String description, DataTypeEnum dataType, String defaultValue, @Singular List<String> aliases) {
         this.mKey = name;
         this.mDescription = description;
         mDataType = dataType.getInstance();

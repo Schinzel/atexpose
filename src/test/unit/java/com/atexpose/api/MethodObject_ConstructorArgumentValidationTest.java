@@ -1,6 +1,6 @@
 package com.atexpose.api;
 
-import com.atexpose.api.datatypes.DataType;
+import com.atexpose.api.datatypes.DataTypeEnum;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -20,7 +20,7 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .arguments(Collections.emptyList())
                         .accessLevel(1)
                         .labels(Collections.emptyList())
-                        .returnDataType(DataType.INT.getInstance())
+                        .returnDataType(DataTypeEnum.INT.getInstance())
                         .build()
         ).withMessageContaining("theObject");
     }
@@ -37,7 +37,7 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .arguments(Collections.emptyList())
                         .accessLevel(1)
                         .labels(Collections.emptyList())
-                        .returnDataType(DataType.INT.getInstance())
+                        .returnDataType(DataTypeEnum.INT.getInstance())
                         .build()
         ).withMessageContaining("method");
     }
@@ -54,7 +54,7 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .arguments(Collections.emptyList())
                         .accessLevel(1)
                         .labels(Collections.emptyList())
-                        .returnDataType(DataType.INT.getInstance())
+                        .returnDataType(DataTypeEnum.INT.getInstance())
                         .build()
         ).withMessageContaining("description");
     }
@@ -88,7 +88,7 @@ public class MethodObject_ConstructorArgumentValidationTest {
                         .arguments(Collections.emptyList())
                         .accessLevel(1)
                         .labels(Collections.emptyList())
-                        .returnDataType(DataType.INT.getInstance())
+                        .returnDataType(DataTypeEnum.INT.getInstance())
                         .build()
         ).withMessageContaining("Number of required arguments is higher than the actual number of arguments");
     }

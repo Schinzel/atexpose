@@ -5,7 +5,7 @@ package com.atexpose.api.datatypes;
  *
  * @author schinzel
  */
-public enum DataType {
+public enum DataTypeEnum {
     ALPHA_NUMERIC_STRING(new AlphNumStringDT()),
     BOOLEAN(new BooleanDT()),
     INT(new IntDT()),
@@ -15,7 +15,7 @@ public enum DataType {
     private final AbstractDataType mAdt;
 
 
-    DataType(AbstractDataType adt) {
+    DataTypeEnum(AbstractDataType adt) {
         mAdt = adt;
     }
 

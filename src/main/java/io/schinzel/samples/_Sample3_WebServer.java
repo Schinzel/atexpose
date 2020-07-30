@@ -1,7 +1,7 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
-import com.atexpose.api.datatypes.DataType;
+import com.atexpose.api.datatypes.DataTypeEnum;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
@@ -30,7 +30,7 @@ public class _Sample3_WebServer {
         AtExpose atExpose = AtExpose.create();
         //Add a custom argument
         atExpose.getAPI()
-                .addArgument("Price", DataType.INT, "A price");
+                .addArgument("Price", DataTypeEnum.INT, "A price");
         atExpose
                 //Expose static methods in a class
                 .expose(MyClass.class)

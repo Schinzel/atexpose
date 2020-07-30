@@ -1,6 +1,6 @@
 package com.atexpose.api;
 
-import com.atexpose.api.datatypes.DataType;
+import com.atexpose.api.datatypes.DataTypeEnum;
 import com.google.common.collect.ImmutableList;
 import io.schinzel.basicutils.state.State;
 import org.junit.Test;
@@ -16,19 +16,19 @@ public class MethodArgumentsTest {
         Argument argument1 = Argument.builder()
                 .name("arg1")
                 .alias("arg1Alias")
-                .dataType(DataType.STRING)
+                .dataType(DataTypeEnum.STRING)
                 .defaultValue("my_default_value")
                 .build();
         Argument argument2 = Argument.builder()
                 .name("arg2")
                 .alias("arg2Alias")
-                .dataType(DataType.INT)
+                .dataType(DataTypeEnum.INT)
                 .defaultValue("1234")
                 .build();
         Argument argument3 = Argument.builder()
                 .name("arg3")
                 .alias("arg3Alias")
-                .dataType(DataType.BOOLEAN)
+                .dataType(DataTypeEnum.BOOLEAN)
                 .defaultValue("true")
                 .build();
         ImmutableList<Argument> arguments = new ImmutableList.Builder<Argument>()

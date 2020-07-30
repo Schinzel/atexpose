@@ -2,7 +2,7 @@ package com.atexpose.api;
 
 import com.atexpose.Expose;
 import com.atexpose.api.datatypes.AbstractDataType;
-import com.atexpose.api.datatypes.DataType;
+import com.atexpose.api.datatypes.DataTypeEnum;
 import com.atexpose.errors.SetUpError;
 import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 import io.schinzel.basicutils.state.IStateNode;
@@ -28,31 +28,31 @@ public class API implements IStateNode {
 
 
     public API() {
-        for (DataType datatype : DataType.values()) {
+        for (DataTypeEnum datatype : DataTypeEnum.values()) {
             this.addPrimitiveDataType(datatype.getInstance());
         }
         //Set up the basic arguments.
         this
                 .addArgument(Argument.builder()
                         .name("Int")
-                        .dataType(DataType.INT)
+                        .dataType(DataTypeEnum.INT)
                         .description("An integer.")
                         .defaultValue("0")
                         .build())
                 .addArgument(Argument.builder()
                         .name("String")
-                        .dataType(DataType.STRING)
+                        .dataType(DataTypeEnum.STRING)
                         .description("A string.")
                         .build())
                 //Set upp method for help
                 .addArgument(Argument.builder()
                         .name("SearchString")
-                        .dataType(DataType.STRING)
+                        .dataType(DataTypeEnum.STRING)
                         .description("A string to sort for.")
                         .build())
                 .addArgument(Argument.builder()
                         .name("Options")
-                        .dataType(DataType.STRING)
+                        .dataType(DataTypeEnum.STRING)
                         .description("Options available are v for verbose help and l for mLabels.")
                         .defaultValue("")
                         .build());
@@ -90,7 +90,7 @@ public class API implements IStateNode {
     }
 
 
-    public API addArgument(String name, DataType dataType, String description) {
+    public API addArgument(String name, DataTypeEnum dataType, String description) {
         Argument argument = Argument.builder()
                 .name(name)
                 .dataType(dataType)
