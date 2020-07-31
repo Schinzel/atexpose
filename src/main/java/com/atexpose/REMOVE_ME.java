@@ -9,9 +9,10 @@ public class REMOVE_ME {
         System.out.println("Here");
         AtExpose atExpose = AtExpose.create();
         atExpose.getAPI()
+                .addDataType(new ClassDT(RemoveMeVar.class))
                 .addArgument(Argument.builder()
                         .name("test_var")
-                        .dataType(new ClassDT(RemoveMeClass2.class))
+                        .dataType(new ClassDT(RemoveMeVar.class))
                         .description("Reads incoming requests and sends the responses")
                         .build());
 

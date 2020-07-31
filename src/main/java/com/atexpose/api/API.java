@@ -29,7 +29,7 @@ public class API implements IStateNode {
 
     public API() {
         for (DataTypeEnum datatype : DataTypeEnum.values()) {
-            this.addPrimitiveDataType(datatype.getDataType());
+            mDataTypes.add(datatype.getDataType());
         }
         //Set up the basic arguments.
         this
@@ -61,25 +61,23 @@ public class API implements IStateNode {
     }
 
 
-    private void addPrimitiveDataType(AbstractDataType adt) {
-        mDataTypes.add(adt);
-    }
-
-
     public MethodObject getMethodObject(String methodName) {
-        MethodObject methodObject;
-        if (mMethods.has(methodName)) {
-            methodObject = mMethods.get(methodName);
-        } else {
+        if (!mMethods.has(methodName)) {
             throw new RuntimeException("No such method '" + methodName + "'");
         }
-        return methodObject;
+        return mMethods.get(methodName);
     }
 
 
     public API addLabel(String name, String description) {
         Label label = new Label(name, description);
         mLabels.add(label);
+        return this;
+    }
+
+
+    public API addDataType(AbstractDataType dataType) {
+        mDataTypes.add(dataType);
         return this;
     }
 

@@ -1,16 +1,5 @@
 export class ServerCaller {
     /**
-     * No description available
-     */
-    async concat(String = '', Int = '0'){
-        return await new ServerCallerInt()
-            .setPath('/api/concat')
-            .addArg('String', String)
-            .addArg('Int', Int)
-            .callWithPromise();
-    }
-
-    /**
      * Returns the argument string. Util method for testing.
      */
     async echo(String = ''){
@@ -41,19 +30,9 @@ export class ServerCaller {
     /**
      * No description available
      */
-    async test_it(){
+    async test_it_3(){
         return await new ServerCallerInt()
-            .setPath('/api/test_it')
-            .callWithPromise();
-    }
-
-    /**
-     * No description available
-     */
-    async test_it_2(test_var = ''){
-        return await new ServerCallerInt()
-            .setPath('/api/test_it_2')
-            .addArg('test_var', test_var)
+            .setPath('/api/test_it_3')
             .callWithPromise();
     }
 

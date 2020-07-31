@@ -19,10 +19,10 @@ public class Serialization {
     }
 
     public static void main(String[] args) {
-        RemoveMeClass2 class2 = new RemoveMeClass2("Two", 2);
+        RemoveMeVar class2 = new RemoveMeVar("Two", 2);
         String s = Serialization.objectToJsonString(class2);
-        RemoveMeClass2 removeMeClass2 = Serialization.jsonStringToObject(s, RemoveMeClass2.class);
+        RemoveMeVar removeMeVar = Serialization.jsonStringToObject(s, RemoveMeVar.class);
         System.out.println(s);
-        System.out.println(removeMeClass2.toString());
+        System.out.println(removeMeVar.toString());
     }
 }

@@ -7,7 +7,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class RemoveMeClass2 {
+public class RemoveMeVar {
     public String s;
     public int i;
 }
