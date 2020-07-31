@@ -30,7 +30,7 @@ public class _Sample3_WebServer {
         AtExpose atExpose = AtExpose.create();
         //Add a custom argument
         atExpose.getAPI()
-                .addArgument("Price", DataTypeEnum.INT, "A price");
+                .addArgument("Price", DataTypeEnum.INT.getDataType(), "A price");
         atExpose
                 //Expose static methods in a class
                 .expose(MyClass.class)

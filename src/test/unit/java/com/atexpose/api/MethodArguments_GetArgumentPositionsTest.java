@@ -20,17 +20,17 @@ public class MethodArguments_GetArgumentPositionsTest {
     private MethodArguments getThreeArguments() {
         Argument argument1 = Argument.builder()
                 .name("arg1")
-                .dataType(DataTypeEnum.STRING)
+                .dataType(DataTypeEnum.STRING.getDataType())
                 .defaultValue("my_default_value")
                 .build();
         Argument argument2 = Argument.builder()
                 .name("arg2")
-                .dataType(DataTypeEnum.INT)
+                .dataType(DataTypeEnum.INT.getDataType())
                 .defaultValue("1234")
                 .build();
         Argument argument3 = Argument.builder()
                 .name("arg3")
-                .dataType(DataTypeEnum.BOOLEAN)
+                .dataType(DataTypeEnum.BOOLEAN.getDataType())
                 .defaultValue("true")
                 .build();
         ImmutableList<Argument> arguments = new ImmutableList.Builder<Argument>()

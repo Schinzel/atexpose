@@ -35,24 +35,24 @@ public class API implements IStateNode {
         this
                 .addArgument(Argument.builder()
                         .name("Int")
-                        .dataType(DataTypeEnum.INT)
+                        .dataType(DataTypeEnum.INT.getDataType())
                         .description("An integer.")
                         .defaultValue("0")
                         .build())
                 .addArgument(Argument.builder()
                         .name("String")
-                        .dataType(DataTypeEnum.STRING)
+                        .dataType(DataTypeEnum.STRING.getDataType())
                         .description("A string.")
                         .build())
                 //Set upp method for help
                 .addArgument(Argument.builder()
                         .name("SearchString")
-                        .dataType(DataTypeEnum.STRING)
+                        .dataType(DataTypeEnum.STRING.getDataType())
                         .description("A string to sort for.")
                         .build())
                 .addArgument(Argument.builder()
                         .name("Options")
-                        .dataType(DataTypeEnum.STRING)
+                        .dataType(DataTypeEnum.STRING.getDataType())
                         .description("Options available are v for verbose help and l for mLabels.")
                         .defaultValue("")
                         .build());
@@ -90,7 +90,7 @@ public class API implements IStateNode {
     }
 
 
-    public API addArgument(String name, DataTypeEnum dataType, String description) {
+    public API addArgument(String name, AbstractDataType dataType, String description) {
         Argument argument = Argument.builder()
                 .name(name)
                 .dataType(dataType)

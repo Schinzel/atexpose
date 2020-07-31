@@ -2,7 +2,7 @@ package com.atexpose.api.datatypes;
 
 import com.atexpose.Serialization;
 
-public class ClassDT<T> extends AbstractDataType {
+public class ClassDT extends AbstractDataType {
     private final Class mClazz;
 
     public ClassDT(Class clazz) {
@@ -13,12 +13,12 @@ public class ClassDT<T> extends AbstractDataType {
 
     @Override
     protected boolean verifyValue(String value) {
-        return false;
+        return true;
     }
 
 
     @Override
-    protected T castToDataType(String value) {
-        return (T) Serialization.jsonStringToObject(value, mClazz);
+    protected Object castToDataType(String value) {
+        return Serialization.jsonStringToObject(value, mClazz);
     }
 }

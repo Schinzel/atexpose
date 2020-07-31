@@ -41,7 +41,7 @@ public class APITest {
 
     @Test
     public void addArgument_ArgumentAdded_ExistsArgumentWithSetDescription() {
-        API api = new API().addArgument("MyName", DataTypeEnum.STRING, "My description");
+        API api = new API().addArgument("MyName", DataTypeEnum.STRING.getDataType(), "My description");
         Argument argument = api.getArguments()
                 .get("MyName");
         assertThat(argument.getDescription()).isEqualTo("My description");

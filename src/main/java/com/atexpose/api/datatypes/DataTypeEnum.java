@@ -20,6 +20,6 @@ public enum DataTypeEnum {
 
     @Getter
     private final AbstractDataType mDataType;
-    
+
 
 }

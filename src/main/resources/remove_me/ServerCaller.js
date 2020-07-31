@@ -48,6 +48,16 @@ export class ServerCaller {
     }
 
     /**
+     * No description available
+     */
+    async test_it_2(test_var = ''){
+        return await new ServerCallerInt()
+            .setPath('/api/test_it_2')
+            .addArg('test_var', test_var)
+            .callWithPromise();
+    }
+
+    /**
      * Returns the current server time in UTC.
      */
     async time(){

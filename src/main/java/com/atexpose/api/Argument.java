@@ -22,10 +22,10 @@ public class Argument implements IValueWithKey, IStateNode {
 
 
     @Builder
-    Argument(String name, String description, DataTypeEnum dataType, String defaultValue) {
+    Argument(String name, String description, AbstractDataType dataType, String defaultValue) {
         this.mKey = name;
         this.mDescription = description;
-        mDataType = dataType.getDataType();
+        mDataType = dataType;
         if (defaultValue == null) {
             mDefaultValueAsString = "";
         } else {
