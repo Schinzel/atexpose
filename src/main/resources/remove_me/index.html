@@ -11,24 +11,30 @@
 <script type="module">
     import {ServerCaller} from "./ServerCaller.js";
 
-    class Apa{
-        async doit(){
-            let apa =  await new ServerCaller().time();
-            console.log("apa "+ apa);
+    class Apa {
+        async doit() {
+            let apa = await new ServerCaller().time();
+            console.log("apa " + apa);
 
             let a = await new ServerCaller()
-            .echo('hej');
+                .echo('hej');
             console.log("a " + a);
 
             let b = await new ServerCaller()
-            .concat('bear', 77);
+                .concat('bear', 77);
             console.log('b ' + b);
         }
     }
 
     async function ppp() {
-        let apa =  await new ServerCaller().startTime();
-        console.log("apa "+ apa);
+        let apa = await new ServerCaller().startTime();
+        console.log("apa " + apa);
+
+        let d = await new ServerCaller().test_it_3();
+        console.log('d ' + d);
+
+        d = JSON.stringify(d);
+        let e = await new ServerCaller().test_it_2(d);
 
     }
 

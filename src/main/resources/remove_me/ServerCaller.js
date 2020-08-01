@@ -1,5 +1,16 @@
 export class ServerCaller {
     /**
+     * No description available
+     */
+    async concat(String = '', Int = '0'){
+        return await new ServerCallerInt()
+            .setPath('/api/concat')
+            .addArg('String', String)
+            .addArg('Int', Int)
+            .callWithPromise();
+    }
+
+    /**
      * Returns the argument string. Util method for testing.
      */
     async echo(String = ''){
@@ -24,6 +35,25 @@ export class ServerCaller {
     async startTime(){
         return await new ServerCallerInt()
             .setPath('/api/startTime')
+            .callWithPromise();
+    }
+
+    /**
+     * No description available
+     */
+    async test_it(){
+        return await new ServerCallerInt()
+            .setPath('/api/test_it')
+            .callWithPromise();
+    }
+
+    /**
+     * No description available
+     */
+    async test_it_2(test_var = ''){
+        return await new ServerCallerInt()
+            .setPath('/api/test_it_2')
+            .addArg('test_var', test_var)
             .callWithPromise();
     }
 
@@ -145,7 +175,7 @@ class ServerCallerInt {
         let requestPathWithHost = getAjaxUrl(this._requestPath);
         console.log(`requesting API url '${requestPathWithHost}'`);
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: requestPathWithHost,
             data: this._requestArguments,
             cache: true,

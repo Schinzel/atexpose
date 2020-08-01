@@ -21,4 +21,10 @@ public class ClassDT extends AbstractDataType {
     protected Object castToDataType(String value) {
         return Serialization.jsonStringToObject(value, mClazz);
     }
+
+    @Override
+    public String convertFromDataTypeToString(Object value) {
+        return Serialization.objectToJsonString(value);
+    }
+
 }

@@ -163,7 +163,7 @@ public class JsClientGenerator implements IGenerator {
             "        let requestPathWithHost = getAjaxUrl(this._requestPath);\n" +
             "        console.log(`requesting API url '${requestPathWithHost}'`);\n" +
             "        $.ajax({\n" +
-            "            type: \"GET\",\n" +
+            "            type: \"POST\",\n" +
             "            url: requestPathWithHost,\n" +
             "            data: this._requestArguments,\n" +
             "            cache: true,\n" +

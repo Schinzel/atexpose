@@ -2,7 +2,7 @@ package com.atexpose;
 
 public class RemoveMeClass {
 
-   /* @Expose(
+    @Expose(
             arguments = {"String", "Int"}
     )
     public static String concat(String str1, Integer integer) {
@@ -19,7 +19,7 @@ public class RemoveMeClass {
     )
     public static String test_it_2(RemoveMeVar test_var){
         return "Dit it!";
-    }*/
+    }
 
     @Expose
     public static RemoveMeVar test_it_3(){
