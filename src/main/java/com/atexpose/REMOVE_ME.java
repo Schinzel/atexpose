@@ -3,10 +3,21 @@ package com.atexpose;
 import com.atexpose.api.Argument;
 import com.atexpose.api.datatypes.ClassDT;
 import com.atexpose.generator.JsClientGenerator;
+import io.schinzel.jstranspiler.transpiler.KotlinClass;
+import kotlin.jvm.JvmClassMappingKt;
+import kotlin.reflect.KClass;
 
 public class REMOVE_ME {
     public static void main(String[] args) {
         System.out.println("Here");
+
+        String javaScript = new KotlinClass(getKClass(RemoveMeVar.class))
+                .toJavaScript();
+        String javaScript2 = new KotlinClass(RemoveMeVar.class)
+                .toJavaScript();
+        System.out.println(javaScript);
+        System.out.println(javaScript2);
+
         AtExpose atExpose = AtExpose.create();
         atExpose.getAPI()
                 .addDataType(new ClassDT(RemoveMeVar.class))
@@ -24,5 +35,9 @@ public class REMOVE_ME {
                 .startCLI()
                 .generate(new JsClientGenerator("src/main/resources/remove_me/ServerCaller.js"));
 
+    }
+
+    public static <T> KClass<T> getKClass(Class<T> cls){
+        return JvmClassMappingKt.getKotlinClass(cls);
     }
 }
