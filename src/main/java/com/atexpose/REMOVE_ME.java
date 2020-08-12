@@ -9,13 +9,9 @@ import kotlin.reflect.KClass;
 
 public class REMOVE_ME {
     public static void main(String[] args) {
-        System.out.println("Here");
 
-        String javaScript = new KotlinClass(getKClass(RemoveMeVar.class))
-                .toJavaScript();
         String javaScript2 = new KotlinClass(RemoveMeVar.class)
                 .toJavaScript();
-        System.out.println(javaScript);
         System.out.println(javaScript2);
 
         AtExpose atExpose = AtExpose.create();
@@ -31,13 +27,10 @@ public class REMOVE_ME {
 
         atExpose
                 .expose(RemoveMeClass.class)
-                .startWebServer("remove_me")
-                .startCLI()
+                //.startWebServer("remove_me")
+                //.startCLI()
                 .generate(new JsClientGenerator("src/main/resources/remove_me/ServerCaller.js"));
 
     }
 
-    public static <T> KClass<T> getKClass(Class<T> cls){
-        return JvmClassMappingKt.getKotlinClass(cls);
-    }
 }

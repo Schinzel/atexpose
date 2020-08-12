@@ -1,7 +1,10 @@
 package com.atexpose.generator;
 
+import com.atexpose.api.Argument;
 import com.atexpose.api.MethodObject;
+import com.atexpose.api.datatypes.*;
 import io.schinzel.basicutils.file.FileWriter;
+import io.schinzel.jstranspiler.JsTranspiler;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,11 +23,12 @@ public class JsClientGenerator implements IGenerator {
         for (MethodObject method : methods) {
             if (method.getAccessLevelRequiredToUseThisMethod() == 1) {
                 String methodName = method.getMethod().getName();
+
                 String arguments = method
                         .getMethodArguments()
                         .getArguments()
                         .stream()
-                        .map(n -> n.getKey() + " = '" + n.getDefaultValueAsString() + "'")
+                        .map(Argument::getKey)
                         .collect(Collectors.joining(", "));
 
                 String setServerCallerArguments = method
@@ -37,9 +41,23 @@ public class JsClientGenerator implements IGenerator {
                     setServerCallerArguments = setServerCallerArguments + "\n";
                 }
 
+                String jsDocArguments = method
+                        .getMethodArguments()
+                        .getArguments()
+                        .stream()
+                        .map(n -> "     * @param {" + getJsDataTypeName(n.getDataType()) + "} " + n.getKey() + " - " + n.getDescription() + "")
+                        .collect(Collectors.joining("\n"));
+                if (!jsDocArguments.isEmpty()) {
+                    jsDocArguments = jsDocArguments + "\n";
+                }
+
+
+
                 String str = ""
                         + "    /**\n"
                         + "     * " + method.getDescription() + "\n"
+                        + jsDocArguments
+                        + "     * @return {" + getJsDataTypeName(method.getReturnDataType()) + "}\n"
                         + "     */\n"
                         + "    async " + methodName + "(" + arguments + "){\n"
                         + "        return await new ServerCallerInt()\n"
@@ -50,8 +68,7 @@ public class JsClientGenerator implements IGenerator {
                 sb.append(str);
             }
         }
-
-        String fileContent = HEADER + sb.toString() + FOOTER;
+        String fileContent = DATA_OBJECT_CLASS + HEADER + sb.toString() + FOOTER;
         FileWriter.writer()
                 .fileName(mFilePath)
                 .content(fileContent)
@@ -59,10 +76,24 @@ public class JsClientGenerator implements IGenerator {
 
     }
 
+    private static String getJsDataTypeName(AbstractDataType dataType) {
+        if (dataType instanceof AlphNumStringDT) {
+            return "string";
+        } else if (dataType instanceof BooleanDT) {
+            return "boolean";
+        } else if (dataType instanceof IntDT) {
+            return "number";
+        } else if (dataType instanceof StringDT) {
+            return "string";
+        } else {
+           return dataType.getKey();
+        }
+    }
 
-    private final static String HEADER = "export class ServerCaller {\n"
+    private static final String DATA_OBJECT_CLASS = JsTranspiler.Companion.getDataObjectClass();
+    private static final String HEADER = "export class ServerCaller {\n"
             + "";
-    private final static String FOOTER = "" +
+    private static final String FOOTER = "" +
             "}\n" +
             "\n" +
             "\n" +
@@ -115,16 +146,6 @@ public class JsClientGenerator implements IGenerator {
             "     */\n" +
             "    addArg(name, value) {\n" +
             "        this._requestArguments[name] = value;\n" +
-            "        return this;\n" +
-            "    }\n" +
-            "\n" +
-            "    /**\n" +
-            "     * Set data other than request arguments\n" +
-            "     * @param data\n" +
-            "     * @return {ServerCaller} This for chaining\n" +
-            "     */\n" +
-            "    setRequestData(data) {\n" +
-            "        this._requestArguments = data;\n" +
             "        return this;\n" +
             "    }\n" +
             "\n" +
