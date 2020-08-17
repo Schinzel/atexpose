@@ -19,7 +19,7 @@ public class JsClientGenerator implements IGenerator {
 
     @Override
     public void generate(List<MethodObject> methods) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder alljsMethods = new StringBuilder();
         for (MethodObject method : methods) {
             if (method.getAccessLevelRequiredToUseThisMethod() == 1) {
                 String methodName = method.getMethod().getName();
@@ -35,25 +35,17 @@ public class JsClientGenerator implements IGenerator {
                         .getMethodArguments()
                         .getArguments()
                         .stream()
-                        .map(n -> "            .addArg('" + n.getKey() + "', " + n.getKey() + ")")
-                        .collect(Collectors.joining("\n"));
-                if (!setServerCallerArguments.isEmpty()) {
-                    setServerCallerArguments = setServerCallerArguments + "\n";
-                }
+                        .map(n -> "            .addArg('" + n.getKey() + "', " + n.getKey() + ")\n")
+                        .collect(Collectors.joining());
 
                 String jsDocArguments = method
                         .getMethodArguments()
                         .getArguments()
                         .stream()
-                        .map(n -> "     * @param {" + getJsDataTypeName(n.getDataType()) + "} " + n.getKey() + " - " + n.getDescription() + "")
-                        .collect(Collectors.joining("\n"));
-                if (!jsDocArguments.isEmpty()) {
-                    jsDocArguments = jsDocArguments + "\n";
-                }
+                        .map(n -> "     * @param {" + getJsDataTypeName(n.getDataType()) + "} " + n.getKey() + " - " + n.getDescription() + "\n")
+                        .collect(Collectors.joining());
 
-
-
-                String str = ""
+                String jsMethod = ""
                         + "    /**\n"
                         + "     * " + method.getDescription() + "\n"
                         + jsDocArguments
@@ -65,10 +57,10 @@ public class JsClientGenerator implements IGenerator {
                         + setServerCallerArguments
                         + "            .callWithPromise();\n"
                         + "    }\n\n";
-                sb.append(str);
+                alljsMethods.append(jsMethod);
             }
         }
-        String fileContent = DATA_OBJECT_CLASS + HEADER + sb.toString() + FOOTER;
+        String fileContent = DATA_OBJECT_CLASS + HEADER + alljsMethods.toString() + FOOTER;
         FileWriter.writer()
                 .fileName(mFilePath)
                 .content(fileContent)
