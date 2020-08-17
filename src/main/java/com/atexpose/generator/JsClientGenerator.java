@@ -19,24 +19,18 @@ public class JsClientGenerator implements IGenerator {
 
     @Override
     public void generate(List<MethodObject> methods) {
-        StringBuilder alljsMethods = new StringBuilder();
+        StringBuilder allJsMethods = new StringBuilder();
         for (MethodObject method : methods) {
             if (method.getAccessLevelRequiredToUseThisMethod() == 1) {
-                String methodName = method.getMethod().getName();
 
-                String arguments = method
+                String jsMethodName = method.getMethod().getName();
+
+                String jsArguments = method
                         .getMethodArguments()
                         .getArguments()
                         .stream()
                         .map(Argument::getKey)
                         .collect(Collectors.joining(", "));
-
-                String setServerCallerArguments = method
-                        .getMethodArguments()
-                        .getArguments()
-                        .stream()
-                        .map(n -> "            .addArg('" + n.getKey() + "', " + n.getKey() + ")\n")
-                        .collect(Collectors.joining());
 
                 String jsDocArguments = method
                         .getMethodArguments()
@@ -45,22 +39,37 @@ public class JsClientGenerator implements IGenerator {
                         .map(n -> "     * @param {" + getJsDataTypeName(n.getDataType()) + "} " + n.getKey() + " - " + n.getDescription() + "\n")
                         .collect(Collectors.joining());
 
+                String setServerCallerArguments = method
+                        .getMethodArguments()
+                        .getArguments()
+                        .stream()
+                        .map(n -> "            .addArg('" + n.getKey() + "', " + n.getKey() + ")\n")
+                        .collect(Collectors.joining());
+
                 String jsMethod = ""
                         + "    /**\n"
                         + "     * " + method.getDescription() + "\n"
                         + jsDocArguments
                         + "     * @return {" + getJsDataTypeName(method.getReturnDataType()) + "}\n"
                         + "     */\n"
-                        + "    async " + methodName + "(" + arguments + "){\n"
+                        + "    async " + jsMethodName + "(" + jsArguments + "){\n"
                         + "        return await new ServerCallerInt()\n"
-                        + "            .setPath('/api/" + methodName + "')\n"
+                        + "            .setPath('/api/" + jsMethodName + "')\n"
                         + setServerCallerArguments
                         + "            .callWithPromise();\n"
                         + "    }\n\n";
-                alljsMethods.append(jsMethod);
+
+                allJsMethods.append(jsMethod);
             }
         }
-        String fileContent = DATA_OBJECT_CLASS + HEADER + alljsMethods.toString() + FOOTER;
+        String fileContent = "" +
+                HEADER +
+                START_SERVER_CALLER_CLASS +
+                allJsMethods.toString() +
+                END_SERVER_CALLER_CLASS +
+                SERVER_CALLER_INTERNAL_CLASS +
+                DATA_OBJECT_CLASS;
+
         FileWriter.writer()
                 .fileName(mFilePath)
                 .content(fileContent)
@@ -78,16 +87,25 @@ public class JsClientGenerator implements IGenerator {
         } else if (dataType instanceof StringDT) {
             return "string";
         } else {
-           return dataType.getKey();
+            return dataType.getKey();
         }
     }
 
+    private static final String HEADER = "" +
+            "/**\n" +
+            " * The purpose of this class is to send requests to the server. \n" +
+            " * This class has been automatically generated with one method per method in the API. \n" +
+            " */\n";
+
     private static final String DATA_OBJECT_CLASS = JsTranspiler.Companion.getDataObjectClass();
-    private static final String HEADER = "export class ServerCaller {\n"
-            + "";
-    private static final String FOOTER = "" +
+
+    private static final String START_SERVER_CALLER_CLASS = "export class ServerCaller {\n" + "";
+
+    private static final String END_SERVER_CALLER_CLASS = "" +
             "}\n" +
-            "\n" +
+            "\n";
+
+    private static final String SERVER_CALLER_INTERNAL_CLASS = "" +
             "\n" +
             "const REQUEST_TIMEOUT = 60000;\n" +
             "\n" +
@@ -129,12 +147,11 @@ public class JsClientGenerator implements IGenerator {
             "        return this;\n" +
             "    }\n" +
             "\n" +
-            "\n" +
             "    /**\n" +
             "     * Add an argument to send to server.\n" +
             "     * @param name of the argument (will be key in JSON arguments)\n" +
             "     * @param value of the argument for the name key (in JSON)\n" +
-            "     * @return {ServerCaller} This for chaining\n" +
+            "     * @return {ServerCallerInt} This for chaining\n" +
             "     */\n" +
             "    addArg(name, value) {\n" +
             "        this._requestArguments[name] = value;\n" +
@@ -145,7 +162,7 @@ public class JsClientGenerator implements IGenerator {
             "     * Set callback function for successful request\n" +
             "     * Example: setSuccessCallback(function(response) { })\n" +
             "     * @param callback\n" +
-            "     * @return {ServerCaller} This for chaining\n" +
+            "     * @return {ServerCallerInt} This for chaining\n" +
             "     */\n" +
             "    setSuccessCallback(callback) {\n" +
             "        if (typeof callback !== \"function\") {\n" +
@@ -159,7 +176,7 @@ public class JsClientGenerator implements IGenerator {
             "     * Set callback function for failed request\n" +
             "     * Example: setFailCallback(function(status, response) { })\n" +
             "     * @param callback\n" +
-            "     * @return {ServerCaller} This for chaining\n" +
+            "     * @return {ServerCallerInt} This for chaining\n" +
             "     */\n" +
             "    setFailCallback(callback) {\n" +
             "        if (typeof callback !== \"function\") {\n" +
@@ -249,7 +266,7 @@ public class JsClientGenerator implements IGenerator {
             "    } catch (e) {\n" +
             "        return str;\n" +
             "    }\n" +
-            "}";
+            "}\n\n";
 
 
 }
