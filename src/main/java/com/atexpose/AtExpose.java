@@ -2,6 +2,7 @@ package com.atexpose;
 
 import com.atexpose.api.API;
 import com.atexpose.api.MethodObject;
+import com.atexpose.api.datatypes.ClassDT;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcherfactories.CliFactory;
 import com.atexpose.dispatcherfactories.WebServerBuilder;
@@ -17,6 +18,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The central class that is the spider in the web.
@@ -25,7 +27,7 @@ import java.util.List;
  *
  * @author Schinzel
  */
-@SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue", "UnusedReturnValue"})
+@SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue", "UnusedReturnValue", "rawtypes"})
 @Accessors(prefix = "m")
 public class AtExpose implements IStateNode {
     /** Instance creation time. For status and debug purposes. */
@@ -67,8 +69,21 @@ public class AtExpose implements IStateNode {
 
     public AtExpose generate(IGenerator generator) {
         List<MethodObject> methodObjects = new ArrayList<>(mAPI.getMethods().values());
-        generator.generate(methodObjects);
+        List<Class> customClasses = getCustomClasses();
+        generator.generate(methodObjects, customClasses);
         return this;
+    }
+
+
+    /**
+     * @return Classes that exists outside atexpose and have been added to the api
+     */
+    private List<Class> getCustomClasses() {
+        return mAPI.getDataTypes()
+                .stream()
+                .filter(n -> n instanceof ClassDT)
+                .map(n -> ((ClassDT) n).getClazz())
+                .collect(Collectors.toList());
     }
 
 

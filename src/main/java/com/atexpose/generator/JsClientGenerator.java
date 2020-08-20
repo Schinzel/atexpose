@@ -5,6 +5,7 @@ import com.atexpose.api.MethodObject;
 import com.atexpose.api.datatypes.*;
 import io.schinzel.basicutils.file.FileWriter;
 import io.schinzel.jstranspiler.JsTranspiler;
+import io.schinzel.jstranspiler.transpiler.KotlinClass;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,28 +19,28 @@ public class JsClientGenerator implements IGenerator {
 
 
     @Override
-    public void generate(List<MethodObject> methods) {
-        StringBuilder allJsMethods = new StringBuilder();
-        for (MethodObject method : methods) {
-            if (method.getAccessLevelRequiredToUseThisMethod() == 1) {
+    public void generate(List<MethodObject> serverSideMethods, List<Class> dataTypeList) {
+        StringBuilder jsMethods = new StringBuilder();
+        for (MethodObject serverSideMethod : serverSideMethods) {
+            if (serverSideMethod.getAccessLevelRequiredToUseThisMethod() == 1) {
 
-                String jsMethodName = method.getMethod().getName();
+                String jsMethodName = serverSideMethod.getMethod().getName();
 
-                String jsArguments = method
+                String jsArguments = serverSideMethod
                         .getMethodArguments()
                         .getArguments()
                         .stream()
                         .map(Argument::getKey)
                         .collect(Collectors.joining(", "));
 
-                String jsDocArguments = method
+                String jsDocArguments = serverSideMethod
                         .getMethodArguments()
                         .getArguments()
                         .stream()
                         .map(n -> "     * @param {" + getJsDataTypeName(n.getDataType()) + "} " + n.getKey() + " - " + n.getDescription() + "\n")
                         .collect(Collectors.joining());
 
-                String setServerCallerArguments = method
+                String setServerCallerArguments = serverSideMethod
                         .getMethodArguments()
                         .getArguments()
                         .stream()
@@ -48,9 +49,9 @@ public class JsClientGenerator implements IGenerator {
 
                 String jsMethod = ""
                         + "    /**\n"
-                        + "     * " + method.getDescription() + "\n"
+                        + "     * " + serverSideMethod.getDescription() + "\n"
                         + jsDocArguments
-                        + "     * @return {" + getJsDataTypeName(method.getReturnDataType()) + "}\n"
+                        + "     * @return {" + getJsDataTypeName(serverSideMethod.getReturnDataType()) + "}\n"
                         + "     */\n"
                         + "    async " + jsMethodName + "(" + jsArguments + "){\n"
                         + "        return await new ServerCallerInt()\n"
@@ -59,14 +60,23 @@ public class JsClientGenerator implements IGenerator {
                         + "            .callWithPromise();\n"
                         + "    }\n\n";
 
-                allJsMethods.append(jsMethod);
+                jsMethods.append(jsMethod);
             }
         }
+
+        String jsCustomClasses = dataTypeList.stream()
+                .map(n -> new KotlinClass(n).toJavaScript())
+                .collect(Collectors.joining());
+
+        String jsServerCaller = "" +
+                START_SERVER_CALLER_CLASS +
+                jsMethods.toString() +
+                END_SERVER_CALLER_CLASS;
+
         String fileContent = "" +
                 HEADER +
-                START_SERVER_CALLER_CLASS +
-                allJsMethods.toString() +
-                END_SERVER_CALLER_CLASS +
+                jsServerCaller +
+                jsCustomClasses +
                 SERVER_CALLER_INTERNAL_CLASS +
                 DATA_OBJECT_CLASS;
 

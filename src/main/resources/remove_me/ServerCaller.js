@@ -1,8 +1,15 @@
+/**
+ * The purpose of this class is to send requests to the server. 
+ * This class has been automatically generated with one method per method in the API. 
+ */
 export class ServerCaller {
     /**
      * No description available
+     * @param {string} String - A string.
+     * @param {number} Int - An integer.
+     * @return {string}
      */
-    async concat(String = '', Int = '0'){
+    async concat(String, Int){
         return await new ServerCallerInt()
             .setPath('/api/concat')
             .addArg('String', String)
@@ -12,8 +19,10 @@ export class ServerCaller {
 
     /**
      * Returns the argument string. Util method for testing.
+     * @param {string} String - A string.
+     * @return {string}
      */
-    async echo(String = ''){
+    async echo(String){
         return await new ServerCallerInt()
             .setPath('/api/echo')
             .addArg('String', String)
@@ -22,6 +31,7 @@ export class ServerCaller {
 
     /**
      * Simply returns the string "pong". Util method for testing.
+     * @return {string}
      */
     async ping(){
         return await new ServerCallerInt()
@@ -31,6 +41,7 @@ export class ServerCaller {
 
     /**
      * Returns the time when the server was started
+     * @return {string}
      */
     async startTime(){
         return await new ServerCallerInt()
@@ -40,6 +51,7 @@ export class ServerCaller {
 
     /**
      * No description available
+     * @return {object}
      */
     async test_it(){
         return await new ServerCallerInt()
@@ -49,8 +61,10 @@ export class ServerCaller {
 
     /**
      * No description available
+     * @param {RemoveMeVar} test_var - Reads incoming requests and sends the responses
+     * @return {string}
      */
-    async test_it_2(test_var = ''){
+    async test_it_2(test_var){
         return await new ServerCallerInt()
             .setPath('/api/test_it_2')
             .addArg('test_var', test_var)
@@ -59,6 +73,7 @@ export class ServerCaller {
 
     /**
      * No description available
+     * @return {RemoveMeVar}
      */
     async test_it_3(){
         return await new ServerCallerInt()
@@ -68,12 +83,48 @@ export class ServerCaller {
 
     /**
      * Returns the current server time in UTC.
+     * @return {string}
      */
     async time(){
         return await new ServerCallerInt()
             .setPath('/api/time')
             .callWithPromise();
     }
+
+}
+
+export class RemoveMeVar extends DataObject {
+    constructor(json) {
+        super();
+        if (json) {
+            /**
+             * @private
+             */
+            this.s = json.s;
+            /**
+             * @private
+             */
+            this.i = parseInt(json.i);
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @return {String!} 
+     */
+    getS() {
+        return this.s;
+    }
+    
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @return {number} 
+     */
+    getI() {
+        return this.i;
+    }
+    
+
 
 }
 
@@ -118,12 +169,11 @@ class ServerCallerInt {
         return this;
     }
 
-
     /**
      * Add an argument to send to server.
      * @param name of the argument (will be key in JSON arguments)
      * @param value of the argument for the name key (in JSON)
-     * @return {ServerCaller} This for chaining
+     * @return {ServerCallerInt} This for chaining
      */
     addArg(name, value) {
         this._requestArguments[name] = value;
@@ -131,20 +181,10 @@ class ServerCallerInt {
     }
 
     /**
-     * Set data other than request arguments
-     * @param data
-     * @return {ServerCaller} This for chaining
-     */
-    setRequestData(data) {
-        this._requestArguments = data;
-        return this;
-    }
-
-    /**
      * Set callback function for successful request
      * Example: setSuccessCallback(function(response) { })
      * @param callback
-     * @return {ServerCaller} This for chaining
+     * @return {ServerCallerInt} This for chaining
      */
     setSuccessCallback(callback) {
         if (typeof callback !== "function") {
@@ -158,7 +198,7 @@ class ServerCallerInt {
      * Set callback function for failed request
      * Example: setFailCallback(function(status, response) { })
      * @param callback
-     * @return {ServerCaller} This for chaining
+     * @return {ServerCallerInt} This for chaining
      */
     setFailCallback(callback) {
         if (typeof callback !== "function") {
@@ -249,3 +289,33 @@ function toJSON(str) {
         return str;
     }
 }
+
+/**
+ * This class holds methods common to all transpiled classes.
+ */
+export class DataObject {
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * return {object} This instance as a json object
+     */
+    asJsonObject() {
+        return JSON.parse(JSON.stringify(this));
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * return {string} This instance as a json string
+     */
+    asJsonString() {
+        return JSON.stringify(this);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * return {object} A clone of this object
+     */
+    clone() {
+        return new this.constructor(this.asJsonObject());
+    }
+}
+

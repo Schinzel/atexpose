@@ -24,7 +24,7 @@ public class API implements IStateNode {
     @Getter private final ValuesWithKeys<MethodObject> mMethods = ValuesWithKeys.create("Methods");
     @Getter private final ValuesWithKeys<Argument> mArguments = ValuesWithKeys.create("Arguments");
     @Getter(AccessLevel.PACKAGE) final ValuesWithKeys<Label> mLabels = ValuesWithKeys.create("Labels");
-    private final ValuesWithKeys<AbstractDataType> mDataTypes = ValuesWithKeys.create("DataTypes");
+    @Getter private final ValuesWithKeys<AbstractDataType> mDataTypes = ValuesWithKeys.create("DataTypes");
 
 
     public API() {

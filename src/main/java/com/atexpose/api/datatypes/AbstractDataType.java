@@ -19,9 +19,6 @@ public abstract class AbstractDataType implements IValueWithKey, IStateNode {
     @Getter
     @NonNull
     final String allowedValueDesc;
-    // ----------------------------------------------------------------
-    // ABSTRACT METHODS
-    // ----------------------------------------------------------------
 
 
     /**

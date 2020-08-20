@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IGenerator {
 
-    void generate(List<MethodObject> methods);
+    void generate(List<MethodObject> methods, List<Class> dataTypeList);
 }
