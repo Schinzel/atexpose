@@ -5,11 +5,11 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 @Accessors(prefix = "m")
-public class ClassDT extends AbstractDataType {
+public class ClassDT<T> extends AbstractDataType {
     @Getter
-    private final Class mClazz;
+    private final Class<T> mClazz;
 
-    public ClassDT(Class clazz) {
+    public ClassDT(Class<T> clazz) {
         super(clazz.getSimpleName(), "The chars allowed for JSON strings");
         mClazz = clazz;
     }
@@ -24,7 +24,7 @@ public class ClassDT extends AbstractDataType {
 
 
     @Override
-    protected Object castToDataType(String value) {
+    protected T castToDataType(String value) {
         return Serialization.jsonStringToObject(value, mClazz);
     }
 
