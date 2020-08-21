@@ -10,7 +10,7 @@ public class RemoveMeClass {
     }
 
     @Expose
-    public static Object test_it() {
+    public static RemoveMeVar test_it() {
         return new RemoveMeVar("dd", 77);
     }
 

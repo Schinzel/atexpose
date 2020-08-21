@@ -19,7 +19,7 @@ public class JsClientGenerator implements IGenerator {
 
 
     @Override
-    public void generate(List<MethodObject> serverSideMethods, List<Class> dataTypeList) {
+    public void generate(List<MethodObject> serverSideMethods, List<Class<?>> customDataTypeClasses) {
         StringBuilder jsMethods = new StringBuilder();
         for (MethodObject serverSideMethod : serverSideMethods) {
             if (serverSideMethod.getAccessLevelRequiredToUseThisMethod() == 1) {
@@ -64,7 +64,7 @@ public class JsClientGenerator implements IGenerator {
             }
         }
 
-        String jsCustomClasses = dataTypeList.stream()
+        String jsCustomClasses = customDataTypeClasses.stream()
                 .map(n -> new KotlinClass(n).toJavaScript())
                 .collect(Collectors.joining());
 

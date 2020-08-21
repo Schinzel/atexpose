@@ -61,7 +61,7 @@ public class AtExpose implements IStateNode {
     }
 
 
-    public AtExpose expose(Class clazz) {
+    public AtExpose expose(Class<?> clazz) {
         mAPI.expose(clazz);
         return this;
     }
@@ -69,7 +69,7 @@ public class AtExpose implements IStateNode {
 
     public AtExpose generate(IGenerator generator) {
         List<MethodObject> methodObjects = new ArrayList<>(mAPI.getMethods().values());
-        List<Class> customClasses = getCustomClasses();
+        List<Class<?>> customClasses = getCustomClasses();
         generator.generate(methodObjects, customClasses);
         return this;
     }
@@ -78,7 +78,7 @@ public class AtExpose implements IStateNode {
     /**
      * @return Classes that exists outside atexpose and have been added to the api
      */
-    private List<Class> getCustomClasses() {
+    private List getCustomClasses() {
         return mAPI.getDataTypes()
                 .stream()
                 .filter(n -> n instanceof ClassDT)
