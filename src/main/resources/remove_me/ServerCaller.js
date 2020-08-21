@@ -110,7 +110,7 @@ export class RemoveMeVar extends DataObject {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * @return {String!} 
+     * @return {string} 
      */
     getS() {
         return this.s;
