@@ -88,3 +88,186 @@ Samples found [here](https://github.com/Schinzel/atexpose/tree/master/src/main/j
 @Expose runs well on Heroku and is battle tested on a site that has thousands of visitors per day.
 
 
+# Overview
+@Expose consists of:
+1. An API
+2. A set of dispatcher
+
+The API is defines the methods that can be invoked. The dispatchers are responsible for receiving incoming requests, processing the requests and sending the response.
+
+The main components of the API are 
+1. Methods
+2. Arguments
+3. Data types
+
+
+A dispatcher consists of
+1. A channel - Receives the incoming messages and sends the response
+2. A parser - Parses the incoming message
+3. A wrapper - Wraps the response
+4. Zero, one or multiple logs
+
+![Object Diagram](https://docs.google.com/drawings/d/e/2PACX-1vRK1kiOCWuwzFy_dq8s3Xk0RWQO85wvDa_aGZxCZg3KVMUhDK1da-ctQknM4HtvVVeLlTWcHwC17X6_/pub?w=960&h=720)
+
+
+
+
+# Channels
+
+### Purpose
+The purpose of a channel is to read incoming messages and to write outgoing responses.
+
+### Available Channels
+* CommandLineChannel - Reads from and writes to system out. 
+* ScriptFileChannel - Input is a file with a set of requests. 
+* ScheduledTask - Input is a request that is triggered at an interval. 
+* ScheduledReport - Input is a request that is triggered at an interval. Output is an email sent. 
+*  WebChannel - Input is a request sent to a port. Output is written to the same socket from where the request originated. 
+
+
+
+# Parsers
+
+### Purpose
+The purpose of a parser is to parse incoming messages.
+
+#### Available Parsers
+
+###### TextParser
+`doSomething 123, "monkey"`
+
+###### UrlParser
+`doSomething?arg1=123&arg2=monkey`
+
+###### JsonRpcParser
+`{"method": "doSomething", "params": {"arg1": 123, "arg2": monkey}}`
+
+
+# Wrappers
+
+### Purpose
+The purpose of a wrapper is to wrap outgoing responses. 
+
+### Available Wrappers
+###### CsvWrapper
+A simple return with comma separated values. 
+
+###### WebWrapper
+For wrapping responses to send to a browser. 
+Sets HTTP response header. 
+Handles
+1. Static files. Examples: HTML, CSS, image files, JavaScript files.
+2. POST and GET requests
+
+Server side includes are supported for text files.
+1. File includes. Syntax: `<!--#include file="header.html" -->`
+2. Variables include. Syntax: `<!--#echo var="my_var" -->`
+
+
+
+# Loggers
+
+A logger has 
+1. a type - Event or Error
+2. a format - formats the output
+3. a writer - writes the formatted output
+4. optionally a crypto - it can be desirable to encrypt sensitive log data
+
+The available formats are
+1. JSON
+2. Single line format - suitable for log entries 
+3. Multi line format - easier to read for humans
+
+The available writers are
+1. System out - writes to system out
+2. Mail - send the entry as an emial
+
+
+
+# Queues
+
+Queues are a great way to reduce complexity in a system. By using message queues the different parts of the system do not get intertwined. By having a system that is decoupled it will be easier to understand, easier to change and several other benefits. You can easily have some services on AWS, some on Azure and some on your own servers. 
+
+### Queues in @Expose
+@Expose supports receiving requests through Amazons SQS - Simple Queue Service. To make life easier there is a stand alone utility class for adding requests to the queue.
+
+A message queue has two main components; a producer and a consumer. A producer puts messages on the queue and a consumer consumes the messages from the queue. For @Expose messages are requests. 
+
+#### Consumer
+A consumer is a dispatcher like for example the command line interface which gets its request by reading from an SQS queue.
+
+#### Producer
+Requests can be added to a SQS queue in any manner. There does exist two utility classes to facilitate adding messages to the queue:
+1. `JsonRpc` formats request in the expected JSON RPC format. 
+2. `SqsProducer` adds requests to the SQS queue. 
+
+#### Message format
+Messages are sent in [JSON-RPC 2.0](http://www.jsonrpc.org/specification) format
+```json
+{"method": "doSomething", "params": {"para1": 23, "para2": 42}}
+```
+
+### Sample
+Prerequisites. An [AWS SQS Fifo queue](http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html). 
+
+##### Step 1 - On system 1 expose a method
+```java
+public class JobClass {
+
+    @Expose(requiredAccessLevel = 1,
+            arguments = {"Int"})
+    String doHeavyBackgroundJob(int count) {
+        Sandman.snoozeSeconds(1);
+        return "Phew, all done with heavy job " + count;
+    }
+}
+```
+
+##### Step 2 - On system 1 set up a consumer
+On the system with the exposed method, start a consumer. 
+```java
+AtExpose.create()
+	//Expose sample class
+	.expose(new JobClass())
+	//Start SQS consumer
+	.startDispatcher(getSqsConsumer());
+
+private static IDispatcher getSqsConsumer() {
+	return SqsConsumerFactory.builder()
+		.awsAccessKey(AWS.ACCESS_KEY)
+		.awsSecretKey(AWS.SECRET_KEY)
+		.queueUrl(AWS.QUEUE_URL)
+		.region(Regions.EU_WEST_1)
+		.name("MyFirstSqsConsumer")
+		.noOfThreads(2)
+		.accessLevel(1)
+		.build();
+}
+```
+
+##### Step 3 - On system 2 add requests to the queue
+```java
+//Create a SqsProducer that can put messages on an AWS SQS queue.
+IQueueProducer sqsProducer = SqsProducer.builder()
+	.awsAccessKey(AWS.ACCESS_KEY)
+	.awsSecretKey(AWS.SECRET_KEY)
+	.region(Regions.EU_WEST_1)
+	.queueUrl(AWS.QUEUE_URL)
+	.sqsQueueType(SqsQueueType.FIFO)
+	.build();
+
+String jsonRpc = JsonRpc.builder()
+	.methodName("doHeavyBackgroundJob")
+	.argument("Int", String.valueOf(i))
+	.build()
+	.toString();
+sqsProducer.send(jsonRpc);
+```
+
+
+
+'
+# Time and File format
+
+* All times are in UTC.
+* Where there is an option, UTF-8 is used. 
