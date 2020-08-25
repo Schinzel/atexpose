@@ -1,7 +1,9 @@
 package com.atexpose.api;
 
 import com.atexpose.Expose;
+import com.atexpose.RemoveMeVar;
 import com.atexpose.api.datatypes.AbstractDataType;
+import com.atexpose.api.datatypes.ClassDT;
 import com.atexpose.api.datatypes.DataTypeEnum;
 import com.atexpose.errors.SetUpError;
 import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
@@ -81,6 +83,11 @@ public class API implements IStateNode {
         return this;
     }
 
+
+    public API addDataType(Class clazz) {
+        mDataTypes.add(new ClassDT<>(clazz));
+        return this;
+    }
 
     public API addArgument(Argument arg) {
         mArguments.add(arg);

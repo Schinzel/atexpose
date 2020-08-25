@@ -7,6 +7,7 @@ import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcherfactories.CliFactory;
 import com.atexpose.dispatcherfactories.WebServerBuilder;
 import com.atexpose.generator.IGenerator;
+import com.atexpose.generator.JsClientGenerator;
 import com.atexpose.util.DateTimeStrings;
 import com.atexpose.util.mail.IEmailSender;
 import io.schinzel.basicutils.Checker;
@@ -66,6 +67,10 @@ public class AtExpose implements IStateNode {
         return this;
     }
 
+    public AtExpose generateJavaScriptClient(String fileName) {
+        this.generate(new JsClientGenerator(fileName));
+        return this;
+    }
 
     public AtExpose generate(IGenerator generator) {
         List<MethodObject> methodObjects = new ArrayList<>(mAPI.getMethods().values());

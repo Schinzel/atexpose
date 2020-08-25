@@ -2,13 +2,12 @@ package com.atexpose;
 
 import com.atexpose.api.Argument;
 import com.atexpose.api.datatypes.ClassDT;
-import com.atexpose.generator.JsClientGenerator;
 
 public class REMOVE_ME {
     public static void main(String[] args) {
         AtExpose atExpose = AtExpose.create();
         atExpose.getAPI()
-                .addDataType(new ClassDT<>(RemoveMeVar.class))
+                .addDataType(RemoveMeVar.class)
                 .addArgument(Argument.builder()
                         .name("test_var")
                         .dataType(new ClassDT<>(RemoveMeVar.class))
@@ -20,7 +19,7 @@ public class REMOVE_ME {
                 .expose(RemoveMeClass.class)
                 //.startWebServer("remove_me")
                 //.startCLI()
-                .generate(new JsClientGenerator("src/main/resources/remove_me/ServerCaller.js"));
+                .generateJavaScriptClient("src/main/resources/remove_me/ServerCaller.js");
 
     }
 

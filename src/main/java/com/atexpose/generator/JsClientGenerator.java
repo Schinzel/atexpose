@@ -75,10 +75,10 @@ public class JsClientGenerator implements IGenerator {
 
         String fileContent = "" +
                 HEADER +
-                jsServerCaller +
+                DATA_OBJECT_CLASS +
                 jsCustomClasses +
-                SERVER_CALLER_INTERNAL_CLASS +
-                DATA_OBJECT_CLASS;
+                jsServerCaller +
+                SERVER_CALLER_INTERNAL_CLASS;
 
         FileWriter.writer()
                 .fileName(mFilePath)
