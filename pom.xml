@@ -21,6 +21,14 @@
     </properties>
 
 
+    <repositories>
+        <repository>
+            <id>maven-repo.schinzel.io</id>
+            <url>http://maven-repo.schinzel.io/snapshot</url>
+        </repository>
+    </repositories>
+
+
     <distributionManagement>
         <snapshotRepository>
             <id>${deploy-repo}</id>
@@ -189,14 +197,6 @@
             </plugin>
         </plugins>
     </build>
-
-
-    <repositories>
-        <repository>
-            <id>maven-repo.schinzel.io</id>
-            <url>http://maven-repo.schinzel.io/release</url>
-        </repository>
-    </repositories>
 
 
     <dependencies>
