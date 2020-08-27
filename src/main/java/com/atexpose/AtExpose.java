@@ -1,7 +1,9 @@
 package com.atexpose;
 
 import com.atexpose.api.API;
+import com.atexpose.api.Argument;
 import com.atexpose.api.MethodObject;
+import com.atexpose.api.datatypes.AbstractDataType;
 import com.atexpose.api.datatypes.ClassDT;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcherfactories.CliFactory;
@@ -206,6 +208,25 @@ public class AtExpose implements IStateNode {
         }
         //Start the messaging!
         dispatcher.commenceMessaging(this.getAPI());
+        return this;
+    }
+
+    //------------------------------------------------------------------------
+    // API METHODS
+    //------------------------------------------------------------------------
+
+    public AtExpose addDataType(Class clazz) {
+        this.getAPI().addDataType(new ClassDT<>(clazz));
+        return this;
+    }
+
+    public AtExpose addDataType(AbstractDataType dataType) {
+        this.getAPI().addDataType(dataType);
+        return this;
+    }
+
+    public AtExpose addArgument(Argument arg) {
+        this.getAPI().addArgument(arg);
         return this;
     }
 
