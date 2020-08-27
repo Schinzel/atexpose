@@ -115,33 +115,13 @@ export class ServerCaller {
 
     /**
      * No description available
+     * @param {RemoveMeVar} test_var - Reads incoming requests and sends the responses
      * @return {RemoveMeVar}
      */
-    async test_it(){
+    async test_it(test_var){
         return await new ServerCallerInt()
             .setPath('/api/test_it')
-            .callWithPromise();
-    }
-
-    /**
-     * No description available
-     * @param {RemoveMeVar} test_var - Reads incoming requests and sends the responses
-     * @return {string}
-     */
-    async test_it_2(test_var){
-        return await new ServerCallerInt()
-            .setPath('/api/test_it_2')
             .addArg('test_var', test_var)
-            .callWithPromise();
-    }
-
-    /**
-     * No description available
-     * @return {RemoveMeVar}
-     */
-    async test_it_3(){
-        return await new ServerCallerInt()
-            .setPath('/api/test_it_3')
             .callWithPromise();
     }
 
@@ -205,7 +185,10 @@ class ServerCallerInt {
      * @return {ServerCallerInt} This for chaining
      */
     addArg(name, value) {
-        if (typeof value === 'object') {            value = JSON.stringify(value);        }        this._requestArguments[name] = value;
+        if (typeof value === 'object') {
+            value = JSON.stringify(value);
+        }
+        this._requestArguments[name] = value;
         return this;
     }
 

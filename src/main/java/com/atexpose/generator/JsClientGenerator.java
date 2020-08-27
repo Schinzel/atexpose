@@ -164,9 +164,9 @@ public class JsClientGenerator implements IGenerator {
             "     * @return {ServerCallerInt} This for chaining\n" +
             "     */\n" +
             "    addArg(name, value) {\n" +
-            "        if (typeof value === 'object') {" +
-            "            value = JSON.stringify(value);" +
-            "        }" +
+            "        if (typeof value === 'object') {\n" +
+            "            value = JSON.stringify(value);\n" +
+            "        }\n" +
             "        this._requestArguments[name] = value;\n" +
             "        return this;\n" +
             "    }\n" +

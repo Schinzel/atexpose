@@ -1,5 +1,6 @@
 package com.atexpose;
 
+@SuppressWarnings("unused")
 public class RemoveMeClass {
 
     @Expose(
@@ -9,21 +10,11 @@ public class RemoveMeClass {
         return str1 + integer.toString();
     }
 
-    @Expose
-    public static RemoveMeVar test_it() {
-        return new RemoveMeVar("dd", 77);
-    }
-
     @Expose(
             arguments = {"test_var"}
     )
-    public static String test_it_2(RemoveMeVar test_var){
-        return "Dit it!";
-    }
-
-    @Expose
-    public static RemoveMeVar test_it_3(){
-        return new RemoveMeVar("bear", 33);
+    public static RemoveMeVar test_it(RemoveMeVar test_var) {
+        return new RemoveMeVar(test_var.s, test_var.i + 10);
     }
 
 }
