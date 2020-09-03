@@ -12,7 +12,7 @@ public class AlphNumStringDT extends StringDT {
 
 
     AlphNumStringDT() {
-        super("alph_num_string", "Allowed values are the alphanumeric characters, underscore, at sign, full stop and "
+        super("AlphNumString", "Allowed values are the alphanumeric characters, underscore, at sign, full stop and "
                 + "hyphen-minus. The alphanumeric character set consists of the numbers 0 to 9 and "
                 + "letters A to Z in the English alphabet case-sensitive. "
                 + "The maximum length is " + MAX_LENGTH + " characters. Reserved value is the string 'null'.");

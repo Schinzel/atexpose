@@ -7,7 +7,7 @@ package com.atexpose.api.datatypes;
  */
 public class IntDT extends AbstractDataType {
     IntDT() {
-        super("int",
+        super("Int",
                 "Allowed values are whole numbers from -2147483647 to 2147483647. The non-numeric character "
                 + "allowed is minus as the first character to indicate negative values.");
     }

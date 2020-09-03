@@ -33,7 +33,7 @@ public class APITest {
                 .expose(ExposedClass.class);
         Help help = new Help(api);
         String methodHelp = help.help("exposedMethod", "");
-        assertEquals("string exposedMethod(string String)", methodHelp);
+        assertEquals("String exposedMethod(String String)", methodHelp);
         String argsMissing = help.help("Chimp", "");
         assertEquals("No matches found for 'Chimp'", argsMissing);
     }

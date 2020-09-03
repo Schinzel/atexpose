@@ -36,7 +36,7 @@ class NativeMethods {
 
 
     @Expose(
-            arguments = {"FileName"},
+            arguments = {"file_name"},
             requiredAccessLevel = 3,
             requiredArgumentCount = 1,
             description = "Reads and executes the argument script file. Useful for setting up settings, scheduled tasks and so on.",
@@ -50,7 +50,7 @@ class NativeMethods {
 
 
     @Expose(
-            arguments = {"DispatcherName", "LogFormatter", "LogWriter", "CryptoKey"},
+            arguments = {"dispatcher_name", "log_formatter", "log_writer", "crypto_key"},
             requiredAccessLevel = 3,
             description = "Adds an event logger to a dispatcher.",
             labels = {"@Expose", "AtExpose", "Logs"},
@@ -62,7 +62,7 @@ class NativeMethods {
 
 
     @Expose(
-            arguments = {"DispatcherName", "LogFormatter", "LogWriter", "CryptoKey"},
+            arguments = {"dispatcher_name", "log_formatter", "log_writer", "crypto_key"},
             requiredAccessLevel = 3,
             description = "Adds an error logger to a dispatcher.",
             labels = {"@Expose", "AtExpose", "Logs"},
@@ -100,7 +100,7 @@ class NativeMethods {
 
 
     @Expose(
-            arguments = {"DispatcherName"},
+            arguments = {"dispatcher_name"},
             requiredAccessLevel = 3,
             description = "Closes the argument dispatcher.",
             labels = {"@Expose"}
