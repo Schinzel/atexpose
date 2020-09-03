@@ -7,6 +7,7 @@ import com.atexpose.api.datatypes.AbstractDataType;
 import com.atexpose.api.datatypes.ClassDT;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcherfactories.CliFactory;
+import com.atexpose.dispatcherfactories.ScriptFileReaderFactory;
 import com.atexpose.dispatcherfactories.WebServerBuilder;
 import com.atexpose.generator.IGenerator;
 import com.atexpose.generator.JsClientGenerator;
@@ -138,6 +139,10 @@ public class AtExpose implements IStateNode {
         return this;
     }
 
+    public AtExpose readScriptFile(String fileName) {
+        this.start(ScriptFileReaderFactory.create(fileName));
+        return this;
+    }
 
     /**
      * Starts a web server on port 5555
