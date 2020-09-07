@@ -147,7 +147,9 @@ public class AtExpose implements IStateNode {
     /**
      * Starts a web server on port 5555
      *
-     * @param webServerDir Path to web server dir
+     * @param webServerDir Path to web server dir. Relative to the
+     *                     resource dir. For example "web" if web is
+     *                     a dir in the resource dir
      * @return This for chaining
      */
     public AtExpose startWebServer(String webServerDir) {
@@ -158,7 +160,9 @@ public class AtExpose implements IStateNode {
     /**
      * Starts a web server
      *
-     * @param webServerDir Path to web server dir
+     * @param webServerDir Path to web server dir. Relative to the
+     *                     resource dir. For example "web" if web is
+     *                     a dir in the resource dir
      * @param port         Port to start web server on
      * @return This for chaining
      */
