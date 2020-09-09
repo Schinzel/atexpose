@@ -35,10 +35,7 @@ public class JsClientGenerator implements IGenerator {
                         argumentList.stream(),
                         (argument, index) -> {
                             boolean isOptionalArgument = index >= serverSideMethod.getNoOfRequiredArguments();
-                            return isOptionalArgument
-                                    ? argument.getKey() + " = " + (argument.getDataType().getKey().equalsIgnoreCase("Int") ? argument.getDefaultValueAsString() : "'" + argument.getDefaultValue() + "'")
-                                    : argument.getKey();
-
+                            return getClientArgument(argument, isOptionalArgument);
                         })
                         .collect(Collectors.joining(", "));
 
@@ -93,6 +90,21 @@ public class JsClientGenerator implements IGenerator {
 
     }
 
+
+    private static String getClientArgument(Argument argument, boolean isOptionalArgument) {
+        String returnValue = argument.getKey();
+        if (isOptionalArgument) {
+            boolean isNumeric = argument.getDataType().getKey().equalsIgnoreCase("Int");
+            returnValue += " = ";
+            returnValue += isNumeric
+                    ? argument.getDefaultValueAsString()
+                    : "'" + argument.getDefaultValue() + "'";
+
+        }
+        return returnValue;
+    }
+
+
     private static String getJsDataTypeName(AbstractDataType dataType) {
         if (dataType instanceof AlphNumStringDT) {
             return "string";
@@ -113,15 +125,19 @@ public class JsClientGenerator implements IGenerator {
             " * This class has been automatically generated with one method per method in the API. \n" +
             " */\n";
 
+
     private static final String DATA_OBJECT_CLASS = JsTranspiler.Companion.getDataObjectClass();
+
 
     private static final String START_SERVER_CALLER_CLASS = "" +
             "// noinspection JSUnusedGlobalSymbols\n" +
             "export class ServerCaller {\n" + "";
 
+
     private static final String END_SERVER_CALLER_CLASS = "" +
             "}\n" +
             "\n";
+
 
     private static final String SERVER_CALLER_INTERNAL_CLASS = "" +
             "\n" +
