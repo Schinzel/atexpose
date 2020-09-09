@@ -29,7 +29,7 @@ public class _Sample2_WebServer {
                 //Expose an instance
                 .expose(new MyObject())
                 //Start a web server
-                .start(WebServerBuilder.create().build())
+                //.start(WebServerBuilder.create().build())
                 .generate(new JsClientGenerator("src/main/resources/ServerCaller.js"));
     }
 }

@@ -2,6 +2,7 @@
  * The purpose of this class is to send requests to the server. 
  * This class has been automatically generated with one method per method in the API. 
  */
+// noinspection JSUnusedLocalSymbols
 /**
  * This class holds methods common to all transpiled classes.
  */
@@ -31,46 +32,51 @@ class DataObject {
     }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export class ServerCaller {
+    // noinspection JSUnusedGlobalSymbols
     /**
      * No description available
-     * @param {string} String - A string.
+     * @param {string} String - A string
      * @return {string}
      */
-    async doEcho(String){
+    async doEcho(String = 'null'){
         return await new ServerCallerInt()
             .setPath('/api/doEcho')
             .addArg('String', String)
             .callWithPromise();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * No description available
-     * @param {number} Int - An integer.
+     * @param {number} Int - An integer
      * @return {string}
      */
-    async doHeavyBackgroundJob(Int){
+    async doHeavyBackgroundJob(Int = 0){
         return await new ServerCallerInt()
             .setPath('/api/doHeavyBackgroundJob')
             .addArg('Int', Int)
             .callWithPromise();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * No description available
-     * @param {number} Int - An integer.
+     * @param {number} Int - An integer
      * @return {number}
      */
-    async doubleIt(Int){
+    async doubleIt(Int = 0){
         return await new ServerCallerInt()
             .setPath('/api/doubleIt')
             .addArg('Int', Int)
             .callWithPromise();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Returns the argument string. Util method for testing.
-     * @param {string} String - A string.
+     * @param {string} String - A string
      * @return {string}
      */
     async echo(String){
@@ -80,6 +86,7 @@ export class ServerCaller {
             .callWithPromise();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * No description available
      * @return {string}
@@ -90,6 +97,7 @@ export class ServerCaller {
             .callWithPromise();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Simply returns the string "pong". Util method for testing.
      * @return {string}
@@ -100,6 +108,7 @@ export class ServerCaller {
             .callWithPromise();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * No description available
      * @return {string}
@@ -110,18 +119,22 @@ export class ServerCaller {
             .callWithPromise();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * The thing is set to the argument value
-     * @param {string} String - A string.
+     * @param {string} String - A string
+     * @param {number} Int - An integer
      * @return {string}
      */
-    async setTheThing(String){
+    async setTheThing(String, Int = 0){
         return await new ServerCallerInt()
             .setPath('/api/setTheThing')
             .addArg('String', String)
+            .addArg('Int', Int)
             .callWithPromise();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Returns the time when the server was started
      * @return {string}
@@ -132,6 +145,7 @@ export class ServerCaller {
             .callWithPromise();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Returns the current server time in UTC.
      * @return {string}

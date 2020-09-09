@@ -3,6 +3,7 @@ package com.atexpose.generator;
 import com.atexpose.api.Argument;
 import com.atexpose.api.MethodObject;
 import com.atexpose.api.datatypes.*;
+import com.google.common.collect.Streams;
 import io.schinzel.basicutils.file.FileWriter;
 import io.schinzel.jstranspiler.JsTranspiler;
 import io.schinzel.jstranspiler.transpiler.KotlinClass;
@@ -25,29 +26,34 @@ public class JsClientGenerator implements IGenerator {
             if (serverSideMethod.getAccessLevelRequiredToUseThisMethod() == 1) {
 
                 String jsMethodName = serverSideMethod.getMethod().getName();
-
-                String jsArguments = serverSideMethod
+                List<Argument> argumentList = serverSideMethod
                         .getMethodArguments()
-                        .getArguments()
-                        .stream()
-                        .map(Argument::getKey)
+                        .getArguments();
+
+                @SuppressWarnings("UnstableApiUsage")
+                String jsArguments = Streams.mapWithIndex(
+                        argumentList.stream(),
+                        (argument, index) -> {
+                            boolean isOptionalArgument = index >= serverSideMethod.getNoOfRequiredArguments();
+                            return isOptionalArgument
+                                    ? argument.getKey() + " = " + (argument.getDataType().getKey().equalsIgnoreCase("Int") ? argument.getDefaultValueAsString() : "'" + argument.getDefaultValue() + "'")
+                                    : argument.getKey();
+
+                        })
                         .collect(Collectors.joining(", "));
 
-                String jsDocArguments = serverSideMethod
-                        .getMethodArguments()
-                        .getArguments()
+                String jsDocArguments = argumentList
                         .stream()
                         .map(n -> "     * @param {" + getJsDataTypeName(n.getDataType()) + "} " + n.getKey() + " - " + n.getDescription() + "\n")
                         .collect(Collectors.joining());
 
-                String setServerCallerArguments = serverSideMethod
-                        .getMethodArguments()
-                        .getArguments()
+                String setServerCallerArguments = argumentList
                         .stream()
                         .map(n -> "            .addArg('" + n.getKey() + "', " + n.getKey() + ")\n")
                         .collect(Collectors.joining());
 
                 String jsMethod = ""
+                        + "    // noinspection JSUnusedGlobalSymbols\n"
                         + "    /**\n"
                         + "     * " + serverSideMethod.getDescription() + "\n"
                         + jsDocArguments
@@ -109,7 +115,9 @@ public class JsClientGenerator implements IGenerator {
 
     private static final String DATA_OBJECT_CLASS = JsTranspiler.Companion.getDataObjectClass();
 
-    private static final String START_SERVER_CALLER_CLASS = "export class ServerCaller {\n" + "";
+    private static final String START_SERVER_CALLER_CLASS = "" +
+            "// noinspection JSUnusedGlobalSymbols\n" +
+            "export class ServerCaller {\n" + "";
 
     private static final String END_SERVER_CALLER_CLASS = "" +
             "}\n" +
