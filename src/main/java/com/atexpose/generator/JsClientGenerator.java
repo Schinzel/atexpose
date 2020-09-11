@@ -91,15 +91,20 @@ public class JsClientGenerator implements IGenerator {
     }
 
 
+    /**
+     * @param argument           The argument to convert to a JS argument
+     * @param isOptionalArgument True if the argument is optional, else false
+     * @return Examples: "my_arg" or "my_arg = 0" or "my_arg = 'default arg'"
+     */
     private static String getClientArgument(Argument argument, boolean isOptionalArgument) {
         String returnValue = argument.getKey();
         if (isOptionalArgument) {
             boolean isNumeric = argument.getDataType().getKey().equalsIgnoreCase("Int");
+            boolean isNull = argument.getDefaultValue() == null;
             returnValue += " = ";
-            returnValue += isNumeric
-                    ? argument.getDefaultValueAsString()
+            returnValue +=  (isNumeric || isNull)
+                    ? argument.getDefaultValue()
                     : "'" + argument.getDefaultValue() + "'";
-
         }
         return returnValue;
     }

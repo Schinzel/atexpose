@@ -76,7 +76,7 @@ export class ServerCaller {
      * @param {number} Int - An integer
      * @return {string}
      */
-    async concat(String = 'null', Int = 0){
+    async concat(String = null, Int = 0){
         return await new ServerCallerInt()
             .setPath('/api/concat')
             .addArg('String', String)
@@ -125,7 +125,7 @@ export class ServerCaller {
      * @param {RemoveMeVar} test_var - Reads incoming requests and sends the responses
      * @return {RemoveMeVar}
      */
-    async test_it(test_var = 'null'){
+    async test_it(test_var = null){
         return await new ServerCallerInt()
             .setPath('/api/test_it')
             .addArg('test_var', test_var)
