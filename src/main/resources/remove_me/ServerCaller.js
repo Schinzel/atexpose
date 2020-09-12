@@ -233,7 +233,7 @@ class ServerCallerInt {
      */
     call() {
         let requestPathWithHost = getAjaxUrl(this._requestPath);
-        console.log(`requesting API url '${requestPathWithHost}'`);
+        console.log(`Requesting path '${this._requestPath}'`);
         $.ajax({
             type: "POST",
             url: requestPathWithHost,
