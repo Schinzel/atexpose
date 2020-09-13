@@ -6,7 +6,9 @@ import com.atexpose.api.datatypes.*;
 import com.google.common.collect.Streams;
 import io.schinzel.basicutils.file.FileWriter;
 import io.schinzel.jstranspiler.JsTranspiler;
+import io.schinzel.jstranspiler.transpiler.IToJavaScript;
 import io.schinzel.jstranspiler.transpiler.KotlinClass;
+import io.schinzel.jstranspiler.transpiler.KotlinEnum;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,7 +70,12 @@ public class JsClientGenerator implements IGenerator {
         }
 
         String jsCustomClasses = customDataTypeClasses.stream()
-                .map(n -> new KotlinClass(n).toJavaScript())
+                .map(n -> {
+                    IToJavaScript clazz = n.isEnum()
+                            ? new KotlinEnum(n)
+                            : new KotlinClass(n);
+                    return clazz.toJavaScript();
+                })
                 .collect(Collectors.joining());
 
         String jsServerCaller = "" +
@@ -102,7 +109,7 @@ public class JsClientGenerator implements IGenerator {
             boolean isNumeric = argument.getDataType().getKey().equalsIgnoreCase("Int");
             boolean isNull = argument.getDefaultValue() == null;
             returnValue += " = ";
-            returnValue +=  (isNumeric || isNull)
+            returnValue += (isNumeric || isNull)
                     ? argument.getDefaultValue()
                     : "'" + argument.getDefaultValue() + "'";
         }

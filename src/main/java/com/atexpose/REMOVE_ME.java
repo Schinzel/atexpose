@@ -12,6 +12,7 @@ public class REMOVE_ME {
     public static void main(String[] args) {
         AtExpose.create()
                 .addDataType(RemoveMeVar.class)
+                .addDataType(RemoveMeEnum.class)
                 .addArgument(Argument.builder()
                         .name("test_var")
                         .dataType(new ClassDT<>(RemoveMeVar.class))

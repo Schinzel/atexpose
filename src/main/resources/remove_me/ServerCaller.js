@@ -32,6 +32,14 @@ class DataObject {
     }
 }
 
+/**
+ * @typedef {{name: string}} RemoveMeEnum
+ */
+export const RemoveMeEnum = Object.freeze({
+    FIRST: {name: 'FIRST'},
+    SECOND: {name: 'SECOND'}
+});
+
 export class RemoveMeVar extends DataObject {
     constructor(json) {
         super();
@@ -233,7 +241,7 @@ class ServerCallerInt {
      */
     call() {
         let requestPathWithHost = getAjaxUrl(this._requestPath);
-        console.log(`Requesting path '${this._requestPath}'`);
+        console.log(`requesting API url '${requestPathWithHost}'`);
         $.ajax({
             type: "POST",
             url: requestPathWithHost,
