@@ -296,6 +296,7 @@ sqsProducer.send(jsonRpc);
 # Versions
 ## Features added for next release
 - New feature: Generators
+- JavaScript client generator added. Translates the api to a JavaScript client.
 - API requests prefixed with `api` instead of `call`
 - Aliases are no longer supported
 - Data types `Float` and `JSONObject` are no longer supported
