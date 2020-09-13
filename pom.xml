@@ -260,6 +260,13 @@
             <type>pom</type>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <!-- Serializes json strings and deserializes objects -->
+            <artifactId>jackson-module-kotlin</artifactId>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <version>2.11.1</version>
+        </dependency>
+
         <!-- DEV DEPENDENCIES -->
         <dependency>
             <!-- Annotations that generates getters, setters and more that

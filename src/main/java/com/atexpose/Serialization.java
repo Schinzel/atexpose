@@ -2,10 +2,11 @@ package com.atexpose;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import static com.fasterxml.jackson.module.kotlin.ExtensionsKt.jacksonObjectMapper;
 
 public class Serialization {
-    private static final ObjectMapper serializer = new ObjectMapper();
-    private static final ObjectMapper deserializer = new ObjectMapper();
+    private static final ObjectMapper serializer = jacksonObjectMapper();
+    private static final ObjectMapper deserializer = jacksonObjectMapper();
 
 
     @SneakyThrows
@@ -14,15 +15,8 @@ public class Serialization {
     }
 
     @SneakyThrows
-    public static <T> T jsonStringToObject(String value, Class<T> clazz){
+    public static <T> T jsonStringToObject(String value, Class<T> clazz) {
         return deserializer.readValue(value, clazz);
     }
 
-    public static void main(String[] args) {
-        RemoveMeVar class2 = new RemoveMeVar("Two", 2);
-        String s = Serialization.objectToJsonString(class2);
-        RemoveMeVar removeMeVar = Serialization.jsonStringToObject(s, RemoveMeVar.class);
-        System.out.println(s);
-        System.out.println(removeMeVar.toString());
-    }
 }
