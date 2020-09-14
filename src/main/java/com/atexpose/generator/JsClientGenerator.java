@@ -204,7 +204,7 @@ public class JsClientGenerator implements IGenerator {
             "            value = JSON.stringify(value);\n" +
             "        } else if (typeof value === 'object'){\n" +
             "            value = value.name;\n" +
-            "        }" +
+            "        }\n" +
             "        this._requestArguments[name] = value;\n" +
             "        return this;\n" +
             "    }\n" +
