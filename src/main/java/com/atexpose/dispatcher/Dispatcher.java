@@ -3,15 +3,14 @@ package com.atexpose.dispatcher;
 import com.atexpose.api.API;
 import com.atexpose.api.MethodObject;
 import com.atexpose.dispatcher.channels.IChannel;
-import com.atexpose.dispatcher.invocation.Invocation;
 import com.atexpose.dispatcher.invocation.RequestArguments;
 import com.atexpose.dispatcher.logging.LogEntry;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.dispatcher.wrapper.IWrapper;
-import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.util.ByteStorage;
+import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
 import io.schinzel.basicutils.thrower.Thrower;
@@ -193,11 +192,9 @@ public class Dispatcher implements Runnable, IDispatcher {
                             .requestArgumentNames(request.getArgumentNames())
                             .build()
                             .getArgumentValuesAsObjects();
-                    Object responseAsObject = Invocation.invokeBuilder()
-                            .method(methodObject.getMethod())
-                            .targetObject(methodObject.getObject())
-                            .argumentValuesAsObjects(requestArgumentValues)
-                            .invoke();
+                    Object responseAsObject = methodObject
+                            .getMethod()
+                            .invoke(methodObject.getObject(), requestArgumentValues);
                     responseAsString = methodObject
                             .getReturnDataType()
                             .convertFromDataTypeToString(responseAsObject);
@@ -209,10 +206,21 @@ public class Dispatcher implements Runnable, IDispatcher {
                 }
             } catch (Exception e) {
                 isError = true;
+                String errorMessage = (e.getMessage() == null)
+                        ? e.getCause().getMessage()
+                        : e.getMessage();
+                ImmutableMap<String, String> requestExceptionInfo = (request.isFileRequest())
+                        ? ImmutableMap.<String, String>builder()
+                        .put("error_message", errorMessage)
+                        .put("file_name", request.getFileName())
+                        .build()
+                        : ImmutableMap.<String, String>builder()
+                        .put("error_message", errorMessage)
+                        .put("argument_values", request.getArgumentValues().toString())
+                        .put("argument_names", request.getArgumentNames().toString())
+                        .build();
                 //If the exception has properties
-                wrappedResponse = (e instanceof IExceptionProperties)
-                        ? mWrapper.wrapError(((IExceptionProperties) e).getProperties())
-                        : mWrapper.wrapError(Collections.singletonMap("error_message", e.getMessage()));
+                wrappedResponse = mWrapper.wrapError(requestExceptionInfo);
                 wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
             } finally {
                 timeOfIncomingRequest = (timeOfIncomingRequest == null) ? Instant.now() : timeOfIncomingRequest;

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.Charset;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -71,7 +72,7 @@ public class WebServerTest {
                 + "\r\n"
                 + "{\"error_message\":\"Error while reading from socket. Request not allowed. Request has to start with GET or POST. Request: ' " + request + "'\"}\n\n";
         String response = SocketRWUtil.read(socket);
-        assertEquals(expected, response);
+        assertThat(response).startsWith(expected);
     }
 
 

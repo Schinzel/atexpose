@@ -300,6 +300,7 @@ sqsProducer.send(jsonRpc);
 - API requests prefixed with `api` instead of `call`
 - Aliases are no longer supported
 - Data types `Float` and `JSONObject` are no longer supported
+- Removed `IExceptionProperties`
 
 ## 0.9.38
 _2020-01-03_
