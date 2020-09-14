@@ -12,8 +12,14 @@ public class ClassDT<T> extends AbstractDataType {
     private final Class<T> mClazz;
     // 1) Starts with "
     // 2) followed by any number of chars that are uppercase chars, any number or underscore or minus
-    // 3) ending with a "
-    private static final Pattern ENUM_VALUE_PATTERN = Pattern.compile("^[\"][A-Z0-9_-]*[\"]");
+    // 3) ending with "
+    /**
+     * Reg ex: 
+     * 1) Starts with "
+     * 2) followed by any number of chars that are uppercase chars, any number or underscore or minus
+     * 3) ending with "
+     */
+    private static final Pattern SERIALIZED_ENUM_PATTERN = Pattern.compile("^[\"][A-Z0-9_-]*[\"]");
 
     public ClassDT(Class<T> clazz) {
         super(clazz.getSimpleName(), "The chars allowed for JSON strings");
@@ -26,8 +32,8 @@ public class ClassDT<T> extends AbstractDataType {
         //A full eval for JSON is to expensive,
         //so only check is starts and ends with curly brackets
         return (value.startsWith("{") && value.endsWith("}"))
-                // Or this is the value for an enum
-                || ENUM_VALUE_PATTERN.matcher(value).matches();
+                // Or this is the string representation for an enum
+                || SERIALIZED_ENUM_PATTERN.matcher(value).matches();
     }
 
 
