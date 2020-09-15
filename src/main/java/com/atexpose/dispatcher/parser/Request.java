@@ -21,18 +21,18 @@ public class Request {
 
     @Getter
     @Builder.Default
-    private String mMethodName = "";
+    private final String mMethodName = "";
     @Getter
     @Builder.Default
-    private List<String> mArgumentNames = Collections.emptyList();
+    private final List<String> mArgumentNames = Collections.emptyList();
     @Getter
     @Builder.Default
-    private List<String> mArgumentValues = Collections.emptyList();
+    private final List<String> mArgumentValues = Collections.emptyList();
     @Getter
     @Builder.Default
-    private String mFileName = "";
+    private final String mFileName = "";
     @Getter
     @Builder.Default
-    private boolean mFileRequest = false;
+    private final boolean mFileRequest = false;
 
 }

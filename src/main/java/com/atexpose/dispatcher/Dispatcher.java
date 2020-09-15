@@ -216,6 +216,7 @@ public class Dispatcher implements Runnable, IDispatcher {
                         .build()
                         : ImmutableMap.<String, String>builder()
                         .put("error_message", errorMessage)
+                        .put("method_name", request.getMethodName())
                         .put("argument_values", request.getArgumentValues().toString())
                         .put("argument_names", request.getArgumentNames().toString())
                         .build();
