@@ -1,12 +1,12 @@
 package com.atexpose.dispatcher.parser;
 
-import io.schinzel.basicutils.EmptyObjects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * An instance of this object is an incoming request.
@@ -19,10 +19,20 @@ import java.util.*;
 public class Request {
     public static final Request EMPTY = Request.builder().build();
 
-    @Getter @Builder.Default private String mMethodName = "";
-    @Getter @Builder.Default private List<String> mArgumentNames = Collections.emptyList();
-    @Getter @Builder.Default private List<String> mArgumentValues = Collections.emptyList();
-    @Getter @Builder.Default private String mFileName = "";
-    @Getter @Builder.Default private boolean mFileRequest = false;
+    @Getter
+    @Builder.Default
+    private String mMethodName = "";
+    @Getter
+    @Builder.Default
+    private List<String> mArgumentNames = Collections.emptyList();
+    @Getter
+    @Builder.Default
+    private List<String> mArgumentValues = Collections.emptyList();
+    @Getter
+    @Builder.Default
+    private String mFileName = "";
+    @Getter
+    @Builder.Default
+    private boolean mFileRequest = false;
 
 }

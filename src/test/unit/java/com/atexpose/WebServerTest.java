@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -62,7 +62,7 @@ public class WebServerTest {
         int port = 5555;
         Socket socket = new Socket(LOCAL_HOST_IP, port);
         String request = "no header call";
-        byte[] baMessage = request.getBytes(Charset.forName("Utf-8"));
+        byte[] baMessage = request.getBytes(StandardCharsets.UTF_8);
         SocketRWUtil.write(socket, baMessage);
         String expected = "Error while reading from socket. Request not allowed. Request has to start with GET or POST.";
         String response = SocketRWUtil.read(socket);
@@ -207,8 +207,8 @@ public class WebServerTest {
     }
 
 
-    @Expose(
-    )
+    @SuppressWarnings({"unused", "RedundantSuppression"})
+    @Expose
     public static String g() {
         return "It worked!";
     }
