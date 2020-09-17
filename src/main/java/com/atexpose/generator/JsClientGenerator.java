@@ -107,11 +107,18 @@ public class JsClientGenerator implements IGenerator {
         String returnValue = argument.getKey();
         if (isOptionalArgument) {
             boolean isNumeric = argument.getDataType().getKey().equalsIgnoreCase("Int");
-            boolean isNull = argument.getDefaultValue() == null;
-            returnValue += " = ";
-            returnValue += (isNumeric || isNull)
-                    ? argument.getDefaultValue()
-                    : "'" + argument.getDefaultValue() + "'";
+            boolean defaultValIsNull = argument.getDefaultValue() == null;
+            boolean isEnum = (argument.getDataType() instanceof ClassDT
+                    && ((ClassDT<?>) argument.getDataType()).getClazz().isEnum());
+            String valueAssignment;
+            if (isNumeric || defaultValIsNull) {
+                valueAssignment = argument.getDefaultValueAsString();
+            } else if (isEnum) {
+                valueAssignment =  "'" + argument.getDefaultValueAsString() + "'";
+            } else {
+                valueAssignment = "'" + argument.getDefaultValueAsString() + "'";
+            }
+            returnValue += " = " + valueAssignment;
         }
         return returnValue;
     }

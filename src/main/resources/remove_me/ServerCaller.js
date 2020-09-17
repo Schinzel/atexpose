@@ -84,7 +84,7 @@ export class ServerCaller {
      * @param {number} Int - An integer
      * @return {string}
      */
-    async concat(String = null, Int = 0){
+    async concat(String, Int){
         return await new ServerCallerInt()
             .setPath('/api/concat')
             .addArg('String', String)
@@ -130,13 +130,26 @@ export class ServerCaller {
     // noinspection JSUnusedGlobalSymbols
     /**
      * No description available
-     * @param {RemoveMeVar} test_var - Reads incoming requests and sends the responses
+     * @param {RemoveMeVar} test_var - 
      * @return {RemoveMeVar}
      */
-    async test_it(test_var = null){
+    async test_it(test_var){
         return await new ServerCallerInt()
             .setPath('/api/test_it')
             .addArg('test_var', test_var)
+            .callWithPromise();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * No description available
+     * @param {RemoveMeEnum} test_enum - 
+     * @return {RemoveMeEnum}
+     */
+    async test_it_2(test_enum = '"FIRST"'){
+        return await new ServerCallerInt()
+            .setPath('/api/test_it_2')
+            .addArg('test_enum', test_enum)
             .callWithPromise();
     }
 
@@ -201,8 +214,10 @@ class ServerCallerInt {
      * @return {ServerCallerInt} This for chaining
      */
     addArg(name, value) {
-        if (typeof value === 'object') {
+        if (value instanceof DataObject) {
             value = JSON.stringify(value);
+        } else if (typeof value === 'object'){
+            value = '"' + value.name + '"';
         }
         this._requestArguments[name] = value;
         return this;
@@ -241,7 +256,7 @@ class ServerCallerInt {
      */
     call() {
         let requestPathWithHost = getAjaxUrl(this._requestPath);
-        console.log(`requesting API url '${requestPathWithHost}'`);
+        console.log(`requesting API url '${this._requestPath}'`);
         $.ajax({
             type: "POST",
             url: requestPathWithHost,
