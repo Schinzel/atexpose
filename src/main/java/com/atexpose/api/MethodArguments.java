@@ -1,6 +1,5 @@
 package com.atexpose.api;
 
-import com.atexpose.api.datatypes.AbstractDataType;
 import com.google.common.collect.ImmutableList;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.state.IStateNode;
@@ -90,16 +89,36 @@ public class MethodArguments implements IStateNode {
         Thrower.throwIfTrue(argumentValues.isEmpty() && argumentValues.size() != argumentNames.size())
                 .message("ArgumentValues and ArgumentNames need to be of same size");
         Object[] argumentValuesAsObjects = ArrayUtils.EMPTY_OBJECT_ARRAY;
-        if (argumentValues != null && argumentValues.size() > 0) {
+        if (argumentValues != null && !argumentValues.isEmpty()) {
             argumentValuesAsObjects = new Object[argumentValues.size()];
             for (int i = 0; i < argumentValues.size(); i++) {
-                AbstractDataType dataType = Checker.isEmpty(argumentNames)
-                        ? mArguments.get(i).getDataType()
-                        : this.getArgument(argumentNames.get(i)).getDataType();
-                argumentValuesAsObjects[i] = dataType.convertFromStringToDataType(argumentValues.get(i));
+                Argument argument = Checker.isEmpty(argumentNames)
+                        ? mArguments.get(i)
+                        : this.getArgument(argumentNames.get(i));
+                argumentValuesAsObjects[i] = cast(argumentValues.get(i), argument);
             }
         }
         return argumentValuesAsObjects;
+    }
+
+
+    /**
+     * @param argumentValueAsString The string to make into an object
+     * @param argument              Converts the string to object
+     * @return The argument value string value as an Object with the Argument data type
+     */
+    private static Object cast(String argumentValueAsString, Argument argument) {
+        // If the argument value as string in not a valid argument according to the argument
+        if (!argument.containsAllowedChars(argumentValueAsString)) {
+            String message = "Argument value '" + argumentValueAsString + "' is not a valid argument '"
+                    + argument.getKey() + "'  as it does not adhere to the pattern '"
+                    + argument.getAllowedCharsPattern() + "'";
+            throw new RuntimeException(message);
+        }
+        // Convert the string to Object
+        return argument
+                .getDataType()
+                .convertFromStringToDataType(argumentValueAsString);
     }
 
 

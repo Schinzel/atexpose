@@ -2,6 +2,7 @@ package com.atexpose;
 
 import com.atexpose.api.Argument;
 import com.atexpose.api.datatypes.ClassDT;
+import com.atexpose.api.datatypes.DataTypeEnum;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
@@ -13,6 +14,12 @@ public class REMOVE_ME {
         AtExpose.create()
                 .addDataType(RemoveMeVar.class)
                 .addDataType(RemoveMeEnum.class)
+                .addArgument(Argument.builder()
+                        .name("test_arg")
+                        .dataType(DataTypeEnum.STRING.getDataType())
+                        .allowedCharsRegEx("[a-z0-9_@.-]*")
+                        .description("")
+                        .build())
                 .addArgument(Argument.builder()
                         .name("test_var")
                         .dataType(new ClassDT<>(RemoveMeVar.class))
@@ -30,6 +37,7 @@ public class REMOVE_ME {
                         .cacheFilesInRAM(false)
                         .build()
                         .addLogger(getEventLogger()))
+                .startCLI()
                 .generateJavaScriptClient("src/main/resources/remove_me/ServerCaller.js");
         System.out.println("System started!");
 

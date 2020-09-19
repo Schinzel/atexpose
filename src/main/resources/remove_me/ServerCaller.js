@@ -80,6 +80,19 @@ export class ServerCaller {
     // noinspection JSUnusedGlobalSymbols
     /**
      * No description available
+     * @param {string} test_arg - 
+     * @return {string}
+     */
+    async bapp(test_arg = ){
+        return await new ServerCallerInt()
+            .setPath('/api/bapp')
+            .addArg('test_arg', test_arg)
+            .callWithPromise();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * No description available
      * @param {string} String - A string
      * @param {number} Int - An integer
      * @return {string}

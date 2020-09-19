@@ -27,4 +27,12 @@ public class RemoveMeClass {
         return RemoveMeEnum.SECOND;
     }
 
+
+    @Expose(
+            arguments = {"test_arg"}
+    )
+    public static String bapp(String str){
+        return  str + " bapp!";
+    }
+
 }
