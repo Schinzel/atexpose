@@ -51,12 +51,15 @@ public class Argument implements IValueWithKey, IStateNode {
 
     @Override
     public State getState() {
+        String allowedChars = (this.mAllowedCharsPattern == null)
+                ? ""
+                : this.mAllowedCharsPattern.toString();
         return State.getBuilder()
                 .add("Name", this.getKey())
                 .add("DataType", this.getDataType().getKey())
                 .add("Description", this.getDescription())
                 .add("DefaultValue", this.getDefaultValueAsString())
-                .add("Pattern", this.mAllowedCharsPattern.toString())
+                .add("Pattern", allowedChars)
                 .build();
     }
 }
