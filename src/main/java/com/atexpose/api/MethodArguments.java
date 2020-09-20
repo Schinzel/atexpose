@@ -110,8 +110,8 @@ public class MethodArguments implements IStateNode {
     private static Object cast(String argumentValueAsString, Argument argument) {
         // If the argument value as string in not a valid argument according to the argument
         if (!argument.containsAllowedChars(argumentValueAsString)) {
-            String message = "Argument value '" + argumentValueAsString + "' is not a valid argument '"
-                    + argument.getKey() + "'  as it does not adhere to the pattern '"
+            String message = "Argument value '" + argumentValueAsString + "' is not a valid value for argument named '"
+                    + argument.getKey() + "'  a it does not adhere to the pattern '"
                     + argument.getAllowedCharsPattern() + "'";
             throw new RuntimeException(message);
         }
