@@ -75,22 +75,21 @@ export class RemoveMeVar extends DataObject {
 
 }
 
-// noinspection JSUnusedGlobalSymbols
+// noinspection JSUnusedGlobalSymbols,UnnecessaryLocalVariableJS
 export class ServerCaller {
-    // noinspection JSUnusedGlobalSymbols
     /**
      * No description available
      * @param {string} test_arg - 
      * @return {string}
      */
-    async bapp(test_arg = ){
-        return await new ServerCallerInt()
+    async bapp(test_arg = ''){
+        let response = await new ServerCallerInt()
             .setPath('/api/bapp')
             .addArg('test_arg', test_arg)
             .callWithPromise();
-    }
+         return response
+;    }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * No description available
      * @param {string} String - A string
@@ -98,84 +97,85 @@ export class ServerCaller {
      * @return {string}
      */
     async concat(String, Int){
-        return await new ServerCallerInt()
+        let response = await new ServerCallerInt()
             .setPath('/api/concat')
             .addArg('String', String)
             .addArg('Int', Int)
             .callWithPromise();
-    }
+         return response
+;    }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * Returns the argument string. Util method for testing.
      * @param {string} String - A string
      * @return {string}
      */
     async echo(String){
-        return await new ServerCallerInt()
+        let response = await new ServerCallerInt()
             .setPath('/api/echo')
             .addArg('String', String)
             .callWithPromise();
-    }
+         return response
+;    }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * Simply returns the string "pong". Util method for testing.
      * @return {string}
      */
     async ping(){
-        return await new ServerCallerInt()
+        let response = await new ServerCallerInt()
             .setPath('/api/ping')
             .callWithPromise();
-    }
+         return response
+;    }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * Returns the time when the server was started
      * @return {string}
      */
     async startTime(){
-        return await new ServerCallerInt()
+        let response = await new ServerCallerInt()
             .setPath('/api/startTime')
             .callWithPromise();
-    }
+         return response
+;    }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * No description available
      * @param {RemoveMeVar} test_var - 
      * @return {RemoveMeVar}
      */
     async test_it(test_var){
-        return await new ServerCallerInt()
+        let response = await new ServerCallerInt()
             .setPath('/api/test_it')
             .addArg('test_var', test_var)
             .callWithPromise();
-    }
+         return new RemoveMeVar(response)
+;    }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * No description available
      * @param {RemoveMeEnum} test_enum - 
      * @return {RemoveMeEnum}
      */
     async test_it_2(test_enum = '"FIRST"'){
-        return await new ServerCallerInt()
+        let response = await new ServerCallerInt()
             .setPath('/api/test_it_2')
             .addArg('test_enum', test_enum)
             .callWithPromise();
-    }
+         return RemoveMeEnum[response]
+;    }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * Returns the current server time in UTC.
      * @return {string}
      */
     async time(){
-        return await new ServerCallerInt()
+        let response = await new ServerCallerInt()
             .setPath('/api/time')
             .callWithPromise();
-    }
+         return response
+;    }
 
 }
 

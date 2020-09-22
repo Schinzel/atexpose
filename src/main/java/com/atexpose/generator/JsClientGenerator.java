@@ -51,23 +51,27 @@ public class JsClientGenerator implements IGenerator {
                         .map(n -> "            .addArg('" + n.getKey() + "', " + n.getKey() + ")\n")
                         .collect(Collectors.joining());
 
+                final AbstractDataType returnDataType = serverSideMethod.getReturnDataType();
+
+
                 String jsMethod = ""
-                        + "    // noinspection JSUnusedGlobalSymbols\n"
                         + "    /**\n"
                         + "     * " + serverSideMethod.getDescription() + "\n"
                         + jsDocArguments
-                        + "     * @return {" + getJsDataTypeName(serverSideMethod.getReturnDataType()) + "}\n"
+                        + "     * @return {" + getJsDataTypeName(returnDataType) + "}\n"
                         + "     */\n"
                         + "    async " + jsMethodName + "(" + jsArguments + "){\n"
-                        + "        return await new ServerCallerInt()\n"
+                        + "        let response = await new ServerCallerInt()\n"
                         + "            .setPath('/api/" + jsMethodName + "')\n"
                         + setServerCallerArguments
                         + "            .callWithPromise();\n"
+                        + "         return " + getJsReturnStatement(returnDataType) + "\n;"
                         + "    }\n\n";
 
                 jsMethods.append(jsMethod);
             }
         }
+
 
         String jsCustomClasses = customDataTypeClasses.stream()
                 .map(n -> {
@@ -99,6 +103,20 @@ public class JsClientGenerator implements IGenerator {
 
 
     /**
+     *
+     * @param returnDataType
+     * @return Example "response" or "MyEnum[response]" or "new MyClass(response);
+     */
+    private static String getJsReturnStatement(AbstractDataType returnDataType) {
+        if (isStandardDataType(returnDataType))
+            return "response";
+        return isEnum(returnDataType)
+                ? returnDataType.getKey() + "[response]"
+                : "new " + returnDataType.getKey() + "(response)";
+    }
+
+
+    /**
      * @param argument           The argument to convert to a JS argument
      * @param isOptionalArgument True if the argument is optional, else false
      * @return Examples: "my_arg" or "my_arg = 0" or "my_arg = 'default arg'"
@@ -114,7 +132,7 @@ public class JsClientGenerator implements IGenerator {
             if (isNumeric || defaultValIsNull) {
                 valueAssignment = argument.getDefaultValueAsString();
             } else if (isEnum) {
-                valueAssignment =  "'" + argument.getDefaultValueAsString() + "'";
+                valueAssignment = "'" + argument.getDefaultValueAsString() + "'";
             } else {
                 valueAssignment = "'" + argument.getDefaultValueAsString() + "'";
             }
@@ -123,6 +141,16 @@ public class JsClientGenerator implements IGenerator {
         return returnValue;
     }
 
+
+    private static boolean isEnum(AbstractDataType dataType) {
+        return (dataType instanceof ClassDT) && ((ClassDT) dataType).getClazz().isEnum();
+    }
+
+    private static boolean isStandardDataType(AbstractDataType dataType) {
+        return dataType instanceof BooleanDT
+                || dataType instanceof IntDT
+                || dataType instanceof StringDT;
+    }
 
     private static String getJsDataTypeName(AbstractDataType dataType) {
         if (dataType instanceof AlphNumStringDT) {
@@ -149,7 +177,7 @@ public class JsClientGenerator implements IGenerator {
 
 
     private static final String START_SERVER_CALLER_CLASS = "" +
-            "// noinspection JSUnusedGlobalSymbols\n" +
+            "// noinspection JSUnusedGlobalSymbols,UnnecessaryLocalVariableJS\n" +
             "export class ServerCaller {\n" + "";
 
 

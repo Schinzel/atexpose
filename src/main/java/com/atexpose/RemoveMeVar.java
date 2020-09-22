@@ -1,6 +1,5 @@
 package com.atexpose;
 
-import io.schinzel.jstranspiler.transpiler.JsTranspiler_CompileToJavaScript;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

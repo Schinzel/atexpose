@@ -1,7 +1,7 @@
 package com.atexpose;
 
 @SuppressWarnings("unused")
-public class RemoveMeClass {
+public class RemoveMeApi {
 
     @Expose(
             arguments = {"String", "Int"},
