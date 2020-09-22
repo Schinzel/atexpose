@@ -65,7 +65,7 @@ public class JsClientGenerator implements IGenerator {
                         + "            .setPath('/api/" + jsMethodName + "')\n"
                         + setServerCallerArguments
                         + "            .callWithPromise();\n"
-                        + "         return " + getJsReturnStatement(returnDataType) + ";\n;"
+                        + "         return " + getJsReturnStatement(returnDataType) + ";\n"
                         + "    }\n\n";
 
                 jsMethods.append(jsMethod);
