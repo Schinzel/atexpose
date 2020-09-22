@@ -65,7 +65,7 @@ public class JsClientGenerator implements IGenerator {
                         + "            .setPath('/api/" + jsMethodName + "')\n"
                         + setServerCallerArguments
                         + "            .callWithPromise();\n"
-                        + "         return " + getJsReturnStatement(returnDataType) + "\n;"
+                        + "         return " + getJsReturnStatement(returnDataType) + ";\n;"
                         + "    }\n\n";
 
                 jsMethods.append(jsMethod);
@@ -105,7 +105,7 @@ public class JsClientGenerator implements IGenerator {
     /**
      *
      * @param returnDataType
-     * @return Example "response" or "MyEnum[response]" or "new MyClass(response);
+     * @return Example "response" or "MyEnum[response]" or "new MyClass(response)"
      */
     private static String getJsReturnStatement(AbstractDataType returnDataType) {
         if (isStandardDataType(returnDataType))
