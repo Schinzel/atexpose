@@ -12,7 +12,6 @@ import com.atexpose.dispatcherfactories.WebServerBuilder;
 import com.atexpose.generator.IGenerator;
 import com.atexpose.generator.JsClientGenerator;
 import com.atexpose.util.DateTimeStrings;
-import com.atexpose.util.mail.IEmailSender;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 import io.schinzel.basicutils.state.IStateNode;
@@ -31,15 +30,13 @@ import java.util.stream.Collectors;
  *
  * @author Schinzel
  */
-@SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue", "UnusedReturnValue", "rawtypes"})
+@SuppressWarnings({"WeakerAccess", "SameParameterValue", "UnusedReturnValue", "rawtypes", "unused", "RedundantSuppression"})
 @Accessors(prefix = "m")
 public class AtExpose implements IStateNode {
     /** Instance creation time. For status and debug purposes. */
     private final String mInstanceStartTime = DateTimeStrings.getDateTimeUTC();
     /** Reference to the API. */
     @Getter private final API mAPI;
-    /** Holds an email sender instance if such has been set up. */
-    @Getter private IEmailSender mMailSender;
     /** Holds the running dispatchers */
     @Getter ValuesWithKeys<IDispatcher> mDispatchers = ValuesWithKeys.create("Dispatchers");
 
@@ -86,11 +83,11 @@ public class AtExpose implements IStateNode {
     /**
      * @return Classes that exists outside atexpose and have been added to the api
      */
-    private List getCustomClasses() {
+    private List<Class<?>> getCustomClasses() {
         return mAPI.getDataTypes()
                 .stream()
                 .filter(n -> n instanceof ClassDT)
-                .map(n -> ((ClassDT) n).getClazz())
+                .map(n -> (Class<?>)((ClassDT) n).getClazz())
                 .collect(Collectors.toList());
     }
 
@@ -106,15 +103,6 @@ public class AtExpose implements IStateNode {
         //Empty the dispatcher collection.
         this.getDispatchers().clear();
         return this;
-    }
-
-
-    /**
-     * @param dispatcherName The name of the dispatcher to return
-     * @return The dispatcher with the argument name
-     */
-    public IDispatcher getDispatcher(String dispatcherName) {
-        return this.getDispatchers().get(dispatcherName);
     }
 
 
@@ -224,7 +212,7 @@ public class AtExpose implements IStateNode {
     // API METHODS
     //------------------------------------------------------------------------
 
-    public AtExpose addDataType(Class clazz) {
+    public AtExpose addDataType(Class<?> clazz) {
         this.getAPI().addDataType(new ClassDT<>(clazz));
         return this;
     }
@@ -245,7 +233,6 @@ public class AtExpose implements IStateNode {
         return State.getBuilder()
                 .add("TimeNow", DateTimeStrings.getDateTimeUTC())
                 .add("StartTime", mInstanceStartTime)
-                .addChild("EmailSender", this.getMailSender())
                 .addChildren(this.getDispatchers())
                 .build();
     }

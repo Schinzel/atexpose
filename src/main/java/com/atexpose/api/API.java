@@ -1,7 +1,6 @@
 package com.atexpose.api;
 
 import com.atexpose.Expose;
-import com.atexpose.RemoveMeVar;
 import com.atexpose.api.datatypes.AbstractDataType;
 import com.atexpose.api.datatypes.ClassDT;
 import com.atexpose.api.datatypes.DataTypeEnum;
@@ -84,7 +83,7 @@ public class API implements IStateNode {
     }
 
 
-    public API addDataType(Class clazz) {
+    public API addDataType(Class<?> clazz) {
         mDataTypes.add(new ClassDT<>(clazz));
         return this;
     }
@@ -126,7 +125,7 @@ public class API implements IStateNode {
      * @param theClass The class to expose.
      * @return This for chaining.
      */
-    public API expose(Class theClass) {
+    public API expose(Class<?> theClass) {
         Object theObject;
         try {
             theObject = theClass.newInstance();
@@ -139,7 +138,7 @@ public class API implements IStateNode {
     }
 
 
-    private API expose(Class theClass, Object theObject) {
+    private API expose(Class<?> theClass, Object theObject) {
         Method[] methods = theClass.getDeclaredMethods();
         for (Method method : methods) {
             Expose expose = method.getAnnotation(Expose.class);
