@@ -80,21 +80,21 @@ export class ServerCaller {
     /**
      * No description available
      * @param {string} test_arg - 
-     * @return {string}
+     * @returns {Promise<string>}
      */
     async bapp(test_arg = ''){
         let response = await new ServerCallerInt()
             .setPath('/api/bapp')
             .addArg('test_arg', test_arg)
             .callWithPromise();
-         return response
-;    }
+         return response;
+    }
 
     /**
      * No description available
      * @param {string} String - A string
      * @param {number} Int - An integer
-     * @return {string}
+     * @returns {Promise<string>}
      */
     async concat(String, Int){
         let response = await new ServerCallerInt()
@@ -102,80 +102,80 @@ export class ServerCaller {
             .addArg('String', String)
             .addArg('Int', Int)
             .callWithPromise();
-         return response
-;    }
+         return response;
+    }
 
     /**
      * Returns the argument string. Util method for testing.
      * @param {string} String - A string
-     * @return {string}
+     * @returns {Promise<string>}
      */
     async echo(String){
         let response = await new ServerCallerInt()
             .setPath('/api/echo')
             .addArg('String', String)
             .callWithPromise();
-         return response
-;    }
+         return response;
+    }
 
     /**
      * Simply returns the string "pong". Util method for testing.
-     * @return {string}
+     * @returns {Promise<string>}
      */
     async ping(){
         let response = await new ServerCallerInt()
             .setPath('/api/ping')
             .callWithPromise();
-         return response
-;    }
+         return response;
+    }
 
     /**
      * Returns the time when the server was started
-     * @return {string}
+     * @returns {Promise<string>}
      */
     async startTime(){
         let response = await new ServerCallerInt()
             .setPath('/api/startTime')
             .callWithPromise();
-         return response
-;    }
+         return response;
+    }
 
     /**
      * No description available
      * @param {RemoveMeVar} test_var - 
-     * @return {RemoveMeVar}
+     * @returns {Promise<RemoveMeVar>}
      */
     async test_it(test_var){
         let response = await new ServerCallerInt()
             .setPath('/api/test_it')
             .addArg('test_var', test_var)
             .callWithPromise();
-         return new RemoveMeVar(response)
-;    }
+         return new RemoveMeVar(response);
+    }
 
     /**
      * No description available
      * @param {RemoveMeEnum} test_enum - 
-     * @return {RemoveMeEnum}
+     * @returns {Promise<RemoveMeEnum>}
      */
     async test_it_2(test_enum = '"FIRST"'){
         let response = await new ServerCallerInt()
             .setPath('/api/test_it_2')
             .addArg('test_enum', test_enum)
             .callWithPromise();
-         return RemoveMeEnum[response]
-;    }
+         return RemoveMeEnum[response];
+    }
 
     /**
      * Returns the current server time in UTC.
-     * @return {string}
+     * @returns {Promise<string>}
      */
     async time(){
         let response = await new ServerCallerInt()
             .setPath('/api/time')
             .callWithPromise();
-         return response
-;    }
+         return response;
+    }
 
 }
 

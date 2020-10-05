@@ -58,7 +58,7 @@ public class JsClientGenerator implements IGenerator {
                         + "    /**\n"
                         + "     * " + serverSideMethod.getDescription() + "\n"
                         + jsDocArguments
-                        + "     * @return {" + getJsDataTypeName(returnDataType) + "}\n"
+                        + "     * @returns {Promise<" + getJsDataTypeName(returnDataType) + ">}\n"
                         + "     */\n"
                         + "    async " + jsMethodName + "(" + jsArguments + "){\n"
                         + "        let response = await new ServerCallerInt()\n"
