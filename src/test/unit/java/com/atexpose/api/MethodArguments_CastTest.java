@@ -44,19 +44,19 @@ public class MethodArguments_CastTest {
 
     @Test
     public void cast_NullValues_Exception() {
-        List<String> argumentValues = null;
         List<String> argumentNames = Collections.emptyList();
+        MethodArguments methodArguments = this.getThreeArguments();
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> this.getThreeArguments().cast(argumentValues, argumentNames));
+                .isThrownBy(() -> methodArguments.cast(null, argumentNames));
     }
 
 
     @Test
     public void cast_NullNames_Exception() {
         List<String> argumentValues = Collections.emptyList();
-        List<String> argumentNames = null;
+        MethodArguments methodArguments = this.getThreeArguments();
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> this.getThreeArguments().cast(argumentValues, argumentNames));
+                .isThrownBy(() -> methodArguments.cast(argumentValues, null));
     }
 
 
@@ -64,8 +64,9 @@ public class MethodArguments_CastTest {
     public void cast_ValuesAndNamesOfDifferentSizes_Exception() {
         List<String> argumentValues = ImmutableList.of("");
         List<String> argumentNames = ImmutableList.of("", "");
+        MethodArguments methodArguments = this.getThreeArguments();
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> this.getThreeArguments().cast(argumentValues, argumentNames));
+                .isThrownBy(() -> methodArguments.cast(argumentValues, argumentNames));
     }
 
 

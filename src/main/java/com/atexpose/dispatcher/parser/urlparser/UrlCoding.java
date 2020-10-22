@@ -1,9 +1,9 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
-import java.io.UnsupportedEncodingException;
+import org.apache.commons.lang3.StringUtils;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Got the code from here: http://sangupta.com/tech/encodeuricomponent-and.html
@@ -86,10 +86,10 @@ class UrlCoding {
     }
 
 
-    private static String getHex(byte buf[]) {
+    private static String getHex(byte[] buf) {
         StringBuilder o = new StringBuilder(buf.length * 3);
-        for (int i = 0; i < buf.length; i++) {
-            int n = (int) buf[i] & 0xff;
+        for (byte b : buf) {
+            int n = (int) b & 0xff;
             o.append("%");
             if (n < 0x10) {
                 o.append("0");

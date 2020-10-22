@@ -85,7 +85,7 @@ public class HttpRequest {
         //Get path and query
         String pathAndQuery = SubString.create(mHttpRequest)
                 .startDelimiter("GET ")
-                .endDelimiter(" HTTP/1.1")
+                .endDelimiter(END_OF_URL)
                 .getString();
         //Get the path. If there is a "?" in the string
         String path = pathAndQuery.contains("?")
