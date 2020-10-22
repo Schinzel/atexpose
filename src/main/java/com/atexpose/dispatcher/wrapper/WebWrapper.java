@@ -256,7 +256,7 @@ public class WebWrapper implements IWrapper {
                         ? FileRW.readFileAsString(includeFileName)
                         : "Include file '" + includeFileName + "' not found";
                 //Replace all $ with \$. This as dollar sign has a special meaning in Matcher.appendReplacement
-                includeFileContent = includeFileContent.replaceAll("\\$", "\\\\\\$");
+                includeFileContent = backslashDollarSigns(includeFileContent);
                 //Add content up until include file and replace include file reference with include file content
                 includeFileMatcher.appendReplacement(fileContentReturn, includeFileContent);
             }
@@ -266,6 +266,19 @@ public class WebWrapper implements IWrapper {
         }
         //Create byte array and return
         return UTF8.getBytes(mainFileContent);
+    }
+
+
+    /**
+     *
+     * @param str
+     * @return The argument string with all all $ replaced with \$
+     */
+    static String backslashDollarSigns(String str){
+        if (str == null){
+            throw new RuntimeException("String cannot be null");
+        }
+        return str.replace("$", "\\$");
     }
 
 

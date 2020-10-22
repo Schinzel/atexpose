@@ -335,4 +335,42 @@ public class WebWrapperTest {
     }
 
 
+
+    @Test
+    public void backslashDollarSigns_emptyString_emptyString(){
+        String actual = WebWrapper.backslashDollarSigns("");
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    public void backslashDollarSigns_null_exception(){
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
+                WebWrapper.backslashDollarSigns(null)
+        );
+
+    }
+
+
+    @Test
+    public void backslashDollarSigns_noDollarSings_unchanged(){
+        String actual = WebWrapper.backslashDollarSigns("any_string");
+        assertThat(actual).isEqualTo("any_string");
+    }
+
+    @Test
+    public void backslashDollarSigns_onlyDollarSign_fixed(){
+        String actual = WebWrapper.backslashDollarSigns("$");
+        char ch[]={'\\', '$'};
+        String expected = new String(ch);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void backslashDollarSigns_severalDollarSigns_allFixed(){
+        String actual = WebWrapper.backslashDollarSigns("$a$b$c$");
+        char ch[]={'\\', '$','a','\\', '$','b','\\', '$','c','\\', '$'};
+        String expected = new String(ch);
+        assertThat(actual).isEqualTo(expected);
+    }
+
 }
