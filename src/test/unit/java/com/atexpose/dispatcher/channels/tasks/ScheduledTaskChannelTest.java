@@ -4,9 +4,7 @@ import com.atexpose.util.ByteStorage;
 import com.atexpose.util.watch.TestWatch;
 import com.atexpose.util.watch.Watch;
 import io.schinzel.basicutils.FunnyChars;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -17,15 +15,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 
 /**
  * @author Schinzel
  */
 public class ScheduledTaskChannelTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
 
     /**
@@ -59,8 +55,8 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void getClone_Exception() {
-        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                getTestChannel().getClone());
+        final ScheduledTaskChannel testChannel = getTestChannel();
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(testChannel::getClone);
     }
 
 
@@ -123,7 +119,7 @@ public class ScheduledTaskChannelTest {
 
 
     @Test
-    public void getRequest_SleepEnds_True() throws InterruptedException {
+    public void getRequest_SleepEnds_True() {
         ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "MyRequest", ChronoUnit.MILLIS, 50, "", ZonedDateTime.now(), Watch.create());
         boolean actual = stc.getRequest(new ByteStorage());
         assertThat(actual).isTrue();
@@ -171,7 +167,7 @@ public class ScheduledTaskChannelTest {
     @Test
     public void requestReadTime_NormalCase_0() {
         long actualReadTime = getTestChannel().requestReadTime();
-        assertThat(actualReadTime).isEqualTo(0);
+        assertThat(actualReadTime).isZero();
     }
 
 
@@ -203,7 +199,9 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void writeResponse_DoesNothingButDoesNotThrowException() {
-        getTestChannel().writeResponse(null);
+        assertThatCode(() ->
+                getTestChannel().writeResponse(null)
+        ).doesNotThrowAnyException();
     }
 
 

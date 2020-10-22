@@ -6,6 +6,8 @@ package com.atexpose;
  * @author Schinzel
  */
 public class MyProperties {
+
+    MyProperties(){}
     /**
      * The line separator of the operating system that this code runs on.
      */

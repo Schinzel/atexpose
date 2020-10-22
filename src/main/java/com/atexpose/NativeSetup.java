@@ -14,6 +14,9 @@ import com.atexpose.api.datatypes.DataType;
  */
 class NativeSetup {
 
+    NativeSetup() {
+    }
+
     static void setUp(API api) {
         NativeSetup.setUpLabels(api);
         NativeSetup.setUpArguments(api);

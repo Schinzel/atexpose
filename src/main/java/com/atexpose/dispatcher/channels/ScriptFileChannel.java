@@ -27,7 +27,7 @@ public class ScriptFileChannel implements IChannel {
     /** The time it took to read a line. For logging and statistics. */
     private long mLineReadTime;
     /** Used to read the file. */
-    private BufferedReader mBufferedReader;
+    private final BufferedReader mBufferedReader;
     //------------------------------------------------------------------------
     // CONSTRUCTORS AND SHUTDOWN
     //------------------------------------------------------------------------
@@ -51,6 +51,7 @@ public class ScriptFileChannel implements IChannel {
 
     @Override
     public void shutdown(Thread thread) {
+        // No need to shutdown a script file reader so no code here
     }
 
 
