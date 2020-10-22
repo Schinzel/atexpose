@@ -84,8 +84,7 @@ public class MethodArguments implements IStateNode {
      * @return The argument values cast to to the arguments' data types
      */
     public Object[] cast(List<String> argumentValues, List<String> argumentNames) {
-        Thrower.createInstance()
-                .throwIfVarNull(argumentValues, "argumentValues");
+        Thrower.throwIfVarNull(argumentValues, "argumentValues");
         Thrower.throwIfVarNull(argumentNames, "argumentNames");
         Thrower.throwIfTrue(!argumentNames.isEmpty() && argumentValues.size() != argumentNames.size())
                 .message("ArgumentValues and ArgumentNames need to be of same size");
@@ -94,12 +93,11 @@ public class MethodArguments implements IStateNode {
         }
         Object[] argumentValuesAsObjects = new Object[argumentValues.size()];
         for (int i = 0; i < argumentValues.size(); i++) {
-            Argument argument = Checker.isEmpty(argumentNames)
+            Argument argument = argumentNames.isEmpty()
                     ? mArguments.get(i)
                     : this.getArgument(argumentNames.get(i));
             argumentValuesAsObjects[i] = cast(argumentValues.get(i), argument);
         }
-
         return argumentValuesAsObjects;
     }
 
