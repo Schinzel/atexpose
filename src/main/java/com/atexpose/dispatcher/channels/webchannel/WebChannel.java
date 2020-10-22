@@ -7,12 +7,11 @@ import com.atexpose.util.ByteStorage;
 import com.atexpose.util.httpresponse.HttpResponse302;
 import com.atexpose.util.httpresponse.HttpResponseString;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.thrower.Thrower;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
+import io.schinzel.basicutils.thrower.Thrower;
 import lombok.Builder;
 import lombok.experimental.Accessors;
-import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -30,23 +29,24 @@ import java.net.URI;
 @Accessors(prefix = "m")
 public class WebChannel implements IChannel {
     private static final int MAX_PENDING_REQUESTS = 50;
-    /** The server socket. Shared by all threads listening to the same port. */
-    final private ServerSocket mServerSocket;
-    /** The socket timeout. */
-    final private int mSocketTimeout;
-    /** Holds the redirects. File, host and https redirects. */
-    final private Redirects mRedirects;
     /** For logging and stats, hold the time it took to read the message from first to last byte. */
     private long mLogRequestReadTime;
     /** The client socket connection. */
     private Socket mClientSocket;
     /** The response write time. For logging and stats */
     private long mResponseWriteTime = 0L;
+    /** The server socket. Shared by all threads listening to the same port. */
+    private final ServerSocket mServerSocket;
+    /** The socket timeout. */
+    private final int mSocketTimeout;
+    /** Holds the redirects. File, host and https redirects. */
+    private final Redirects mRedirects;
 
 
     //------------------------------------------------------------------------
     // CONSTRUCTORS AND SHUTDOWN
     //------------------------------------------------------------------------
+    @SuppressWarnings("unused")
     @Builder(builderClassName = "WebChannelBuilder")
     WebChannel(int port, int timeout, Redirects redirects) {
         this(getServerSocket(port), redirects, timeout);
@@ -176,10 +176,10 @@ public class WebChannel implements IChannel {
 
     @Override
     public void writeResponse(byte[] response) {
-        try {
+        try (Socket socket = mClientSocket) {
             mResponseWriteTime = System.currentTimeMillis();
             //Send the Response to the client.
-            SocketRW.write(mClientSocket, response);
+            SocketRW.write(socket, response);
         } catch (IOException ioe) {
             //If not "Error while writing to socket Connection reset by peer: socket write error"
             //Error indicating timeout on client.
@@ -188,8 +188,6 @@ public class WebChannel implements IChannel {
                 throw new RuntimeException("Error while writing to socket " + ioe.getMessage());
             }
         } finally {
-            //Close the client connection.
-            IOUtils.closeQuietly(mClientSocket);
             mResponseWriteTime = (System.currentTimeMillis() - mResponseWriteTime);
         }
     }
@@ -229,4 +227,3 @@ public class WebChannel implements IChannel {
     }
 
 }
-

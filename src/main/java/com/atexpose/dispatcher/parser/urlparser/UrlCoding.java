@@ -1,6 +1,7 @@
 package com.atexpose.dispatcher.parser.urlparser;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,21 +20,16 @@ class UrlCoding {
         }
         int l = input.length();
         StringBuilder o = new StringBuilder(l * 3);
-        try {
-            for (int i = 0; i < l; i++) {
-                String e = input.substring(i, i + 1);
-                if (!ALLOWED_CHARS.contains(e)) {
-                    byte[] b = e.getBytes("utf-8");
-                    o.append(getHex(b));
-                    continue;
-                }
-                o.append(e);
+        for (int i = 0; i < l; i++) {
+            String e = input.substring(i, i + 1);
+            if (!ALLOWED_CHARS.contains(e)) {
+                byte[] b = e.getBytes(StandardCharsets.UTF_8);
+                o.append(getHex(b));
+                continue;
             }
-            return o.toString();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            o.append(e);
         }
-        return input;
+        return o.toString();
     }
 
 

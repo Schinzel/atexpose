@@ -1,7 +1,6 @@
 package com.atexpose.util;
 
 import io.schinzel.basicutils.UTF8;
-import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,12 +39,10 @@ public class FileRW {
      * Returns null if no such file or it cannot be read,
      */
     public static InputStream getInputStream(String fileName) {
-        InputStream is;
         if (fileName.charAt(0) != '/') {
             fileName = "/" + fileName;
         }
-        is = FileRW.class.getResourceAsStream(fileName);
-        return is;
+        return FileRW.class.getResourceAsStream(fileName);
     }
 
 
@@ -59,8 +56,7 @@ public class FileRW {
     public static byte[] readFileAsByteArray(String fileName) {
         //Intermediate storage of file read into RAM
         ByteStorage byteStorage = new ByteStorage();
-        try {
-            InputStream is = FileRW.getInputStream(fileName);
+        try (InputStream is = FileRW.getInputStream(fileName)) {
             if (is == null) {
                 throw new RuntimeException("No such file '" + fileName + "'");
             }
@@ -71,7 +67,6 @@ public class FileRW {
             while ((no_of_bytes_read = is.read(bytes_from_file)) != -1) {
                 byteStorage.add(bytes_from_file, 0, no_of_bytes_read);
             }
-            IOUtils.closeQuietly(is);
         } catch (IOException e) {
             throw new RuntimeException("Error while reading file '" + fileName + "'. Java error message: " + e.getMessage());
         }

@@ -68,7 +68,7 @@ public class LogEntry implements ILogEntry {
         } else {
             logDataBuilder
                     .put(LogEntry.KEY_METHOD_NAME, methodName)
-                    .put("arguments", arguments);
+                    .put(KEY_ARGUMENTS, arguments);
 
         }
         return logDataBuilder.build();

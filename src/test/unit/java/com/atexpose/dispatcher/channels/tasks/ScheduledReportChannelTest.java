@@ -8,9 +8,7 @@ import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import io.schinzel.basicutils.UTF8;
 import org.json.JSONObject;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -20,14 +18,11 @@ import java.security.Security;
 import static org.junit.Assert.assertEquals;
 
 public class ScheduledReportChannelTest {
-    private IEmailSender mMailSender = new GmailEmailSender("noreply@example.com", "myPsw");
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    private final IEmailSender mMailSender = new GmailEmailSender("noreply@example.com", "myPsw");
 
 
     @Test
-    public void testWriteResponse() throws NoSuchFieldException, MessagingException {
+    public void testWriteResponse() throws MessagingException {
         //Set up dummy cert so that the gmail sender will trust greenmail recipient
         Security.setProperty("ssl.SocketFactory.provider", DummySSLSocketFactory.class.getName());
         //Start om the smtp test port, 3465. 
