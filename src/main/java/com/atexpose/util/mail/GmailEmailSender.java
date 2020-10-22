@@ -45,7 +45,7 @@ public class GmailEmailSender implements IEmailSender {
     }
 
 
-    GmailEmailSender disableSSLCheckServerIdentityForTest(){
+    public GmailEmailSender disableSSLCheckServerIdentityForTest(){
         mSSLCheckServerIdentity = false;
         return this;
     }

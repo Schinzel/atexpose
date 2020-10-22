@@ -31,7 +31,8 @@ public class ScheduledReportChannelTest {
         //Start green mail server
         greenMail.start();
         //Set server to be localhost and send port to test port (as can not use 465 as non root)
-        GmailEmailSender es = new GmailEmailSender("user@example.com", "", "localhost", ServerSetupTest.SMTPS.getPort());
+        GmailEmailSender es = new GmailEmailSender("user@example.com", "", "localhost", ServerSetupTest.SMTPS.getPort())
+                .disableSSLCheckServerIdentityForTest();
         String taskName = "TaskName";
         String request = "echo hej";
         String timeOfDay = "14:50";
