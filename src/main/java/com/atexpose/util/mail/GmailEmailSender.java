@@ -24,6 +24,7 @@ public class GmailEmailSender implements IEmailSender {
     final String mUsername;
     /** The password of the GMail account that will send the mail. **/
     final String mPassword;
+    private boolean mSSLCheckServerIdentity = true;
 
 
     /**
@@ -44,6 +45,12 @@ public class GmailEmailSender implements IEmailSender {
     }
 
 
+    GmailEmailSender disableSSLCheckServerIdentityForTest(){
+        mSSLCheckServerIdentity = false;
+        return this;
+    }
+
+
     /**
      * Sends an email to the argument recipients.
      *
@@ -59,7 +66,7 @@ public class GmailEmailSender implements IEmailSender {
             email.setSslSmtpPort(String.valueOf(mPort));
             email.setAuthenticator(new DefaultAuthenticator(mUsername, mPassword));
             email.setSSLOnConnect(true);
-            email.setSSLCheckServerIdentity(true);
+            email.setSSLCheckServerIdentity(mSSLCheckServerIdentity);
             email.setFrom(mUsername, fromName);
             //Per mail
             email.setSubject(subject);
