@@ -1,9 +1,7 @@
 package com.atexpose.dispatcher.parser;
 
 import io.schinzel.basicutils.FunnyChars;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,12 +15,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class TextParserTest {
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-
     @Test
-    public void getClone_NormalTextParser_ClassTextPraser() {
+    public void getClone_NormalTextParser_ClassTextParser() {
         String cloneClassName = new TextParser().getClone().getClass().getSimpleName();
         assertEquals(TextParser.class.getSimpleName(), cloneClassName);
     }

@@ -59,9 +59,10 @@ public class GmailEmailSenderTest {
         String userName = RandomUtil.getRandomString(3) + "@domain.com";
         String fromName = "theFromName" + RandomUtil.getRandomString(3);
         String recipient = RandomUtil.getRandomString(3) + "@monkey.com";
-        GmailEmailSender gms = new GmailEmailSender(userName, "thePassword",
-                "localhost", ServerSetupTest.SMTPS.getPort());
-        gms.send(recipient, subject, body, fromName);
+        new GmailEmailSender(userName, "thePassword",
+                "localhost", ServerSetupTest.SMTPS.getPort())
+                .disableSSLCheckServerIdentityForTest()
+        .send(recipient, subject, body, fromName);
         //Get message 
         MimeMessage message = mGreenMail.getReceivedMessages()[0];
         //Test body

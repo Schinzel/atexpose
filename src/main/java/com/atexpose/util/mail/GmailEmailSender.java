@@ -1,8 +1,6 @@
 package com.atexpose.util.mail;
 
 import com.atexpose.errors.RuntimeError;
-
-
 import io.schinzel.basicutils.state.State;
 import lombok.experimental.Accessors;
 import org.apache.commons.mail.DefaultAuthenticator;
@@ -19,13 +17,14 @@ import org.apache.commons.validator.routines.EmailValidator;
 @Accessors(prefix = "m")
 public class GmailEmailSender implements IEmailSender {
     /** The name of the SMTP server that messages will be sent to */
-    final private String mHostName;
+    private final String mHostName;
     /** The port that messages will be sent to.* */
-    final private int mPort;
+    private final int mPort;
     /** The username of the GMail account that will send the mail. **/
     final String mUsername;
     /** The password of the GMail account that will send the mail. **/
     final String mPassword;
+    private boolean mSSLCheckServerIdentity = true;
 
 
     /**
@@ -46,6 +45,12 @@ public class GmailEmailSender implements IEmailSender {
     }
 
 
+    public GmailEmailSender disableSSLCheckServerIdentityForTest(){
+        mSSLCheckServerIdentity = false;
+        return this;
+    }
+
+
     /**
      * Sends an email to the argument recipients.
      *
@@ -61,6 +66,7 @@ public class GmailEmailSender implements IEmailSender {
             email.setSslSmtpPort(String.valueOf(mPort));
             email.setAuthenticator(new DefaultAuthenticator(mUsername, mPassword));
             email.setSSLOnConnect(true);
+            email.setSSLCheckServerIdentity(mSSLCheckServerIdentity);
             email.setFrom(mUsername, fromName);
             //Per mail
             email.setSubject(subject);
@@ -87,3 +93,5 @@ public class GmailEmailSender implements IEmailSender {
     }
 
 }
+
+
