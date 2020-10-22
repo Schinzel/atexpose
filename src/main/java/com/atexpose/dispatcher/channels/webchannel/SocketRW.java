@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -89,7 +89,7 @@ class SocketRW {
             if (!Checker.isEmpty(sContentLength)) {
                 int iContentLength = Integer.parseInt(sContentLength);
                 int attempts = 0;
-                while ((hr.getBody().getBytes(Charset.forName("UTF-8")).length
+                while ((hr.getBody().getBytes(StandardCharsets.UTF_8).length
                         < iContentLength) && (attempts < LAGGARD_MAX_ATTEMPTS)) {
                     attempts++;
                     Sandman.snoozeMillis(LAGGARD_SNOOZE_BETWEEN_READS);
@@ -97,7 +97,6 @@ class SocketRW {
                     byte[] arr = new byte[BUFFER_SIZE];
                     //Read again from the socket
                     while ((inputStream.available() > 0) && ((bytesRead = inputStream.read(arr)) != -1)) {
-                        //while ((bytesRead = inputStream.read(arr)) != -1) {
                         request.add(arr, 0, bytesRead);
                     }
                     hr = new HttpRequest(request.getAsString());

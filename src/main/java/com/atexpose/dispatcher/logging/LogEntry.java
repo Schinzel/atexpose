@@ -32,9 +32,9 @@ public class LogEntry implements ILogEntry {
     public static final String KEY_METHOD_NAME = "method_name";
     public static final String KEY_ARGUMENTS = "arguments";
 
-    final @NonNull private Instant timeOfIncomingRequest;
-    @Getter final private boolean isError;
-    final @NonNull private String requestString;
+    @NonNull private final Instant timeOfIncomingRequest;
+    @Getter private final boolean isError;
+    @NonNull private final String requestString;
     final @NonNull String response;
     final int threadNumber;
     final long requestReadTime;
