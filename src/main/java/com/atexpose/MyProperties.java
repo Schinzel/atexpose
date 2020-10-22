@@ -7,7 +7,7 @@ package com.atexpose;
  */
 public class MyProperties {
 
-    private MyProperties(){}
+    MyProperties(){}
     /**
      * The line separator of the operating system that this code runs on.
      */
