@@ -25,12 +25,12 @@ public class ClassDTTest {
 
 
     @Test
-    public void castToDataType_ClassSerialized_SameAsSerializedClass(){
+    public void castToDataType_ClassSerialized_SameAsSerializedClass() {
         ClassDT<MyClass> classDT = new ClassDT<>(MyClass.class);
         MyClass myClass = new MyClass();
         String jsonString = classDT.convertFromDataTypeToString(myClass);
         MyClass actual = classDT.castToDataType(jsonString);
-        assertThat(actual).isEqualToComparingFieldByField(myClass);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(myClass);
     }
 
 
