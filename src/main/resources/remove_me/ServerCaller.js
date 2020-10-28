@@ -92,6 +92,19 @@ export class ServerCaller {
 
     /**
      * No description available
+     * @param {string} test_arg - 
+     * @returns {Promise<void>}
+     */
+    async bapp2(test_arg = ''){
+        let response = await new ServerCallerInt()
+            .setPath('/api/bapp2')
+            .addArg('test_arg', test_arg)
+            .callWithPromise();
+         return new void(response);
+    }
+
+    /**
+     * No description available
      * @param {string} String - A string
      * @param {number} Int - An integer
      * @returns {Promise<string>}

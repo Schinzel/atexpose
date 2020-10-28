@@ -3,6 +3,7 @@ package com.atexpose;
 import com.atexpose.api.Argument;
 import com.atexpose.api.datatypes.ClassDT;
 import com.atexpose.api.datatypes.DataTypeEnum;
+import com.atexpose.api.datatypes.VoidDT;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;

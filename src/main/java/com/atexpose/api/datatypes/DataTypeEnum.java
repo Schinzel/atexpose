@@ -15,7 +15,8 @@ public enum DataTypeEnum {
     ALPHA_NUMERIC_STRING(new AlphNumStringDT()),
     BOOLEAN(new BooleanDT()),
     INT(new IntDT()),
-    STRING(new StringDT());
+    STRING(new StringDT()),
+    VOID(new VoidDT());
 
     @Getter
     private final AbstractDataType mDataType;

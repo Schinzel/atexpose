@@ -302,6 +302,7 @@ sqsProducer.send(jsonRpc);
 - Data types `Float` and `JSONObject` are no longer supported
 - `IExceptionProperties` is no longer supported
 - Argument can now take an optional reg ex. All argument values has to match reg ex else an error is thrown.
+- Methods returning `void` are now supported
 
 ## 0.9.38
 _2020-01-03_

@@ -31,8 +31,15 @@ public class RemoveMeApi {
     @Expose(
             arguments = {"test_arg"}
     )
-    public static String bapp(String str){
-        return  str + " bapp!";
+    public static String bapp(String str) {
+        return str + " bapp!";
+    }
+
+
+    @Expose(
+            arguments = {"test_arg"}
+    )
+    public static void bapp2(String str) {
     }
 
 }
