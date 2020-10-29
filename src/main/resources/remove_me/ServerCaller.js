@@ -87,7 +87,7 @@ export class ServerCaller {
             .setPath('/api/bapp')
             .addArg('test_arg', test_arg)
             .callWithPromise();
-         return response;
+        return response;
     }
 
     /**
@@ -100,7 +100,6 @@ export class ServerCaller {
             .setPath('/api/bapp2')
             .addArg('test_arg', test_arg)
             .callWithPromise();
-         return new void(response);
     }
 
     /**
@@ -115,7 +114,7 @@ export class ServerCaller {
             .addArg('String', String)
             .addArg('Int', Int)
             .callWithPromise();
-         return response;
+        return response;
     }
 
     /**
@@ -128,7 +127,7 @@ export class ServerCaller {
             .setPath('/api/echo')
             .addArg('String', String)
             .callWithPromise();
-         return response;
+        return response;
     }
 
     /**
@@ -139,7 +138,7 @@ export class ServerCaller {
         let response = await new ServerCallerInt()
             .setPath('/api/ping')
             .callWithPromise();
-         return response;
+        return response;
     }
 
     /**
@@ -150,7 +149,7 @@ export class ServerCaller {
         let response = await new ServerCallerInt()
             .setPath('/api/startTime')
             .callWithPromise();
-         return response;
+        return response;
     }
 
     /**
@@ -163,7 +162,7 @@ export class ServerCaller {
             .setPath('/api/test_it')
             .addArg('test_var', test_var)
             .callWithPromise();
-         return new RemoveMeVar(response);
+        return new RemoveMeVar(response);
     }
 
     /**
@@ -176,7 +175,7 @@ export class ServerCaller {
             .setPath('/api/test_it_2')
             .addArg('test_enum', test_enum)
             .callWithPromise();
-         return RemoveMeEnum[response];
+        return RemoveMeEnum[response];
     }
 
     /**
@@ -187,7 +186,7 @@ export class ServerCaller {
         let response = await new ServerCallerInt()
             .setPath('/api/time')
             .callWithPromise();
-         return response;
+        return response;
     }
 
 }

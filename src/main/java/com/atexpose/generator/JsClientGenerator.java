@@ -108,15 +108,15 @@ public class JsClientGenerator implements IGenerator {
      */
     private static String getJsReturnStatement(AbstractDataType returnDataType) {
         if (isStandardDataType(returnDataType))
-            return "            return response;\n";
+            return "        return response;\n";
         // If the return is an enum
         if (isEnum(returnDataType))
-            return "            return" + returnDataType.getKey() + "[response];\n";
+            return "        return " + returnDataType.getKey() + "[response];\n";
         // if the return is void
         if (returnDataType instanceof VoidDT)
             return "";
         // else, i.e. a return that is one of the data types registered with @expose
-        return "            return new " + returnDataType.getKey() + "(response);\n";
+        return "        return new " + returnDataType.getKey() + "(response);\n";
     }
 
 
