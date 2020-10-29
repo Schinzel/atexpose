@@ -117,10 +117,6 @@ public class JsClientGenerator implements IGenerator {
             return "";
         // else, i.e. a return that is one of the data types registered with @expose
         return "            return new " + returnDataType.getKey() + "(response);\n";
-
-//        return isEnum(returnDataType)
-//                ? returnDataType.getKey() + "[response]"
-//                : "new " + returnDataType.getKey() + "(response)";
     }
 
 
