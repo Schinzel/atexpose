@@ -1,7 +1,8 @@
 package com.atexpose.api.datatypes;
 
 /**
- * Used for returns only
+ * Used to handle void returns from methods in Java and Unit returns from
+ * functions in Kotlin. Used for returns only.
  */
 public class VoidDT extends AbstractDataType {
 
