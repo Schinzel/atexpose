@@ -2,7 +2,6 @@ package com.atexpose.dispatcher.wrapper;
 
 import com.google.common.base.Joiner;
 import io.schinzel.basicutils.state.State;
-import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -28,12 +27,6 @@ public class CsvWrapper implements IWrapper {
     @Override
     public byte[] wrapFile(String fileName) {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-
-    @Override
-    public String wrapJSON(String response) {
-        return new JSONObject(response).toString(3);
     }
 
 

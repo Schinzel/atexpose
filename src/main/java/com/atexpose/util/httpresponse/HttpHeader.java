@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * The purpose of this class is to represent an header header.
+ * The purpose of this class is to represent an http header.
  * <p>
  * Created by Schinzel on 2017-05-31.
  */
@@ -21,8 +21,11 @@ class HttpHeader {
 
 
     @Builder
-    HttpHeader(HttpStatusCode httpStatusCode, Map<String, String> customHeaders,
-               ContentType contentType, int browserCacheMaxAgeInSeconds, int contentLength) {
+    HttpHeader(HttpStatusCode httpStatusCode,
+               Map<String, String> customHeaders,
+               ContentType contentType,
+               int browserCacheMaxAgeInSeconds,
+               int contentLength) {
         if (customHeaders == null) {
             customHeaders = Collections.emptyMap();
         }
