@@ -1,5 +1,7 @@
 package com.atexpose;
 
+import com.atexpose.dispatcher.channels.webchannel.WebSession;
+
 @SuppressWarnings("unused")
 public class RemoveMeApi {
 
@@ -16,6 +18,8 @@ public class RemoveMeApi {
             requiredArgumentCount = 1
     )
     public static RemoveMeVar test_it(RemoveMeVar test_var) {
+        String cookieValue = WebSession.getIncomingCookie("my_cookie");
+        System.out.println("cookieValue44 " + cookieValue);
         return new RemoveMeVar(test_var.s, test_var.i + 10);
     }
 

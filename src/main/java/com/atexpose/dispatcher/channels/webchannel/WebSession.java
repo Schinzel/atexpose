@@ -5,33 +5,34 @@ import java.util.Map;
 
 public class WebSession {
     private static final Map<String, Map<String, String>> INCOMING_COOKIES = new HashMap<>();
-    private static final Map<String, Map<String, String>> COOKIES_TO_WRITE = new HashMap<>();
+    private static final Map<String, Map<String, String>> COOKIES_TO_SET = new HashMap<>();
 
-    static String getIncomingCookie(String cookieName) {
+    static void setIncomingCookies(Map<String, String> cookies) {
+        final HashMap<String, String> map = new HashMap<>(cookies);
+        WebSession.INCOMING_COOKIES
+                .put(threadName(), map);
+    }
+
+
+    public static String getIncomingCookie(String cookieName) {
         return WebSession.INCOMING_COOKIES
                 .get(threadName())
                 .get(cookieName);
     }
 
 
-    static void setIncomingCookies(Map<String, String> cookies) {
-        WebSession.INCOMING_COOKIES
-                .put(threadName(), cookies);
-    }
-
-
-    static void addCookieToWrite(String cookieName, String cookieValue) {
-        if (!WebSession.COOKIES_TO_WRITE.containsKey(threadName())) {
-            WebSession.COOKIES_TO_WRITE.put(threadName(), new HashMap<>());
+    public static void addCookieToSet(String cookieName, String cookieValue) {
+        if (!WebSession.COOKIES_TO_SET.containsKey(threadName())) {
+            WebSession.COOKIES_TO_SET.put(threadName(), new HashMap<>());
         }
-        WebSession.COOKIES_TO_WRITE
+        WebSession.COOKIES_TO_SET
                 .get(threadName())
                 .put(cookieName, cookieValue);
     }
 
 
-    static Map<String, String> getCookiesToWrite() {
-        return WebSession.COOKIES_TO_WRITE.get(threadName());
+    static Map<String, String> getCookiesToSet() {
+        return WebSession.COOKIES_TO_SET.get(threadName());
     }
 
 
@@ -40,7 +41,7 @@ public class WebSession {
         if (incomingCookiesForCurrentThread != null) {
             incomingCookiesForCurrentThread.clear();
         }
-        Map<String, String> cookiesToWriteForCurrentThread = COOKIES_TO_WRITE.get(threadName());
+        Map<String, String> cookiesToWriteForCurrentThread = COOKIES_TO_SET.get(threadName());
         if (cookiesToWriteForCurrentThread != null) {
             cookiesToWriteForCurrentThread.clear();
         }
