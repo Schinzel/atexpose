@@ -99,10 +99,6 @@ public class WebChannel implements IChannel {
     public boolean getRequest(ByteStorage request) {
         boolean keepReadingFromSocket;
         do {
-
-            final String threadName = Thread.currentThread().getName();
-            System.out.println(threadName);
-
             keepReadingFromSocket = false;
             try {
                 mClientSocket = mServerSocket.accept();

@@ -15,6 +15,7 @@ public class WebSession {
 
 
     static void setIncomingCookies(Map<String, String> cookies) {
+        System.out.println(threadName() + " setting cookies");
         WebSession.INCOMING_COOKIES
                 .put(threadName(), cookies);
     }
@@ -36,8 +37,13 @@ public class WebSession {
 
 
     static void closeSession() {
-        INCOMING_COOKIES.get(threadName()).clear();
-        COOKIES_TO_WRITE.get(threadName()).clear();
+        System.out.println(threadName() + " clearing cookies");
+        if (INCOMING_COOKIES.containsKey(threadName())) {
+            INCOMING_COOKIES.get(threadName()).clear();
+        }
+        if (COOKIES_TO_WRITE.containsKey(threadName())) {
+            COOKIES_TO_WRITE.get(threadName()).clear();
+        }
     }
 
 
