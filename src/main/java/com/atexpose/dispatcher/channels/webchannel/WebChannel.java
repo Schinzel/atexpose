@@ -99,6 +99,10 @@ public class WebChannel implements IChannel {
     public boolean getRequest(ByteStorage request) {
         boolean keepReadingFromSocket;
         do {
+
+            final String threadName = Thread.currentThread().getName();
+            System.out.println(threadName);
+
             keepReadingFromSocket = false;
             try {
                 mClientSocket = mServerSocket.accept();
@@ -117,8 +121,8 @@ public class WebChannel implements IChannel {
                 HttpRequest httpRequest = SocketRW.read(request, mClientSocket);
                 //Get direct response (empty string if there is no direct response)
                 String directResponse = this.getDirectResponse(httpRequest);
-                //If there was no direct response
-                if (!Checker.isEmpty(directResponse)) {
+                //If there was a direct response
+                if (Checker.isNotEmpty(directResponse)) {
                     byte[] redirectAsByteArr = UTF8.getBytes(directResponse);
                     //Send the redirect instruction to client
                     this.writeResponse(redirectAsByteArr);
@@ -126,6 +130,7 @@ public class WebChannel implements IChannel {
                     request.clear();
                     keepReadingFromSocket = true;
                 }
+                WebSession.setIncomingCookies(httpRequest.getCookies());
             }//Catch read timeout errors
             catch (InterruptedIOException iioe) {
                 mLogRequestReadTime = System.currentTimeMillis() - mLogRequestReadTime;
@@ -180,6 +185,7 @@ public class WebChannel implements IChannel {
             mResponseWriteTime = System.currentTimeMillis();
             //Send the Response to the client.
             SocketRW.write(socket, response);
+            WebSession.closeSession();
         } catch (IOException ioe) {
             //If not "Error while writing to socket Connection reset by peer: socket write error"
             //Error indicating timeout on client.
