@@ -43,11 +43,6 @@ public abstract class AbstractDataType implements IValueWithKey, IStateNode {
     protected abstract Object castToDataType(String value);
 
 
-    public boolean isJson() {
-        return false;
-    }
-
-
     /**
      * @param value The value to convert
      * @return The value cast to the data type. For example a Boolean

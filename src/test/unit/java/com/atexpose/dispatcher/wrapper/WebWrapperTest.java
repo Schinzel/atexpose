@@ -3,7 +3,6 @@ package com.atexpose.dispatcher.wrapper;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.substring.SubString;
-import org.json.JSONObject;
 import org.junit.Test;
 
 import java.util.Map;
@@ -196,42 +195,6 @@ public class WebWrapperTest {
 
 
     @Test
-    public void wrapJson_Json_BodyIsJson() {
-        JSONObject json = new JSONObject()
-                .put("k1", "v1")
-                .put("k2", "v2");
-        String response = WebWrapper.builder()
-                .webServerDir("testfiles/")
-                .cacheFilesInRam(false)
-                .build()
-                .wrapJSON(json.toString());
-        String body = SubString.create(response)
-                .startDelimiter("\r\n\r\n")
-                .toString();
-        assertThat(body).startsWith(json.toString());
-    }
-
-
-    @Test
-    public void wrapJSON_CustomHeader_HeaderContainsCustomHeader() {
-        JSONObject jo = new JSONObject()
-                .put("k1", "v1");
-        Map<String, String> customHeaders = ImmutableMap.<String, String>builder()
-                .put("bear", "kodiak")
-                .build();
-        String response = WebWrapper.builder()
-                .webServerDir("testfiles/")
-                .responseHeaders(customHeaders)
-                .build()
-                .wrapJSON(jo.toString());
-        String header = SubString.create(response)
-                .endDelimiter("\r\n\r\n")
-                .toString();
-        assertThat(header).contains("bear: kodiak");
-    }
-
-
-    @Test
     public void getFileHeaderAndContent_NonExistingFile_Expcetion() {
         WebWrapper webWrapper = WebWrapper.builder()
                 .webServerDir("testfiles/")
@@ -335,15 +298,14 @@ public class WebWrapperTest {
     }
 
 
-
     @Test
-    public void backslashDollarSigns_emptyString_emptyString(){
+    public void backslashDollarSigns_emptyString_emptyString() {
         String actual = WebWrapper.backslashDollarSigns("");
         assertThat(actual).isEmpty();
     }
 
     @Test
-    public void backslashDollarSigns_null_exception(){
+    public void backslashDollarSigns_null_exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
                 WebWrapper.backslashDollarSigns(null)
         );
@@ -352,23 +314,23 @@ public class WebWrapperTest {
 
 
     @Test
-    public void backslashDollarSigns_noDollarSings_unchanged(){
+    public void backslashDollarSigns_noDollarSings_unchanged() {
         String actual = WebWrapper.backslashDollarSigns("any_string");
         assertThat(actual).isEqualTo("any_string");
     }
 
     @Test
-    public void backslashDollarSigns_onlyDollarSign_fixed(){
+    public void backslashDollarSigns_onlyDollarSign_fixed() {
         String actual = WebWrapper.backslashDollarSigns("$");
-        char ch[]={'\\', '$'};
+        char ch[] = {'\\', '$'};
         String expected = new String(ch);
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
-    public void backslashDollarSigns_severalDollarSigns_allFixed(){
+    public void backslashDollarSigns_severalDollarSigns_allFixed() {
         String actual = WebWrapper.backslashDollarSigns("$a$b$c$");
-        char ch[]={'\\', '$','a','\\', '$','b','\\', '$','c','\\', '$'};
+        char ch[] = {'\\', '$', 'a', '\\', '$', 'b', '\\', '$', 'c', '\\', '$'};
         String expected = new String(ch);
         assertThat(actual).isEqualTo(expected);
     }

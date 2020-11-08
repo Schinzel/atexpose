@@ -198,10 +198,7 @@ public class Dispatcher implements Runnable, IDispatcher {
                     responseAsString = methodObject
                             .getReturnDataType()
                             .convertFromDataTypeToString(responseAsObject);
-                    //If return type is Json
-                    wrappedResponse = (methodObject.getReturnDataType().isJson())
-                            ? mWrapper.wrapJSON(responseAsString)
-                            : mWrapper.wrapResponse(responseAsString);
+                    wrappedResponse = mWrapper.wrapResponse(responseAsString);
                     wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
                 }
             } catch (Exception e) {

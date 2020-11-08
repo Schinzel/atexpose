@@ -2,17 +2,20 @@ package com.atexpose.dispatcher.wrapper;
 
 import com.atexpose.ProjectProperties;
 import com.atexpose.util.FileRW;
-import com.atexpose.util.httpresponse.*;
-import com.google.common.base.Charsets;
+import com.atexpose.util.httpresponse.HttpResponse404;
+import com.atexpose.util.httpresponse.HttpResponse500;
+import com.atexpose.util.httpresponse.HttpResponseFile;
+import com.atexpose.util.httpresponse.HttpResponseString;
 import io.schinzel.basicutils.Checker;
-import io.schinzel.basicutils.thrower.Thrower;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.collections.Cache;
 import io.schinzel.basicutils.state.State;
+import io.schinzel.basicutils.thrower.Thrower;
 import lombok.Builder;
 import lombok.experimental.Accessors;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -40,11 +43,14 @@ import java.util.regex.Pattern;
 @Accessors(prefix = "m")
 public class WebWrapper implements IWrapper {
     /** The default 404 page */
-    private static final byte[] DEFAULT_404_PAGE = "<html><body><center>File not found</center><body></html>".getBytes(Charsets.UTF_8);
+    private static final byte[] DEFAULT_404_PAGE = "<html><body><center>File not found</center><body></html>"
+            .getBytes(StandardCharsets.UTF_8);
     /** Pattern for server side variables. Example: <!--#echo var="my_var" --> */
-    private static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern.compile("<!--#echo var=\"([a-zA-Z1-9_]{3,25})\" -->");
+    private static final Pattern VARIABLE_PLACEHOLDER_PATTERN = Pattern
+            .compile("<!--#echo var=\"([a-zA-Z1-9_]{3,25})\" -->");
     /** Pattern for server side include files. Example: <!--#include file="header.html" --> */
-    private static final Pattern INCLUDE_FILE_PATTERN = Pattern.compile("<!--#include file=\"([\\w,/]+\\.[A-Za-z]{2,4})\" -->");
+    private static final Pattern INCLUDE_FILE_PATTERN = Pattern
+            .compile("<!--#include file=\"([\\w,/]+\\.[A-Za-z]{2,4})\" -->");
     /** The default to return if no page was specified */
     private static final String DEFAULT_PAGE = "index.html";
     /** Where the files to server resides on the hard drive **/
@@ -101,16 +107,6 @@ public class WebWrapper implements IWrapper {
     public String wrapError(Map<String, String> properties) {
         return HttpResponse500.builder()
                 .body(new JSONObject(properties))
-                .customHeaders(mCustomResponseHeaders)
-                .build()
-                .getResponse();
-    }
-
-
-    @Override
-    public String wrapJSON(String response) {
-        return HttpResponseJson.builder()
-                .body(response)
                 .customHeaders(mCustomResponseHeaders)
                 .build()
                 .getResponse();
@@ -270,12 +266,10 @@ public class WebWrapper implements IWrapper {
 
 
     /**
-     *
-     * @param str
      * @return The argument string with all all $ replaced with \$
      */
-    static String backslashDollarSigns(String str){
-        if (str == null){
+    static String backslashDollarSigns(String str) {
+        if (str == null) {
             throw new RuntimeException("String cannot be null");
         }
         return str.replace("$", "\\$");
