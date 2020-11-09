@@ -1,6 +1,7 @@
 package com.atexpose.util.httpresponse;
 
 import com.atexpose.dispatcher.PropertiesDispatcher;
+import com.atexpose.dispatcher.channels.webchannel.WebSessionCookie;
 import com.google.common.base.Joiner;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.str.Str;
@@ -8,7 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * The purpose of this class is to represent an http header.
@@ -23,12 +26,19 @@ class HttpHeader {
     @Builder
     HttpHeader(HttpStatusCode httpStatusCode,
                Map<String, String> customHeaders,
+               List<WebSessionCookie> cookieList,
                ContentType contentType,
                int browserCacheMaxAgeInSeconds,
                int contentLength) {
         if (customHeaders == null) {
             customHeaders = Collections.emptyMap();
         }
+        final String setCookieHeaderLines = Checker.isEmpty(cookieList)
+                ? ""
+                : cookieList
+                .stream()
+                .map(WebSessionCookie::getSetCookieString)
+                .collect(Collectors.joining(""));
         header = Str.create()
                 .a("HTTP/1.1 ").acrlf(httpStatusCode.getCode())
                 .a("Server: ").acrlf(PropertiesDispatcher.RESP_HEADER_SERVER_NAME)
@@ -40,6 +50,7 @@ class HttpHeader {
                 //Add the custom response headers
                 .acrlf(Joiner.on("\r\n").withKeyValueSeparator(": ").join(customHeaders))
                 .endIf()
+                .a(setCookieHeaderLines)
                 .acrlf();
     }
 

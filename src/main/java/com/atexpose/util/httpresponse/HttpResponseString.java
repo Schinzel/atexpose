@@ -1,10 +1,12 @@
 package com.atexpose.util.httpresponse;
 
+import com.atexpose.dispatcher.channels.webchannel.WebSessionCookie;
 import io.schinzel.basicutils.UTF8;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,11 +20,15 @@ public class HttpResponseString {
 
 
     @Builder
-    HttpResponseString(@NonNull String body, Map<String, String> customHeaders) {
+    HttpResponseString(
+            @NonNull String body,
+            Map<String, String> customHeaders,
+            List<WebSessionCookie> cookieList) {
         int contentLength = UTF8.getBytes(body).length;
         HttpHeader header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.OK)
                 .customHeaders(customHeaders)
+                .cookieList(cookieList)
                 .contentType(ContentType.TEXT)
                 .contentLength(contentLength)
                 .build();

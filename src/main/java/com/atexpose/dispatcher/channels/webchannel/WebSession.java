@@ -1,11 +1,17 @@
 package com.atexpose.dispatcher.channels.webchannel;
 
+import lombok.val;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WebSession {
     private static final Map<String, Map<String, String>> INCOMING_COOKIES = new HashMap<>();
-    private static final Map<String, Map<String, String>> COOKIES_TO_SET = new HashMap<>();
+    private static final Map<String, List<WebSessionCookie>> COOKIES_TO_SET = new HashMap<>();
+
+    private WebSession(){}
 
     static void setIncomingCookies(Map<String, String> cookies) {
         final HashMap<String, String> map = new HashMap<>(cookies);
@@ -21,18 +27,21 @@ public class WebSession {
     }
 
 
-    public static void addCookieToSet(String cookieName, String cookieValue) {
-        if (!WebSession.COOKIES_TO_SET.containsKey(threadName())) {
-            WebSession.COOKIES_TO_SET.put(threadName(), new HashMap<>());
+    public static void addCookieToSet(WebSessionCookie cookie) {
+        val threadName = threadName();
+        if (!WebSession.COOKIES_TO_SET.containsKey(threadName)) {
+            WebSession.COOKIES_TO_SET.put(threadName, new ArrayList<>());
         }
         WebSession.COOKIES_TO_SET
-                .get(threadName())
-                .put(cookieName, cookieValue);
+                .get(threadName)
+                .add(cookie);
     }
 
 
-    static Map<String, String> getCookiesToSet() {
-        return WebSession.COOKIES_TO_SET.get(threadName());
+    public static List<WebSessionCookie> getCookiesToSet() {
+        val threadName = threadName();
+        val cookie = WebSession.COOKIES_TO_SET.get(threadName);
+        return cookie;
     }
 
 
@@ -41,9 +50,9 @@ public class WebSession {
         if (incomingCookiesForCurrentThread != null) {
             incomingCookiesForCurrentThread.clear();
         }
-        Map<String, String> cookiesToWriteForCurrentThread = COOKIES_TO_SET.get(threadName());
-        if (cookiesToWriteForCurrentThread != null) {
-            cookiesToWriteForCurrentThread.clear();
+        List<WebSessionCookie> cookiesToSetForCurrentThread = COOKIES_TO_SET.get(threadName());
+        if (cookiesToSetForCurrentThread != null) {
+            cookiesToSetForCurrentThread.clear();
         }
     }
 
@@ -51,4 +60,8 @@ public class WebSession {
     private static String threadName() {
         return Thread.currentThread().getName();
     }
+
+
 }
+
+

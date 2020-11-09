@@ -3,7 +3,6 @@ package com.atexpose;
 import com.atexpose.api.Argument;
 import com.atexpose.api.datatypes.ClassDT;
 import com.atexpose.api.datatypes.DataTypeEnum;
-import com.atexpose.api.datatypes.VoidDT;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
@@ -35,10 +34,11 @@ public class REMOVE_ME {
                         .build())
                 .expose(RemoveMeApi.class)
                 .start(WebServerBuilder.create()
-                        .webServerDir("remove_me")
-                        .cacheFilesInRAM(false)
-                        .build()
-                        .addLogger(getEventLogger()))
+                                .webServerDir("remove_me")
+                                .cacheFilesInRAM(false)
+                                .build()
+                        //.addLogger(getEventLogger())
+                )
                 .startCLI()
                 .generateJavaScriptClient("src/main/resources/remove_me/ServerCaller.js");
         System.out.println("System started!");
