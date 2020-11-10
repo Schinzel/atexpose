@@ -37,7 +37,7 @@ class HttpHeader {
                 ? ""
                 : cookieList
                 .stream()
-                .map(WebSessionCookie::getSetCookieString)
+                .map(WebSessionCookie::getHttpHeaderSetCookieString)
                 .collect(Collectors.joining(""));
         header = Str.create()
                 .a("HTTP/1.1 ").acrlf(httpStatusCode.getCode())

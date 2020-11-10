@@ -5,6 +5,8 @@ import com.atexpose.dispatcher.channels.webchannel.WebSessionCookie;
 import io.schinzel.basicutils.RandomUtil;
 import lombok.val;
 
+import java.time.Instant;
+
 @SuppressWarnings("unused")
 public class RemoveMeApi {
 
@@ -23,8 +25,9 @@ public class RemoveMeApi {
     public static RemoveMeVar test_it(RemoveMeVar test_var) {
         String cookieValue = WebSession.getIncomingCookie("my_cookie");
         val cookie = WebSessionCookie.builder()
-                .name("my_funky_cookie")
+                .name("my_funky_cookie_" + RandomUtil.getRandomString(2))
                 .value("kalle kutta")
+                .expires(Instant.now().plusSeconds(60 * 20))
                 .build();
         WebSession.addCookieToSet(cookie);
         System.out.println("cookieValue44 " + cookieValue);
@@ -39,6 +42,7 @@ public class RemoveMeApi {
         val cookie = WebSessionCookie.builder()
                 .name("my_second_funky_cookie")
                 .value(RandomUtil.getRandomString(5))
+                .expires(Instant.now().plusSeconds(60 * 10))
                 .build();
         WebSession.addCookieToSet(cookie);
         return RemoveMeEnum.SECOND;
