@@ -126,7 +126,7 @@ public class WebChannel implements IChannel {
                     request.clear();
                     keepReadingFromSocket = true;
                 }
-                WebSession.setIncomingCookies(httpRequest.getCookies());
+                WebSession.setCookiesFromClient(httpRequest.getCookies());
             }//Catch read timeout errors
             catch (InterruptedIOException iioe) {
                 mLogRequestReadTime = System.currentTimeMillis() - mLogRequestReadTime;

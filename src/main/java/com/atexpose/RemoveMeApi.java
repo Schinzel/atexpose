@@ -29,7 +29,7 @@ public class RemoveMeApi {
                 .value("kalle kutta")
                 .expires(Instant.now().plusSeconds(60 * 20))
                 .build();
-        WebSession.addCookieToSet(cookie);
+        WebSession.addCookieToSendToClient(cookie);
         System.out.println("cookieValue44 " + cookieValue);
         return new RemoveMeVar(test_var.s, test_var.i + 10);
     }
@@ -44,7 +44,7 @@ public class RemoveMeApi {
                 .value(RandomUtil.getRandomString(5))
                 .expires(Instant.now().plusSeconds(60 * 10))
                 .build();
-        WebSession.addCookieToSet(cookie);
+        WebSession.addCookieToSendToClient(cookie);
         return RemoveMeEnum.SECOND;
     }
 
