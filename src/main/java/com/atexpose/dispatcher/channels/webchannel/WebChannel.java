@@ -126,7 +126,7 @@ public class WebChannel implements IChannel {
                     request.clear();
                     keepReadingFromSocket = true;
                 }
-                WebSession.setCookiesFromClient(httpRequest.getCookies());
+                WebCookieStorage.setCookiesFromClient(httpRequest.getCookies());
             }//Catch read timeout errors
             catch (InterruptedIOException iioe) {
                 mLogRequestReadTime = System.currentTimeMillis() - mLogRequestReadTime;
@@ -181,7 +181,7 @@ public class WebChannel implements IChannel {
             mResponseWriteTime = System.currentTimeMillis();
             //Send the Response to the client.
             SocketRW.write(socket, response);
-            WebSession.closeSession();
+            WebCookieStorage.closeSession();
         } catch (IOException ioe) {
             //If not "Error while writing to socket Connection reset by peer: socket write error"
             //Error indicating timeout on client.

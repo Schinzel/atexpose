@@ -1,6 +1,5 @@
 package com.atexpose.dispatcher.channels.webchannel;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,26 +36,11 @@ import java.util.Map;
  * In WebChannel:
  * WebSession.closeSession()
  */
-public class WebSession {
-    /**
-     * Holds the incoming cookies that where a part of the request
-     * Key - the name of a thread
-     * Value - A map with cookie keys and values
-     */
-    static final Map<String, Map<String, String>> COOKIES_FROM_CLIENT
-            = new HashMap<>();
-    /**
-     * Holds cookies to send to the browser
-     * Key - the name of the thread
-     * Value - A list of cookies to send to the client
-     */
-    static final Map<String, List<WebSessionCookie>> COOKIES_TO_SEND_TO_CLIENT
-            = new HashMap<>();
-
-    static final WebSession2 WEB_SESSION_2 = new WebSession2();
+public class WebCookieStorage {
+    static final WebCookieStorageInternal WEB_COOKIE_STORAGE_INTERNAL = new WebCookieStorageInternal();
 
     // Private constructor to prevent incorrect usage
-    private WebSession() {
+    private WebCookieStorage() {
     }
 
 
@@ -69,7 +53,7 @@ public class WebSession {
      * @return The value of the cookie with the argument name
      */
     public static String getIncomingCookie(String cookieName) {
-        return WEB_SESSION_2.getIncomingCookie(cookieName, threadName());
+        return WEB_COOKIE_STORAGE_INTERNAL.getIncomingCookie(cookieName, threadName());
     }
 
     /**
@@ -79,7 +63,7 @@ public class WebSession {
      * @param cookie A cookie to send to client
      */
     public static void addCookieToSendToClient(WebSessionCookie cookie) {
-        WEB_SESSION_2.addCookieToSendToClient(cookie, threadName());
+        WEB_COOKIE_STORAGE_INTERNAL.addCookieToSendToClient(cookie, threadName());
     }
 
 
@@ -92,7 +76,7 @@ public class WebSession {
      * @param cookies Cookies that came from the client
      */
     static void setCookiesFromClient(Map<String, String> cookies) {
-        WEB_SESSION_2.setCookiesFromClient(cookies, threadName());
+        WEB_COOKIE_STORAGE_INTERNAL.setCookiesFromClient(cookies, threadName());
     }
 
 
@@ -100,7 +84,7 @@ public class WebSession {
      * @return The cookies to send to the client
      */
     public static List<WebSessionCookie> getCookiesToSendToClient() {
-        return WEB_SESSION_2.getCookiesToSendToClient(threadName());
+        return WEB_COOKIE_STORAGE_INTERNAL.getCookiesToSendToClient(threadName());
     }
 
 
@@ -108,12 +92,11 @@ public class WebSession {
      * Clears the data for this thread.
      */
     static void closeSession() {
-        WEB_SESSION_2.closeSession(threadName());
+        WEB_COOKIE_STORAGE_INTERNAL.closeSession(threadName());
     }
 
 
     private static String threadName() {
         return Thread.currentThread().getName();
     }
-
 }
