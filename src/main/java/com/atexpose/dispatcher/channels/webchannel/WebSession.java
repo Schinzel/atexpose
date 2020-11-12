@@ -9,19 +9,21 @@ import java.util.Map;
 
 /**
  * This is used to read and write cookies in Java or Kotlin code, i.e.
- * outside @expose code.
+ * outside @expose code. It only works in conjunction with the web server,
+ * i.e. a WebChannel as channel and WebWrapper as wrapper
+ *
  * <p>
  * Usage:
- * To write a cookie
+ * <p>
+ * To read a cookie:
+ * String cookieValue = WebSession.getIncomingCookie("my_cookie_name");
+ * To write a cookie:
  * WebSessionCookie cookie = WebSessionCookie.builder()
  * .name("my_cookie_name")
  * .value("1234")
  * .expires(Instant.now().plusSeconds(60 * 20))
  * .build();
  * WebSession.addCookieToSet(cookie);
- * <p>
- * To read a cookie:
- * String cookieValue = WebSession.getIncomingCookie("my_cookie_name");
  * <p>
  * <p>
  * Life cycle of a request response
@@ -30,8 +32,8 @@ import java.util.Map;
  * <p>
  * In code outside of @expose
  * WebSession.getIncomingCookie("name_of_cookie")
+ * WebSession.getIncomingCookie("name_of_second_cookie")
  * WebSession.addCookieToSendToClient(cookieOne)
- * WebSession.getIncomingCookie(cookieTwo)
  * <p>
  * In WebWrapper:
  * WebSession.getCookiesToSendToClient()
