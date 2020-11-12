@@ -10,6 +10,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * The purpose of this class is to generate the string for setting a cookie in a HTTP header
+ * response.
+ * <p>
+ * Example:
+ * "Set-Cookie: cookie_name=cookie_value; Path=/; Expires=Thu, 12 Nov 2020 04:39:51 GMT"
+ */
 @Accessors(prefix = "m")
 public class WebSessionCookie {
     private static final DateTimeFormatter COOKIE_TIME_FORMAT = DateTimeFormatter
@@ -20,16 +27,17 @@ public class WebSessionCookie {
 
     @Builder
     WebSessionCookie(String name, String value, Instant expires) {
-        val cookieExpiresString = LocalDateTime
-                .ofInstant(expires, ZoneId.of("GMT"))
-                .format(COOKIE_TIME_FORMAT);
+        val cookieExpiresString = WebSessionCookie.getExpiresDate(expires);
         mHttpHeaderSetCookieString = "Set-Cookie: "
                 + name + "=" + value + "; "
                 + "Path=/; "
                 + "Expires=" + cookieExpiresString + "\r\n";
-        System.out.println(mHttpHeaderSetCookieString);
+    }
 
+    static String getExpiresDate(Instant instant) {
+        return LocalDateTime
+                .ofInstant(instant, ZoneId.of("GMT"))
+                .format(COOKIE_TIME_FORMAT);
     }
 }
-
 

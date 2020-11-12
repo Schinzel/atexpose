@@ -1,8 +1,5 @@
 package com.atexpose.dispatcher.channels.webchannel;
 
-import lombok.val;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,19 +43,22 @@ public class WebSession {
      * Key - the name of a thread
      * Value - A map with cookie keys and values
      */
-    private static final Map<String, Map<String, String>> COOKIES_FROM_CLIENT
+    static final Map<String, Map<String, String>> COOKIES_FROM_CLIENT
             = new HashMap<>();
     /**
      * Holds cookies to send to the browser
      * Key - the name of the thread
      * Value - A list of cookies to send to the client
      */
-    private static final Map<String, List<WebSessionCookie>> COOKIES_TO_SEND_TO_CLIENT
+    static final Map<String, List<WebSessionCookie>> COOKIES_TO_SEND_TO_CLIENT
             = new HashMap<>();
+
+    static final WebSession2 WEB_SESSION_2 = new WebSession2();
 
     // Private constructor to prevent incorrect usage
     private WebSession() {
     }
+
 
     //------------------------------------------------------------------------
     // Methods used outside of @expose
@@ -69,9 +69,7 @@ public class WebSession {
      * @return The value of the cookie with the argument name
      */
     public static String getIncomingCookie(String cookieName) {
-        return WebSession.COOKIES_FROM_CLIENT
-                .get(threadName())
-                .get(cookieName);
+        return WEB_SESSION_2.getIncomingCookie(cookieName, threadName());
     }
 
     /**
@@ -81,17 +79,7 @@ public class WebSession {
      * @param cookie A cookie to send to client
      */
     public static void addCookieToSendToClient(WebSessionCookie cookie) {
-        // Get name of current thread
-        val threadName = threadName();
-        // If the current thread is not in the map
-        if (!WebSession.COOKIES_TO_SEND_TO_CLIENT.containsKey(threadName)) {
-            // Add an entry for current thread
-            WebSession.COOKIES_TO_SEND_TO_CLIENT.put(threadName, new ArrayList<>());
-        }
-        // Add the argument cookie to the current thread list of cookie to send to client
-        WebSession.COOKIES_TO_SEND_TO_CLIENT
-                .get(threadName)
-                .add(cookie);
+        WEB_SESSION_2.addCookieToSendToClient(cookie, threadName());
     }
 
 
@@ -104,9 +92,7 @@ public class WebSession {
      * @param cookies Cookies that came from the client
      */
     static void setCookiesFromClient(Map<String, String> cookies) {
-        final HashMap<String, String> map = new HashMap<>(cookies);
-        WebSession.COOKIES_FROM_CLIENT
-                .put(threadName(), map);
+        WEB_SESSION_2.setCookiesFromClient(cookies, threadName());
     }
 
 
@@ -114,9 +100,7 @@ public class WebSession {
      * @return The cookies to send to the client
      */
     public static List<WebSessionCookie> getCookiesToSendToClient() {
-        val threadName = threadName();
-        return WebSession
-                .COOKIES_TO_SEND_TO_CLIENT.get(threadName);
+        return WEB_SESSION_2.getCookiesToSendToClient(threadName());
     }
 
 
@@ -124,24 +108,12 @@ public class WebSession {
      * Clears the data for this thread.
      */
     static void closeSession() {
-        // Get map for cookies-from-client
-        Map<String, String> currentThreadsCookiesFromClient = COOKIES_FROM_CLIENT.get(threadName());
-        // If there was a map
-        if (currentThreadsCookiesFromClient != null) {
-            // Clear the map
-            currentThreadsCookiesFromClient.clear();
-        }
-        // Get map for cookies-to-send-to-client
-        List<WebSessionCookie> currentThreadsCookiesToSendToClient = COOKIES_TO_SEND_TO_CLIENT.get(threadName());
-        // If there was such a map
-        if (currentThreadsCookiesToSendToClient != null) {
-            // Clear the map
-            currentThreadsCookiesToSendToClient.clear();
-        }
+        WEB_SESSION_2.closeSession(threadName());
     }
 
 
     private static String threadName() {
         return Thread.currentThread().getName();
     }
+
 }
