@@ -56,6 +56,7 @@ public class WebCookieStorage {
         return WEB_COOKIE_STORAGE_INTERNAL.getIncomingCookie(cookieName, threadName());
     }
 
+
     /**
      * Argument cookie will be sent to client as a part of the response of the
      * current thread
@@ -67,10 +68,10 @@ public class WebCookieStorage {
     }
 
 
+
     //------------------------------------------------------------------------
     // Methods used by @expose
     //------------------------------------------------------------------------
-
 
     /**
      * @param cookies Cookies that came from the client

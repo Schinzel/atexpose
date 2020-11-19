@@ -14,20 +14,25 @@ class WebCookieStorageInternal {
      * Key - the name of a thread
      * Value - A map with cookie keys and values
      */
-    final Map<String, Map<String, String>> cookiesFromClient = new HashMap<>();
+    final Map<String, Map<String, String>> mCookiesFromClient = new HashMap<>();
     /**
      * Holds cookies to send to the browser
      * Key - the name of the thread
      * Value - A list of cookies to send to the client
      */
-    final Map<String, List<WebSessionCookie>> cookiesToSendToClient = new HashMap<>();
+    final Map<String, List<WebSessionCookie>> mCookiesToSendToClient = new HashMap<>();
+
+    //------------------------------------------------------------------------
+    // Methods used outside of @expose (via WebCookieStorage)
+    //------------------------------------------------------------------------
 
 
     String getIncomingCookie(String cookieName, String threadName) {
         try {
-            Thrower.throwIfVarEmpty(cookieName, "cookieName");
-            Thrower.throwIfVarEmpty(threadName, "threadName");
-            val currentThreadsCookies = cookiesFromClient.get(threadName);
+            Thrower.createInstance()
+                    .throwIfVarEmpty(cookieName, "cookieName")
+                    .throwIfVarEmpty(threadName, "threadName");
+            val currentThreadsCookies = mCookiesFromClient.get(threadName);
             if (currentThreadsCookies == null) {
                 throw new RuntimeException("No cookies for thread");
             }
@@ -42,15 +47,16 @@ class WebCookieStorageInternal {
 
     void addCookieToSendToClient(WebSessionCookie cookie, String threadName) {
         try {
-            Thrower.throwIfVarNull(cookie, "cookie");
-            Thrower.throwIfVarEmpty(threadName, "threadName");
+            Thrower.createInstance()
+                    .throwIfVarNull(cookie, "cookie")
+                    .throwIfVarEmpty(threadName, "threadName");
             // If the current thread is not in the map
-            if (!cookiesToSendToClient.containsKey(threadName)) {
+            if (!mCookiesToSendToClient.containsKey(threadName)) {
                 // Add an entry for current thread
-                cookiesToSendToClient.put(threadName, new ArrayList<>());
+                mCookiesToSendToClient.put(threadName, new ArrayList<>());
             }
             // Add the argument cookie to the current thread list of cookie to send to client
-            cookiesToSendToClient
+            mCookiesToSendToClient
                     .get(threadName)
                     .add(cookie);
         } catch (Exception e) {
@@ -61,33 +67,37 @@ class WebCookieStorageInternal {
     }
 
 
+    //------------------------------------------------------------------------
+    // Methods used by @expose (via WebCookieSession)
+    //------------------------------------------------------------------------
+
     void setCookiesFromClient(Map<String, String> cookies, String threadName) {
         Thrower.throwIfVarEmpty(threadName, "threadName");
         if (cookies == null) {
             cookies = Collections.emptyMap();
         }
         final HashMap<String, String> map = new HashMap<>(cookies);
-        cookiesFromClient.put(threadName, map);
+        mCookiesFromClient.put(threadName, map);
     }
 
 
     List<WebSessionCookie> getCookiesToSendToClient(String threadName) {
         Thrower.throwIfVarEmpty(threadName, "threadName");
-        return cookiesToSendToClient.get(threadName);
+        return mCookiesToSendToClient.get(threadName);
     }
 
 
     void closeSession(String threadName) {
         Thrower.throwIfVarEmpty(threadName, "threadName");
         // Get map for cookies-from-client
-        Map<String, String> currentThreadsCookiesFromClient = cookiesFromClient.get(threadName);
+        Map<String, String> currentThreadsCookiesFromClient = mCookiesFromClient.get(threadName);
         // If there was a map
         if (currentThreadsCookiesFromClient != null) {
             // Clear the map
             currentThreadsCookiesFromClient.clear();
         }
         // Get map for cookies-to-send-to-client
-        List<WebSessionCookie> currentThreadsCookiesToSendToClient = cookiesToSendToClient.get(threadName);
+        List<WebSessionCookie> currentThreadsCookiesToSendToClient = mCookiesToSendToClient.get(threadName);
         // If there was such a map
         if (currentThreadsCookiesToSendToClient != null) {
             // Clear the map

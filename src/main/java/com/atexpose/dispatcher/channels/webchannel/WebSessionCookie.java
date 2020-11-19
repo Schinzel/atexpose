@@ -1,5 +1,6 @@
 package com.atexpose.dispatcher.channels.webchannel;
 
+import io.schinzel.basicutils.thrower.Thrower;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -9,6 +10,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
 
 /**
  * The purpose of this class is to generate the string for setting a cookie in a HTTP header
@@ -22,19 +24,30 @@ public class WebSessionCookie {
     private static final DateTimeFormatter COOKIE_TIME_FORMAT = DateTimeFormatter
             .ofPattern("EEE, dd MMM yyyy HH:mm:ss 'GMT'");
 
+    private static final Pattern ALLOWED_CHARS_NAME_VALUE = Pattern
+            .compile("[a-zA-Z0-9_-]{1,100}");
+
+
     @Getter
     private final String mHttpHeaderSetCookieString;
 
     @Builder
     WebSessionCookie(String name, String value, Instant expires) {
-        val cookieExpiresString = WebSessionCookie.getExpiresDate(expires);
+        Thrower.createInstance()
+                .throwIfVarEmpty(name, "name")
+                .throwIfVarEmpty(value, "value")
+                .throwIfNotMatchesRegex(name, "name", ALLOWED_CHARS_NAME_VALUE)
+                .throwIfNotMatchesRegex(value, "value", ALLOWED_CHARS_NAME_VALUE)
+                .throwIfTrue(expires.isBefore(Instant.now().minusSeconds(1)), "Expires has to be after now");
+        val expiresAsString = WebSessionCookie.getExpiresAsString(expires);
         mHttpHeaderSetCookieString = "Set-Cookie: "
                 + name + "=" + value + "; "
                 + "Path=/; "
-                + "Expires=" + cookieExpiresString + "\r\n";
+                + "Expires=" + expiresAsString + "\r\n";
     }
 
-    static String getExpiresDate(Instant instant) {
+
+    static String getExpiresAsString(Instant instant) {
         return LocalDateTime
                 .ofInstant(instant, ZoneId.of("GMT"))
                 .format(COOKIE_TIME_FORMAT);

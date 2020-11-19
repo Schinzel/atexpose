@@ -5,6 +5,7 @@ import io.schinzel.basicutils.RandomUtil;
 import lombok.val;
 import org.junit.Test;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 
@@ -73,35 +74,61 @@ public class WebCookieStorageInternalTest {
 
     @Test
     public void addCookieToSendToClient_cookieNull_Exception() {
-
+        val webCookieStorage = new WebCookieStorageInternal();
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
+                webCookieStorage.addCookieToSendToClient(null, "any_thread_name")
+        );
     }
 
     @Test
     public void addCookieToSendToClient_threadNameNull_Exception() {
-
-    }
-
-
-    @Test
-    public void addCookieToSendToClient_threadDoesNotExist_Exception() {
-
+        val webCookieStorage = new WebCookieStorageInternal();
+        val cookie = getCookie();
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
+                webCookieStorage.addCookieToSendToClient(cookie, null)
+        );
     }
 
 
     @Test
     public void addCookieToSendToClient_addOneCookieInOneThread_CookieExitsInCollection() {
+        val webCookieStorage = new WebCookieStorageInternal();
+        val cookie = getCookie();
+        webCookieStorage.addCookieToSendToClient(cookie, "my_thread_name");
+        final boolean cookieExists = webCookieStorage.mCookiesToSendToClient
+                .get("my_thread_name")
+                .contains(cookie);
+        assertThat(cookieExists).isTrue();
 
     }
 
     @Test
     public void addCookieToSendToClient_add1000Cookies_collectionsHas1000Cookies() {
-
+        val webCookieStorage = new WebCookieStorageInternal();
+        for (int i = 0; i < 1000; i++) {
+            webCookieStorage.addCookieToSendToClient(getCookie(), "thread_i" + i);
+        }
+        assertThat(webCookieStorage.mCookiesToSendToClient.size()).isEqualTo(1000);
     }
-
 
     @Test
     public void addCookieToSendToClient_add1CookieIn1000Threads_collectionsHas1000ThreadsWithOneCookieEach() {
-
+        val webCookieStorage = new WebCookieStorageInternal();
+        for (int i = 0; i < 1000; i++) {
+            val cookie = WebSessionCookie.builder()
+                    .name("cookie_" + i)
+                    .value(RandomUtil.getRandomString(10))
+                    .expires(Instant.now())
+                    .build();
+            webCookieStorage.addCookieToSendToClient(cookie, "thread_" + i);
+        }
+        for (int i = 0; i < 1000; i++) {
+            val headerString = webCookieStorage.mCookiesToSendToClient
+                    .get("thread_" + i)
+                    .get(0)
+                    .getHttpHeaderSetCookieString();
+            assertThat(headerString).contains("cookie_" + i);
+        }
     }
 
 
@@ -111,5 +138,13 @@ public class WebCookieStorageInternalTest {
     private static String getRandomString() {
         val stringLength = RandomUtil.getRandomNumber(1, 100);
         return RandomUtil.getRandomString(stringLength);
+    }
+
+    private static WebSessionCookie getCookie() {
+        return WebSessionCookie.builder()
+                .name(RandomUtil.getRandomString(10))
+                .value(RandomUtil.getRandomString(10))
+                .expires(Instant.now())
+                .build();
     }
 }
