@@ -6,8 +6,8 @@ import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
-import com.atexpose.dispatcherfactories.CliFactory;
-import com.atexpose.dispatcherfactories.WebServerBuilder;
+import com.atexpose.dispatcher_factories.CliFactory;
+import com.atexpose.dispatcher_factories.WebServerBuilder;
 import io.schinzel.samples.auxiliary.MyClass;
 import io.schinzel.samples.auxiliary.MyObject;
 

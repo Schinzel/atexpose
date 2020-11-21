@@ -2,7 +2,7 @@ package com.atexpose;
 
 import com.atexpose.api.API;
 import com.atexpose.api.Argument;
-import com.atexpose.api.datatypes.DataTypeEnum;
+import com.atexpose.api.data_types.DataTypeEnum;
 
 /**
  * The purpose of this class is to native se up for @Expose.

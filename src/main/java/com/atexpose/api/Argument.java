@@ -1,6 +1,6 @@
 package com.atexpose.api;
 
-import com.atexpose.api.datatypes.AbstractDataType;
+import com.atexpose.api.data_types.AbstractDataType;
 import io.schinzel.basicutils.collections.valueswithkeys.IValueWithKey;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;

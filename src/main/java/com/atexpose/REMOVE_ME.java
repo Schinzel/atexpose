@@ -1,13 +1,13 @@
 package com.atexpose;
 
 import com.atexpose.api.Argument;
-import com.atexpose.api.datatypes.ClassDT;
-import com.atexpose.api.datatypes.DataTypeEnum;
+import com.atexpose.api.data_types.ClassDT;
+import com.atexpose.api.data_types.DataTypeEnum;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
-import com.atexpose.dispatcherfactories.WebServerBuilder;
+import com.atexpose.dispatcher_factories.WebServerBuilder;
 
 public class REMOVE_ME {
     public static void main(String[] args) {

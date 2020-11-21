@@ -8,7 +8,7 @@ import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.CreateQueueRequest;
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcherfactories.SqsConsumerFactory;
+import com.atexpose.dispatcher_factories.SqsConsumerFactory;
 import com.atexpose.util.sqs.SqsProducer;
 import com.atexpose.util.sqs.SqsQueueType;
 import io.schinzel.basicutils.RandomUtil;

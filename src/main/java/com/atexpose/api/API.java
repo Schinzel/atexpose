@@ -1,9 +1,9 @@
 package com.atexpose.api;
 
 import com.atexpose.Expose;
-import com.atexpose.api.datatypes.AbstractDataType;
-import com.atexpose.api.datatypes.ClassDT;
-import com.atexpose.api.datatypes.DataTypeEnum;
+import com.atexpose.api.data_types.AbstractDataType;
+import com.atexpose.api.data_types.ClassDT;
+import com.atexpose.api.data_types.DataTypeEnum;
 import com.atexpose.errors.SetUpError;
 import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 import io.schinzel.basicutils.state.IStateNode;

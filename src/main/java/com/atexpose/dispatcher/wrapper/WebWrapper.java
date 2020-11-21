@@ -1,12 +1,12 @@
 package com.atexpose.dispatcher.wrapper;
 
 import com.atexpose.ProjectProperties;
-import com.atexpose.dispatcher.channels.webchannel.WebCookieHandler;
+import com.atexpose.dispatcher.channels.web_channel.WebCookieHandler;
 import com.atexpose.util.FileRW;
-import com.atexpose.util.httpresponse.HttpResponse404;
-import com.atexpose.util.httpresponse.HttpResponse500;
-import com.atexpose.util.httpresponse.HttpResponseFile;
-import com.atexpose.util.httpresponse.HttpResponseString;
+import com.atexpose.util.http_response.HttpResponse404;
+import com.atexpose.util.http_response.HttpResponse500;
+import com.atexpose.util.http_response.HttpResponseFile;
+import com.atexpose.util.http_response.HttpResponseString;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.collections.Cache;
