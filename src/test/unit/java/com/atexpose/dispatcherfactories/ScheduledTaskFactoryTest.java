@@ -5,7 +5,7 @@ import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannel;
 import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelDaily;
 import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelMinute;
 import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelMonthly;
-import com.atexpose.dispatcher.parser.TextParser;
+import com.atexpose.dispatcher.parser.textparser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import org.junit.Test;
 

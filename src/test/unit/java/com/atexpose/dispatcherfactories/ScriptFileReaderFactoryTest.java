@@ -2,7 +2,7 @@ package com.atexpose.dispatcherfactories;
 
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.ScriptFileChannel;
-import com.atexpose.dispatcher.parser.TextParser;
+import com.atexpose.dispatcher.parser.textparser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import org.junit.Test;
 

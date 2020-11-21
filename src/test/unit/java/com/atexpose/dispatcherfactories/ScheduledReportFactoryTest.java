@@ -4,7 +4,7 @@ import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.tasks.ScheduledReportChannel;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
-import com.atexpose.dispatcher.parser.TextParser;
+import com.atexpose.dispatcher.parser.textparser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import com.atexpose.util.mail.MockMailSender;
 import org.junit.Test;

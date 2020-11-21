@@ -1,4 +1,4 @@
-package com.atexpose.dispatcher.parser;
+package com.atexpose.dispatcher.parser.textparser;
 
 import io.schinzel.basicutils.FunnyChars;
 import org.junit.Test;

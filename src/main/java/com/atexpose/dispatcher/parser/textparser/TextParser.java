@@ -1,5 +1,7 @@
-package com.atexpose.dispatcher.parser;
+package com.atexpose.dispatcher.parser.textparser;
 
+import com.atexpose.dispatcher.parser.IParser;
+import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.errors.RuntimeError;
 import io.schinzel.basicutils.state.State;
 
