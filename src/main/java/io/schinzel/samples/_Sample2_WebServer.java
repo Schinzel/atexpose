@@ -1,7 +1,6 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
-import com.atexpose.dispatcherfactories.WebServerBuilder;
 import com.atexpose.generator.JsClientGenerator;
 import io.schinzel.samples.auxiliary.MyClass;
 import io.schinzel.samples.auxiliary.MyObject;

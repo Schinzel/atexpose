@@ -203,6 +203,26 @@ To use a generator
 
 The project includes a JsClientGenerator which generates a JavaScript client.
 
+# Cookies
+When using the web server, cookies can be read and set. 
+
+To read a cookie:
+```
+String cookieValue = WebCookieHandler.getRequestCookieValue("my_cookie_name");
+```
+
+To write a cookie:
+```
+WebCookie cookie = WebCookie.builder()
+  .name("my_cookie_name")
+  .value("1234")
+  .expires(Instant.now().plusSeconds(60 * 20))
+  .build();
+WebCookieHandler.addResponseCookie(cookie);
+```
+
+
+
 # Queues
 
 Queues are a great way to reduce complexity in a system. By using message queues the different parts of the system do not get intertwined. By having a system that is decoupled it will be easier to understand, easier to change and several other benefits. You can easily have some services on AWS, some on Azure and some on your own servers. 
@@ -296,12 +316,13 @@ sqsProducer.send(jsonRpc);
 # Versions
 ## Features added for next release
 - New feature: Generators
+- New feature: Read and set cookies when using the web server 
 - JavaScript client generator added. Translates the api to a JavaScript client.
 - API requests prefixed with `api` instead of `call`
 - Aliases are no longer supported
 - Data types `Float` and `JSONObject` are no longer supported
 - `IExceptionProperties` is no longer supported
-- Argument can now take an optional reg ex. All argument values has to match reg ex else an error is thrown.
+- `Argument` can now take an optional reg ex. All argument values has to match reg ex else an error is thrown.
 - Methods returning `void` are now supported
 
 ## 0.9.38

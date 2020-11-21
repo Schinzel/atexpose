@@ -2,8 +2,8 @@ package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcherfactories.CliFactory;
-import com.atexpose.dispatcherfactories.ScheduledReportFactory;
+import com.atexpose.dispatcher_factories.CliFactory;
+import com.atexpose.dispatcher_factories.ScheduledReportFactory;
 import com.atexpose.util.mail.IEmailSender;
 import com.atexpose.util.mail.MockMailSender;
 

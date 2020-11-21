@@ -2,8 +2,8 @@ package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcherfactories.CliFactory;
-import com.atexpose.dispatcherfactories.ScheduledTaskFactory;
+import com.atexpose.dispatcher_factories.CliFactory;
+import com.atexpose.dispatcher_factories.ScheduledTaskFactory;
 
 /**
  * In this sample scheduled tasks are set up.

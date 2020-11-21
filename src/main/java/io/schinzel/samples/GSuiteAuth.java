@@ -2,8 +2,8 @@ package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcherfactories.CliFactory;
-import com.atexpose.dispatcherfactories.WebServerBuilder;
+import com.atexpose.dispatcher_factories.CliFactory;
+import com.atexpose.dispatcher_factories.WebServerBuilder;
 
 /**
  * This sample sets a web server that requires you to be logged in to the argument domain

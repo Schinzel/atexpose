@@ -1,7 +1,7 @@
 package com.atexpose;
 
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcherfactories.WebServerBuilder;
+import com.atexpose.dispatcher_factories.WebServerBuilder;
 import io.schinzel.basicutils.Sandman;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

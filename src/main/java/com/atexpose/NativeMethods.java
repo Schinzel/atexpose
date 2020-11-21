@@ -5,7 +5,7 @@ import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
-import com.atexpose.dispatcherfactories.ScriptFileReaderFactory;
+import com.atexpose.dispatcher_factories.ScriptFileReaderFactory;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.crypto.cipher.Aes256Gcm;
 import io.schinzel.crypto.cipher.ICipher;

@@ -1,7 +1,7 @@
 package com.atexpose;
 
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcherfactories.ScheduledReportFactory;
+import com.atexpose.dispatcher_factories.ScheduledReportFactory;
 import com.atexpose.util.mail.MockMailSender;
 import org.json.JSONException;
 import org.json.JSONObject;

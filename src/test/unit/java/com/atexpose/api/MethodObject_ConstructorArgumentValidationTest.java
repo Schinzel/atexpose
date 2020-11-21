@@ -1,6 +1,6 @@
 package com.atexpose.api;
 
-import com.atexpose.api.datatypes.DataTypeEnum;
+import com.atexpose.api.data_types.DataTypeEnum;
 import org.junit.Test;
 
 import java.util.Collections;

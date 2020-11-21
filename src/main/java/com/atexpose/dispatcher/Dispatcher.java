@@ -3,7 +3,6 @@ package com.atexpose.dispatcher;
 import com.atexpose.api.API;
 import com.atexpose.api.MethodObject;
 import com.atexpose.dispatcher.channels.IChannel;
-import com.atexpose.dispatcher.invocation.RequestArguments;
 import com.atexpose.dispatcher.logging.LogEntry;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.parser.IParser;

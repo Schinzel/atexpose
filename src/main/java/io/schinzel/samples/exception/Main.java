@@ -1,8 +1,8 @@
 package io.schinzel.samples.exception;
 
 import com.atexpose.AtExpose;
-import com.atexpose.dispatcherfactories.CliFactory;
-import com.atexpose.dispatcherfactories.WebServerBuilder;
+import com.atexpose.dispatcher_factories.CliFactory;
+import com.atexpose.dispatcher_factories.WebServerBuilder;
 import io.schinzel.samples.auxiliary.MyClass;
 
 /**

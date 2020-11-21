@@ -12,6 +12,8 @@
     import {RemoveMeVar, ServerCaller} from "./ServerCaller.js";
 
     async function myFunction() {
+        document.cookie = 'my_cookie=123456; expires=Sun, 1 Jan 2023 00:00:00 UTC; path=/';
+
         let removeMeVar = new RemoveMeVar({s: "any string", i: 444});
 
         let myClass = await new ServerCaller().test_it(removeMeVar);

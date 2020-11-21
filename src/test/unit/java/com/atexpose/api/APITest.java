@@ -1,7 +1,7 @@
 package com.atexpose.api;
 
 import com.atexpose.Expose;
-import com.atexpose.api.datatypes.DataTypeEnum;
+import com.atexpose.api.data_types.DataTypeEnum;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
