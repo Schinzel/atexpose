@@ -1,7 +1,7 @@
 package com.atexpose.dispatcher.wrapper;
 
 import com.atexpose.ProjectProperties;
-import com.atexpose.dispatcher.channels.webchannel.WebCookieStorage;
+import com.atexpose.dispatcher.channels.webchannel.WebCookieHandler;
 import com.atexpose.util.FileRW;
 import com.atexpose.util.httpresponse.HttpResponse404;
 import com.atexpose.util.httpresponse.HttpResponse500;
@@ -99,7 +99,7 @@ public class WebWrapper implements IWrapper {
         return HttpResponseString.builder()
                 .body(methodReturn)
                 .customHeaders(mCustomResponseHeaders)
-                .cookieList(WebCookieStorage.getCookiesToSendToClient())
+                .cookieList(WebCookieHandler.getCookiesToSendToClient())
                 .build()
                 .getResponse();
     }

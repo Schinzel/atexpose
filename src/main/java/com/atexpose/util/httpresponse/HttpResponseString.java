@@ -1,6 +1,6 @@
 package com.atexpose.util.httpresponse;
 
-import com.atexpose.dispatcher.channels.webchannel.WebSessionCookie;
+import com.atexpose.dispatcher.channels.webchannel.WebCookie;
 import io.schinzel.basicutils.UTF8;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class HttpResponseString {
     HttpResponseString(
             @NonNull String body,
             Map<String, String> customHeaders,
-            List<WebSessionCookie> cookieList) {
+            List<WebCookie> cookieList) {
         int contentLength = UTF8.getBytes(body).length;
         HttpHeader header = HttpHeader.builder()
                 .httpStatusCode(HttpStatusCode.OK)

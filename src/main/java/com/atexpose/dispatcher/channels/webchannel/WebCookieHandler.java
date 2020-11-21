@@ -12,35 +12,35 @@ import java.util.Map;
  * Usage:
  * <p>
  * To read a cookie:
- * String cookieValue = WebSession.getIncomingCookie("my_cookie_name");
+ * String cookieValue = WebCookieHandler.getIncomingCookie("my_cookie_name");
  * To write a cookie:
- * WebSessionCookie cookie = WebSessionCookie.builder()
+ * WebSessionCookie cookie = WebCookie.builder()
  * .name("my_cookie_name")
  * .value("1234")
  * .expires(Instant.now().plusSeconds(60 * 20))
  * .build();
- * WebSession.addCookieToSet(cookie);
+ * WebCookieHandler.addCookieToSet(cookie);
  * <p>
  * <p>
  * Life cycle of a request response
  * In WebChannel:
- * WebSession.setCookiesFromClient(cookies)
+ * WebCookieHandler.setCookiesFromClient(cookies)
  * <p>
  * In code outside of @expose
- * WebSession.getIncomingCookie("name_of_cookie")
- * WebSession.getIncomingCookie("name_of_second_cookie")
- * WebSession.addCookieToSendToClient(cookieOne)
+ * WebCookieHandler.getIncomingCookie("name_of_cookie")
+ * WebCookieHandler.getIncomingCookie("name_of_second_cookie")
+ * WebCookieHandler.addCookieToSendToClient(cookieOne)
  * <p>
  * In WebWrapper:
- * WebSession.getCookiesToSendToClient()
+ * WebCookieHandler.getCookiesToSendToClient()
  * In WebChannel:
- * WebSession.closeSession()
+ * WebCookieHandler.closeSession()
  */
-public class WebCookieStorage {
-    static final WebCookieStorageInternal WEB_COOKIE_STORAGE_INTERNAL = new WebCookieStorageInternal();
+public class WebCookieHandler {
+    static final WebCookieHandlerInternal WEB_COOKIE_HANDLER_INTERNAL = new WebCookieHandlerInternal();
 
     // Private constructor to prevent incorrect usage
-    private WebCookieStorage() {
+    private WebCookieHandler() {
     }
 
 
@@ -53,7 +53,7 @@ public class WebCookieStorage {
      * @return The value of the cookie with the argument name
      */
     public static String getIncomingCookie(String cookieName) {
-        return WEB_COOKIE_STORAGE_INTERNAL.getIncomingCookie(cookieName, threadName());
+        return WEB_COOKIE_HANDLER_INTERNAL.getIncomingCookie(cookieName, threadName());
     }
 
 
@@ -63,8 +63,8 @@ public class WebCookieStorage {
      *
      * @param cookie A cookie to send to client
      */
-    public static void addCookieToSendToClient(WebSessionCookie cookie) {
-        WEB_COOKIE_STORAGE_INTERNAL.addCookieToSendToClient(cookie, threadName());
+    public static void addCookieToSendToClient(WebCookie cookie) {
+        WEB_COOKIE_HANDLER_INTERNAL.addCookieToSendToClient(cookie, threadName());
     }
 
 
@@ -77,15 +77,15 @@ public class WebCookieStorage {
      * @param cookies Cookies that came from the client
      */
     static void setCookiesFromClient(Map<String, String> cookies) {
-        WEB_COOKIE_STORAGE_INTERNAL.setCookiesFromClient(cookies, threadName());
+        WEB_COOKIE_HANDLER_INTERNAL.setCookiesFromClient(cookies, threadName());
     }
 
 
     /**
      * @return The cookies to send to the client
      */
-    public static List<WebSessionCookie> getCookiesToSendToClient() {
-        return WEB_COOKIE_STORAGE_INTERNAL.getCookiesToSendToClient(threadName());
+    public static List<WebCookie> getCookiesToSendToClient() {
+        return WEB_COOKIE_HANDLER_INTERNAL.getCookiesToSendToClient(threadName());
     }
 
 
@@ -93,7 +93,7 @@ public class WebCookieStorage {
      * Clears the data for this thread.
      */
     static void closeSession() {
-        WEB_COOKIE_STORAGE_INTERNAL.closeSession(threadName());
+        WEB_COOKIE_HANDLER_INTERNAL.closeSession(threadName());
     }
 
 

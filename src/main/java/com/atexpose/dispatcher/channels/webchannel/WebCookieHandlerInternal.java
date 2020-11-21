@@ -6,9 +6,9 @@ import lombok.val;
 import java.util.*;
 
 /**
- * The purpose of this class is to store cookies per thread
+ * The purpose of this class is to handle cookies per thread
  */
-class WebCookieStorageInternal {
+class WebCookieHandlerInternal {
     /**
      * Holds the incoming cookies that where a part of the request
      * Key - the name of a thread
@@ -20,7 +20,7 @@ class WebCookieStorageInternal {
      * Key - the name of the thread
      * Value - A list of cookies to send to the client
      */
-    final Map<String, List<WebSessionCookie>> mCookiesToSendToClient = new HashMap<>();
+    final Map<String, List<WebCookie>> mCookiesToSendToClient = new HashMap<>();
 
     //------------------------------------------------------------------------
     // Methods used outside of @expose (via WebCookieStorage)
@@ -45,7 +45,7 @@ class WebCookieStorageInternal {
     }
 
 
-    void addCookieToSendToClient(WebSessionCookie cookie, String threadName) {
+    void addCookieToSendToClient(WebCookie cookie, String threadName) {
         try {
             Thrower.createInstance()
                     .throwIfVarNull(cookie, "cookie")
@@ -81,7 +81,7 @@ class WebCookieStorageInternal {
     }
 
 
-    List<WebSessionCookie> getCookiesToSendToClient(String threadName) {
+    List<WebCookie> getCookiesToSendToClient(String threadName) {
         Thrower.throwIfVarEmpty(threadName, "threadName");
         return mCookiesToSendToClient.get(threadName);
     }
@@ -97,7 +97,7 @@ class WebCookieStorageInternal {
             currentThreadsCookiesFromClient.clear();
         }
         // Get map for cookies-to-send-to-client
-        List<WebSessionCookie> currentThreadsCookiesToSendToClient = mCookiesToSendToClient.get(threadName);
+        List<WebCookie> currentThreadsCookiesToSendToClient = mCookiesToSendToClient.get(threadName);
         // If there was such a map
         if (currentThreadsCookiesToSendToClient != null) {
             // Clear the map
