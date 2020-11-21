@@ -1,6 +1,6 @@
 package com.atexpose.util.http_response;
 
-import com.atexpose.dispatcher.channels.web_channel.WebCookie;
+import com.atexpose.util.web_cookie.WebCookie;
 import io.schinzel.basicutils.UTF8;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,5 +1,7 @@
-package com.atexpose.dispatcher.channels.web_channel;
+package com.atexpose.util.web_cookie;
 
+import com.atexpose.util.web_cookie.WebCookie;
+import com.atexpose.util.web_cookie.WebCookieHandlerInternal;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.RandomUtil;
 import lombok.val;

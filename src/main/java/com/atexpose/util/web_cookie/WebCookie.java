@@ -1,4 +1,4 @@
-package com.atexpose.dispatcher.channels.web_channel;
+package com.atexpose.util.web_cookie;
 
 import io.schinzel.basicutils.thrower.Thrower;
 import lombok.Builder;

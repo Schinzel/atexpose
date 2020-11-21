@@ -1,7 +1,7 @@
 package com.atexpose.util.http_response;
 
 import com.atexpose.dispatcher.PropertiesDispatcher;
-import com.atexpose.dispatcher.channels.web_channel.WebCookie;
+import com.atexpose.util.web_cookie.WebCookie;
 import com.google.common.base.Joiner;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.str.Str;

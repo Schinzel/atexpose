@@ -1,4 +1,4 @@
-package com.atexpose.dispatcher.channels.webchannel.redirect;
+package com.atexpose.dispatcher.channels.web_channel.redirect;
 
 import java.net.URI;
 

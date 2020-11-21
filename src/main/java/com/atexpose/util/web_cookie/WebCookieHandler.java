@@ -1,4 +1,4 @@
-package com.atexpose.dispatcher.channels.web_channel;
+package com.atexpose.util.web_cookie;
 
 import java.util.List;
 import java.util.Map;
@@ -76,7 +76,7 @@ public class WebCookieHandler {
     /**
      * @param cookies Cookies that came from the client
      */
-    static void setCookiesFromClient(Map<String, String> cookies) {
+    public static void setCookiesFromClient(Map<String, String> cookies) {
         WEB_COOKIE_HANDLER_INTERNAL.setCookiesFromClient(cookies, threadName());
     }
 
@@ -92,7 +92,7 @@ public class WebCookieHandler {
     /**
      * Clears the data for this thread.
      */
-    static void closeSession() {
+    public static void closeSession() {
         WEB_COOKIE_HANDLER_INTERNAL.closeSession(threadName());
     }
 

@@ -1,4 +1,4 @@
-package com.atexpose.dispatcher.parser.urlparser.httprequest;
+package com.atexpose.dispatcher.parser.url_parser.httprequest;
 
 class HttpRequestsUtil {
     static final String FILE_REQUEST_NO_QUERY = "GET /index.html HTTP/1.1\r\n"

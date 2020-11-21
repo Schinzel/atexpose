@@ -1,4 +1,4 @@
-package com.atexpose.dispatcher.parser.urlparser;
+package com.atexpose.dispatcher.parser.url_parser;
 
 import java.util.HashMap;
 import java.util.Map;

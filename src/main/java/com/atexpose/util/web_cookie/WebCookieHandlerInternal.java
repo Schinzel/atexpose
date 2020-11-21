@@ -1,4 +1,4 @@
-package com.atexpose.dispatcher.channels.web_channel;
+package com.atexpose.util.web_cookie;
 
 import io.schinzel.basicutils.thrower.Thrower;
 import lombok.val;
@@ -23,7 +23,7 @@ class WebCookieHandlerInternal {
     final Map<String, List<WebCookie>> mCookiesToSendToClient = new HashMap<>();
 
     //------------------------------------------------------------------------
-    // Methods used outside of @expose (via WebCookieStorage)
+    // Methods used outside of @expose (via WebCookieHandler)
     //------------------------------------------------------------------------
 
 
@@ -68,7 +68,7 @@ class WebCookieHandlerInternal {
 
 
     //------------------------------------------------------------------------
-    // Methods used by @expose (via WebCookieSession)
+    // Methods used by @expose (via WebCookieHandler)
     //------------------------------------------------------------------------
 
     void setCookiesFromClient(Map<String, String> cookies, String threadName) {

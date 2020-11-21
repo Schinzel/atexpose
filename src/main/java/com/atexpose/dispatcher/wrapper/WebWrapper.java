@@ -1,7 +1,7 @@
 package com.atexpose.dispatcher.wrapper;
 
 import com.atexpose.ProjectProperties;
-import com.atexpose.dispatcher.channels.web_channel.WebCookieHandler;
+import com.atexpose.util.web_cookie.WebCookieHandler;
 import com.atexpose.util.FileRW;
 import com.atexpose.util.http_response.HttpResponse404;
 import com.atexpose.util.http_response.HttpResponse500;

@@ -1,7 +1,7 @@
 package com.atexpose;
 
-import com.atexpose.dispatcher.channels.web_channel.WebCookieHandler;
-import com.atexpose.dispatcher.channels.web_channel.WebCookie;
+import com.atexpose.util.web_cookie.WebCookieHandler;
+import com.atexpose.util.web_cookie.WebCookie;
 import io.schinzel.basicutils.RandomUtil;
 import lombok.val;
 
