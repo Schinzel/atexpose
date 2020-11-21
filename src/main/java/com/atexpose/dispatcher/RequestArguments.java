@@ -1,4 +1,4 @@
-package com.atexpose.dispatcher.invocation;
+package com.atexpose.dispatcher;
 
 import com.atexpose.api.MethodArguments;
 import io.schinzel.basicutils.Checker;
