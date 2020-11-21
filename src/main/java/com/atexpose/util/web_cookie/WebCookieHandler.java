@@ -4,43 +4,58 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This is used to read and write cookies in Java or Kotlin code, i.e.
- * outside @expose code. It only works in conjunction with the web server,
- * i.e. a WebChannel as channel and WebWrapper as wrapper
+ * The purpose of this class is read and write cookies in Java or Kotlin code outside @expose code.
+ * It only works in conjunction with the web server, i.e. a WebChannel as channel and WebWrapper as wrapper
  *
  * <p>
- * Usage:
- * <p>
+ * <b>Usage</b>
+ * <br>
  * To read a cookie:
- * String cookieValue = WebCookieHandler.getIncomingCookie("my_cookie_name");
+ * <pre>
+ *     String cookieValue = WebCookieHandler.getIncomingCookie("my_cookie_name");
+ * </pre>
  * To write a cookie:
- * WebSessionCookie cookie = WebCookie.builder()
- * .name("my_cookie_name")
- * .value("1234")
- * .expires(Instant.now().plusSeconds(60 * 20))
- * .build();
- * WebCookieHandler.addCookieToSet(cookie);
- * <p>
+ * <pre>
+ *     WebCookie cookie = WebCookie.builder()
+ *      .name("my_cookie_name")
+ *      .value("1234")
+ *      .expires(Instant.now().plusSeconds(60 * 20))
+ *      .build();
+ *     WebCookieHandler.addCookieToSet(cookie);
+ * </pre>
+ *
+ * </p>
+ *
+ * <b>Internal documentation</b>
  * <p>
  * Life cycle of a request response
- * In WebChannel:
- * WebCookieHandler.setCookiesFromClient(cookies)
+ * </p>
  * <p>
+ * In WebChannel:
+ * <pre>
+ *     WebCookieHandlerSetCookies.setCookiesFromClient(cookies)
+ * </pre>
  * In code outside of @expose
- * WebCookieHandler.getIncomingCookie("name_of_cookie")
- * WebCookieHandler.getIncomingCookie("name_of_second_cookie")
- * WebCookieHandler.addCookieToSendToClient(cookieOne)
- * <p>
+ * <pre>
+ *     WebCookieHandler.getIncomingCookie("name_of_cookie")
+ *     WebCookieHandler.getIncomingCookie("name_of_second_cookie")
+ *     WebCookieHandler.addCookieToSendToClient(cookieOne)
+ * </pre>
  * In WebWrapper:
- * WebCookieHandler.getCookiesToSendToClient()
+ * <pre>
+ *     WebCookieHandlerGetCookies.getCookiesToSendToClient()
+ * </pre>
  * In WebChannel:
- * WebCookieHandler.closeSession()
+ * <pre>
+ *     WebCookieHandlerSetCookies.closeRequestResponse()
+ * </pre>
+ * </p>
  */
 public class WebCookieHandler {
-    static final WebCookieHandlerInternal WEB_COOKIE_HANDLER_INTERNAL = new WebCookieHandlerInternal();
+    private static final WebCookieHandlerInternal WEB_COOKIE_HANDLER_INTERNAL = new WebCookieHandlerInternal();
 
-    // Private constructor to prevent incorrect usage
-    private WebCookieHandler() {
+    // Protected constructor to prevent incorrect usage
+    protected WebCookieHandler() {
     }
 
 
@@ -68,15 +83,17 @@ public class WebCookieHandler {
     }
 
 
-
     //------------------------------------------------------------------------
     // Methods used by @expose
+    // These are protected so these methods will not be accessible outside of @expose.
+    // But this class is extended inside of @expose as to make these methods accessible
+    // inside of @expose.
     //------------------------------------------------------------------------
 
     /**
      * @param cookies Cookies that came from the client
      */
-    public static void setCookiesFromClient(Map<String, String> cookies) {
+    protected static void setCookiesFromClientInternal(Map<String, String> cookies) {
         WEB_COOKIE_HANDLER_INTERNAL.setCookiesFromClient(cookies, threadName());
     }
 
@@ -84,7 +101,7 @@ public class WebCookieHandler {
     /**
      * @return The cookies to send to the client
      */
-    public static List<WebCookie> getCookiesToSendToClient() {
+    protected static List<WebCookie> getCookiesToSendToClientInternal() {
         return WEB_COOKIE_HANDLER_INTERNAL.getCookiesToSendToClient(threadName());
     }
 
@@ -92,10 +109,14 @@ public class WebCookieHandler {
     /**
      * Clears the data for this thread.
      */
-    public static void closeSession() {
-        WEB_COOKIE_HANDLER_INTERNAL.closeSession(threadName());
+    protected static void closeRequestResponseInternal() {
+        WEB_COOKIE_HANDLER_INTERNAL.closeRequestResponse(threadName());
     }
 
+
+    //------------------------------------------------------------------------
+    // Private method
+    //------------------------------------------------------------------------
 
     private static String threadName() {
         return Thread.currentThread().getName();

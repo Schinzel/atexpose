@@ -9,7 +9,7 @@ import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.url_parser.UrlParser;
 import com.atexpose.dispatcher.parser.url_parser.UrlParserWithGSuiteAuth;
 import com.atexpose.dispatcher.wrapper.IWrapper;
-import com.atexpose.dispatcher.wrapper.WebWrapper;
+import com.atexpose.dispatcher.wrapper.web_wrapper.WebWrapper;
 import io.schinzel.basicutils.Checker;
 import lombok.Setter;
 import lombok.experimental.Accessors;

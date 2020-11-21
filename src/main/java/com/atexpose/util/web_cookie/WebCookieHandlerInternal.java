@@ -87,7 +87,7 @@ class WebCookieHandlerInternal {
     }
 
 
-    void closeSession(String threadName) {
+    void closeRequestResponse(String threadName) {
         Thrower.throwIfVarEmpty(threadName, "threadName");
         // Get map for cookies-from-client
         Map<String, String> currentThreadsCookiesFromClient = mCookiesFromClient.get(threadName);

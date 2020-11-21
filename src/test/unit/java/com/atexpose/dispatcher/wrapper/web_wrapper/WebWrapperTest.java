@@ -1,5 +1,6 @@
-package com.atexpose.dispatcher.wrapper;
+package com.atexpose.dispatcher.wrapper.web_wrapper;
 
+import com.atexpose.dispatcher.wrapper.web_wrapper.WebWrapper;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.substring.SubString;

@@ -1,6 +1,6 @@
-package com.atexpose.dispatcher.wrapper;
+package com.atexpose.dispatcher.wrapper.web_wrapper;
 
-import com.atexpose.dispatcher.wrapper.FileUtil;
+import com.atexpose.dispatcher.wrapper.web_wrapper.FileUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
