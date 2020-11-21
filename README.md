@@ -204,21 +204,21 @@ To use a generator
 The project includes a JsClientGenerator which generates a JavaScript client.
 
 # Cookies
-When using the web server cookies can be read and set. 
+When using the web server, cookies can be read and set. 
 
 To read a cookie:
 ```
-String cookieValue = WebSession.getIncomingCookie("my_cookie_name");
+String cookieValue = WebCookieHandler.getRequestCookieValue("my_cookie_name");
 ```
 
 To write a cookie:
 ```
-WebSessionCookie cookie = WebSessionCookie.builder()
+WebCookie cookie = WebCookie.builder()
   .name("my_cookie_name")
   .value("1234")
   .expires(Instant.now().plusSeconds(60 * 20))
   .build();
-WebSession.addCookieToSet(cookie);
+WebCookieHandler.addResponseCookie(cookie);
 ```
 
 
@@ -322,7 +322,7 @@ sqsProducer.send(jsonRpc);
 - Aliases are no longer supported
 - Data types `Float` and `JSONObject` are no longer supported
 - `IExceptionProperties` is no longer supported
-- Argument can now take an optional reg ex. All argument values has to match reg ex else an error is thrown.
+- `Argument` can now take an optional reg ex. All argument values has to match reg ex else an error is thrown.
 - Methods returning `void` are now supported
 
 ## 0.9.38

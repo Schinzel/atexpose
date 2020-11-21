@@ -27,7 +27,7 @@ class WebCookieHandlerInternal {
     //------------------------------------------------------------------------
 
 
-    String getIncomingCookie(String cookieName, String threadName) {
+    String getRequestCookieValue(String cookieName, String threadName) {
         try {
             Thrower.createInstance()
                     .throwIfVarEmpty(cookieName, "cookieName")
@@ -45,7 +45,7 @@ class WebCookieHandlerInternal {
     }
 
 
-    void addCookieToSendToClient(WebCookie cookie, String threadName) {
+    void addResponseCookie(WebCookie cookie, String threadName) {
         try {
             Thrower.createInstance()
                     .throwIfVarNull(cookie, "cookie")
@@ -71,7 +71,7 @@ class WebCookieHandlerInternal {
     // Methods used by @expose (via WebCookieHandler)
     //------------------------------------------------------------------------
 
-    void setCookiesFromClient(Map<String, String> cookies, String threadName) {
+    void setRequestCookies(Map<String, String> cookies, String threadName) {
         Thrower.throwIfVarEmpty(threadName, "threadName");
         if (cookies == null) {
             cookies = Collections.emptyMap();
@@ -81,7 +81,7 @@ class WebCookieHandlerInternal {
     }
 
 
-    List<WebCookie> getCookiesToSendToClient(String threadName) {
+    List<WebCookie> getResponseCookies(String threadName) {
         Thrower.throwIfVarEmpty(threadName, "threadName");
         return mCookiesToSendToClient.get(threadName);
     }

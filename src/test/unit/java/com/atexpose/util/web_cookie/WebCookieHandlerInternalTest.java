@@ -1,7 +1,5 @@
 package com.atexpose.util.web_cookie;
 
-import com.atexpose.util.web_cookie.WebCookie;
-import com.atexpose.util.web_cookie.WebCookieHandlerInternal;
 import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.RandomUtil;
 import lombok.val;
@@ -25,7 +23,7 @@ public class WebCookieHandlerInternalTest {
     public void getIncomingCookie_cookieNameNull_Exception() {
         val webCookie = new WebCookieHandlerInternal();
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                webCookie.getIncomingCookie(null, "any_thread_name")
+                webCookie.getRequestCookieValue(null, "any_thread_name")
         );
     }
 
@@ -33,7 +31,7 @@ public class WebCookieHandlerInternalTest {
     public void getIncomingCookie_cookieNameEmptyString_Exception() {
         val webCookie = new WebCookieHandlerInternal();
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                webCookie.getIncomingCookie("", "any_thread_name")
+                webCookie.getRequestCookieValue("", "any_thread_name")
         );
     }
 
@@ -41,8 +39,8 @@ public class WebCookieHandlerInternalTest {
     public void getIncomingCookie_cookieNameDoesNotExist_Null() {
         val webCookie = new WebCookieHandlerInternal();
         val threadName = getRandomString();
-        webCookie.setCookiesFromClient(Collections.emptyMap(), threadName);
-        val actual = webCookie.getIncomingCookie("no_such_cookie", threadName);
+        webCookie.setRequestCookies(Collections.emptyMap(), threadName);
+        val actual = webCookie.getRequestCookieValue("no_such_cookie", threadName);
         assertThat(actual).isNull();
     }
 
@@ -51,7 +49,7 @@ public class WebCookieHandlerInternalTest {
     public void getIncomingCookie_threadDoesNotExist_Exception() {
         val webCookie = new WebCookieHandlerInternal();
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                webCookie.getIncomingCookie("any_cookie_name", "no_such_thread")
+                webCookie.getRequestCookieValue("any_cookie_name", "no_such_thread")
         );
     }
 
@@ -64,8 +62,8 @@ public class WebCookieHandlerInternalTest {
         Map<String, String> map = ImmutableMap.<String, String>builder()
                 .put(cookieName, cookieValue)
                 .build();
-        webCookie.setCookiesFromClient(map, threadName);
-        val actual = webCookie.getIncomingCookie(cookieName, threadName);
+        webCookie.setRequestCookies(map, threadName);
+        val actual = webCookie.getRequestCookieValue(cookieName, threadName);
         assertThat(actual).isEqualTo(cookieValue);
     }
 
@@ -78,7 +76,7 @@ public class WebCookieHandlerInternalTest {
     public void addCookieToSendToClient_cookieNull_Exception() {
         val webCookieStorage = new WebCookieHandlerInternal();
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                webCookieStorage.addCookieToSendToClient(null, "any_thread_name")
+                webCookieStorage.addResponseCookie(null, "any_thread_name")
         );
     }
 
@@ -87,7 +85,7 @@ public class WebCookieHandlerInternalTest {
         val webCookieStorage = new WebCookieHandlerInternal();
         val cookie = getCookie();
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                webCookieStorage.addCookieToSendToClient(cookie, null)
+                webCookieStorage.addResponseCookie(cookie, null)
         );
     }
 
@@ -96,7 +94,7 @@ public class WebCookieHandlerInternalTest {
     public void addCookieToSendToClient_addOneCookieInOneThread_CookieExitsInCollection() {
         val webCookieStorage = new WebCookieHandlerInternal();
         val cookie = getCookie();
-        webCookieStorage.addCookieToSendToClient(cookie, "my_thread_name");
+        webCookieStorage.addResponseCookie(cookie, "my_thread_name");
         final boolean cookieExists = webCookieStorage.mCookiesToSendToClient
                 .get("my_thread_name")
                 .contains(cookie);
@@ -108,7 +106,7 @@ public class WebCookieHandlerInternalTest {
     public void addCookieToSendToClient_add1000Cookies_collectionsHas1000Cookies() {
         val webCookieStorage = new WebCookieHandlerInternal();
         for (int i = 0; i < 1000; i++) {
-            webCookieStorage.addCookieToSendToClient(getCookie(), "thread_i" + i);
+            webCookieStorage.addResponseCookie(getCookie(), "thread_i" + i);
         }
         assertThat(webCookieStorage.mCookiesToSendToClient.size()).isEqualTo(1000);
     }
@@ -122,7 +120,7 @@ public class WebCookieHandlerInternalTest {
                     .value(RandomUtil.getRandomString(10))
                     .expires(Instant.now())
                     .build();
-            webCookieStorage.addCookieToSendToClient(cookie, "thread_" + i);
+            webCookieStorage.addResponseCookie(cookie, "thread_" + i);
         }
         for (int i = 0; i < 1000; i++) {
             val headerString = webCookieStorage.mCookiesToSendToClient

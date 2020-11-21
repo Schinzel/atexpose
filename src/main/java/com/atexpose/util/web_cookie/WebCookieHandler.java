@@ -12,7 +12,7 @@ import java.util.Map;
  * <br>
  * To read a cookie:
  * <pre>
- *     String cookieValue = WebCookieHandler.getIncomingCookie("my_cookie_name");
+ *     String cookieValue = WebCookieHandler.getRequestCookieValue("my_cookie_name");
  * </pre>
  * To write a cookie:
  * <pre>
@@ -21,7 +21,7 @@ import java.util.Map;
  *      .value("1234")
  *      .expires(Instant.now().plusSeconds(60 * 20))
  *      .build();
- *     WebCookieHandler.addCookieToSet(cookie);
+ *     WebCookieHandler.addResponseCookie(cookie);
  * </pre>
  *
  * </p>
@@ -33,17 +33,17 @@ import java.util.Map;
  * <p>
  * In WebChannel:
  * <pre>
- *     WebCookieHandlerSetCookies.setCookiesFromClient(cookies)
+ *     WebCookieHandlerSetCookies.setRequestCookies(cookies)
  * </pre>
  * In code outside of @expose
  * <pre>
- *     WebCookieHandler.getIncomingCookie("name_of_cookie")
- *     WebCookieHandler.getIncomingCookie("name_of_second_cookie")
- *     WebCookieHandler.addCookieToSendToClient(cookieOne)
+ *     WebCookieHandler.getRequestCookieValue("name_of_cookie")
+ *     WebCookieHandler.getRequestCookieValue("name_of_second_cookie")
+ *     WebCookieHandler.addResponseCookie(cookieOne)
  * </pre>
  * In WebWrapper:
  * <pre>
- *     WebCookieHandlerGetCookies.getCookiesToSendToClient()
+ *     WebCookieHandlerGetCookies.getResponseCookies()
  * </pre>
  * In WebChannel:
  * <pre>
@@ -65,10 +65,10 @@ public class WebCookieHandler {
 
     /**
      * @param cookieName The name of the cookie
-     * @return The value of the cookie with the argument name
+     * @return The value of the cookie with the argument name that was part of the request
      */
-    public static String getIncomingCookie(String cookieName) {
-        return WEB_COOKIE_HANDLER_INTERNAL.getIncomingCookie(cookieName, threadName());
+    public static String getRequestCookieValue(String cookieName) {
+        return WEB_COOKIE_HANDLER_INTERNAL.getRequestCookieValue(cookieName, threadName());
     }
 
 
@@ -78,8 +78,8 @@ public class WebCookieHandler {
      *
      * @param cookie A cookie to send to client
      */
-    public static void addCookieToSendToClient(WebCookie cookie) {
-        WEB_COOKIE_HANDLER_INTERNAL.addCookieToSendToClient(cookie, threadName());
+    public static void addResponseCookie(WebCookie cookie) {
+        WEB_COOKIE_HANDLER_INTERNAL.addResponseCookie(cookie, threadName());
     }
 
 
@@ -93,16 +93,16 @@ public class WebCookieHandler {
     /**
      * @param cookies Cookies that came from the client
      */
-    protected static void setCookiesFromClientInternal(Map<String, String> cookies) {
-        WEB_COOKIE_HANDLER_INTERNAL.setCookiesFromClient(cookies, threadName());
+    protected static void setRequestCookiesProtected(Map<String, String> cookies) {
+        WEB_COOKIE_HANDLER_INTERNAL.setRequestCookies(cookies, threadName());
     }
 
 
     /**
      * @return The cookies to send to the client
      */
-    protected static List<WebCookie> getCookiesToSendToClientInternal() {
-        return WEB_COOKIE_HANDLER_INTERNAL.getCookiesToSendToClient(threadName());
+    protected static List<WebCookie> getResponseCookiesProtected() {
+        return WEB_COOKIE_HANDLER_INTERNAL.getResponseCookies(threadName());
     }
 
 

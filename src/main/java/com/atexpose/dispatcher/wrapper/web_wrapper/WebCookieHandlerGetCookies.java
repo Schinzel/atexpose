@@ -11,7 +11,7 @@ import java.util.List;
  */
 class WebCookieHandlerGetCookies extends WebCookieHandler {
 
-    static List<WebCookie> getCookiesToSendToClient() {
-        return getCookiesToSendToClientInternal();
+    static List<WebCookie> getResponseCookies() {
+        return getResponseCookiesProtected();
     }
 }

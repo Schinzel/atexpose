@@ -99,7 +99,7 @@ public class WebWrapper implements IWrapper {
         return HttpResponseString.builder()
                 .body(methodReturn)
                 .customHeaders(mCustomResponseHeaders)
-                .cookieList(WebCookieHandlerGetCookies.getCookiesToSendToClient())
+                .cookieList(WebCookieHandlerGetCookies.getResponseCookies())
                 .build()
                 .getResponse();
     }

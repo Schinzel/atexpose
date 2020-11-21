@@ -10,8 +10,8 @@ import java.util.Map;
  * outside of @expose
  */
 class WebCookieHandlerSetCookies extends WebCookieHandler {
-    static void setCookiesFromClient(Map<String, String> cookies) {
-        setCookiesFromClientInternal(cookies);
+    static void setRequestCookies(Map<String, String> cookies) {
+        setRequestCookiesProtected(cookies);
     }
 
     static void closeRequestResponse() {

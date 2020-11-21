@@ -23,13 +23,13 @@ public class RemoveMeApi {
             requiredArgumentCount = 1
     )
     public static RemoveMeVar test_it(RemoveMeVar test_var) {
-        String cookieValue = WebCookieHandler.getIncomingCookie("my_cookie");
+        String cookieValue = WebCookieHandler.getRequestCookieValue("my_cookie");
         val cookie = WebCookie.builder()
                 .name("my_funky_cookie_" + RandomUtil.getRandomString(2))
                 .value("kalle kutta")
                 .expires(Instant.now().plusSeconds(60 * 20))
                 .build();
-        WebCookieHandler.addCookieToSendToClient(cookie);
+        WebCookieHandler.addResponseCookie(cookie);
         return new RemoveMeVar(test_var.s, test_var.i + 10);
     }
 
@@ -43,7 +43,7 @@ public class RemoveMeApi {
                 .value(RandomUtil.getRandomString(5))
                 .expires(Instant.now().plusSeconds(60 * 10))
                 .build();
-        WebCookieHandler.addCookieToSendToClient(cookie);
+        WebCookieHandler.addResponseCookie(cookie);
         return RemoveMeEnum.SECOND;
     }
 
