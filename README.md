@@ -62,10 +62,10 @@ public class MyClass {
 Start @Expose:
 ```java
 AtExpose.create()
-	//Expose static methods in a class
+	//Expose methods in a class
 	.expose(new MyClass())
-	//Start web server
-	.start(WebServerBuilder.create().build());
+	//Start web server on default port 5555
+	.startWebServer();
 
 
 ```

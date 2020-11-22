@@ -87,7 +87,7 @@ public class AtExpose implements IStateNode {
         return mAPI.getDataTypes()
                 .stream()
                 .filter(n -> n instanceof ClassDT)
-                .map(n -> (Class<?>)((ClassDT) n).getClazz())
+                .map(n -> (Class<?>) ((ClassDT) n).getClazz())
                 .collect(Collectors.toList());
     }
 
@@ -130,6 +130,16 @@ public class AtExpose implements IStateNode {
     public AtExpose readScriptFile(String fileName) {
         this.start(ScriptFileReaderFactory.create(fileName));
         return this;
+    }
+
+
+    /**
+     * Starts a web server on port 5555
+     *
+     * @return This for chaining
+     */
+    public AtExpose startWebServer() {
+        return this.startWebServer("");
     }
 
     /**
