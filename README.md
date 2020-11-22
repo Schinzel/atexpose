@@ -315,15 +315,19 @@ sqsProducer.send(jsonRpc);
 
 # Versions
 ## Features added for next release
-- New feature: Generators
-- New feature: Read and set cookies when using the web server 
-- JavaScript client generator added. Translates the api to a JavaScript client.
-- API requests prefixed with `api` instead of `call`
-- Aliases are no longer supported
-- Data types `Float` and `JSONObject` are no longer supported
-- `IExceptionProperties` is no longer supported
-- `Argument` can now take an optional reg ex. All argument values has to match reg ex else an error is thrown.
-- Methods returning `void` are now supported
+- New features:
+  - Generators
+  - Read and set cookies when using the web server
+  - Methods returning `void` are now supported
+  - JavaScript client generator added. Translates the api to a JavaScript client.
+  - `Argument` can now take an optional reg ex. All argument values has to match reg ex else an error is thrown.
+- Removed: 
+  - Support for GSuite authentication 
+  - Aliases are no longer supported
+  - Data types `Float` and `JSONObject` are no longer supported
+  - `IExceptionProperties` is no longer supported
+- Changed:
+  - API requests prefixed with `api` instead of `call`
 
 ## 0.9.38
 _2020-01-03_

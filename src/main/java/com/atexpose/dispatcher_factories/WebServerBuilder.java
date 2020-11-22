@@ -7,10 +7,8 @@ import com.atexpose.dispatcher.channels.web_channel.WebChannel;
 import com.atexpose.dispatcher.channels.web_channel.redirect.Redirects;
 import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.url_parser.UrlParser;
-import com.atexpose.dispatcher.parser.url_parser.UrlParserWithGSuiteAuth;
 import com.atexpose.dispatcher.wrapper.IWrapper;
 import com.atexpose.dispatcher.wrapper.web_wrapper.WebWrapper;
-import io.schinzel.basicutils.Checker;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -53,8 +51,6 @@ public class WebServerBuilder {
     @Setter boolean mForceDefaultPage = false;
     private Map<String, String> mResponseHeaders = new HashMap<>();
     private Redirects.RedirectsBuilder mRedirectsBuilder = Redirects.getBuilder();
-    private String mAuthCookieName;
-    private String mAuthDomain;
     /** File name custom 404 page */
     @Setter private String mFileName404Page;
 
@@ -160,13 +156,6 @@ public class WebServerBuilder {
     }
 
 
-    public WebServerBuilder gSuiteAuth(String authCookieName, String domain) {
-        mAuthCookieName = authCookieName;
-        mAuthDomain = domain;
-        return this;
-    }
-
-
     private IWrapper getWrapper() {
         return WebWrapper.builder()
                 .webServerDir(mWebServerDir)
@@ -176,20 +165,6 @@ public class WebServerBuilder {
                 .responseHeaders(mResponseHeaders)
                 .fileName404Page(mFileName404Page)
                 .build();
-    }
-
-
-    /**
-     * @return If there has been an auth domain set, a UrlParserWithGSuiteAuth is
-     * returned. Else a URLParser is returned.
-     */
-    private IParser getParser() {
-        return (Checker.isEmpty(mAuthDomain)) ?
-                new UrlParser() :
-                UrlParserWithGSuiteAuth.builder()
-                        .authCookieName(mAuthCookieName)
-                        .domain(mAuthDomain)
-                        .build();
     }
 
 
@@ -211,7 +186,7 @@ public class WebServerBuilder {
         //Construct web server name
         String webServerName = "WebServer_" + mPort;
         IChannel webChannel = this.getChannel();
-        IParser parser = this.getParser();
+        IParser parser = new UrlParser();
         IWrapper wrapper = this.getWrapper();
         return Dispatcher.builder()
                 .name(webServerName)
@@ -223,5 +198,4 @@ public class WebServerBuilder {
                 .noOfThreads(mNumberOfThreads)
                 .build();
     }
-
 }
