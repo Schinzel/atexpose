@@ -1,13 +1,12 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
-import com.atexpose.generator.JsClientGenerator;
 import io.schinzel.samples.auxiliary.MyClass;
 import io.schinzel.samples.auxiliary.MyObject;
 
 /**
  * This sample exposes a class and an object.
- * A command line interface and a web server is started.
+ * A web server is started.
  * <p>
  * Test the below commands in a browser:
  * http://127.0.0.1:5555/api/sayIt
@@ -28,7 +27,6 @@ public class _Sample2_WebServer {
                 //Expose an instance
                 .expose(new MyObject())
                 //Start a web server
-                //.start(WebServerBuilder.create().build())
-                .generate(new JsClientGenerator("src/main/resources/ServerCaller.js"));
+                .startWebServer();
     }
 }

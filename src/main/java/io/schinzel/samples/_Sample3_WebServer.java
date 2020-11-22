@@ -1,13 +1,13 @@
 package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
+import com.atexpose.api.Argument;
 import com.atexpose.api.data_types.DataTypeEnum;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
-import com.atexpose.dispatcher_factories.CliFactory;
 import com.atexpose.dispatcher_factories.WebServerBuilder;
 import io.schinzel.samples.auxiliary.MyClass;
 import io.schinzel.samples.auxiliary.MyObjectWithCustomArgument;
@@ -27,11 +27,12 @@ public class _Sample3_WebServer {
 
 
     public static void main(String[] args) {
-        AtExpose atExpose = AtExpose.create();
-        //Add a custom argument
-        atExpose.getAPI()
-                .addArgument("Price", DataTypeEnum.INT.getDataType(), "A price");
-        atExpose
+        AtExpose.create()
+                .addArgument(Argument.builder()
+                        .name("Price")
+                        .dataType(DataTypeEnum.INT.getDataType())
+                        .description("A price")
+                        .build())
                 //Expose static methods in a class
                 .expose(MyClass.class)
                 //Expose an instance
@@ -39,7 +40,7 @@ public class _Sample3_WebServer {
                 //Start web server
                 .start(getWebServer())
                 //Start a command line interface
-                .start(CliFactory.create());
+                .startCLI();
     }
 
 
