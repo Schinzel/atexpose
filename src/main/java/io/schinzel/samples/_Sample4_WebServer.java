@@ -9,16 +9,18 @@ import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
 import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import com.atexpose.dispatcher_factories.WebServerBuilder;
+import io.schinzel.samples.auxiliary.ClassWithCustomArgument;
 import io.schinzel.samples.auxiliary.MyClass;
-import io.schinzel.samples.auxiliary.MyObjectWithCustomArgument;
 
 /**
- * This sample exposes a class and an object.
- * Also a more advanced web server configuration is used.
- * A command line interface and a web server is started
- * The web server serves files from the directory "web/sample3"
+ * The purpose of this sample is to show a more advanced set up.
  * <p>
- * Test the below commands in a browser:
+ * In the command line interface try:
+ * getPrice
+ * setPrice 55
+ * getPrice
+ * <p>
+ * Load the below url in a browser:
  * http://127.0.0.1:5555/mypage.html
  *
  * @author schinzel
@@ -28,6 +30,7 @@ public class _Sample3_WebServer {
 
     public static void main(String[] args) {
         AtExpose.create()
+                // Add a custom argument "Price"
                 .addArgument(Argument.builder()
                         .name("Price")
                         .dataType(DataTypeEnum.INT.getDataType())
@@ -36,7 +39,7 @@ public class _Sample3_WebServer {
                 //Expose static methods in a class
                 .expose(MyClass.class)
                 //Expose an instance
-                .expose(new MyObjectWithCustomArgument())
+                .expose(new ClassWithCustomArgument())
                 //Start web server
                 .start(getWebServer())
                 //Start a command line interface

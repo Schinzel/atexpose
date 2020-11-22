@@ -128,7 +128,7 @@ public class AtExpose implements IStateNode {
     }
 
     public AtExpose readScriptFile(String fileName) {
-        this.start(ScriptFileReaderFactory.create(fileName));
+        this.start(ScriptFileReaderFactory.create(fileName), true);
         return this;
     }
 

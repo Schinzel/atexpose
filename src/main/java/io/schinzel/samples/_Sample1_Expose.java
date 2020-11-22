@@ -5,16 +5,24 @@ import io.schinzel.samples.auxiliary.MyClass;
 import io.schinzel.samples.auxiliary.MyObject;
 
 /**
+ * <p>
+ * The purpose of this class is to show the a basic set up.
+ * </p>
+ * <p>
  * This sample exposes a class and an object.
  * A command line interface is started.
+ * </p>
  * <p>
  * In the terminal test:
+ * </p>
+ * <pre>
  * sayIt
  * doubleIt 55
  * doEcho chimp
  * setTheThing gorilla
  * getTheThing
  * shutdown
+ * </pre>
  *
  * @author schinzel
  */

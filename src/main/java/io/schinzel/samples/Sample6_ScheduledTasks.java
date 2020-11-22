@@ -6,16 +6,16 @@ import com.atexpose.dispatcher_factories.CliFactory;
 import com.atexpose.dispatcher_factories.ScheduledTaskFactory;
 
 /**
- * In this sample scheduled tasks are set up.
  * <p>
- * Things to try:
- * - Run below sample and type 'status' in command line interface.
- * - In cli type 'addMinuteTask anyname, time, 1' to type a task
- * - In cli type 'removeTask MyTask3' to remove a task
- * - In cli type 'help *task*' to see all methods that deals with taks.
+ * The purpose of this sample is to show how to set up a scheduled task
+ * </p>
+ * <p>
+ * Run below sample and type 'status' in command line interface. This displays the different
+ * tasks currently running
+ * </p>
  */
 
-public class ScheduledTasks {
+public class Sample6_ScheduledTasks {
     public static void main(String[] args) {
         AtExpose.create()
                 .start(getMinuteTask())
@@ -50,7 +50,7 @@ public class ScheduledTasks {
                 .request("ping")
                 .timeOfDay("07:00")
                 .dayOfMonth(14)
-                .timeZone("America/New_York\"")
+                .timeZone("America/New_York")
                 .build();
 
     }
