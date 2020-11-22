@@ -26,7 +26,7 @@ import com.atexpose.util.mail.MockMailSender;
  * terminal to get the current time in UTC.
  * </p>
  */
-class Schedule7_ScheduledReport {
+class Sample7_ScheduledReport {
 
     public static void main(String[] args) {
         AtExpose.create()
@@ -38,8 +38,8 @@ class Schedule7_ScheduledReport {
     private static IDispatcher getScheduledReport() {
         IEmailSender emailSender = new MockMailSender();
         /*
-         Use the below to send an actual email
-         GmailEmailSender emailSender = new GmailEmailSender("name@example.com", "my_gmail_password");
+         Replace the mock email sender to send an actual email
+         IEmailSender emailSender = new GmailEmailSender("name@example.com", "my_gmail_password");
         */
         return ScheduledReportFactory.builder()
                 .taskName("MyTask")

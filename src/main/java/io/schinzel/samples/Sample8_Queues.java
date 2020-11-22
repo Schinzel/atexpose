@@ -3,7 +3,6 @@ package io.schinzel.samples;
 import com.amazonaws.regions.Regions;
 import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcher_factories.CliFactory;
 import com.atexpose.dispatcher_factories.SqsConsumerFactory;
 import com.atexpose.util.sqs.JsonRpc;
 import com.atexpose.util.sqs.SqsProducer;
@@ -12,6 +11,9 @@ import io.schinzel.samples.auxiliary.MyObject;
 import io.schinzel.samples.auxiliary.AWS;
 
 /**
+ * <p>
+ * The purpose of this sample is
+ * </p>
  * This sample sets up a consumer and consumes messages from a AWS SQS queue. The sample also
  * shows how to use a utility class to put messages on an AWS SQS queue.
  * <p>
@@ -29,7 +31,7 @@ import io.schinzel.samples.auxiliary.AWS;
  * <p>
  * Created by schinzel on 2017-07-06.
  */
-public class Queue {
+public class Sample8_Queues {
 
 
     public static void main(String[] args) {
@@ -39,20 +41,20 @@ public class Queue {
 
 
     /**
-     * Typical code to set up a SQS.
+     * Typical code to set up an SQS.
      */
     static void startAtExposeWithConsumer() {
         AtExpose.create()
                 //Expose a sample class
                 .expose(new MyObject())
                 //Start a command line interface
-                .start(CliFactory.create())
+                .startCLI()
                 //Start up SQS consumer
-                .start(getConsumer());
+                .start(getSqsConsumer());
     }
 
 
-    private static IDispatcher getConsumer() {
+    private static IDispatcher getSqsConsumer() {
         return SqsConsumerFactory.builder()
                 .awsAccessKey(AWS.ACCESS_KEY)
                 .awsSecretKey(AWS.SECRET_KEY)
