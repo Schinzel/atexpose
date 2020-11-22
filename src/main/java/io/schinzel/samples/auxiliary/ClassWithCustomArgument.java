@@ -2,7 +2,7 @@ package io.schinzel.samples.auxiliary;
 
 import com.atexpose.Expose;
 
-public class MyObjectWithCustomArgument {
+public class ClassWithCustomArgument {
     int mPrice = 17;
 
 

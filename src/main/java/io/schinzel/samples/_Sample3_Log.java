@@ -10,14 +10,19 @@ import com.atexpose.dispatcher_factories.WebServerBuilder;
 import io.schinzel.samples.auxiliary.MyClass;
 
 /**
- * This sample adds logs to dispatchers
+ * <p>
+ * The purpose of this sample is to show how to add a logger
+ * </p>
  * <p>
  * Request the below URL in a browser and observe the log in the terminal
+ * </p>
+ * <pre>
  * http://127.0.0.1:5555/api/doubleIt?Int=55
- * <p>
- * Add a log
+ * </pre>
+ *
+ * @author schinzel
  */
-public class Log {
+public class _Sample3_Log {
     public static void main(String[] args) {
         AtExpose.create()
                 //Expose methods in a class
@@ -27,15 +32,23 @@ public class Log {
     }
 
 
+    /**
+     *
+     * @return A web server
+     */
     private static IDispatcher getWebServer() {
         return WebServerBuilder.create()
                 .build()
                 //Add a logger to web server
-                .addLogger(getWebServerLogger());
+                .addLogger(getLogger());
     }
 
 
-    private static Logger getWebServerLogger() {
+    /**
+     *
+     * @return A logger
+     */
+    private static Logger getLogger() {
         return Logger
                 .builder()
                 .loggerType(LoggerType.EVENT)

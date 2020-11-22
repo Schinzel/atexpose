@@ -25,7 +25,7 @@ import io.schinzel.samples.auxiliary.MyClass;
  *
  * @author schinzel
  */
-public class _Sample3_WebServer {
+public class _Sample4_WebServer {
 
 
     public static void main(String[] args) {
@@ -50,7 +50,7 @@ public class _Sample3_WebServer {
     private static IDispatcher getWebServer() {
         return WebServerBuilder.create()
                 //Set the dir from which requested file will be read
-                .webServerDir("web/sample3")
+                .webServerDir("web/sample4")
                 //Disable RAM cache so that changes to files made kicks through without restarting the web server
                 .cacheFilesInRAM(false)
                 //Set custom 404 page
