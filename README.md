@@ -322,7 +322,7 @@ sqsProducer.send(jsonRpc);
   - JavaScript client generator added. Translates the api to a JavaScript client.
   - `Argument` can now take an optional reg ex. All argument values has to match reg ex else an error is thrown.
 - Removed: 
-  - Support for GSuite authentication 
+  - GSuite authentication is no longer supported 
   - Aliases are no longer supported
   - Data types `Float` and `JSONObject` are no longer supported
   - `IExceptionProperties` is no longer supported
