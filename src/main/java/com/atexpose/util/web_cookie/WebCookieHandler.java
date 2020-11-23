@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * <p>
  * The purpose of this class is read and write cookies in Java or Kotlin code outside @expose code.
+ * </p>
+ * <p>
  * It only works in conjunction with the web server, i.e. a WebChannel as channel and WebWrapper as wrapper
- *
+ *</p>
  * <p>
  * <b>Usage</b>
  * <br>
@@ -27,6 +30,11 @@ import java.util.Map;
  * </p>
  *
  * <b>Internal documentation</b>
+ * <p>
+ * The somewhat contrived naming is due to that there already is a CookieHandler and
+ * AtExposeCookieHandler is kind of long. It is used in conjunction with the web server which
+ * uses a WebChannel and a WebWrapper.
+ * </p>
  * <p>
  * Life cycle of a request response
  * </p>
