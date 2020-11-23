@@ -25,7 +25,7 @@ import io.schinzel.samples.auxiliary.MyObject;
  *
  * @author schinzel
  */
-public class _Sample2_WebServer {
+public class Sample2_WebServer {
 
 
     public static void main(String[] args) {

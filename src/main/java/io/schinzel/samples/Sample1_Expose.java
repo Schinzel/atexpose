@@ -26,7 +26,7 @@ import io.schinzel.samples.auxiliary.MyObject;
  *
  * @author schinzel
  */
-public class _Sample1_Expose {
+public class Sample1_Expose {
 
 
     public static void main(String[] args) {

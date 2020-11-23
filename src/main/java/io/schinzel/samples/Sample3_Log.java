@@ -22,7 +22,7 @@ import io.schinzel.samples.auxiliary.MyClass;
  *
  * @author schinzel
  */
-public class _Sample3_Log {
+public class Sample3_Log {
     public static void main(String[] args) {
         AtExpose.create()
                 //Expose methods in a class
