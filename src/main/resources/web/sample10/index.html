@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample</title>
+    <script src="jquery-2.1.3.min.js"></script>
+</head>
+<body>
+<h1>This is index in sample 10</h1>
+<script type="module">
+
+    import {ServerCaller} from "./ServerCaller.js";
+
+    async function callServer() {
+
+        let manager = await new ServerCaller().getManager();
+        log("Got manager from server");
+        log(manager);
+        manager.setAge(45);
+        log("Managers age changed");
+        log(manager);
+        let serverResponse = await new ServerCaller().setManager(manager);
+        log('Server response: ' + serverResponse);
+    }
+
+
+    function log(str) {
+        console.log(str);
+    }
+
+    callServer();
+
+</script>
+</body>
+</html>
