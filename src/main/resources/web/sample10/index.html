@@ -6,13 +6,16 @@
     <script src="jquery-2.1.3.min.js"></script>
 </head>
 <body>
-<h1>This is index in sample 10</h1>
+<h1>Sample 10 Page</h1>
 <script type="module">
 
-    import {ServerCaller} from "./ServerCaller.js";
+    import {Position, ServerCaller} from "./ServerCaller.js";
 
-    async function callServer() {
-
+    /**
+     * Calls the server and retrieves a class.
+     * Changes a property in this class and send it to the server.
+     */
+    async function getAndSetPersonClass() {
         let manager = await new ServerCaller().getManager();
         log("Got manager from server");
         log(manager);
@@ -24,11 +27,24 @@
     }
 
 
+    /**
+     * Calls the server and retrieves en enum.
+     * Sends the same enum with a different value to the server.
+     */
+    async function getAndSetPositionEnum() {
+        let position = await new ServerCaller().getPosition();
+        log("Got position from server");
+        log(position);
+        let serverResponse = await new ServerCaller().setPosition(Position.SECOND);
+        log('Server response: ' + serverResponse);
+    }
+
     function log(str) {
         console.log(str);
     }
 
-    callServer();
+    getAndSetPersonClass();
+    getAndSetPositionEnum();
 
 </script>
 </body>

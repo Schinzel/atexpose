@@ -16,7 +16,7 @@ public class Person {
     }
 
     public String toString(){
-        return "Manager with name " + name + " is " + age + " years old";
+        return "Manager with name " + name + " who is " + age + " years old";
     }
 }
 

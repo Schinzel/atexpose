@@ -112,6 +112,17 @@ export class ServerCaller {
     }
 
     /**
+     * No description available
+     * @returns {Promise<Position>}
+     */
+    async getPosition(){
+        let response = await new ServerCallerInt()
+            .setPath('/api/getPosition')
+            .callWithPromise();
+        return Position[response];
+    }
+
+    /**
      * Simply returns the string "pong". Util method for testing.
      * @returns {Promise<string>}
      */
@@ -131,6 +142,19 @@ export class ServerCaller {
         let response = await new ServerCallerInt()
             .setPath('/api/setManager')
             .addArg('manager', manager)
+            .callWithPromise();
+        return response;
+    }
+
+    /**
+     * No description available
+     * @param {Position} position - The position
+     * @returns {Promise<string>}
+     */
+    async setPosition(position){
+        let response = await new ServerCallerInt()
+            .setPath('/api/setPosition')
+            .addArg('position', position)
             .callWithPromise();
         return response;
     }
