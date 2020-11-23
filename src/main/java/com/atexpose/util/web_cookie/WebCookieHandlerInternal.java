@@ -20,14 +20,14 @@ class WebCookieHandlerInternal {
      * Key - the name of the thread
      * Value - A list of cookies to send to the client
      */
-    final Map<String, List<WebCookie>> mCookiesToSendToClient = new HashMap<>();
+    final Map<String, List<ResponseCookie>> mCookiesToSendToClient = new HashMap<>();
 
     //------------------------------------------------------------------------
     // Methods used outside of @expose (via WebCookieHandler)
     //------------------------------------------------------------------------
 
 
-    String getRequestCookieValue(String cookieName, String threadName) {
+    RequestCookie getRequestCookie(String cookieName, String threadName) {
         try {
             Thrower.createInstance()
                     .throwIfVarEmpty(cookieName, "cookieName")
@@ -36,16 +36,21 @@ class WebCookieHandlerInternal {
             if (currentThreadsCookies == null) {
                 throw new RuntimeException("No cookies for thread");
             }
-            return currentThreadsCookies.get(cookieName);
+            val cookieValue = currentThreadsCookies.get(cookieName);
+            return (cookieValue == null)
+                    ? null
+                    : RequestCookie.builder()
+                    .value(cookieValue)
+                    .build();
         } catch (Exception e) {
-            val errorMessage = "Error when requesting incoming cookie named '"
+            val errorMessage = "Error when getting request cookie named '"
                     + cookieName + "' in thread '" + threadName + "'. ";
             throw new RuntimeException(errorMessage + e.getMessage());
         }
     }
 
 
-    void addResponseCookie(WebCookie cookie, String threadName) {
+    void addResponseCookie(ResponseCookie cookie, String threadName) {
         try {
             Thrower.createInstance()
                     .throwIfVarNull(cookie, "cookie")
@@ -81,7 +86,7 @@ class WebCookieHandlerInternal {
     }
 
 
-    List<WebCookie> getResponseCookies(String threadName) {
+    List<ResponseCookie> getResponseCookies(String threadName) {
         Thrower.throwIfVarEmpty(threadName, "threadName");
         return mCookiesToSendToClient.get(threadName);
     }
@@ -97,7 +102,7 @@ class WebCookieHandlerInternal {
             currentThreadsCookiesFromClient.clear();
         }
         // Get map for cookies-to-send-to-client
-        List<WebCookie> currentThreadsCookiesToSendToClient = mCookiesToSendToClient.get(threadName);
+        List<ResponseCookie> currentThreadsCookiesToSendToClient = mCookiesToSendToClient.get(threadName);
         // If there was such a map
         if (currentThreadsCookiesToSendToClient != null) {
             // Clear the map

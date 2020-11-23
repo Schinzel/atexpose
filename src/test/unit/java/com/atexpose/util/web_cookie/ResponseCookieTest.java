@@ -1,6 +1,5 @@
 package com.atexpose.util.web_cookie;
 
-import com.atexpose.util.web_cookie.WebCookie;
 import io.schinzel.basicutils.RandomUtil;
 import lombok.val;
 import org.junit.Test;
@@ -10,12 +9,12 @@ import java.time.Instant;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 
-public class WebCookieTest {
+public class ResponseCookieTest {
 
     @Test
     public void getExpiresDate() {
         val instant = Instant.parse("2020-11-12T21:59:59.50Z");
-        val dateTimeString = WebCookie.getExpiresAsString(instant);
+        val dateTimeString = ResponseCookie.getExpiresAsString(instant);
         val expected = "Thu, 12 Nov 2020 21:59:59 GMT";
         assertThat(dateTimeString).isEqualTo(expected);
     }
@@ -24,7 +23,7 @@ public class WebCookieTest {
     @Test
     public void getHttpHeaderSetCookieString() {
         val cookieValue = RandomUtil.getRandomString(5);
-        val actual = WebCookie.builder()
+        val actual = ResponseCookie.builder()
                 .name("cookie_name")
                 .value(cookieValue)
                 .expires(Instant.parse("2120-11-12T21:59:59.50Z"))
@@ -38,7 +37,7 @@ public class WebCookieTest {
     @Test
     public void builder_nameHasAllowedChars_NoException() {
         assertThatCode(() ->
-                WebCookie.builder()
+                ResponseCookie.builder()
                         .name("my_name")
                         .value("my_value")
                         .expires(Instant.now())
@@ -49,7 +48,7 @@ public class WebCookieTest {
     @Test
     public void builder_nameHasForbiddenChars_NoException() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                WebCookie.builder()
+                ResponseCookie.builder()
                         .name("åäö")
                         .value("my_value")
                         .expires(Instant.now().minusSeconds(100))
@@ -61,7 +60,7 @@ public class WebCookieTest {
     @Test
     public void builder_expiresIsBeforeNow_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                WebCookie.builder()
+                ResponseCookie.builder()
                         .name("my_name")
                         .value("my_value")
                         .expires(Instant.now().minusSeconds(100))
@@ -72,7 +71,7 @@ public class WebCookieTest {
     @Test
     public void builder_instantIsNull_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                WebCookie.builder()
+                ResponseCookie.builder()
                         .name("my_name")
                         .value("my_value")
                         .expires(null)
@@ -84,7 +83,7 @@ public class WebCookieTest {
     @Test
     public void builder_nameIsEmptyString_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                WebCookie.builder()
+                ResponseCookie.builder()
                         .name("")
                         .value("my_value")
                         .expires(Instant.now().minusSeconds(100))
@@ -95,7 +94,7 @@ public class WebCookieTest {
     @Test
     public void builder_nameIsTooLong_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                WebCookie.builder()
+                ResponseCookie.builder()
                         .name(RandomUtil.getRandomString(101))
                         .value("my_value")
                         .expires(Instant.now().minusSeconds(100))
@@ -106,7 +105,7 @@ public class WebCookieTest {
     @Test
     public void builder_nameIsNull_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                WebCookie.builder()
+                ResponseCookie.builder()
                         .name(null)
                         .value("my_value")
                         .expires(Instant.now().minusSeconds(100))
@@ -118,7 +117,7 @@ public class WebCookieTest {
     @Test
     public void builder_valueHasAllowedChars_NoException() {
         assertThatCode(() ->
-                WebCookie.builder()
+                ResponseCookie.builder()
                         .name("my_name")
                         .value("my_value")
                         .expires(Instant.now())
@@ -129,7 +128,7 @@ public class WebCookieTest {
     @Test
     public void builder_valueHasForbiddenChars_NoException() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                WebCookie.builder()
+                ResponseCookie.builder()
                         .name("my_name")
                         .value("åäö")
                         .expires(Instant.now())
@@ -141,7 +140,7 @@ public class WebCookieTest {
     @Test
     public void builder_valueIsEmptyString_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                WebCookie.builder()
+                ResponseCookie.builder()
                         .name("my_name")
                         .value("")
                         .expires(Instant.now())
@@ -152,7 +151,7 @@ public class WebCookieTest {
     @Test
     public void builder_valueIsTooLong_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                WebCookie.builder()
+                ResponseCookie.builder()
                         .name("my_name")
                         .value(RandomUtil.getRandomString(105))
                         .expires(Instant.now())
@@ -163,7 +162,7 @@ public class WebCookieTest {
     @Test
     public void builder_valueIsNull_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                WebCookie.builder()
+                ResponseCookie.builder()
                         .name("my_name")
                         .value(null)
                         .expires(Instant.now())

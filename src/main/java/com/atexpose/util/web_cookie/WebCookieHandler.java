@@ -37,8 +37,8 @@ import java.util.Map;
  * </pre>
  * In code outside of @expose
  * <pre>
- *     WebCookieHandler.getRequestCookieValue("name_of_cookie")
- *     WebCookieHandler.getRequestCookieValue("name_of_second_cookie")
+ *     WebCookieHandler.getRequestCookie("name_of_cookie")
+ *     WebCookieHandler.getRequestCookie("name_of_second_cookie")
  *     WebCookieHandler.addResponseCookie(cookieOne)
  * </pre>
  * In WebWrapper:
@@ -65,10 +65,10 @@ public class WebCookieHandler {
 
     /**
      * @param cookieName The name of the cookie
-     * @return The value of the cookie with the argument name that was part of the request
+     * @return The cookie with the argument name that was part of the request
      */
-    public static String getRequestCookieValue(String cookieName) {
-        return WEB_COOKIE_HANDLER_INTERNAL.getRequestCookieValue(cookieName, threadName());
+    public static RequestCookie getRequestCookie(String cookieName) {
+        return WEB_COOKIE_HANDLER_INTERNAL.getRequestCookie(cookieName, threadName());
     }
 
 
@@ -78,7 +78,7 @@ public class WebCookieHandler {
      *
      * @param cookie A cookie to send to client
      */
-    public static void addResponseCookie(WebCookie cookie) {
+    public static void addResponseCookie(ResponseCookie cookie) {
         WEB_COOKIE_HANDLER_INTERNAL.addResponseCookie(cookie, threadName());
     }
 
@@ -101,7 +101,7 @@ public class WebCookieHandler {
     /**
      * @return The cookies to send to the client
      */
-    protected static List<WebCookie> getResponseCookiesProtected() {
+    protected static List<ResponseCookie> getResponseCookiesProtected() {
         return WEB_COOKIE_HANDLER_INTERNAL.getResponseCookies(threadName());
     }
 

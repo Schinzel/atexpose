@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * "Set-Cookie: cookie_name=cookie_value; Path=/; Expires=Thu, 12 Nov 2020 04:39:51 GMT"
  */
 @Accessors(prefix = "m")
-public class WebCookie {
+public class ResponseCookie {
     private static final DateTimeFormatter COOKIE_TIME_FORMAT = DateTimeFormatter
             .ofPattern("EEE, dd MMM yyyy HH:mm:ss 'GMT'");
 
@@ -32,14 +32,14 @@ public class WebCookie {
     private final String mHttpHeaderSetCookieString;
 
     @Builder
-    WebCookie(String name, String value, Instant expires) {
+    ResponseCookie(String name, String value, Instant expires) {
         Thrower.createInstance()
                 .throwIfVarEmpty(name, "name")
                 .throwIfVarEmpty(value, "value")
                 .throwIfNotMatchesRegex(name, "name", ALLOWED_CHARS_NAME_VALUE)
                 .throwIfNotMatchesRegex(value, "value", ALLOWED_CHARS_NAME_VALUE)
                 .throwIfTrue(expires.isBefore(Instant.now().minusSeconds(1)), "Expires has to be after now");
-        val expiresAsString = WebCookie.getExpiresAsString(expires);
+        val expiresAsString = ResponseCookie.getExpiresAsString(expires);
         mHttpHeaderSetCookieString = "Set-Cookie: "
                 + name + "=" + value + "; "
                 + "Path=/; "

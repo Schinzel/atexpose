@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.wrapper.web_wrapper;
 
-import com.atexpose.util.web_cookie.WebCookie;
+import com.atexpose.util.web_cookie.ResponseCookie;
 import com.atexpose.util.web_cookie.WebCookieHandler;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  */
 class WebCookieHandlerGetCookies extends WebCookieHandler {
 
-    static List<WebCookie> getResponseCookies() {
+    static List<ResponseCookie> getResponseCookies() {
         return getResponseCookiesProtected();
     }
 }

@@ -1,7 +1,7 @@
 package com.atexpose.util.http_response;
 
 import com.atexpose.dispatcher.PropertiesDispatcher;
-import com.atexpose.util.web_cookie.WebCookie;
+import com.atexpose.util.web_cookie.ResponseCookie;
 import com.google.common.base.Joiner;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.str.Str;
@@ -26,7 +26,7 @@ class HttpHeader {
     @Builder
     HttpHeader(HttpStatusCode httpStatusCode,
                Map<String, String> customHeaders,
-               List<WebCookie> cookieList,
+               List<ResponseCookie> cookieList,
                ContentType contentType,
                int browserCacheMaxAgeInSeconds,
                int contentLength) {
@@ -37,7 +37,7 @@ class HttpHeader {
                 ? ""
                 : cookieList
                 .stream()
-                .map(WebCookie::getHttpHeaderSetCookieString)
+                .map(ResponseCookie::getHttpHeaderSetCookieString)
                 .collect(Collectors.joining(""));
         header = Str.create()
                 .a("HTTP/1.1 ").acrlf(httpStatusCode.getCode())

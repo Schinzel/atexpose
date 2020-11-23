@@ -1,7 +1,7 @@
 package com.atexpose;
 
 import com.atexpose.util.web_cookie.WebCookieHandler;
-import com.atexpose.util.web_cookie.WebCookie;
+import com.atexpose.util.web_cookie.ResponseCookie;
 import io.schinzel.basicutils.RandomUtil;
 import lombok.val;
 
@@ -23,8 +23,10 @@ public class RemoveMeApi {
             requiredArgumentCount = 1
     )
     public static RemoveMeVar test_it(RemoveMeVar test_var) {
-        String cookieValue = WebCookieHandler.getRequestCookieValue("my_cookie");
-        val cookie = WebCookie.builder()
+        String cookieValue = WebCookieHandler
+                .getRequestCookie("my_cookie")
+                .getValue();
+        val cookie = ResponseCookie.builder()
                 .name("my_funky_cookie_" + RandomUtil.getRandomString(2))
                 .value("kalle kutta")
                 .expires(Instant.now().plusSeconds(60 * 20))
@@ -38,7 +40,7 @@ public class RemoveMeApi {
             arguments = {"test_enum"}
     )
     public static RemoveMeEnum test_it_2(RemoveMeEnum test_enum) {
-        val cookie = WebCookie.builder()
+        val cookie = ResponseCookie.builder()
                 .name("my_second_funky_cookie")
                 .value(RandomUtil.getRandomString(5))
                 .expires(Instant.now().plusSeconds(60 * 10))
