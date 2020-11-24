@@ -36,7 +36,7 @@ public class Sample10 {
                         .description("The position")
                         .build())
                 // Create an argument "sample_arg" that is of data type "String"
-                // was a reg ex that defines which chars are allowed.
+                // with a reg ex that defines which chars are allowed.
                 .addArgument(Argument.builder()
                         .name("sample_arg")
                         .dataType(DataTypeEnum.STRING.getDataType())
