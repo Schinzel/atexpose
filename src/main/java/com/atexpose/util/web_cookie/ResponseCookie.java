@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 public class ResponseCookie {
     private static final DateTimeFormatter COOKIE_TIME_FORMAT = DateTimeFormatter
             .ofPattern("EEE, dd MMM yyyy HH:mm:ss 'GMT'");
-
     private static final Pattern ALLOWED_CHARS_NAME_VALUE = Pattern
             .compile("[a-zA-Z0-9_-]{1,100}");
 
@@ -32,20 +31,25 @@ public class ResponseCookie {
     private final String mHttpHeaderSetCookieString;
 
     @Builder
-    ResponseCookie(String name, String value, Instant expires, boolean httpOnly) {
+    ResponseCookie(String name, String value, Instant expires, boolean httpOnly, SameSite sameSite) {
         Thrower.createInstance()
                 .throwIfVarEmpty(name, "name")
                 .throwIfVarEmpty(value, "value")
                 .throwIfNotMatchesRegex(name, "name", ALLOWED_CHARS_NAME_VALUE)
                 .throwIfNotMatchesRegex(value, "value", ALLOWED_CHARS_NAME_VALUE)
+                .throwIfVarNull(expires, "expires")
                 .throwIfTrue(expires.isBefore(Instant.now().minusSeconds(1)), "Expires has to be after now");
         val expiresAsString = ResponseCookie.getExpiresAsString(expires);
         val httpOnlyString = httpOnly ? "; HttpOnly" : "";
+        val sameSiteString = (sameSite != null)
+                ? "; SameSite=" + sameSite.getAttributeValue()
+                : "";
         mHttpHeaderSetCookieString = "Set-Cookie: "
                 + name + "=" + value + "; "
                 + "Path=/; "
                 + "Expires=" + expiresAsString
                 + httpOnlyString
+                + sameSiteString
                 + "\r\n";
     }
 

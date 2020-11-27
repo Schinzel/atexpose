@@ -171,7 +171,7 @@ public class ResponseCookieTest {
     }
 
     @Test
-    public void builder_HttpOnlyFalse_NoHttpOnlyFlag() {
+    public void getHttpHeaderSetCookieString_HttpOnlyFalse_NoHttpOnlyFlag() {
         val httpHeaderSetCookieString = ResponseCookie.builder()
                 .name("my_name")
                 .value("my_value")
@@ -183,7 +183,7 @@ public class ResponseCookieTest {
     }
 
     @Test
-    public void builder_HttpOnlyNotSet_NoHttpOnlyFlag() {
+    public void getHttpHeaderSetCookieString_HttpOnlyNotSet_NoHttpOnlyFlag() {
         val httpHeaderSetCookieString = ResponseCookie.builder()
                 .name("my_name")
                 .value("my_value")
@@ -195,7 +195,7 @@ public class ResponseCookieTest {
 
 
     @Test
-    public void builder_HttpOnlyTrue_HttpOnlyPresent() {
+    public void getHttpHeaderSetCookieString_HttpOnlyTrue_HttpOnlyPresent() {
         val httpHeaderSetCookieString = ResponseCookie.builder()
                 .name("my_name")
                 .value("my_value")
@@ -206,4 +206,51 @@ public class ResponseCookieTest {
         assertThat(httpHeaderSetCookieString).contains("; HttpOnly");
     }
 
+    @Test
+    public void getHttpHeaderSetCookieString_SameSiteNotSet_NoSameSiteFlag() {
+        val httpHeaderSetCookieString = ResponseCookie.builder()
+                .name("my_name")
+                .value("my_value")
+                .expires(Instant.now())
+                .build()
+                .getHttpHeaderSetCookieString();
+        assertThat(httpHeaderSetCookieString).doesNotContain("SameSite");
+    }
+
+
+    @Test
+    public void getHttpHeaderSetCookieString_SameSiteNone_SameSiteSetToNone() {
+        val httpHeaderSetCookieString = ResponseCookie.builder()
+                .name("my_name")
+                .value("my_value")
+                .expires(Instant.now())
+                .sameSite(SameSite.NONE)
+                .build()
+                .getHttpHeaderSetCookieString();
+        assertThat(httpHeaderSetCookieString).contains("; SameSite=None");
+    }
+
+    @Test
+    public void getHttpHeaderSetCookieString_SameSiteLax_SameSiteSetToLax() {
+        val httpHeaderSetCookieString = ResponseCookie.builder()
+                .name("my_name")
+                .value("my_value")
+                .expires(Instant.now())
+                .sameSite(SameSite.LAX)
+                .build()
+                .getHttpHeaderSetCookieString();
+        assertThat(httpHeaderSetCookieString).contains("; SameSite=Lax");
+    }
+
+    @Test
+    public void getHttpHeaderSetCookieString_SameSiteStrict_SameSiteSetToStrict() {
+        val httpHeaderSetCookieString = ResponseCookie.builder()
+                .name("my_name")
+                .value("my_value")
+                .expires(Instant.now())
+                .sameSite(SameSite.STRICT)
+                .build()
+                .getHttpHeaderSetCookieString();
+        assertThat(httpHeaderSetCookieString).contains("; SameSite=Strict");
+    }
 }
