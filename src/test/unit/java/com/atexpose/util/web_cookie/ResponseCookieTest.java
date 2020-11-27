@@ -169,4 +169,41 @@ public class ResponseCookieTest {
                         .build()
         );
     }
+
+    @Test
+    public void builder_HttpOnlyFalse_NoHttpOnlyFlag() {
+        val httpHeaderSetCookieString = ResponseCookie.builder()
+                .name("my_name")
+                .value("my_value")
+                .expires(Instant.now())
+                .httpOnly(false)
+                .build()
+                .getHttpHeaderSetCookieString();
+        assertThat(httpHeaderSetCookieString).doesNotContain("HttpOnly");
+    }
+
+    @Test
+    public void builder_HttpOnlyNotSet_NoHttpOnlyFlag() {
+        val httpHeaderSetCookieString = ResponseCookie.builder()
+                .name("my_name")
+                .value("my_value")
+                .expires(Instant.now())
+                .build()
+                .getHttpHeaderSetCookieString();
+        assertThat(httpHeaderSetCookieString).doesNotContain("HttpOnly");
+    }
+
+
+    @Test
+    public void builder_HttpOnlyTrue_HttpOnlyPresent() {
+        val httpHeaderSetCookieString = ResponseCookie.builder()
+                .name("my_name")
+                .value("my_value")
+                .expires(Instant.now())
+                .httpOnly(true)
+                .build()
+                .getHttpHeaderSetCookieString();
+        assertThat(httpHeaderSetCookieString).contains("; HttpOnly");
+    }
+
 }

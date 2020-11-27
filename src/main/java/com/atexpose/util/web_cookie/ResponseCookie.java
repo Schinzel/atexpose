@@ -32,7 +32,7 @@ public class ResponseCookie {
     private final String mHttpHeaderSetCookieString;
 
     @Builder
-    ResponseCookie(String name, String value, Instant expires) {
+    ResponseCookie(String name, String value, Instant expires, boolean httpOnly) {
         Thrower.createInstance()
                 .throwIfVarEmpty(name, "name")
                 .throwIfVarEmpty(value, "value")
@@ -40,10 +40,13 @@ public class ResponseCookie {
                 .throwIfNotMatchesRegex(value, "value", ALLOWED_CHARS_NAME_VALUE)
                 .throwIfTrue(expires.isBefore(Instant.now().minusSeconds(1)), "Expires has to be after now");
         val expiresAsString = ResponseCookie.getExpiresAsString(expires);
+        val httpOnlyString = httpOnly ? "; HttpOnly" : "";
         mHttpHeaderSetCookieString = "Set-Cookie: "
                 + name + "=" + value + "; "
                 + "Path=/; "
-                + "Expires=" + expiresAsString + "\r\n";
+                + "Expires=" + expiresAsString
+                + httpOnlyString
+                + "\r\n";
     }
 
 
