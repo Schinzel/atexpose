@@ -10,8 +10,10 @@ import io.schinzel.samples.sample10.Position;
 import io.schinzel.samples.sample10.SampleAPI;
 
 /**
- * The purpose of this sample is to show how to use custom arguments with custom classes and
- * enums in @expose.
+ * The purpose of this sample is to show how to use
+ * - custom arguments with custom classes
+ * - enums in @expose
+ * - instants
  * <p>
  * Load page: http://127.0.0.1:5555/
  */

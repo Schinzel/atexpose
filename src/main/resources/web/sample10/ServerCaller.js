@@ -44,6 +44,10 @@ export class Person extends DataObject {
              * @private
              */
             this.age = parseInt(json.age);
+            /**
+             * @private
+             */
+            this.timeStamp = new Date(json.timeStamp);
         }
     }
 
@@ -65,12 +69,31 @@ export class Person extends DataObject {
     
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @return {Date} 
+     */
+    getTimeStamp() {
+        return this.timeStamp;
+    }
+    
+    // noinspection JSUnusedGlobalSymbols
+    /**
      * 
      * @param {number} age
      * @return {Person}
      */
     setAge(age) {
         this.age = age;
+        return this;
+    }
+    
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * 
+     * @param {Date} timeStamp
+     * @return {Person}
+     */
+    setTimeStamp(timeStamp) {
+        this.timeStamp = timeStamp;
         return this;
     }
     

@@ -20,7 +20,8 @@
         log("Got manager from server");
         log(manager);
         manager.setAge(45);
-        log("Managers age changed");
+        manager.setTimeStamp(new Date());
+        log("Managers age and time stamp changed");
         log(manager);
         let serverResponse = await new ServerCaller().setManager(manager);
         log('Server response: ' + serverResponse);
