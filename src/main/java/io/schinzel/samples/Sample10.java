@@ -3,7 +3,7 @@ package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
 import com.atexpose.api.Argument;
-import com.atexpose.api.data_types.ClassDT;
+import com.atexpose.api.data_types.class_dt.ClassDT;
 import com.atexpose.api.data_types.DataTypeEnum;
 import io.schinzel.samples.sample10.Person;
 import io.schinzel.samples.sample10.Position;

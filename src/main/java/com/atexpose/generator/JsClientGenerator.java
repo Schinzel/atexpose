@@ -3,6 +3,7 @@ package com.atexpose.generator;
 import com.atexpose.api.Argument;
 import com.atexpose.api.MethodObject;
 import com.atexpose.api.data_types.*;
+import com.atexpose.api.data_types.class_dt.ClassDT;
 import com.google.common.collect.Streams;
 import io.schinzel.basicutils.file.FileWriter;
 import io.schinzel.jstranspiler.JsTranspiler;

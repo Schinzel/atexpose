@@ -4,7 +4,7 @@ import com.atexpose.api.API;
 import com.atexpose.api.Argument;
 import com.atexpose.api.MethodObject;
 import com.atexpose.api.data_types.AbstractDataType;
-import com.atexpose.api.data_types.ClassDT;
+import com.atexpose.api.data_types.class_dt.ClassDT;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher_factories.CliFactory;
 import com.atexpose.dispatcher_factories.ScriptFileReaderFactory;

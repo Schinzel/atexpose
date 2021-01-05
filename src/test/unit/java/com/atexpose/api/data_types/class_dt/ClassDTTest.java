@@ -1,7 +1,6 @@
-package com.atexpose.api.data_types;
+package com.atexpose.api.data_types.class_dt;
 
 import org.junit.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ClassDTTest {
