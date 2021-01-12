@@ -5,6 +5,7 @@ import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.channels.SqsChannel;
 import com.atexpose.dispatcher.parser.JsonRpcParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
+import io.schinzel.samples.auxiliary.AWS;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -17,10 +18,10 @@ public class SqsConsumerFactoryTest extends SqsConsumerFactory {
     public void getChannel_DefaultSetUp_SqsChannel() {
         Dispatcher dispatcher = (Dispatcher) SqsConsumerFactory.builder()
                 .name("MyConsumerName")
-                .awsAccessKey("MyAwsKey")
-                .awsSecretKey("MySecretAwsKey")
+                .awsAccessKey(AWS.ACCESS_KEY)
+                .awsSecretKey(AWS.SECRET_KEY)
                 .region(Regions.EU_WEST_1)
-                .queueUrl("MyQueueUrl")
+                .queueName("MyQueueName.fifo")
                 .accessLevel(1)
                 .noOfThreads(17)
                 .build();
@@ -33,10 +34,10 @@ public class SqsConsumerFactoryTest extends SqsConsumerFactory {
     public void getParser_DefaultSetUp_JsonRpcParser() {
         Dispatcher dispatcher = (Dispatcher) SqsConsumerFactory.builder()
                 .name("MyConsumerName")
-                .awsAccessKey("MyAwsKey")
-                .awsSecretKey("MySecretAwsKey")
+                .awsAccessKey(AWS.ACCESS_KEY)
+                .awsSecretKey(AWS.SECRET_KEY)
                 .region(Regions.EU_WEST_1)
-                .queueUrl("MyQueueUrl")
+                .queueName("MyQueueName.fifo")
                 .accessLevel(1)
                 .noOfThreads(17)
                 .build();
@@ -49,10 +50,10 @@ public class SqsConsumerFactoryTest extends SqsConsumerFactory {
     public void getWrapper_DefaultSetUp_CsvWrapper() {
         Dispatcher dispatcher = (Dispatcher) SqsConsumerFactory.builder()
                 .name("MyConsumerName")
-                .awsAccessKey("MyAwsKey")
-                .awsSecretKey("MySecretAwsKey")
+                .awsAccessKey(AWS.ACCESS_KEY)
+                .awsSecretKey(AWS.SECRET_KEY)
                 .region(Regions.EU_WEST_1)
-                .queueUrl("MyQueueUrl")
+                .queueName("MyQueueName.fifo")
                 .accessLevel(1)
                 .noOfThreads(17)
                 .build();
@@ -65,10 +66,10 @@ public class SqsConsumerFactoryTest extends SqsConsumerFactory {
     public void accessLevel_2_2() {
         Dispatcher dispatcher = (Dispatcher) SqsConsumerFactory.builder()
                 .name("MyConsumerName")
-                .awsAccessKey("MyAwsKey")
-                .awsSecretKey("MySecretAwsKey")
+                .awsAccessKey(AWS.ACCESS_KEY)
+                .awsSecretKey(AWS.SECRET_KEY)
                 .region(Regions.EU_WEST_1)
-                .queueUrl("MyQueueUrl")
+                .queueName("MyQueueName.fifo")
                 .accessLevel(2)
                 .noOfThreads(17)
                 .build();
@@ -81,10 +82,10 @@ public class SqsConsumerFactoryTest extends SqsConsumerFactory {
     public void getKey_MyConsumerName_MyConsumerName() {
         Dispatcher dispatcher = (Dispatcher) SqsConsumerFactory.builder()
                 .name("MyConsumerName")
-                .awsAccessKey("MyAwsKey")
-                .awsSecretKey("MySecretAwsKey")
+                .awsAccessKey(AWS.ACCESS_KEY)
+                .awsSecretKey(AWS.SECRET_KEY)
                 .region(Regions.EU_WEST_1)
-                .queueUrl("MyQueueUrl")
+                .queueName("MyQueueName.fifo")
                 .accessLevel(2)
                 .noOfThreads(17)
                 .build();
@@ -97,10 +98,10 @@ public class SqsConsumerFactoryTest extends SqsConsumerFactory {
     public void getKey_EmptyString_SqsConsumer() {
         Dispatcher dispatcher = (Dispatcher) SqsConsumerFactory.builder()
                 .name("")
-                .awsAccessKey("MyAwsKey")
-                .awsSecretKey("MySecretAwsKey")
+                .awsAccessKey(AWS.ACCESS_KEY)
+                .awsSecretKey(AWS.SECRET_KEY)
                 .region(Regions.EU_WEST_1)
-                .queueUrl("MyQueueUrl")
+                .queueName("MyQueueName.fifo")
                 .accessLevel(2)
                 .noOfThreads(17)
                 .build();
@@ -113,10 +114,10 @@ public class SqsConsumerFactoryTest extends SqsConsumerFactory {
     public void threadCount_17_17() {
         Dispatcher dispatcher = (Dispatcher) SqsConsumerFactory.builder()
                 .name("MyConsumerName")
-                .awsAccessKey("MyAwsKey")
-                .awsSecretKey("MySecretAwsKey")
+                .awsAccessKey(AWS.ACCESS_KEY)
+                .awsSecretKey(AWS.SECRET_KEY)
                 .region(Regions.EU_WEST_1)
-                .queueUrl("MyQueueUrl")
+                .queueName("MyQueueName.fifo")
                 .accessLevel(2)
                 .noOfThreads(17)
                 .build();
@@ -129,15 +130,15 @@ public class SqsConsumerFactoryTest extends SqsConsumerFactory {
     public void isSynchronized_DefaultSetUp_False() {
         Dispatcher dispatcher = (Dispatcher) SqsConsumerFactory.builder()
                 .name("MyConsumerName")
-                .awsAccessKey("MyAwsKey")
-                .awsSecretKey("MySecretAwsKey")
+                .awsAccessKey(AWS.ACCESS_KEY)
+                .awsSecretKey(AWS.SECRET_KEY)
                 .region(Regions.EU_WEST_1)
-                .queueUrl("MyQueueUrl")
+                .queueName("MyQueueName.fifo")
                 .accessLevel(2)
                 .noOfThreads(17)
                 .build();
         assertThat(dispatcher.isSynchronized())
-                .isEqualTo(false);
+                .isFalse();
     }
 
 
@@ -145,10 +146,10 @@ public class SqsConsumerFactoryTest extends SqsConsumerFactory {
     public void getLoggers_DefaultSetUp_EmptyList() {
         Dispatcher dispatcher = (Dispatcher) SqsConsumerFactory.builder()
                 .name("MyConsumerName")
-                .awsAccessKey("MyAwsKey")
-                .awsSecretKey("MySecretAwsKey")
+                .awsAccessKey(AWS.ACCESS_KEY)
+                .awsSecretKey(AWS.SECRET_KEY)
                 .region(Regions.EU_WEST_1)
-                .queueUrl("MyQueueUrl")
+                .queueName("MyQueueName.fifo")
                 .accessLevel(2)
                 .noOfThreads(17)
                 .build();

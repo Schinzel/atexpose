@@ -6,7 +6,7 @@ import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.channels.SqsChannel;
 import com.atexpose.dispatcher.parser.JsonRpcParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
-import com.atexpose.util.sqs.SqsConsumer;
+import io.schinzel.awsutils.sqs.SqsConsumer;
 import io.schinzel.basicutils.Checker;
 import lombok.Builder;
 
@@ -15,7 +15,7 @@ public class SqsConsumerFactory {
 
     @Builder
     static IDispatcher newSqsConsumer(String name, String awsAccessKey, String awsSecretKey, Regions region,
-                                      String queueUrl, int accessLevel, int noOfThreads) {
+                                      String queueName, int accessLevel, int noOfThreads) {
         if (Checker.isEmpty(name)) {
             name = "SqsConsumer";
         }
@@ -23,7 +23,7 @@ public class SqsConsumerFactory {
                 .awsAccessKey(awsAccessKey)
                 .awsSecretKey(awsSecretKey)
                 .region(region)
-                .queueUrl(queueUrl)
+                .queueName(queueName)
                 .build();
         return Dispatcher.builder()
                 .name(name)

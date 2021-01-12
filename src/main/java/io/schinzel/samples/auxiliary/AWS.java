@@ -10,6 +10,6 @@ import io.schinzel.basicutils.configvar.ConfigVar;
 public class AWS {
     public static final String ACCESS_KEY = ConfigVar.create(".env").getValue("AWS_SQS_ACCESS_KEY");
     public static final String SECRET_KEY = ConfigVar.create(".env").getValue("AWS_SQS_SECRET_KEY");
-    public static final String QUEUE_URL = "https://sqs.eu-west-1.amazonaws.com/146535832843/my_first_queue.fifo";
+    public static final String QUEUE_NAME = "my_first_queue";
 
 }

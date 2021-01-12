@@ -5,10 +5,9 @@ import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher_factories.SqsConsumerFactory;
 import com.atexpose.util.sqs.JsonRpc;
-import com.atexpose.util.sqs.SqsProducer;
-import com.atexpose.util.sqs.SqsQueueType;
-import io.schinzel.samples.auxiliary.MyObject;
+import io.schinzel.awsutils.sqs.SqsProducer;
 import io.schinzel.samples.auxiliary.AWS;
+import io.schinzel.samples.auxiliary.MyObject;
 
 /**
  * <p>
@@ -58,7 +57,7 @@ public class Sample8_Queues {
         return SqsConsumerFactory.builder()
                 .awsAccessKey(AWS.ACCESS_KEY)
                 .awsSecretKey(AWS.SECRET_KEY)
-                .queueUrl(AWS.QUEUE_URL)
+                .queueName(AWS.QUEUE_NAME)
                 .region(Regions.EU_WEST_1)
                 .name("MyFirstSqsConsumer")
                 .noOfThreads(2)
@@ -75,9 +74,9 @@ public class Sample8_Queues {
         SqsProducer sqsProducer = SqsProducer.builder()
                 .awsAccessKey(AWS.ACCESS_KEY)
                 .awsSecretKey(AWS.SECRET_KEY)
-                .queueUrl(AWS.QUEUE_URL)
+                .queueName("my_queue")
                 .region(Regions.EU_WEST_1)
-                .sqsQueueType(SqsQueueType.FIFO)
+                .guaranteedOrder(true)
                 .build();
         //Send 5 messages to SQS queue
         for (int i = 0; i < 5; i++) {
