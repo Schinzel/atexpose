@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import lombok.val;
 import java.time.Instant;
 import java.time.format.DateTimeFormatterBuilder;
+import static com.fasterxml.jackson.module.kotlin.ExtensionsKt.jacksonObjectMapper;
 
 /**
  * The purpose of this class is to serialize and deserialize.
@@ -16,7 +17,11 @@ import java.time.format.DateTimeFormatterBuilder;
  * instead of default "{"epochSecond":870675258,"nano":0}"
  */
 class Serialization {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    /**
+     * jacksonObjectMapper is used instead of ObjectMapper to enable
+     * deserializing to Kotlin data classes
+     */
+    private static final ObjectMapper OBJECT_MAPPER = jacksonObjectMapper();
 
     static {
         val javaTimeModule = new JavaTimeModule()
