@@ -2,6 +2,7 @@ package com.atexpose.util.mail;
 
 import io.schinzel.basicutils.state.State;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -9,15 +10,9 @@ import lombok.experimental.Accessors;
  *
  * @author jorgen
  */
-@Accessors(prefix = "m")
+@Accessors(prefix = "m", chain = true)
 public class MockMailSender implements IEmailSender {
-    @Getter String mRecipient;
-
-
-    @Override
-    public void send(String recipient, String subject, String body, String fromName) {
-        mRecipient = recipient;
-    }
+    @Getter @Setter String mRecipientEmailAddress;
 
 
     @Override
@@ -28,4 +23,23 @@ public class MockMailSender implements IEmailSender {
     }
 
 
+    @Override
+    public MockMailSender setSubject(String subject) {
+        return this;
+    }
+
+    @Override
+    public MockMailSender setBody(String body) {
+        return this;
+    }
+
+    @Override
+    public MockMailSender setFromName(String fromName) {
+        return this;
+    }
+
+    @Override
+    public MockMailSender send() {
+        return this;
+    }
 }

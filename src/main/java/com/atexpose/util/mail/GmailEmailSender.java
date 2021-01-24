@@ -2,6 +2,8 @@ package com.atexpose.util.mail;
 
 import com.atexpose.errors.RuntimeError;
 import io.schinzel.basicutils.state.State;
+import io.schinzel.basicutils.thrower.Thrower;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
@@ -10,26 +12,33 @@ import org.apache.commons.mail.SimpleEmail;
 import org.apache.commons.validator.routines.EmailValidator;
 
 /**
- * The purpose of this class is to send emails from a GMail account.
+ * The purpose of this class is to send emails from a Gmail account.
  *
  * @author Schinzel
  */
-@Accessors(prefix = "m")
+@Accessors(prefix = "m", chain = true)
 public class GmailEmailSender implements IEmailSender {
     /** The name of the SMTP server that messages will be sent to */
     private final String mHostName;
     /** The port that messages will be sent to.* */
     private final int mPort;
-    /** The username of the GMail account that will send the mail. **/
+    /** The username of the Gmail account that will send the mail. **/
     final String mUsername;
-    /** The password of the GMail account that will send the mail. **/
+    /** The password of the Gmail account that will send the mail. **/
     final String mPassword;
     private boolean mSSLCheckServerIdentity = true;
-
+    /** Recipient email address */
+    @Setter private String mRecipientEmailAddress;
+    /** Subject of the mail */
+    @Setter private String mSubject;
+    /** Body of the mail */
+    @Setter private String mBody;
+    /** The name that the email will be from*/
+    @Setter private String mFromName;
 
     /**
-     * @param userName The username of the GMail account that will send the mail.
-     * @param password The password of the GMail account that will send the mail.
+     * @param userName The username of the Gmail account that will send the mail.
+     * @param password The password of the Gmail account that will send the mail.
      */
     public GmailEmailSender(String userName, String password) {
         this(userName, password, "smtp.googlemail.com", 465);
@@ -45,37 +54,36 @@ public class GmailEmailSender implements IEmailSender {
     }
 
 
-    public GmailEmailSender disableSSLCheckServerIdentityForTest(){
+    public GmailEmailSender disableSSLCheckServerIdentityForTest() {
         mSSLCheckServerIdentity = false;
         return this;
     }
 
 
-    /**
-     * Sends an email to the argument recipients.
-     *
-     * @param recipient The recipient that will receive the email.
-     * @param subject   The subject of the email.
-     * @param body      The body of the email.
-     */
     @Override
-    public void send(String recipient, String subject, String body, String fromName) {
+    public GmailEmailSender send() {
         try {
+            Thrower.createInstance()
+                    .throwIfVarNull(mRecipientEmailAddress, "Recipient email address")
+                    .throwIfVarNull(mSubject, "Subject")
+                    .throwIfVarNull(mBody, "Body")
+                    .throwIfVarNull(mFromName, "From Name");
             Email email = new SimpleEmail();
             email.setHostName(mHostName);
             email.setSslSmtpPort(String.valueOf(mPort));
             email.setAuthenticator(new DefaultAuthenticator(mUsername, mPassword));
             email.setSSLOnConnect(true);
             email.setSSLCheckServerIdentity(mSSLCheckServerIdentity);
-            email.setFrom(mUsername, fromName);
+            email.setFrom(mUsername, mFromName);
             //Per mail
-            email.setSubject(subject);
-            email.setMsg(body);
-            if (!EmailValidator.getInstance().isValid(recipient)) {
-                throw new RuntimeError(String.format("'%s' is not a valid email address.", recipient));
+            email.setSubject(mSubject);
+            email.setMsg(mBody);
+            if (!EmailValidator.getInstance().isValid(mRecipientEmailAddress)) {
+                throw new RuntimeError(String.format("'%s' is not a valid email address.", mRecipientEmailAddress));
             }
-            email.addTo(recipient);
+            email.addTo(mRecipientEmailAddress);
             email.send();
+            return this;
         } catch (EmailException ex) {
             throw new RuntimeError("Problems sending mail. Error message: " + ex.getMessage());
         }
@@ -91,7 +99,4 @@ public class GmailEmailSender implements IEmailSender {
                 .add("username", mUsername)
                 .build();
     }
-
 }
-
-

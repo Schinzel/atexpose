@@ -62,8 +62,12 @@ public class GmailEmailSenderTest {
         new GmailEmailSender(userName, "thePassword",
                 "localhost", ServerSetupTest.SMTPS.getPort())
                 .disableSSLCheckServerIdentityForTest()
-        .send(recipient, subject, body, fromName);
-        //Get message 
+                .setRecipientEmailAddress(recipient)
+                .setSubject(subject)
+                .setBody(body)
+                .setFromName(fromName)
+                .send();
+        //Get message
         MimeMessage message = mGreenMail.getReceivedMessages()[0];
         //Test body
         assertEquals(body,
@@ -84,9 +88,13 @@ public class GmailEmailSenderTest {
         String body = "theBody" + RandomUtil.getRandomString(3);
         String userName = RandomUtil.getRandomString(3) + "@domain.com";
         GmailEmailSender gms = new GmailEmailSender(userName, "thePassword",
-                "localhost", ServerSetupTest.SMTPS.getPort());
+                "localhost", ServerSetupTest.SMTPS.getPort())
+                .setRecipientEmailAddress("I_AM_AN_INVALID_EMAIL_ADDRESS")
+                .setSubject(subject)
+                .setBody(body)
+                .setFromName("fromName");
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> gms.send("I_AM_AN_INVALID_EMAIL_ADDRESS", subject, body, "fromName"))
+                .isThrownBy(gms::send)
                 .withMessageStartingWith("'I_AM_AN_INVALID_EMAIL_ADDRESS' is not a valid");
     }
 

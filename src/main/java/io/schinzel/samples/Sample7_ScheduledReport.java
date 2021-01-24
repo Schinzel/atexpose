@@ -11,13 +11,13 @@ import com.atexpose.util.mail.MockMailSender;
  * The purpose of this sample is to show how scheduled reports are set up
  * </p>
  * <p>
- * Note, works only with GMail SMTP server.
+ * Note, works only with Gmail SMTP server.
  * </p>
  * <p>
  * To get this sample to work you need to:
  * </p>
  * <pre>
- * 1) Set your GMail username and password. The email will be sent using this account.
+ * 1) Set your Gmail username and password. The email will be sent using this account.
  * 2) Set recipient email address
  * 3) Set the time to send to send the report in UTC, a min or two from now*.
  * </pre>
@@ -37,10 +37,8 @@ class Sample7_ScheduledReport {
 
     private static IDispatcher getScheduledReport() {
         IEmailSender emailSender = new MockMailSender();
-        /*
-         Replace the mock email sender to send an actual email
-         IEmailSender emailSender = new GmailEmailSender("name@example.com", "my_gmail_password");
-        */
+        // Replace the mock email sender to send an actual email
+        // IEmailSender emailSender = new GmailEmailSender("name@example.com", "my_gmail_password");
         return ScheduledReportFactory.builder()
                 .taskName("MyTask")
                 .request("ping")

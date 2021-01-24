@@ -18,6 +18,6 @@ public class MailLoggerTest {
         MockMailSender sender = new MockMailSender();
         MailLogWriter logger = new MailLogWriter(recipient, sender);
         logger.sendMail(sender, "This is the message");
-        assertTrue(sender.getRecipient().contains("monkey@example.com"));
+        assertTrue(sender.getRecipientEmailAddress().contains("monkey@example.com"));
     }
 }
