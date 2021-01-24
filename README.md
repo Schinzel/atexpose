@@ -328,6 +328,9 @@ sqsProducer.send(jsonRpc);
   - `IExceptionProperties` is no longer supported
 - Changed:
   - API requests prefixed with `api` instead of `call`
+  - `GmailEmailSender` and `IEmailSender` changed their API from a single method
+    `send` that set all properties - for example subject and body - to an API
+    where properties are set with setters and the method `send` has no arguments.
 
 ## 0.9.38
 _2020-01-03_
