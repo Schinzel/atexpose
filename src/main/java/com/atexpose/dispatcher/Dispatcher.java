@@ -17,7 +17,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -185,6 +184,7 @@ public class Dispatcher implements Runnable, IDispatcher {
                     MethodObject methodObject = mAPI.getMethodObject(request.getMethodName());
                     // is the dispatcher authorized to access this method
                     checkAccessLevel(methodObject.getAccessLevelRequiredToUseThisMethod());
+                    checkNumberOfArguments(request.getArgumentValues().size(), methodObject.getNoOfRequiredArguments());
                     Object[] requestArgumentValues = RequestArguments.builder()
                             .methodArguments(methodObject.getMethodArguments())
                             .requestArgumentValuesAsStrings(request.getArgumentValues())
@@ -249,10 +249,15 @@ public class Dispatcher implements Runnable, IDispatcher {
 
 
     private void checkAccessLevel(int methodAccessLevel) {
-        if (methodAccessLevel > this.mAccessLevel) {
-            throw new RuntimeException("Cannot access the requested method through this dispatcher. Method requires access level "
-                    + methodAccessLevel + " and the used dispatcher only has access level " + this.mAccessLevel + ".");
-        }
+        Thrower.throwIfTrue(methodAccessLevel > this.mAccessLevel)
+                .message("Cannot access the requested method through this dispatcher. Method requires access level "
+                        + methodAccessLevel + " and the used dispatcher only has access level " + this.mAccessLevel + ".");
+    }
+
+
+    private static void checkNumberOfArguments(int actualNumberOfArguments, int requiredNumberOfArguments) {
+        Thrower.throwIfTrue(actualNumberOfArguments < requiredNumberOfArguments)
+                .message("To few arguments. Was " + actualNumberOfArguments + " but required " + requiredNumberOfArguments + ".");
     }
     // ------------------------------------
     // - Logger

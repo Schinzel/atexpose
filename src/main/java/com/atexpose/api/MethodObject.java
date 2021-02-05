@@ -10,7 +10,6 @@ import io.schinzel.basicutils.thrower.Thrower;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
@@ -49,12 +48,12 @@ public class MethodObject implements IValueWithKey, IStateNode {
     private MethodObject(Object theObject, Method method, String description, int noOfRequiredArguments,
                          List<Argument> arguments, int accessLevel, List<Label> labels,
                          AbstractDataType returnDataType, boolean requireAuthentication) {
-        Thrower.throwIfVarNull(theObject, "theObject");
-        Thrower.throwIfVarNull(method, "method");
-        Thrower.throwIfVarNull(description, "description");
-        Thrower.throwIfVarNull(returnDataType, "returnDataType");
-        Thrower.throwIfTrue(noOfRequiredArguments > arguments.size())
-                .message("Number of required arguments is higher than the actual number of arguments");
+        Thrower.createInstance()
+                .throwIfVarNull(theObject, "theObject")
+                .throwIfVarNull(method, "method")
+                .throwIfVarNull(description, "description")
+                .throwIfVarNull(returnDataType, "returnDataType")
+                .throwIfTrue(noOfRequiredArguments > arguments.size(), "Number of required arguments is higher than the actual number of arguments");
         this.mKey = method.getName();
         mObject = theObject;
         mMethod = method;

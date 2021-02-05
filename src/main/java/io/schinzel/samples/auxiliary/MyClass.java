@@ -19,7 +19,8 @@ public class MyClass {
 
 
     @Expose(
-            arguments = {"Int"}
+            arguments = {"Int"},
+            requiredArgumentCount = 1
     )
     public static int doubleIt(int i) {
         return i * 2;
