@@ -2,7 +2,6 @@ package io.schinzel.samples;
 
 import com.atexpose.AtExpose;
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcher_factories.CliFactory;
 import com.atexpose.dispatcher_factories.ScheduledTaskFactory;
 
 /**
@@ -21,7 +20,7 @@ public class Sample6_ScheduledTasks {
                 .start(getMinuteTask())
                 .start(getDailyTask())
                 .start(getMonthlyTask())
-                .start(CliFactory.create());
+                .startCLI();
     }
 
 
