@@ -123,9 +123,20 @@ public class AtExpose implements IStateNode {
      * @return This for chaining
      */
     public AtExpose startCLI() {
-        this.start(CliFactory.create());
+        return this.startCLI(null);
+    }
+
+
+    /**
+     * Starts a command line interface
+     * @param startOfTheLine Will appear at the start of the line in the console
+     * @return This for chaining
+     */
+    public AtExpose startCLI(String startOfTheLine) {
+        this.start(CliFactory.create(startOfTheLine));
         return this;
     }
+
 
     public AtExpose readScriptFile(String fileName) {
         this.start(ScriptFileReaderFactory.create(fileName), true);

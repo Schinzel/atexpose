@@ -7,12 +7,11 @@ import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.Sandman;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * The purpose of this class is to read command from the command-line interface.
@@ -22,21 +21,22 @@ import java.nio.charset.Charset;
 public class CommandLineChannel implements IChannel {
     private final InputStream mInputStream;
     private boolean mIsToShutdown = false;
-    private static final String CLI_START_OF_LINE = "[@Expose]>";
+    private static final String DEFAULT_START_OF_THE_LINE = "[@Expose]>";
+    private final String mStartOfTheLine;
     //------------------------------------------------------------------------
     // CONSTRUCTORS AND SHUTDOWN
     //------------------------------------------------------------------------
 
-
     public CommandLineChannel() {
-        this(System.in);
+        this(null);
     }
 
-
-    private CommandLineChannel(InputStream customInputStream) {
-        mInputStream = customInputStream;
+    public CommandLineChannel(String tag) {
+        mInputStream = System.in;
+        mStartOfTheLine = (tag == null || tag.isEmpty())
+                ? DEFAULT_START_OF_THE_LINE
+                : "[" + tag + "]>";
     }
-
 
     @Override
     public IChannel getClone() {
@@ -56,10 +56,10 @@ public class CommandLineChannel implements IChannel {
     @Override
     public boolean getRequest(ByteStorage request) {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(mInputStream, Charset.forName("UTF-8")));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(mInputStream, StandardCharsets.UTF_8));
             String input;
             do {
-                System.out.print(CLI_START_OF_LINE);
+                System.out.print(mStartOfTheLine);
                 while (!reader.ready()) {
                     Sandman.snoozeMillis(20);
                     if (mIsToShutdown) {
@@ -115,7 +115,7 @@ public class CommandLineChannel implements IChannel {
     @Override
     public State getState() {
         return State.getBuilder()
-                .add("Tag", CLI_START_OF_LINE)
+                .add("Tag", mStartOfTheLine)
                 .build();
     }
 

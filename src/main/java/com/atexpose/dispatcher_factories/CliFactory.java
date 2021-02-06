@@ -12,12 +12,12 @@ public class CliFactory {
     }
 
 
-    public static IDispatcher create() {
+    public static IDispatcher create(String startOfTheLine) {
         return Dispatcher.builder()
                 .name("CommandLine")
                 .accessLevel(3)
                 .isSynchronized(false)
-                .channel(new CommandLineChannel())
+                .channel(new CommandLineChannel(startOfTheLine))
                 .parser(new TextParser())
                 .wrapper(new CsvWrapper())
                 .noOfThreads(1)
