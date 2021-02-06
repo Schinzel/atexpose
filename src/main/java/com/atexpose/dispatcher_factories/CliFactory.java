@@ -11,6 +11,9 @@ public class CliFactory {
     CliFactory() {
     }
 
+    public static IDispatcher create() {
+        return CliFactory.create(null);
+    }
 
     public static IDispatcher create(String startOfTheLine) {
         return Dispatcher.builder()

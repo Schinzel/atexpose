@@ -64,7 +64,7 @@ public class CliFactoryTest extends CliFactory {
     public void isSynchronized_DefaultSetUp_False() {
         Dispatcher dispatcher = (Dispatcher) CliFactory.create();
         assertThat(dispatcher.isSynchronized())
-                .isEqualTo(false);
+                .isFalse();
     }
 
 
