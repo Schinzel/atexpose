@@ -26,7 +26,7 @@ public class ResponseCookie {
     private static final Pattern ALLOWED_CHARS_NAME = Pattern
             .compile("[a-zA-Z0-9_-]{1,100}");
     private static final Pattern ALLOWED_CHARS_VALUE = Pattern
-            .compile("[a-zA-Z0-9_-]{1,2000}");
+            .compile("[a-zA-Z0-9#:\"_{}\\[\\]\\-, ]{1,2000}");
 
 
 

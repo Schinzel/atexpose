@@ -3,9 +3,7 @@ package com.atexpose.util.web_cookie;
 import io.schinzel.basicutils.RandomUtil;
 import lombok.val;
 import org.junit.Test;
-
 import java.time.Instant;
-
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 
@@ -121,6 +119,19 @@ public class ResponseCookieTest {
                         .name("my_name")
                         .value("my_value")
                         .expires(Instant.now())
+                        .build()
+        ).doesNotThrowAnyException();
+    }
+
+
+    @Test
+    public void builder_allAllowedSpecialCharsInValue_NoException() {
+        assertThatCode(() ->
+                ResponseCookie.builder()
+                        .name("my_name")
+                        .value("#:\"-_{}[],")
+                        .expires(Instant.now())
+                        .sameSite(SameSite.STRICT)
                         .build()
         ).doesNotThrowAnyException();
     }
@@ -253,4 +264,5 @@ public class ResponseCookieTest {
                 .getHttpHeaderSetCookieString();
         assertThat(httpHeaderSetCookieString).contains("; SameSite=Strict");
     }
+
 }
