@@ -23,8 +23,11 @@ import java.util.regex.Pattern;
 public class ResponseCookie {
     private static final DateTimeFormatter COOKIE_TIME_FORMAT = DateTimeFormatter
             .ofPattern("EEE, dd MMM yyyy HH:mm:ss 'GMT'");
-    private static final Pattern ALLOWED_CHARS_NAME_VALUE = Pattern
+    private static final Pattern ALLOWED_CHARS_NAME = Pattern
             .compile("[a-zA-Z0-9_-]{1,100}");
+    private static final Pattern ALLOWED_CHARS_VALUE = Pattern
+            .compile("[a-zA-Z0-9_-]{1,2000}");
+
 
 
     @Getter
@@ -35,8 +38,8 @@ public class ResponseCookie {
         Thrower.createInstance()
                 .throwIfVarEmpty(name, "name")
                 .throwIfVarEmpty(value, "value")
-                .throwIfNotMatchesRegex(name, "name", ALLOWED_CHARS_NAME_VALUE)
-                .throwIfNotMatchesRegex(value, "value", ALLOWED_CHARS_NAME_VALUE)
+                .throwIfNotMatchesRegex(name, "name", ALLOWED_CHARS_NAME)
+                .throwIfNotMatchesRegex(value, "value", ALLOWED_CHARS_VALUE)
                 .throwIfVarNull(expires, "expires")
                 .throwIfTrue(expires.isBefore(Instant.now().minusSeconds(1)), "Expires has to be after now");
         val expiresAsString = ResponseCookie.getExpiresAsString(expires);
