@@ -153,7 +153,7 @@ public class ResponseCookieTest {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
                 ResponseCookie.builder()
                         .name("my_name")
-                        .value(RandomUtil.getRandomString(105))
+                        .value(RandomUtil.getRandomString(2005))
                         .expires(Instant.now())
                         .build()
         );
