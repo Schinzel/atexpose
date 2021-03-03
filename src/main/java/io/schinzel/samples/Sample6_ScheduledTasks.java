@@ -6,7 +6,7 @@ import com.atexpose.dispatcher_factories.ScheduledTaskFactory;
 
 /**
  * <p>
- * The purpose of this sample is to show how to set up a scheduled task
+ * The purpose of this sample is to show how to set up scheduled tasks
  * </p>
  * <p>
  * Run below sample and type 'status' in command line interface. This displays the different
@@ -19,6 +19,7 @@ public class Sample6_ScheduledTasks {
         AtExpose.create()
                 .start(getMinuteTask())
                 .start(getDailyTask())
+                .start(getHourlyTask())
                 .start(getMonthlyTask())
                 .startCLI();
     }
@@ -33,9 +34,19 @@ public class Sample6_ScheduledTasks {
     }
 
 
+    private static IDispatcher getHourlyTask() {
+        return ScheduledTaskFactory.hourlyTaskBuilder()
+                .taskName("MyTask2")
+                .request("time")
+                .minuteOfTheHour(10)
+                .timeZone("UTC")
+                .build();
+    }
+
+
     private static IDispatcher getDailyTask() {
         return ScheduledTaskFactory.dailyTaskBuilder()
-                .taskName("MyTask2")
+                .taskName("MyTask3")
                 .request("echo hi")
                 .timeOfDay("20:55")
                 .timeZone("UTC")
@@ -45,13 +56,11 @@ public class Sample6_ScheduledTasks {
 
     private static IDispatcher getMonthlyTask() {
         return ScheduledTaskFactory.monthlyTaskBuilder()
-                .taskName("MyTask3")
+                .taskName("MyTask4")
                 .request("ping")
                 .timeOfDay("07:00")
                 .dayOfMonth(14)
                 .timeZone("America/New_York")
                 .build();
-
     }
-
 }

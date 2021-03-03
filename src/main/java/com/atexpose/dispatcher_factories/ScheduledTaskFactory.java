@@ -2,10 +2,7 @@ package com.atexpose.dispatcher_factories;
 
 import com.atexpose.dispatcher.Dispatcher;
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannel;
-import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelDaily;
-import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelMinute;
-import com.atexpose.dispatcher.channels.tasks.ScheduledTaskChannelMonthly;
+import com.atexpose.dispatcher.channels.tasks.*;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.logging.LoggerType;
 import com.atexpose.dispatcher.logging.format.LogFormatterFactory;
@@ -13,13 +10,20 @@ import com.atexpose.dispatcher.logging.writer.LogWriterFactory;
 import com.atexpose.dispatcher.parser.text_parser.TextParser;
 import com.atexpose.dispatcher.wrapper.CsvWrapper;
 import lombok.Builder;
+import lombok.val;
 
+@SuppressWarnings("unused")
 public class ScheduledTaskFactory {
 
 
     ScheduledTaskFactory() {
     }
 
+    @Builder(builderMethodName = "hourlyTaskBuilder", builderClassName = "HourlyTaskBuilder")
+    static IDispatcher newHourlyTask(String taskName, String request, int minuteOfTheHour, String timeZone){
+        val taskChannel =new ScheduledTaskChannelHourly(taskName, request, minuteOfTheHour, timeZone);
+        return  ScheduledTaskFactory.addTask(taskChannel);
+    }
 
     @Builder(builderMethodName = "minuteTaskBuilder", builderClassName = "MinuteTaskBuilder")
     static IDispatcher newMinuteTask(String taskName, String request, int minutes) {

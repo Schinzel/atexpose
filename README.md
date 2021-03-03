@@ -321,6 +321,7 @@ sqsProducer.send(jsonRpc);
   - Methods returning `void` are now supported
   - JavaScript client generator added. Translates the api to a JavaScript client.
   - `Argument` can now take an optional reg ex. All argument values has to match reg ex else an error is thrown.
+  - New scheduled task that fires every hour at a given minute
 - Removed: 
   - GSuite authentication is no longer supported 
   - Aliases are no longer supported

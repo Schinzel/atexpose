@@ -29,6 +29,7 @@ public class ScheduledTaskChannel implements IChannel {
     @Getter
     private final String mTaskRequest;
     /** Human readable string describing the task interval. */
+    @Getter(AccessLevel.PACKAGE)
     private final String mHumanReadableTaskInterval;
     /** The interval size. For minute tasks this is the number of minutes between tasks. */
     private final int mIntervalAmount;
@@ -52,8 +53,13 @@ public class ScheduledTaskChannel implements IChannel {
      * @param intervalAmount The amount to wait. Used in conjunction with
      *                       intervalUnit.
      */
-    ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount,
-                         String humanReadableTaskInterval, ZonedDateTime initialTaskFireTime, IWatch watch) {
+    ScheduledTaskChannel(String taskName,
+                         String request,
+                         ChronoUnit intervalUnit,
+                         int intervalAmount,
+                         String humanReadableTaskInterval,
+                         ZonedDateTime initialTaskFireTime,
+                         IWatch watch) {
         mTaskName = taskName;
         mTaskRequest = request;
         mIntervalUnit = intervalUnit;
