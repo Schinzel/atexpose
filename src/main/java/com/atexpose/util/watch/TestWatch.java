@@ -12,7 +12,6 @@ public class TestWatch implements IWatch {
     /** The instant for now. */
     private Instant mInstant = null;
 
-
     /**
      * @return A new instance.
      */

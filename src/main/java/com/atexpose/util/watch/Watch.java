@@ -8,7 +8,6 @@ import java.time.*;
 
 public class Watch implements IWatch {
 
-
     /**
      * @return A new instance.
      */
@@ -23,6 +22,4 @@ public class Watch implements IWatch {
     public Instant getInstant() {
         return Instant.now();
     }
-
-
 }
