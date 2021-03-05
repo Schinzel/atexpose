@@ -19,7 +19,7 @@ public class Watch implements IWatch {
     /**
      * @return An instant representing now.
      */
-    public Instant getInstant() {
+    public Instant getNowAsInstant() {
         return Instant.now();
     }
 }

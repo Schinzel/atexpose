@@ -23,7 +23,7 @@ public class TestWatch implements IWatch {
     /**
      * @return An instant representing now.
      */
-    public Instant getInstant() {
+    public Instant getNowAsInstant() {
         return (mInstant == null) ? Instant.now() : mInstant;
     }
 
@@ -79,6 +79,6 @@ public class TestWatch implements IWatch {
 
     @Override
     public String toString() {
-        return this.getInstant().toString();
+        return this.getNowAsInstant().toString();
     }
 }

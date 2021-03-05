@@ -46,7 +46,7 @@ public class ScheduledTaskChannelHourly extends ScheduledTaskChannel {
      * @return The initial time to fire
      */
     static ZonedDateTime getInitialFireTime(int minuteOfHour, ZoneId zoneId, IWatch watch) {
-        ZonedDateTime now = watch.getInstant()
+        ZonedDateTime now = watch.getNowAsInstant()
                 .atZone(zoneId);
         ZonedDateTime fireTime = now
                 .withMinute(minuteOfHour)

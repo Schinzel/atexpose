@@ -47,7 +47,7 @@ class TaskUtil {
      * @return The argument time as date today in the argument zone
      */
     static ZonedDateTime getZonedDateTime(String timeOfDay, ZoneId zoneId, IWatch watch) {
-        LocalDate localDate = watch.getInstant()
+        LocalDate localDate = watch.getNowAsInstant()
                 .atZone(zoneId)
                 .toLocalDate();
         return LocalTime

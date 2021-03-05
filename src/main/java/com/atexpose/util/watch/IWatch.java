@@ -15,5 +15,5 @@ public interface IWatch {
     /**
      * @return The time now as an instant.
      */
-    Instant getInstant();
+    Instant getNowAsInstant();
 }

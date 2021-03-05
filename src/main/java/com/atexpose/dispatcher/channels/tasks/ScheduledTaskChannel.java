@@ -88,7 +88,7 @@ public class ScheduledTaskChannel implements IChannel {
     @Override
     public boolean getRequest(ByteStorage request) {
         //Get the number of nanoseconds the executing thread should sleep.
-        long nanosToSleep = Duration.between(mWatch.getInstant(), mTimeToFireNext).toNanos();
+        long nanosToSleep = Duration.between(mWatch.getNowAsInstant(), mTimeToFireNext).toNanos();
         try {
             //Put executing thread to sleep.
             TimeUnit.NANOSECONDS.sleep(nanosToSleep);
@@ -123,7 +123,7 @@ public class ScheduledTaskChannel implements IChannel {
 
     static ZonedDateTime getNextTaskTime(ZonedDateTime time, int intervalAmount, TemporalUnit intervalUnit, IWatch watch) {
         //Note, Instant.now().isBefore(mTimeToFireNext) does not work.
-        return (!time.isAfter(ZonedDateTime.ofInstant(watch.getInstant(), time.getZone())))
+        return (!time.isAfter(ZonedDateTime.ofInstant(watch.getNowAsInstant(), time.getZone())))
                 ? getNextTaskTime(time.plus(intervalAmount, intervalUnit), intervalAmount, intervalUnit, watch)
                 : time;
     }
