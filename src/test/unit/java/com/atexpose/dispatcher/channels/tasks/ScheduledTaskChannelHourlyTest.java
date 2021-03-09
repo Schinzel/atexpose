@@ -60,4 +60,32 @@ public class ScheduledTaskChannelHourlyTest {
                 .getInitialFireTime(10, TaskUtil.getZoneId("UTC"), watchNow);
         assertThat(fireTime).isEqualTo("2021-03-03T11:10:00Z");
     }
+
+
+
+    @Test
+    public void getInitialFireTime_NowIs35SecondsBeforeMinOfHour_FireTimeIn35Sec() {
+        IWatch watchNow = TestWatch.create().setDateTime(2021, 12, 30, 22, 54, 25, 0, IWatch.UTC);
+        final ZonedDateTime fireTime = ScheduledTaskChannelHourly
+                .getInitialFireTime(55, TaskUtil.getZoneId("UTC"), watchNow);
+        assertThat(fireTime).isEqualTo("2021-12-30T22:55:00Z");
+    }
+
+    @Test
+    public void getInitialFireTime_NowIs25SecBeforeMinOfHour_FireTimeIn25SecAndOneHour() {
+        IWatch watchNow = TestWatch.create().setDateTime(2021, 12, 30, 22, 54, 35, 0, IWatch.UTC);
+        final ZonedDateTime fireTime = ScheduledTaskChannelHourly
+                .getInitialFireTime(55, TaskUtil.getZoneId("UTC"), watchNow);
+        assertThat(fireTime).isEqualTo("2021-12-30T23:55:00Z");
+    }
+
+
+    @Test
+    public void getInitialFireTime_NowIs10SecondsAfterMinOfHour_FireTimeInOneHourMinus10Sec() {
+        IWatch watchNow = TestWatch.create().setDateTime(2021, 12, 30, 22, 55, 10, 0, IWatch.UTC);
+        final ZonedDateTime fireTime = ScheduledTaskChannelHourly
+                .getInitialFireTime(55, TaskUtil.getZoneId("UTC"), watchNow);
+        assertThat(fireTime).isEqualTo("2021-12-30T23:55:00Z");
+    }
+
 }

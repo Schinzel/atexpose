@@ -54,7 +54,9 @@ public class ScheduledTaskChannelHourly extends ScheduledTaskChannel {
                 .withNano(0);
         ZonedDateTime aFewSecondsInTheFuture = now
                 .plusSeconds(30);
+        // If the fire time is within 30 seconds of now
         return fireTime.isBefore(aFewSecondsInTheFuture)
+                // Set fire time to be next hour
                 ? fireTime.plusHours(1)
                 : fireTime;
     }
