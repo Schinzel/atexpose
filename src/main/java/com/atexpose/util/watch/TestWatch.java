@@ -89,6 +89,17 @@ public class TestWatch implements IWatch {
      */
     public TestWatch setDateTime(int year, int month, int dayOfMonth, int hour, int minute, int second, int nano, ZoneId zoneId) {
         ZonedDateTime zdt = ZonedDateTime.of(year, month, dayOfMonth, hour, minute, second, nano, zoneId);
+        return this.setDateTime(zdt);
+    }
+
+    
+    /**
+     * An instant representing the argument date will be returned with getNowAsInstant.
+     *
+     * @param zdt The date-time to set the test watch to
+     * @return This for chaining
+     */
+    public TestWatch setDateTime(ZonedDateTime zdt) {
         mInstant = zdt.toInstant();
         return this;
     }
