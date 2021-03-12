@@ -207,7 +207,7 @@ public class Dispatcher implements Runnable, IDispatcher {
                         : e.getMessage();
                 if (errorMessage == null) errorMessage = "";
                 String errorClassName = e.getClass().getSimpleName();
-                errorMessage = errorClassName + " " + errorMessage;
+                errorMessage = errorClassName + ". " + errorMessage;
                 ImmutableMap<String, String> requestExceptionInfo = (request.isFileRequest())
                         ? ImmutableMap.<String, String>builder()
                         .put("error_message", errorMessage)
