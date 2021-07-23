@@ -4,6 +4,7 @@ import com.atexpose.util.DateTimeStrings;
 import io.schinzel.jstranspiler.transpiler.JsTranspiler_CreateSetter;
 
 import java.time.Instant;
+import java.util.List;
 
 public class Person {
     public String name;
@@ -11,6 +12,8 @@ public class Person {
     public int age;
     @JsTranspiler_CreateSetter
     public Instant timeStamp = Instant.now();
+    @JsTranspiler_CreateSetter
+    public List<String> ids;
 
     Person() {
     }

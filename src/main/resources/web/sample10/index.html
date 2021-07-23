@@ -19,8 +19,9 @@
         let manager = await new ServerCaller().getManager();
         log("Got manager from server");
         log(manager);
-        manager.setAge(45);
-        manager.setTimeStamp(new Date());
+        manager.setAge(45)
+            .setTimeStamp(new Date())
+            .setIds(["abc", "def"])
         log("Managers age and time stamp changed");
         log(manager);
         let serverResponse = await new ServerCaller().setManager(manager);

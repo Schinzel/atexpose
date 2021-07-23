@@ -48,6 +48,10 @@ export class Person extends DataObject {
              * @private
              */
             this.timeStamp = new Date(json.timeStamp);
+            /**
+             * @private
+             */
+            this.ids = json.ids;
         }
     }
 
@@ -77,6 +81,14 @@ export class Person extends DataObject {
     
     // noinspection JSUnusedGlobalSymbols
     /**
+     * @return {string[]} A copy of the array held
+     */
+    getIds() {
+        return this.ids.slice();
+    }
+    
+    // noinspection JSUnusedGlobalSymbols
+    /**
      * 
      * @param {number} age
      * @return {Person}
@@ -94,6 +106,17 @@ export class Person extends DataObject {
      */
     setTimeStamp(timeStamp) {
         this.timeStamp = timeStamp;
+        return this;
+    }
+    
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Argument array is copied and set
+     * @param {string[]} ids
+     * @return {Person}
+     */
+    setIds(ids) {
+        this.ids = ids.slice();
         return this;
     }
     
