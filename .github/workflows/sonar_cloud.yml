@@ -36,6 +36,5 @@ jobs:
           # AWS credentials
           AWS_SQS_ACCESS_KEY: ${{ secrets.AWS_SQS_ACCESS_KEY }}
           AWS_SQS_SECRET_KEY: ${{ secrets.AWS_SQS_SECRET_KEY }}
-          SONAR_HOST_URL: https://sonarcloud.io
 
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Schinzel_atexpose

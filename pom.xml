@@ -20,6 +20,9 @@
         <deploy-repo>maven-repo.atexpose.com</deploy-repo>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <!-- For sonarcloud integration -->
+        <sonar.organization>schinzel-github</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
 
