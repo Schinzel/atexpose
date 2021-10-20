@@ -5,7 +5,6 @@ running that can serve static file content such as HTML-files and handle proprie
 
 Put differently: It should be the web server that distracts you the least from solving the actual problem you are working on.
 
-[![Build Status](https://travis-ci.org/Schinzel/atexpose.svg?branch=master)](https://travis-ci.org/Schinzel/atexpose)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Schinzel_atexpose&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Schinzel_atexpose)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Schinzel_atexpose&metric=coverage)](https://sonarcloud.io/dashboard?id=Schinzel_atexpose)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Schinzel_atexpose&metric=security_rating)](https://sonarcloud.io/dashboard?id=Schinzel_atexpose)
