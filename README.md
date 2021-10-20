@@ -314,7 +314,8 @@ sqsProducer.send(jsonRpc);
 
 
 # Versions
-## Features added for next release
+## 1.0.0
+_2021-10-20_
 - New features:
   - Generators
   - Read and set cookies when using the web server
