@@ -113,7 +113,7 @@ public class WebServerBuilder {
     /**
      * Redirects all request to a single page. Typically used to set up a fail whale.
      *
-     * @param failWhalePage
+     * @param failWhalePage A path to an HTML page
      * @return This for chaining.
      */
     public WebServerBuilder setFailWhaleRedirect(String failWhalePage) {
@@ -131,7 +131,7 @@ public class WebServerBuilder {
      * "/a/b/c/info.html"
      * "a/b/c/index.html"
      *
-     * @param failWhalePage
+     * @param failWhalePage A path to an HTML page
      * @param useFailWhalePage If true the argument fail whale page will be redirect to. If false,
      *                         this method will do nothing.
      * @return This for chaining.

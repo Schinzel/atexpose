@@ -4,14 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>
  * The purpose of this class is read and write cookies in Java or Kotlin code outside @expose code.
- * </p>
- * <p>
  * It only works in conjunction with the web server, i.e. a WebChannel as channel and WebWrapper as wrapper
- *</p>
- * <p>
- * <b>Usage</b>
+ * <em>Usage</em>
  * <br>
  * To read a cookie:
  * <pre>
@@ -27,7 +22,6 @@ import java.util.Map;
  *     WebCookieHandler.addResponseCookie(cookie);
  * </pre>
  *
- * </p>
  *
  * <b>Internal documentation</b>
  * <p>
@@ -38,7 +32,6 @@ import java.util.Map;
  * <p>
  * Life cycle of a request response
  * </p>
- * <p>
  * In WebChannel:
  * <pre>
  *     WebCookieHandlerSetCookies.setRequestCookies(cookies)
@@ -57,7 +50,6 @@ import java.util.Map;
  * <pre>
  *     WebCookieHandlerSetCookies.closeRequestResponse()
  * </pre>
- * </p>
  */
 public class WebCookieHandler {
     private static final WebCookieHandlerInternal WEB_COOKIE_HANDLER_INTERNAL = new WebCookieHandlerInternal();

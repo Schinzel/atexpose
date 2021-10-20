@@ -26,7 +26,7 @@
     <repositories>
         <repository>
             <id>maven-repo.schinzel.io</id>
-            <url>http://maven-repo.schinzel.io/release</url>
+            <url>https://s3-eu-west-1.amazonaws.com/maven-repo.schinzel.io/release</url>
         </repository>
     </repositories>
 
@@ -52,13 +52,13 @@
                     <!-- Plug in for attaching sources to deploys -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>2.0.4</version>
+                    <version>3.2.1</version>
                 </plugin>
                 <plugin>
                     <!-- Plug in for java doc to deploys -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.3</version>
+                    <version>3.3.1</version>
                     <configuration>
                         <!-- Turns off error checking for java doc-->
                         <additionalparam>-Xdoclint:none</additionalparam>
