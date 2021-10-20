@@ -19,11 +19,20 @@ import java.util.List;
 public class Request {
     public static final Request EMPTY = Request.builder().build();
 
-    @Getter @Builder.Default private String mMethodName = "";
-    @Getter @Builder.Default private List<String> mArgumentNames = Collections.emptyList();
-    @Getter @Builder.Default private List<String> mArgumentValues = Collections.emptyList();
-    @Getter @Builder.Default private String mFileName = "";
-    @Getter @Builder.Default private boolean mFileRequest = false;
-
+    @Getter
+    @Builder.Default
+    private final String mMethodName = "";
+    @Getter
+    @Builder.Default
+    private final List<String> mArgumentNames = Collections.emptyList();
+    @Getter
+    @Builder.Default
+    private final List<String> mArgumentValues = Collections.emptyList();
+    @Getter
+    @Builder.Default
+    private final String mFileName = "";
+    @Getter
+    @Builder.Default
+    private final boolean mFileRequest = false;
 
 }

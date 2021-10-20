@@ -1,6 +1,6 @@
 package com.atexpose.api;
 
-import com.atexpose.api.datatypes.DataType;
+import com.atexpose.api.data_types.DataTypeEnum;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
@@ -16,20 +16,17 @@ public class MethodArguments_GetArgumentTest {
     private MethodArguments getThreeArguments() {
         Argument argument1 = Argument.builder()
                 .name("arg1")
-                .alias("arg1Alias")
-                .dataType(DataType.STRING)
+                .dataType(DataTypeEnum.STRING.getDataType())
                 .defaultValue("my_default_value")
                 .build();
         Argument argument2 = Argument.builder()
                 .name("arg2")
-                .alias("arg2Alias")
-                .dataType(DataType.INT)
+                .dataType(DataTypeEnum.INT.getDataType())
                 .defaultValue("1234")
                 .build();
         Argument argument3 = Argument.builder()
                 .name("arg3")
-                .alias("arg3_alias")
-                .dataType(DataType.BOOLEAN)
+                .dataType(DataTypeEnum.BOOLEAN.getDataType())
                 .defaultValue("true")
                 .build();
         ImmutableList<Argument> arguments = new ImmutableList.Builder<Argument>()
@@ -68,13 +65,6 @@ public class MethodArguments_GetArgumentTest {
     @Test
     public void getArgument_ExistingArgumentName_ArgumentWithRequestedName() {
         Argument argument = this.getThreeArguments().getArgument("arg2");
-        assertThat(argument.getKey()).isEqualToIgnoringCase("arg2");
-    }
-
-
-    @Test
-    public void getArgument_ArgumentNameAlias_ArgumentWithRequestedAlias() {
-        Argument argument = this.getThreeArguments().getArgument("arg2Alias");
         assertThat(argument.getKey()).isEqualToIgnoringCase("arg2");
     }
 

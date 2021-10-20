@@ -11,9 +11,9 @@ public class MockMailSenderTest {
 
     @Test
     public void testSendMail() {
-        MockMailSender mms = new MockMailSender();
-        mms.send("theRecipient", null, null, "fromName");
-        assertTrue(mms.mRecipient.equalsIgnoreCase("theRecipient"));
+        MockMailSender mms = new MockMailSender()
+                .setRecipientEmailAddress("theRecipient");
+        assertTrue(mms.mRecipientEmailAddress.equalsIgnoreCase("theRecipient"));
     }
 
 }

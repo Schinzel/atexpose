@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample Page</title>
+    <script src="jquery-2.1.3.min.js"></script>
+    <script>
+        /**
+         * Call server with command in input box and render the result in the output box.
+         */
+        function callServer() {
+            //Clear old output
+            setOutput("");
+            //Get the text in the input box
+            var input = $("#input").val();
+            //Make a post request
+            $.ajax({
+                type: "POST",
+                url: "/api/" + input,
+                contentType: "application/json; charset=utf-8",
+                success: setOutput
+            }).fail(function (jqXHR) {
+                var message = jqXHR.responseText;
+                setOutput(message);
+            });
+        }
+        /**
+         * Render the argument value in the output box.
+         * @param resp
+         */
+        function setOutput(resp) {
+            $("#output").val(resp);
+        }
+
+
+    </script>
+</head>
+<body>
+<h1>Sample Page</h1>
+
+<h3>Input</h3>
+Example input: <i>sayIt</i>, <i>time</i>, <i>ping</i> and an non existing method name, for example <i>bapp</i>.
+<br>
+<input id="input" type="text" value="time">
+<br>
+<button onclick="callServer()">Click me!</button>
+
+<h3>Output</h3>
+<textarea id="output" rows="20" cols="50">
+</textarea>
+<br>
+
+
+</body>
+</html>

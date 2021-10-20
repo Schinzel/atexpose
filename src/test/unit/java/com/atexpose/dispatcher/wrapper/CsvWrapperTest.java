@@ -42,30 +42,6 @@ public class CsvWrapperTest {
 
 
     @Test
-    public void testWrapJSON() {
-        CsvWrapper csvWrapper = new CsvWrapper();
-        JSONObject jo;
-        String result;
-        //
-        jo = new JSONObject();
-        jo.put("a", "b");
-        result = csvWrapper.wrapJSON(jo);
-        assertEquals("{\"a\": \"b\"}", result);
-        //
-        jo = new JSONObject();
-        jo.put("a", "1");
-        jo.put("b", "2");
-        jo.put("c", "3");
-        result = csvWrapper.wrapJSON(jo);
-        assertEquals("{\n"
-                + "   \"a\": \"1\",\n"
-                + "   \"b\": \"2\",\n"
-                + "   \"c\": \"3\"\n"
-                + "}", result);
-    }
-
-
-    @Test
     public void testGetStatusAsJson() {
         CsvWrapper csvWrapper = new CsvWrapper();
         JSONObject joStatus = csvWrapper.getState().getJson();

@@ -2,7 +2,7 @@ package com.atexpose;
 
 import com.atexpose.dispatcher.IDispatcher;
 import com.atexpose.dispatcher.PropertiesDispatcher;
-import com.atexpose.dispatcherfactories.WebServerBuilder;
+import com.atexpose.dispatcher_factories.WebServerBuilder;
 import io.schinzel.basicutils.FunnyChars;
 import io.schinzel.basicutils.Sandman;
 import org.jsoup.Connection;
@@ -13,8 +13,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 public class WebServerTest {
     private AtExpose mAtExpose;
     private static final String LOCAL_HOST_IP = "127.0.0.1";
-    private static final String URL = "http://" + LOCAL_HOST_IP + ":5555/call/";
+    private static final String URL = "http://" + LOCAL_HOST_IP + ":5555/api/";
 
 
     @Before
@@ -61,17 +62,11 @@ public class WebServerTest {
         int port = 5555;
         Socket socket = new Socket(LOCAL_HOST_IP, port);
         String request = "no header call";
-        byte[] baMessage = request.getBytes(Charset.forName("Utf-8"));
+        byte[] baMessage = request.getBytes(StandardCharsets.UTF_8);
         SocketRWUtil.write(socket, baMessage);
-        String expected = "HTTP/1.1 500 Internal Server Error\r\n"
-                + "Server: " + PropertiesDispatcher.RESP_HEADER_SERVER_NAME + "\r\n"
-                + "Content-Type: application/json; charset=UTF-8\r\n"
-                + "Cache-Control: max-age=0\r\n"
-                + "Content-Length: 139\r\n"
-                + "\r\n"
-                + "{\"error_message\":\"Error while reading from socket. Request not allowed. Request has to start with GET or POST. Request: ' " + request + "'\"}\n\n";
+        String expected = "Error while reading from socket. Request not allowed. Request has to start with GET or POST.";
         String response = SocketRWUtil.read(socket);
-        assertEquals(expected, response);
+        assertThat(response).contains(expected);
     }
 
 
@@ -212,8 +207,8 @@ public class WebServerTest {
     }
 
 
-    @Expose(
-    )
+    @SuppressWarnings({"unused", "RedundantSuppression"})
+    @Expose
     public static String g() {
         return "It worked!";
     }

@@ -1,14 +1,11 @@
 package com.atexpose.dispatcher.channels;
 
-import com.atexpose.util.ByteStorage;
-import com.atexpose.util.sqs.SqsConsumer;
+import io.schinzel.awsutils.sqs.SqsConsumer;
 import io.schinzel.basicutils.UTF8;
 import org.json.JSONObject;
 import org.junit.Test;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -60,7 +57,7 @@ public class SqsChannelTest {
 
 
     @Test
-    public void shutdown_ShouldInvokeCloseOnSqsCosnumer() {
+    public void shutdown_ShouldInvokeCloseOnSqsConsumer() {
         SqsConsumer mock = mock(SqsConsumer.class);
         new SqsChannel(mock).shutdown(Thread.currentThread());
         verify(mock, times(1)).close();
@@ -68,19 +65,9 @@ public class SqsChannelTest {
 
 
     @Test
-    public void getClone_ShouldInvokeCloneOnSqsCosnumer() {
+    public void getClone_ShouldInvokeCloneOnSqsConsumer() {
         SqsConsumer mock = mock(SqsConsumer.class);
         new SqsChannel(mock).getClone();
         verify(mock, times(1)).clone();
-    }
-
-
-    @Test
-    public void getRequest_ByteStorageShouldContainWhatSqsConsumerReceives() {
-        SqsConsumer mock = mock(SqsConsumer.class);
-        when(mock.receive()).thenReturn("incoming!");
-        ByteStorage byteStorage = new ByteStorage();
-        new SqsChannel(mock).getRequest(byteStorage);
-        assertThat(byteStorage.getAsString()).isEqualTo("incoming!");
     }
 }

@@ -1,10 +1,9 @@
 package com.atexpose.dispatcher.channels;
 
-import com.atexpose.MyProperties;
+import com.atexpose.ProjectProperties;
 import com.atexpose.errors.RuntimeError;
 import com.atexpose.util.ByteStorage;
 import com.atexpose.util.FileRW;
-import com.google.common.base.Charsets;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
@@ -13,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * The purpose of this class is to read a text file containing one or several commands.
@@ -45,7 +45,7 @@ public class ScriptFileChannel implements IChannel {
             throw new RuntimeError("No such file or it cannot be read '" + filename + "'");
         }
         InputStream is = FileRW.getInputStream(filename);
-        mBufferedReader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
+        mBufferedReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
     }
 
 
@@ -93,7 +93,7 @@ public class ScriptFileChannel implements IChannel {
         if (!Checker.isEmpty(response)) {
             try {
                 System.out.write(response);
-                System.out.write(UTF8.getBytes(MyProperties.OS_LINE_SEPARATOR));
+                System.out.write(UTF8.getBytes(ProjectProperties.OS_LINE_SEPARATOR));
             } catch (IOException e) {
                 throw new RuntimeError("Error while writing to CLI.");
             }

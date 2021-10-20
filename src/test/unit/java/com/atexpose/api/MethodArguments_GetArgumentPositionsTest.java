@@ -1,6 +1,6 @@
 package com.atexpose.api;
 
-import com.atexpose.api.datatypes.DataType;
+import com.atexpose.api.data_types.DataTypeEnum;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
@@ -20,20 +20,17 @@ public class MethodArguments_GetArgumentPositionsTest {
     private MethodArguments getThreeArguments() {
         Argument argument1 = Argument.builder()
                 .name("arg1")
-                .alias("arg1_alias")
-                .dataType(DataType.STRING)
+                .dataType(DataTypeEnum.STRING.getDataType())
                 .defaultValue("my_default_value")
                 .build();
         Argument argument2 = Argument.builder()
                 .name("arg2")
-                .alias("arg2_alias")
-                .dataType(DataType.INT)
+                .dataType(DataTypeEnum.INT.getDataType())
                 .defaultValue("1234")
                 .build();
         Argument argument3 = Argument.builder()
                 .name("arg3")
-                .alias("arg3_alias")
-                .dataType(DataType.BOOLEAN)
+                .dataType(DataTypeEnum.BOOLEAN.getDataType())
                 .defaultValue("true")
                 .build();
         ImmutableList<Argument> arguments = new ImmutableList.Builder<Argument>()
@@ -113,14 +110,6 @@ public class MethodArguments_GetArgumentPositionsTest {
     @Test
     public void getArgumentPositions__3Arguments_arg3_arg2_arg1__Array_2_1_0() {
         List<String> list = ImmutableList.of("arg3", "arg2", "arg1");
-        int[] argumentPositions = this.getThreeArguments().getArgumentPositions(list);
-        assertThat(argumentPositions).containsExactly(2, 1, 0);
-    }
-
-
-    @Test
-    public void getArgumentPositions__3Arguments_arg3Alias_arg2Alias_arg1Alias__Array_2_1_0() {
-        List<String> list = ImmutableList.of("arg3_alias", "arg2_alias", "arg1_alias");
         int[] argumentPositions = this.getThreeArguments().getArgumentPositions(list);
         assertThat(argumentPositions).containsExactly(2, 1, 0);
     }

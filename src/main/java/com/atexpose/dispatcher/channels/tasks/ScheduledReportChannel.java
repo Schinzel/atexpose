@@ -34,7 +34,12 @@ public class ScheduledReportChannel extends ScheduledTaskChannelDaily {
     public void writeResponse(byte[] response) {
         String responseAsString = UTF8.getString(response);
         String subject = "Scheduled Report " + this.mTaskName;
-        mEmailSender.send(mRecipient, subject, responseAsString, mFromName);
+        mEmailSender
+                .setRecipientEmailAddress(mRecipient)
+                .setSubject(subject)
+                .setBody(responseAsString)
+                .setFromName(mFromName)
+                .send();
     }
 
 

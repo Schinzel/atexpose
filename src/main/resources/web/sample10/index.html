@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample</title>
+    <script src="jquery-2.1.3.min.js"></script>
+</head>
+<body>
+<h1>Sample 10 Page</h1>
+<script type="module">
+
+    import {Position, ServerCaller} from "./ServerCaller.js";
+
+    /**
+     * Calls the server and retrieves a class.
+     * Changes a property in this class and send it to the server.
+     */
+    async function getAndSetPersonClass() {
+        let manager = await new ServerCaller().getManager();
+        log("Got manager from server");
+        log(manager);
+        manager.setAge(45)
+            .setTimeStamp(new Date())
+            .setIds(["abc", "def"])
+        log("Managers age and time stamp changed");
+        log(manager);
+        let serverResponse = await new ServerCaller().setManager(manager);
+        log('Server response: ' + serverResponse);
+    }
+
+
+    /**
+     * Calls the server and retrieves en enum.
+     * Sends the same enum with a different value to the server.
+     */
+    async function getAndSetPositionEnum() {
+        let position = await new ServerCaller().getPosition();
+        log("Got position from server");
+        log(position);
+        let serverResponse = await new ServerCaller().setPosition(Position.SECOND);
+        log('Server response: ' + serverResponse);
+    }
+
+    function log(str) {
+        console.log(str);
+    }
+
+    getAndSetPersonClass();
+    getAndSetPositionEnum();
+
+</script>
+</body>
+</html>

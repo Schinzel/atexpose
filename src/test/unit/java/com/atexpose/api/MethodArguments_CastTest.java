@@ -1,6 +1,6 @@
 package com.atexpose.api;
 
-import com.atexpose.api.datatypes.DataType;
+import com.atexpose.api.data_types.DataTypeEnum;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
@@ -20,20 +20,17 @@ public class MethodArguments_CastTest {
     private MethodArguments getThreeArguments() {
         Argument argument1 = Argument.builder()
                 .name("arg1")
-                .alias("arg1Alias")
-                .dataType(DataType.STRING)
+                .dataType(DataTypeEnum.STRING.getDataType())
                 .defaultValue("my_default_value")
                 .build();
         Argument argument2 = Argument.builder()
                 .name("arg2")
-                .alias("arg2Alias")
-                .dataType(DataType.INT)
+                .dataType(DataTypeEnum.INT.getDataType())
                 .defaultValue("12345")
                 .build();
         Argument argument3 = Argument.builder()
                 .name("arg3")
-                .alias("arg3Alias")
-                .dataType(DataType.BOOLEAN)
+                .dataType(DataTypeEnum.BOOLEAN.getDataType())
                 .defaultValue("true")
                 .build();
         ImmutableList<Argument> arguments = new ImmutableList.Builder<Argument>()
@@ -47,19 +44,19 @@ public class MethodArguments_CastTest {
 
     @Test
     public void cast_NullValues_Exception() {
-        List<String> argumentValues = null;
         List<String> argumentNames = Collections.emptyList();
+        MethodArguments methodArguments = this.getThreeArguments();
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> this.getThreeArguments().cast(argumentValues, argumentNames));
+                .isThrownBy(() -> methodArguments.cast(null, argumentNames));
     }
 
 
     @Test
     public void cast_NullNames_Exception() {
         List<String> argumentValues = Collections.emptyList();
-        List<String> argumentNames = null;
+        MethodArguments methodArguments = this.getThreeArguments();
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> this.getThreeArguments().cast(argumentValues, argumentNames));
+                .isThrownBy(() -> methodArguments.cast(argumentValues, null));
     }
 
 
@@ -67,8 +64,9 @@ public class MethodArguments_CastTest {
     public void cast_ValuesAndNamesOfDifferentSizes_Exception() {
         List<String> argumentValues = ImmutableList.of("");
         List<String> argumentNames = ImmutableList.of("", "");
+        MethodArguments methodArguments = this.getThreeArguments();
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> this.getThreeArguments().cast(argumentValues, argumentNames));
+                .isThrownBy(() -> methodArguments.cast(argumentValues, argumentNames));
     }
 
 
@@ -95,15 +93,6 @@ public class MethodArguments_CastTest {
         List<String> argumentValues = ImmutableList.of("my_string", "1234");
         Object[] result = this.getThreeArguments().cast(argumentValues);
         assertThat(result).containsExactly("my_string", 1234);
-    }
-
-
-    @Test
-    public void cast_ArgumentWithAliases_ArgumentsInCorrectDataTypes() {
-        List<String> argumentValues = ImmutableList.of("true", "1234");
-        List<String> argumentNames = ImmutableList.of("arg3Alias", "arg2Alias");
-        Object[] result = this.getThreeArguments().cast(argumentValues, argumentNames);
-        assertThat(result).containsExactly(true, 1234);
     }
 
 }

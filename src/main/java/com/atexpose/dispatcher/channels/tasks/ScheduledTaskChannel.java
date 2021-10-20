@@ -29,6 +29,7 @@ public class ScheduledTaskChannel implements IChannel {
     @Getter
     private final String mTaskRequest;
     /** Human readable string describing the task interval. */
+    @Getter(AccessLevel.PACKAGE)
     private final String mHumanReadableTaskInterval;
     /** The interval size. For minute tasks this is the number of minutes between tasks. */
     private final int mIntervalAmount;
@@ -52,8 +53,13 @@ public class ScheduledTaskChannel implements IChannel {
      * @param intervalAmount The amount to wait. Used in conjunction with
      *                       intervalUnit.
      */
-    ScheduledTaskChannel(String taskName, String request, ChronoUnit intervalUnit, int intervalAmount,
-                         String humanReadableTaskInterval, ZonedDateTime initialTaskFireTime, IWatch watch) {
+    ScheduledTaskChannel(String taskName,
+                         String request,
+                         ChronoUnit intervalUnit,
+                         int intervalAmount,
+                         String humanReadableTaskInterval,
+                         ZonedDateTime initialTaskFireTime,
+                         IWatch watch) {
         mTaskName = taskName;
         mTaskRequest = request;
         mIntervalUnit = intervalUnit;
@@ -82,7 +88,7 @@ public class ScheduledTaskChannel implements IChannel {
     @Override
     public boolean getRequest(ByteStorage request) {
         //Get the number of nanoseconds the executing thread should sleep.
-        long nanosToSleep = Duration.between(mWatch.getInstant(), mTimeToFireNext).toNanos();
+        long nanosToSleep = Duration.between(mWatch.getNowAsInstant(), mTimeToFireNext).toNanos();
         try {
             //Put executing thread to sleep.
             TimeUnit.NANOSECONDS.sleep(nanosToSleep);
@@ -117,7 +123,7 @@ public class ScheduledTaskChannel implements IChannel {
 
     static ZonedDateTime getNextTaskTime(ZonedDateTime time, int intervalAmount, TemporalUnit intervalUnit, IWatch watch) {
         //Note, Instant.now().isBefore(mTimeToFireNext) does not work.
-        return (!time.isAfter(ZonedDateTime.ofInstant(watch.getInstant(), time.getZone())))
+        return (!time.isAfter(ZonedDateTime.ofInstant(watch.getNowAsInstant(), time.getZone())))
                 ? getNextTaskTime(time.plus(intervalAmount, intervalUnit), intervalAmount, intervalUnit, watch)
                 : time;
     }

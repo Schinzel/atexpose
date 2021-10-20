@@ -12,7 +12,6 @@ public class TestWatch implements IWatch {
     /** The instant for now. */
     private Instant mInstant = null;
 
-
     /**
      * @return A new instance.
      */
@@ -24,16 +23,16 @@ public class TestWatch implements IWatch {
     /**
      * @return An instant representing now.
      */
-    public Instant getInstant() {
+    public Instant getNowAsInstant() {
         return (mInstant == null) ? Instant.now() : mInstant;
     }
 
 
     /**
-     * For testing purposes only. Set a instant that will be returned by getInstant.
+     * An instant representing the argument date will be returned with getNowAsInstant.
      *
-     * @param instant The instant that this instance should return.
-     * @return This for chaining.
+     * @param instant The instant that this instance should return
+     * @return This for chaining
      */
     public TestWatch setInstant(Instant instant) {
         mInstant = instant;
@@ -42,8 +41,7 @@ public class TestWatch implements IWatch {
 
 
     /**
-     * For testing purposes only. An instant representing the argument date will be returned with
-     * getInstant.
+     * An instant representing the argument date will be returned with getNowAsInstant.
      *
      * @param year       The year. E.g. 2015
      * @param month      The month-of-year to represent, from 1 (January) to 12
@@ -51,16 +49,15 @@ public class TestWatch implements IWatch {
      * @param dayOfMonth The day-of-month. From 1 to 31
      * @param hour       The hour-of-day. From 0 to 23
      * @param minute     The minute-of-hour. From 0 to 59
-     * @return This for chaining.
+     * @return This for chaining
      */
     public TestWatch setDateTimeUtc(int year, int month, int dayOfMonth, int hour, int minute) {
-        return this.setDateTime(year, month, dayOfMonth, hour, minute, ZoneId.of("UTC"));
+        return this.setDateTime(year, month, dayOfMonth, hour, minute, 0, 0, ZoneId.of("UTC"));
     }
 
 
     /**
-     * For testing purposes only. An instant representing the argument date will be returned with
-     * getInstant.
+     * An instant representing the argument date will be returned with getNowAsInstant.
      *
      * @param year       The year. E.g. 2015
      * @param month      The month-of-year to represent, from 1 (January) to 12
@@ -69,10 +66,40 @@ public class TestWatch implements IWatch {
      * @param hour       The hour-of-day. From 0 to 23
      * @param minute     The minute-of-hour. From 0 to 59
      * @param zoneId     The id of the zone
-     * @return An instance of this for chaining.
+     * @return This for chaining
      */
     public TestWatch setDateTime(int year, int month, int dayOfMonth, int hour, int minute, ZoneId zoneId) {
-        ZonedDateTime zdt = ZonedDateTime.of(year, month, dayOfMonth, hour, minute, 0, 0, zoneId);
+        return this.setDateTime(year, month, dayOfMonth, hour, minute, 0, 0, zoneId);
+    }
+
+
+    /**
+     * An instant representing the argument date will be returned with getNowAsInstant.
+     *
+     * @param year       The year. E.g. 2015
+     * @param month      The month-of-year to represent, from 1 (January) to 12
+     *                   (December)
+     * @param dayOfMonth The day-of-month. From 1 to 31
+     * @param hour       The hour-of-day. From 0 to 23
+     * @param minute     The minute-of-hour. From 0 to 59
+     * @param second     The second-of-minute. From 0 to 59
+     * @param nano       The nano-of-the-second. From 0 to 999
+     * @param zoneId     The id of the zone
+     * @return This for chaining
+     */
+    public TestWatch setDateTime(int year, int month, int dayOfMonth, int hour, int minute, int second, int nano, ZoneId zoneId) {
+        ZonedDateTime zdt = ZonedDateTime.of(year, month, dayOfMonth, hour, minute, second, nano, zoneId);
+        return this.setDateTime(zdt);
+    }
+
+    
+    /**
+     * An instant representing the argument date will be returned with getNowAsInstant.
+     *
+     * @param zdt The date-time to set the test watch to
+     * @return This for chaining
+     */
+    public TestWatch setDateTime(ZonedDateTime zdt) {
         mInstant = zdt.toInstant();
         return this;
     }
@@ -80,6 +107,6 @@ public class TestWatch implements IWatch {
 
     @Override
     public String toString() {
-        return this.getInstant().toString();
+        return this.getNowAsInstant().toString();
     }
 }

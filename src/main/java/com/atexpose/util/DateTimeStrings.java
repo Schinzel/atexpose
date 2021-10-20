@@ -14,7 +14,8 @@ public class DateTimeStrings {
     /**
      * The format of the date time with milliseconds.
      */
-    private static final DateTimeFormatter DATE_TIME_FORMAT_WITH_MS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final DateTimeFormatter DATE_TIME_FORMAT_WITH_MS = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     //------------------------------------------------------------------------
     // UTC
     //------------------------------------------------------------------------

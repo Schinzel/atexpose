@@ -1,7 +1,7 @@
 package com.atexpose;
 
 import com.atexpose.dispatcher.IDispatcher;
-import com.atexpose.dispatcherfactories.WebServerBuilder;
+import com.atexpose.dispatcher_factories.WebServerBuilder;
 import io.schinzel.basicutils.Sandman;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -220,7 +220,7 @@ public class WebServerRedirectTest {
         AtExpose.create()
                 .start(mWebServer);
         Connection.Response response = Jsoup
-                .connect("http://127.0.0.1:5555/call/ping")
+                .connect("http://127.0.0.1:5555/api/ping")
                 .method(Connection.Method.GET)
                 .followRedirects(false)
                 .execute();

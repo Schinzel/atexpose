@@ -41,7 +41,7 @@ public class ScheduledTaskChannelTest {
         ScheduledTaskChannel dailyTaskChannel = new ScheduledTaskChannel("TheTaskName",
                 "MyRequest", ChronoUnit.MINUTES, 15, "",
                 ZonedDateTime.now(), TestWatch.create().setInstant(myInstant));
-        assertThat(dailyTaskChannel.mWatch.getInstant()).isEqualTo(myInstant);
+        assertThat(dailyTaskChannel.mWatch.getNowAsInstant()).isEqualTo(myInstant);
     }
 
 
@@ -49,7 +49,7 @@ public class ScheduledTaskChannelTest {
     public void constructor_DefaultWatch_WatchReturnsNow() {
         Instant start = Instant.now();
         ScheduledTaskChannel dailyTaskChannel = getTestChannel();
-        assertThat(dailyTaskChannel.mWatch.getInstant()).isBetween(start, Instant.now());
+        assertThat(dailyTaskChannel.mWatch.getNowAsInstant()).isBetween(start, Instant.now());
     }
 
 

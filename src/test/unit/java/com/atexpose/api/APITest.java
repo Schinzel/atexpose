@@ -1,7 +1,7 @@
 package com.atexpose.api;
 
 import com.atexpose.Expose;
-import com.atexpose.api.datatypes.DataType;
+import com.atexpose.api.data_types.DataTypeEnum;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +41,7 @@ public class APITest {
 
     @Test
     public void addArgument_ArgumentAdded_ExistsArgumentWithSetDescription() {
-        API api = new API().addArgument("MyName", DataType.JSON, "My description");
+        API api = new API().addArgument("MyName", DataTypeEnum.STRING.getDataType(), "My description");
         Argument argument = api.getArguments()
                 .get("MyName");
         assertThat(argument.getDescription()).isEqualTo("My description");

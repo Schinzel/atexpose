@@ -1,6 +1,6 @@
 package com.atexpose.dispatcher.logging.writer;
 
-import com.atexpose.MyProperties;
+import com.atexpose.ProjectProperties;
 import io.schinzel.basicutils.UTF8;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class SystemOutLogWriter implements ILogWriter {
     private static synchronized void syncedOutputWrite(String logEntry) {
         try {
             System.out.write(UTF8.getBytes(logEntry));
-            System.out.write(UTF8.getBytes(MyProperties.OS_LINE_SEPARATOR));
+            System.out.write(UTF8.getBytes(ProjectProperties.OS_LINE_SEPARATOR));
             System.out.flush();
         } catch (IOException ex) {
             throw new RuntimeException("There was an error when SystemOutLogger was trying to log. " + ex.getMessage());

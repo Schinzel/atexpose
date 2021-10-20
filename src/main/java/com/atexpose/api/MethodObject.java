@@ -1,6 +1,6 @@
 package com.atexpose.api;
 
-import com.atexpose.api.datatypes.AbstractDataType;
+import com.atexpose.api.data_types.AbstractDataType;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.valueswithkeys.IValueWithKey;
 import io.schinzel.basicutils.state.IStateNode;
@@ -10,9 +10,7 @@ import io.schinzel.basicutils.thrower.Thrower;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,27 +35,25 @@ public class MethodObject implements IValueWithKey, IStateNode {
     //The method that this object defines
     @Getter private final Method mMethod;
     //Holds a description of the method.
-    private final String mDescription;
+    @Getter private final String mDescription;
     //How many of the arguments are required.
     @Getter private final int mNoOfRequiredArguments;
     //Holds the arguments of this method
     @Getter private final MethodArguments mMethodArguments;
     //A list of labels to which this method belongs.
     private List<Label> mLabels;
-    //Alias, i.e. alternate method names for this method.
-    private List<Alias> mAliases = new ArrayList<>();
 
 
     @Builder
     private MethodObject(Object theObject, Method method, String description, int noOfRequiredArguments,
                          List<Argument> arguments, int accessLevel, List<Label> labels,
-                         AbstractDataType returnDataType, List<Alias> aliases, boolean requireAuthentication) {
-        Thrower.throwIfVarNull(theObject, "theObject");
-        Thrower.throwIfVarNull(method, "method");
-        Thrower.throwIfVarNull(description, "description");
-        Thrower.throwIfVarNull(returnDataType, "returnDataType");
-        Thrower.throwIfTrue(noOfRequiredArguments > arguments.size())
-                .message("Number of required arguments is higher than the actual number of arguments");
+                         AbstractDataType returnDataType, boolean requireAuthentication) {
+        Thrower.createInstance()
+                .throwIfVarNull(theObject, "theObject")
+                .throwIfVarNull(method, "method")
+                .throwIfVarNull(description, "description")
+                .throwIfVarNull(returnDataType, "returnDataType")
+                .throwIfTrue(noOfRequiredArguments > arguments.size(), "Number of required arguments is higher than the actual number of arguments");
         this.mKey = method.getName();
         mObject = theObject;
         mMethod = method;
@@ -68,13 +64,6 @@ public class MethodObject implements IValueWithKey, IStateNode {
         mAccessLevelRequiredToUseThisMethod = accessLevel;
         mMethodArguments = MethodArguments.create(arguments);
         mAuthRequired = requireAuthentication;
-        if (!Checker.isEmpty(aliases)) {
-            mAliases = aliases;
-            for (Alias alias : mAliases) {
-                alias.setMethod(this);
-            }
-            Collections.sort(mAliases);
-        }
         if (!Checker.isEmpty(labels)) {
             mLabels = labels;
             for (Label label : labels) {
@@ -122,7 +111,6 @@ public class MethodObject implements IValueWithKey, IStateNode {
                 .add("RequiredArgumentsCount", mNoOfRequiredArguments)
                 .add("JavaClass", mObject.getClass().getCanonicalName())
                 .addChild("Arguments", mMethodArguments)
-                .addChildren("Aliases", mAliases)
                 .addChildren("Labels", mLabels)
                 .build();
     }

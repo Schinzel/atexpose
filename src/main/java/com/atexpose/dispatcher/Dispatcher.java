@@ -3,24 +3,20 @@ package com.atexpose.dispatcher;
 import com.atexpose.api.API;
 import com.atexpose.api.MethodObject;
 import com.atexpose.dispatcher.channels.IChannel;
-import com.atexpose.dispatcher.invocation.Invocation;
-import com.atexpose.dispatcher.invocation.RequestArguments;
 import com.atexpose.dispatcher.logging.LogEntry;
 import com.atexpose.dispatcher.logging.Logger;
 import com.atexpose.dispatcher.parser.IParser;
 import com.atexpose.dispatcher.parser.Request;
 import com.atexpose.dispatcher.wrapper.IWrapper;
-import com.atexpose.errors.IExceptionProperties;
 import com.atexpose.util.ByteStorage;
-import io.schinzel.basicutils.thrower.Thrower;
+import com.google.common.collect.ImmutableMap;
 import io.schinzel.basicutils.UTF8;
 import io.schinzel.basicutils.state.State;
+import io.schinzel.basicutils.thrower.Thrower;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -163,7 +159,7 @@ public class Dispatcher implements Runnable, IDispatcher {
     public void run() {
         ByteStorage incomingRequest = new ByteStorage();
         String decodedIncomingRequest;
-        Object responseAsStrings;
+        String responseAsString;
         String wrappedResponse;
         byte[] wrappedResponseAsUtf8ByteArray;
         while (true) {
@@ -188,33 +184,43 @@ public class Dispatcher implements Runnable, IDispatcher {
                     MethodObject methodObject = mAPI.getMethodObject(request.getMethodName());
                     // is the dispatcher authorized to access this method
                     checkAccessLevel(methodObject.getAccessLevelRequiredToUseThisMethod());
+                    checkNumberOfArguments(request.getArgumentValues().size(), methodObject.getNoOfRequiredArguments());
                     Object[] requestArgumentValues = RequestArguments.builder()
                             .methodArguments(methodObject.getMethodArguments())
                             .requestArgumentValuesAsStrings(request.getArgumentValues())
                             .requestArgumentNames(request.getArgumentNames())
                             .build()
                             .getArgumentValuesAsObjects();
-                    Object responseAsObject = Invocation.invokeBuilder()
-                            .method(methodObject.getMethod())
-                            .targetObject(methodObject.getObject())
-                            .argumentValuesAsObjects(requestArgumentValues)
-                            .invoke();
-                    //If return type is Json
-                    if (methodObject.getReturnDataType().isJson()) {
-                        //Do json wrapping
-                        wrappedResponse = mWrapper.wrapJSON((JSONObject) responseAsObject);
-                    } else {
-                        responseAsStrings = methodObject.getReturnDataType().convertFromDataTypeToString(responseAsObject);
-                        wrappedResponse = mWrapper.wrapResponse((String) responseAsStrings);
-                    }
+                    Object responseAsObject = methodObject
+                            .getMethod()
+                            .invoke(methodObject.getObject(), requestArgumentValues);
+                    responseAsString = methodObject
+                            .getReturnDataType()
+                            .convertFromDataTypeToString(responseAsObject);
+                    wrappedResponse = mWrapper.wrapResponse(responseAsString);
                     wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
                 }
             } catch (Exception e) {
                 isError = true;
+                String errorMessage = (e.getMessage() == null)
+                        ? e.getCause().getMessage()
+                        : e.getMessage();
+                if (errorMessage == null) errorMessage = "";
+                String errorClassName = e.getClass().getSimpleName();
+                errorMessage = errorClassName + ". " + errorMessage;
+                ImmutableMap<String, String> requestExceptionInfo = (request.isFileRequest())
+                        ? ImmutableMap.<String, String>builder()
+                        .put("error_message", errorMessage)
+                        .put("file_name", request.getFileName())
+                        .build()
+                        : ImmutableMap.<String, String>builder()
+                        .put("error_message", errorMessage)
+                        .put("method_name", request.getMethodName())
+                        .put("argument_values", request.getArgumentValues().toString())
+                        .put("argument_names", request.getArgumentNames().toString())
+                        .build();
                 //If the exception has properties
-                wrappedResponse = (e instanceof IExceptionProperties)
-                        ? mWrapper.wrapError(((IExceptionProperties) e).getProperties())
-                        : mWrapper.wrapError(Collections.singletonMap("error_message", e.getMessage()));
+                wrappedResponse = mWrapper.wrapError(requestExceptionInfo);
                 wrappedResponseAsUtf8ByteArray = UTF8.getBytes(wrappedResponse);
             } finally {
                 timeOfIncomingRequest = (timeOfIncomingRequest == null) ? Instant.now() : timeOfIncomingRequest;
@@ -245,10 +251,15 @@ public class Dispatcher implements Runnable, IDispatcher {
 
 
     private void checkAccessLevel(int methodAccessLevel) {
-        if (methodAccessLevel > this.mAccessLevel) {
-            throw new RuntimeException("Cannot access the requested method through this dispatcher. Method requires access level "
-                    + methodAccessLevel + " and the used dispatcher only has access level " + this.mAccessLevel + ".");
-        }
+        Thrower.throwIfTrue(methodAccessLevel > this.mAccessLevel)
+                .message("Cannot access the requested method through this dispatcher. Method requires access level "
+                        + methodAccessLevel + " and the used dispatcher only has access level " + this.mAccessLevel + ".");
+    }
+
+
+    private static void checkNumberOfArguments(int actualNumberOfArguments, int requiredNumberOfArguments) {
+        Thrower.throwIfTrue(actualNumberOfArguments < requiredNumberOfArguments)
+                .message("To few arguments. Was " + actualNumberOfArguments + " but required " + requiredNumberOfArguments + ".");
     }
     // ------------------------------------
     // - Logger

@@ -14,10 +14,11 @@ public class MyObject {
 
     @Expose(
             description = "The thing is set to the argument value",
-            arguments = {"String"},
+            arguments = {"string", "int"},
+            requiredArgumentCount = 1,
             theReturn = "The argument string with a prefix"
     )
-    public String setTheThing(String str) {
+    public String setTheThing(String str, Integer number) {
         mStr = str;
         return "It was set to '" + str + "'.";
     }
@@ -33,7 +34,7 @@ public class MyObject {
 
     @Expose(
             requiredAccessLevel = 1,
-            arguments = {"Int"}
+            arguments = {"int"}
     )
     String doHeavyBackgroundJob(int count) {
         Sandman.snoozeSeconds(1);

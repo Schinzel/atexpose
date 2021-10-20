@@ -1,7 +1,6 @@
 package com.atexpose.dispatcher.wrapper;
 
 import io.schinzel.basicutils.state.IStateNode;
-import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -17,8 +16,4 @@ public interface IWrapper extends IStateNode {
 
 
     String wrapError(Map<String, String> properties);
-
-
-    String wrapJSON(JSONObject response);
-
 }

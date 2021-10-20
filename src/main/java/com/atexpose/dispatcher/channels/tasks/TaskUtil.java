@@ -4,9 +4,7 @@ import com.atexpose.util.watch.IWatch;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.thrower.Thrower;
 
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.regex.Pattern;
 
 /**
@@ -15,6 +13,8 @@ import java.util.regex.Pattern;
  */
 
 class TaskUtil {
+
+    protected TaskUtil(){}
 
     /**
      * @param zoneId E.g. "UTC", ""America/New_York"
@@ -47,11 +47,14 @@ class TaskUtil {
      * @return The argument time as date today in the argument zone
      */
     static ZonedDateTime getZonedDateTime(String timeOfDay, ZoneId zoneId, IWatch watch) {
+        LocalDate localDate = watch.getNowAsInstant()
+                .atZone(zoneId)
+                .toLocalDate();
         return LocalTime
                 //Get the local time from time-of-day string
                 .parse(timeOfDay)
                 //Get date by setting  the date to today in the argument zone
-                .atDate(watch.getLocalDate(zoneId))
+                .atDate(localDate)
                 //Get ZoneDateTime by setting the  argument zone id
                 .atZone(zoneId);
     }

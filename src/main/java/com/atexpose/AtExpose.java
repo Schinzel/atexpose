@@ -1,15 +1,27 @@
 package com.atexpose;
 
 import com.atexpose.api.API;
+import com.atexpose.api.Argument;
+import com.atexpose.api.MethodObject;
+import com.atexpose.api.data_types.AbstractDataType;
+import com.atexpose.api.data_types.class_dt.ClassDT;
 import com.atexpose.dispatcher.IDispatcher;
+import com.atexpose.dispatcher_factories.CliFactory;
+import com.atexpose.dispatcher_factories.ScriptFileReaderFactory;
+import com.atexpose.dispatcher_factories.WebServerBuilder;
+import com.atexpose.generator.IGenerator;
+import com.atexpose.generator.JsClientGenerator;
 import com.atexpose.util.DateTimeStrings;
-import com.atexpose.util.mail.IEmailSender;
 import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The central class that is the spider in the web.
@@ -18,15 +30,13 @@ import lombok.experimental.Accessors;
  *
  * @author Schinzel
  */
-@SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue", "UnusedReturnValue"})
+@SuppressWarnings({"WeakerAccess", "SameParameterValue", "UnusedReturnValue", "rawtypes", "unused", "RedundantSuppression"})
 @Accessors(prefix = "m")
 public class AtExpose implements IStateNode {
     /** Instance creation time. For status and debug purposes. */
     private final String mInstanceStartTime = DateTimeStrings.getDateTimeUTC();
     /** Reference to the API. */
     @Getter private final API mAPI;
-    /** Holds an email sender instance if such has been set up. */
-    @Getter private IEmailSender mMailSender;
     /** Holds the running dispatchers */
     @Getter ValuesWithKeys<IDispatcher> mDispatchers = ValuesWithKeys.create("Dispatchers");
 
@@ -42,7 +52,7 @@ public class AtExpose implements IStateNode {
     AtExpose() {
         mAPI = new API();
         NativeSetup.setUp(this.getAPI());
-        this.getAPI().expose(ExposedAtExpose.create(this));
+        this.getAPI().expose(NativeMethods.create(this));
     }
 
 
@@ -52,9 +62,33 @@ public class AtExpose implements IStateNode {
     }
 
 
-    public AtExpose expose(Class clazz) {
+    public AtExpose expose(Class<?> clazz) {
         mAPI.expose(clazz);
         return this;
+    }
+
+    public AtExpose generateJavaScriptClient(String fileName) {
+        this.generate(new JsClientGenerator(fileName));
+        return this;
+    }
+
+    public AtExpose generate(IGenerator generator) {
+        List<MethodObject> methodObjects = new ArrayList<>(mAPI.getMethods().values());
+        List<Class<?>> customClasses = getCustomClasses();
+        generator.generate(methodObjects, customClasses);
+        return this;
+    }
+
+
+    /**
+     * @return Classes that exists outside atexpose and have been added to the api
+     */
+    private List<Class<?>> getCustomClasses() {
+        return mAPI.getDataTypes()
+                .stream()
+                .filter(n -> n instanceof ClassDT)
+                .map(n -> (Class<?>) ((ClassDT) n).getClazz())
+                .collect(Collectors.toList());
     }
 
 
@@ -73,21 +107,82 @@ public class AtExpose implements IStateNode {
 
 
     /**
-     * @param dispatcherName The name of the dispatcher to return
-     * @return The dispatcher with the argument name
-     */
-    public IDispatcher getDispatcher(String dispatcherName) {
-        return this.getDispatchers().get(dispatcherName);
-    }
-
-
-    /**
      * @param dispatcherName The dispatcher to shutdown.
      * @return This for chaining
      */
     public AtExpose closeDispatcher(String dispatcherName) {
         this.getDispatchers().get(dispatcherName).shutdown();
         this.getDispatchers().remove(dispatcherName);
+        return this;
+    }
+
+
+    /**
+     * Starts a command line interface
+     *
+     * @return This for chaining
+     */
+    public AtExpose startCLI() {
+        return this.startCLI(null);
+    }
+
+
+    /**
+     * Starts a command line interface
+     * @param startOfTheLine Will appear at the start of the line in the console
+     * @return This for chaining
+     */
+    public AtExpose startCLI(String startOfTheLine) {
+        this.start(CliFactory.create(startOfTheLine));
+        return this;
+    }
+
+
+    public AtExpose readScriptFile(String fileName) {
+        this.start(ScriptFileReaderFactory.create(fileName), true);
+        return this;
+    }
+
+
+    /**
+     * Starts a web server on port 5555
+     *
+     * @return This for chaining
+     */
+    public AtExpose startWebServer() {
+        return this.startWebServer("");
+    }
+
+    /**
+     * Starts a web server on port 5555
+     *
+     * @param webServerDir Path to web server dir. Relative to the
+     *                     resource dir. For example "web/my_dir" if "web" is
+     *                     a directory in the resource dir with "my_dir" as
+     *                     a subdirectory.
+     * @return This for chaining
+     */
+    public AtExpose startWebServer(String webServerDir) {
+        return this.startWebServer(webServerDir, 5555);
+    }
+
+
+    /**
+     * Starts a web server
+     *
+     * @param webServerDir Path to web server dir. Relative to the
+     *                     resource dir. For example "web/my_dir" if "web" is
+     *                     a directory in the resource dir with "my_dir" as
+     *                     a subdirectory.
+     * @param port         Port to start web server on
+     * @return This for chaining
+     */
+    public AtExpose startWebServer(String webServerDir, int port) {
+        IDispatcher webServer = WebServerBuilder.create()
+                .webServerDir(webServerDir)
+                .port(port)
+                .build();
+        this.start(webServer, false);
         return this;
     }
 
@@ -136,13 +231,31 @@ public class AtExpose implements IStateNode {
         return this;
     }
 
+    //------------------------------------------------------------------------
+    // API METHODS
+    //------------------------------------------------------------------------
+
+    public AtExpose addDataType(Class<?> clazz) {
+        this.getAPI().addDataType(new ClassDT<>(clazz));
+        return this;
+    }
+
+    public AtExpose addDataType(AbstractDataType dataType) {
+        this.getAPI().addDataType(dataType);
+        return this;
+    }
+
+    public AtExpose addArgument(Argument arg) {
+        this.getAPI().addArgument(arg);
+        return this;
+    }
+
 
     @Override
     public State getState() {
         return State.getBuilder()
                 .add("TimeNow", DateTimeStrings.getDateTimeUTC())
                 .add("StartTime", mInstanceStartTime)
-                .addChild("EmailSender", this.getMailSender())
                 .addChildren(this.getDispatchers())
                 .build();
     }

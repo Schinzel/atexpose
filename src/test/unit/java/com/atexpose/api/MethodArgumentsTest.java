@@ -1,6 +1,6 @@
 package com.atexpose.api;
 
-import com.atexpose.api.datatypes.DataType;
+import com.atexpose.api.data_types.DataTypeEnum;
 import com.google.common.collect.ImmutableList;
 import io.schinzel.basicutils.state.State;
 import org.junit.Test;
@@ -15,20 +15,17 @@ public class MethodArgumentsTest {
     private MethodArguments getThreeArguments() {
         Argument argument1 = Argument.builder()
                 .name("arg1")
-                .alias("arg1Alias")
-                .dataType(DataType.STRING)
+                .dataType(DataTypeEnum.STRING.getDataType())
                 .defaultValue("my_default_value")
                 .build();
         Argument argument2 = Argument.builder()
                 .name("arg2")
-                .alias("arg2Alias")
-                .dataType(DataType.INT)
+                .dataType(DataTypeEnum.INT.getDataType())
                 .defaultValue("1234")
                 .build();
         Argument argument3 = Argument.builder()
                 .name("arg3")
-                .alias("arg3Alias")
-                .dataType(DataType.BOOLEAN)
+                .dataType(DataTypeEnum.BOOLEAN.getDataType())
                 .defaultValue("true")
                 .build();
         ImmutableList<Argument> arguments = new ImmutableList.Builder<Argument>()
@@ -43,14 +40,14 @@ public class MethodArgumentsTest {
     @Test
     public void size_NullArgumentList_0() {
         int size = MethodArguments.create(null).size();
-        assertThat(size).isEqualTo(0);
+        assertThat(size).isZero();
     }
 
 
     @Test
     public void size_EmptyArgumentList_0() {
         int size = MethodArguments.create(Collections.emptyList()).size();
-        assertThat(size).isEqualTo(0);
+        assertThat(size).isZero();
     }
 
 

@@ -1,10 +1,10 @@
 package com.atexpose.api;
 
 import com.atexpose.Expose;
-import com.atexpose.api.datatypes.AbstractDataType;
-import com.atexpose.api.datatypes.DataType;
+import com.atexpose.api.data_types.AbstractDataType;
+import com.atexpose.api.data_types.class_dt.ClassDT;
+import com.atexpose.api.data_types.DataTypeEnum;
 import com.atexpose.errors.SetUpError;
-import io.schinzel.basicutils.Checker;
 import io.schinzel.basicutils.collections.valueswithkeys.ValuesWithKeys;
 import io.schinzel.basicutils.state.IStateNode;
 import io.schinzel.basicutils.state.State;
@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,47 +25,36 @@ public class API implements IStateNode {
     @Getter private final ValuesWithKeys<MethodObject> mMethods = ValuesWithKeys.create("Methods");
     @Getter private final ValuesWithKeys<Argument> mArguments = ValuesWithKeys.create("Arguments");
     @Getter(AccessLevel.PACKAGE) final ValuesWithKeys<Label> mLabels = ValuesWithKeys.create("Labels");
-    @Getter(AccessLevel.PACKAGE) private final ValuesWithKeys<Alias> mAliases = ValuesWithKeys.create("Aliases");
-    private final ValuesWithKeys<AbstractDataType> mDataTypes = ValuesWithKeys.create("DataTypes");
+    @Getter private final ValuesWithKeys<AbstractDataType> mDataTypes = ValuesWithKeys.create("DataTypes");
 
 
     public API() {
-        for (DataType datatype : DataType.values()) {
-            this.addPrimitiveDataType(datatype.getInstance());
+        for (DataTypeEnum datatype : DataTypeEnum.values()) {
+            mDataTypes.add(datatype.getDataType());
         }
         //Set up the basic arguments.
         this
                 .addArgument(Argument.builder()
-                        .name("Float")
-                        .dataType(DataType.FLOAT)
-                        .description("A float.")
-                        .build())
-                .addArgument(Argument.builder()
-                        .name("Json")
-                        .dataType(DataType.JSON)
-                        .description("JSON.")
-                        .build())
-                .addArgument(Argument.builder()
                         .name("Int")
-                        .dataType(DataType.INT)
-                        .description("An integer.")
+                        .dataType(DataTypeEnum.INT.getDataType())
+                        .description("An integer")
                         .defaultValue("0")
                         .build())
                 .addArgument(Argument.builder()
                         .name("String")
-                        .dataType(DataType.STRING)
-                        .description("A string.")
+                        .dataType(DataTypeEnum.STRING.getDataType())
+                        .description("A string")
                         .build())
                 //Set upp method for help
                 .addArgument(Argument.builder()
                         .name("SearchString")
-                        .dataType(DataType.STRING)
-                        .description("A string to sort for.")
+                        .dataType(DataTypeEnum.STRING.getDataType())
+                        .description("A string to search for")
                         .build())
                 .addArgument(Argument.builder()
                         .name("Options")
-                        .dataType(DataType.STRING)
-                        .description("Options available are v for verbose help and l for mLabels.")
+                        .dataType(DataTypeEnum.STRING.getDataType())
+                        .description("Options available are v for verbose help and l for labels.")
                         .defaultValue("")
                         .build());
         this.addLabel("API", "Methods that involve the API.");
@@ -74,35 +62,11 @@ public class API implements IStateNode {
     }
 
 
-    private void addPrimitiveDataType(AbstractDataType adt) {
-        mDataTypes.add(adt);
-    }
-
-
     public MethodObject getMethodObject(String methodName) {
-        MethodObject methodObject;
-        if (mMethods.has(methodName)) {
-            methodObject = mMethods.get(methodName);
-        }//If no method by argument name was found
-        else if (mAliases.has(methodName)) {
-            methodObject = mAliases.get(methodName).getMethod();
-        } else {
+        if (!mMethods.has(methodName)) {
             throw new RuntimeException("No such method '" + methodName + "'");
         }
-        return methodObject;
-    }
-
-
-    private List<Alias> addAliases(String[] names) {
-        List<Alias> aliases = new ArrayList<>();
-        if (!Checker.isEmpty(names)) {
-            for (String name : names) {
-                Alias alias = new Alias(name);
-                aliases.add(alias);
-                mAliases.add(alias);
-            }
-        }
-        return aliases;
+        return mMethods.get(methodName);
     }
 
 
@@ -113,13 +77,24 @@ public class API implements IStateNode {
     }
 
 
+    public API addDataType(AbstractDataType dataType) {
+        mDataTypes.add(dataType);
+        return this;
+    }
+
+
+    public API addDataType(Class<?> clazz) {
+        mDataTypes.add(new ClassDT<>(clazz));
+        return this;
+    }
+
     public API addArgument(Argument arg) {
         mArguments.add(arg);
         return this;
     }
 
 
-    public API addArgument(String name, DataType dataType, String description) {
+    public API addArgument(String name, AbstractDataType dataType, String description) {
         Argument argument = Argument.builder()
                 .name(name)
                 .dataType(dataType)
@@ -150,7 +125,7 @@ public class API implements IStateNode {
      * @param theClass The class to expose.
      * @return This for chaining.
      */
-    public API expose(Class theClass) {
+    public API expose(Class<?> theClass) {
         Object theObject;
         try {
             theObject = theClass.newInstance();
@@ -163,7 +138,7 @@ public class API implements IStateNode {
     }
 
 
-    private API expose(Class theClass, Object theObject) {
+    private API expose(Class<?> theClass, Object theObject) {
         Method[] methods = theClass.getDeclaredMethods();
         for (Method method : methods) {
             Expose expose = method.getAnnotation(Expose.class);
@@ -171,7 +146,6 @@ public class API implements IStateNode {
                 try {
                     List<Argument> arguments = mArguments.get(Arrays.asList(expose.arguments()));
                     List<Label> labels = mLabels.get(Arrays.asList(expose.labels()));
-                    List<Alias> aliases = this.addAliases(expose.aliases());
                     AbstractDataType returnDataType = mDataTypes.get(method.getReturnType().getSimpleName());
                     MethodObject methodObject = MethodObject.builder()
                             .theObject(theObject)
@@ -182,7 +156,6 @@ public class API implements IStateNode {
                             .accessLevel(expose.requiredAccessLevel())
                             .labels(labels)
                             .returnDataType(returnDataType)
-                            .aliases(aliases)
                             .build();
                     mMethods.add(methodObject);
                 } catch (Exception e) {

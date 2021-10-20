@@ -32,7 +32,12 @@ public class MailLogWriter implements ILogWriter {
      * @param logEntry The entry to add to log
      */
     void sendMail(IEmailSender sender, String logEntry) {
-        sender.send(mRecipient, MAIL_SUBJECT, logEntry, "@Expose Log");
+        sender
+                .setRecipientEmailAddress(mRecipient)
+                .setSubject(MAIL_SUBJECT)
+                .setBody(logEntry)
+                .setFromName("@Expose Log")
+                .send();
     }
 
 
