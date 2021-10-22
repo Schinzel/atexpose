@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.atexpose</groupId>
     <artifactId>atexpose</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>@Expose</name>
@@ -205,17 +205,17 @@
         <dependency>
             <groupId>io.schinzel</groupId>
             <artifactId>js-transpiler</artifactId>
-            <version>1.4.0</version>
+            <version>1.4.1</version>
         </dependency>
         <dependency>
             <groupId>io.schinzel</groupId>
             <artifactId>basic-utils</artifactId>
-            <version>1.41</version>
+            <version>1.4.2</version>
         </dependency>
         <dependency>
             <groupId>io.schinzel</groupId>
             <artifactId>aws-utils</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>io.schinzel</groupId>
