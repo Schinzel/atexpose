@@ -24,7 +24,7 @@ Include the following in your POM:
 <repositories>
     <repository>
         <id>maven-repo.atexpose.com</id>
-        <url>http://maven-repo.atexpose.com/release</url>
+        <url>https://s3-eu-west-1.amazonaws.com/maven-repo.atexpose.com/release</url>
     </repository>
 </repositories>
 
@@ -32,7 +32,7 @@ Include the following in your POM:
     <dependency>
         <groupId>com.atexpose</groupId>
         <artifactId>atexpose</artifactId>
-        <version>0.9.36</version>
+        <version>1.0.[x]</version>
     </dependency>
 </dependencies>
 ```
@@ -313,6 +313,10 @@ sqsProducer.send(jsonRpc);
 
 
 # Versions
+## 1.0.1
+_2021-10-22_
+- Updated dependencies
+
 ## 1.0.0
 _2021-10-20_
 - New features:
