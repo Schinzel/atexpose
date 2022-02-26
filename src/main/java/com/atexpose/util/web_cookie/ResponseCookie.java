@@ -40,8 +40,7 @@ public class ResponseCookie {
                 .throwIfVarEmpty(value, "value")
                 .throwIfNotMatchesRegex(name, "name", ALLOWED_CHARS_NAME)
                 .throwIfNotMatchesRegex(value, "value", ALLOWED_CHARS_VALUE)
-                .throwIfVarNull(expires, "expires")
-                .throwIfTrue(expires.isBefore(Instant.now().minusSeconds(1)), "Expires has to be after now");
+                .throwIfVarNull(expires, "expires");
         val expiresAsString = ResponseCookie.getExpiresAsString(expires);
         val httpOnlyString = httpOnly ? "; HttpOnly" : "";
         val sameSiteString = (sameSite != null)

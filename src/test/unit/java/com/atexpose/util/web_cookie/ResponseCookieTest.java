@@ -56,17 +56,6 @@ public class ResponseCookieTest {
 
 
     @Test
-    public void builder_expiresIsBeforeNow_Exception() {
-        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-                ResponseCookie.builder()
-                        .name("my_name")
-                        .value("my_value")
-                        .expires(Instant.now().minusSeconds(100))
-                        .build()
-        );
-    }
-
-    @Test
     public void builder_instantIsNull_Exception() {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
                 ResponseCookie.builder()
