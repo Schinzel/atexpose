@@ -13,8 +13,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 /**
- * The purpose of this class is to generate the string for setting a cookie in a HTTP header
- * response.
+ * The purpose of this class is to generate the string for setting a cookie in
+ * an HTTP header response.
  * <p>
  * Example:
  * "Set-Cookie: cookie_name=cookie_value; Path=/; Expires=Thu, 12 Nov 2020 04:39:51 GMT"

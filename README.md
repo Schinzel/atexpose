@@ -220,7 +220,22 @@ WebCookie cookie = WebCookie.builder()
 WebCookieHandler.addResponseCookie(cookie);
 ```
 
-
+###Cookie Attributes
+####Name - String
+The name of the cookie
+####Value - String
+The value fo the cookie
+####Expires - Instant
+When the cookie expires
+####HttpOnly - Boolean
+A cookie with the HttpOnly attribute is inaccessible to the 
+JavaScript Document.cookie API; it's only sent to the server. For example, 
+cookies that persist in server-side sessions don't need to be available to 
+JavaScript and should have the HttpOnly attribute.
+####SameSite - SameSite Enum
+The SameSite attribute lets servers specify whether/when cookies are sent with 
+cross-site requests. This provides some protection against cross-site request 
+forgery attacks (CSRF). It takes three possible values: Strict, Lax, and None.
 
 # Queues
 
@@ -313,6 +328,11 @@ sqsProducer.send(jsonRpc);
 
 
 # Versions
+## 1.0.3
+_2022-09-04_
+- Added boolean as a native datatype
+- Updated dependencies
+
 ## 1.0.2
 _2022-02-26_
 - ResponseCookies can now have an expires value earlier than now
