@@ -28,6 +28,15 @@ public class MyClass {
 
 
     @Expose(
+            arguments = {"Boolean"},
+            requiredArgumentCount = 1
+    )
+    public static String isTrue(boolean i) {
+        return "It was "  + i;
+    }
+
+
+    @Expose(
             arguments = {"String"}
     )
     public static String doEcho(String str) {
