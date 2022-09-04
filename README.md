@@ -328,6 +328,11 @@ sqsProducer.send(jsonRpc);
 
 
 # Versions
+## 1.0.3
+_2022-09-04_
+- Added boolean as a native datatype
+- Updated dependencies
+
 ## 1.0.2
 _2022-02-26_
 - ResponseCookies can now have an expires value earlier than now

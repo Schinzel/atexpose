@@ -35,6 +35,12 @@ public class API implements IStateNode {
         //Set up the basic arguments.
         this
                 .addArgument(Argument.builder()
+                        .name("Boolean")
+                        .dataType(DataTypeEnum.BOOLEAN.getDataType())
+                        .description("An boolean")
+                        .defaultValue("false")
+                        .build())
+                .addArgument(Argument.builder()
                         .name("Int")
                         .dataType(DataTypeEnum.INT.getDataType())
                         .description("An integer")
