@@ -120,7 +120,14 @@ public class ScheduledTaskChannelTest {
 
     @Test
     public void getRequest_SleepEnds_True() {
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", "MyRequest", ChronoUnit.MILLIS, 50, "", ZonedDateTime.now(), Watch.create());
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName",
+                "MyRequest",
+                ChronoUnit.MILLIS,
+                50,
+                "",
+                ZonedDateTime.now(),
+                Watch.create());
+        stc.mSleepDisabledForTests = true;
         boolean actual = stc.getRequest(new ByteStorage());
         assertThat(actual).isTrue();
     }
@@ -141,7 +148,14 @@ public class ScheduledTaskChannelTest {
     @Test
     public void getRequest_TaskTimeOccurs_ByteStorageReturnsSetRequest() {
         String request = FunnyChars.SERBO_CROATION_GAJ.getString();
-        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName", request, ChronoUnit.MILLIS, 10, "", ZonedDateTime.now(), Watch.create());
+        ScheduledTaskChannel stc = new ScheduledTaskChannel("TheTaskName",
+                request,
+                ChronoUnit.MILLIS,
+                10,
+                "",
+                ZonedDateTime.now(),
+                Watch.create());
+        stc.mSleepDisabledForTests = true;
         //override next-fire-time and set it to be a short time in the future
         ByteStorage byteStorage = new ByteStorage();
         stc.getRequest(byteStorage);
