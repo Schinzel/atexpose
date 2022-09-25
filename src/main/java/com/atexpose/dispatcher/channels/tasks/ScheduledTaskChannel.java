@@ -7,7 +7,6 @@ import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -121,11 +120,18 @@ public class ScheduledTaskChannel implements IChannel {
     }
 
 
-    static ZonedDateTime getNextTaskTime(ZonedDateTime time, int intervalAmount, TemporalUnit intervalUnit, IWatch watch) {
-        //Note, Instant.now().isBefore(mTimeToFireNext) does not work.
-        return (!time.isAfter(ZonedDateTime.ofInstant(watch.getNowAsInstant(), time.getZone())))
-                ? getNextTaskTime(time.plus(intervalAmount, intervalUnit), intervalAmount, intervalUnit, watch)
-                : time;
+    static ZonedDateTime getNextTaskTime(ZonedDateTime nextTimeToFire,
+                                         int intervalAmount,
+                                         TemporalUnit intervalUnit,
+                                         IWatch watch) {
+        ZonedDateTime now = ZonedDateTime.ofInstant(watch.getNowAsInstant(), nextTimeToFire.getZone());
+        // While next-time-to-fire is before now
+        while (nextTimeToFire.isBefore(now)) {
+            // Increment next-time-to-fire with the set amount and interval
+            nextTimeToFire = nextTimeToFire.plus(intervalAmount, intervalUnit);
+        }
+        // If we got here, next-time-to-fire is after now and should be returned
+        return nextTimeToFire;
     }
 
 
