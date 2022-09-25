@@ -7,7 +7,6 @@ import io.schinzel.basicutils.state.State;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -41,8 +40,10 @@ public class ScheduledTaskChannel implements IChannel {
     /** When to fire the task the next time. */
     @Getter(AccessLevel.PACKAGE)
     private ZonedDateTime mTimeToFireNext;
-    //For getting the time
+    /** For getting the time */
     final IWatch mWatch;
+    /** Used to disable sleep for not having to make tests waits */
+    boolean mSleepDisabledForTests = false;
 
 
     /**
@@ -88,7 +89,12 @@ public class ScheduledTaskChannel implements IChannel {
     @Override
     public boolean getRequest(ByteStorage request) {
         //Get the number of nanoseconds the executing thread should sleep.
-        long nanosToSleep = Duration.between(mWatch.getNowAsInstant(), mTimeToFireNext).toNanos();
+        long nanosToSleep = mSleepDisabledForTests
+                ? 0
+                : Duration
+                .between(mWatch.getNowAsInstant(), mTimeToFireNext)
+                .toNanos();
+
         try {
             //Put executing thread to sleep.
             TimeUnit.NANOSECONDS.sleep(nanosToSleep);
@@ -100,10 +106,10 @@ public class ScheduledTaskChannel implements IChannel {
                 throw new RuntimeException("Invocation error in scheduled task. Sleep was interrupted in a unexpected manner. " + ex.getMessage());
             }
         }
-        //Convert request to byte array and add to request argument.
-        request.add(mTaskRequest);
         //Calc the next time to fire task
         mTimeToFireNext = getNextTaskTime(mTimeToFireNext, mIntervalAmount, mIntervalUnit, mWatch);
+        //Convert request to byte array and add to request argument.
+        request.add(mTaskRequest);
         //Return true if was normal wake up. Else return false.
         return true;
     }
@@ -121,11 +127,20 @@ public class ScheduledTaskChannel implements IChannel {
     }
 
 
-    static ZonedDateTime getNextTaskTime(ZonedDateTime time, int intervalAmount, TemporalUnit intervalUnit, IWatch watch) {
-        //Note, Instant.now().isBefore(mTimeToFireNext) does not work.
-        return (!time.isAfter(ZonedDateTime.ofInstant(watch.getNowAsInstant(), time.getZone())))
-                ? getNextTaskTime(time.plus(intervalAmount, intervalUnit), intervalAmount, intervalUnit, watch)
-                : time;
+    static ZonedDateTime getNextTaskTime(ZonedDateTime nextTaskTime,
+                                         int intervalAmount,
+                                         TemporalUnit intervalUnit,
+                                         IWatch watch) {
+        ZonedDateTime aFewSecondsInTheFuture = ZonedDateTime
+                .ofInstant(watch.getNowAsInstant(), nextTaskTime.getZone())
+                .plusSeconds(2);
+        // While next-time-to-fire is before now
+        while (nextTaskTime.isBefore(aFewSecondsInTheFuture)) {
+            // Increment next-time-to-fire with the set amount and interval
+            nextTaskTime = nextTaskTime.plus(intervalAmount, intervalUnit);
+        }
+        // If we got here, next-time-to-fire is after now and should be returned
+        return nextTaskTime;
     }
 
 

@@ -328,6 +328,10 @@ sqsProducer.send(jsonRpc);
 
 
 # Versions
+## 1.0.4
+_2022-09-25_
+- Bug fix: At times scheduled tasks would fire twice
+
 ## 1.0.3
 _2022-09-04_
 - Added boolean as a native datatype
