@@ -331,6 +331,9 @@ sqsProducer.send(jsonRpc);
 ## 1.0.5
 _2022-12-03_
 - Error message: removed the error class name from error message
+- Argument builder: Added `allowedCharsDescription` which is included in 
+the error message when an argument does not match the reg ex pattern. It is 
+intended to be used for a more descriptive error message for non developer users.
 - Fixed the readme section on Cookie Attributes
 
 ## 1.0.4

@@ -7,7 +7,6 @@ import io.schinzel.basicutils.state.State;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-
 import java.util.regex.Pattern;
 
 @Accessors(prefix = "m")
@@ -21,12 +20,19 @@ public class Argument implements IValueWithKey, IStateNode {
     // Holds the string representation of the default value for this argument.
     @Getter private final String mDefaultValueAsString;
     @Getter private Pattern mAllowedCharsPattern = null;
+    // Describes the allowed characters regex for non developer users
+    @Getter private String mAllowedCharsDescription = "";
 
 
     @Builder
-    Argument(String name, String description, AbstractDataType dataType, String defaultValue, String allowedCharsRegEx) {
-        this.mKey = name;
-        this.mDescription = description;
+    Argument(String name,
+             String description,
+             AbstractDataType dataType,
+             String defaultValue,
+             String allowedCharsRegEx,
+             String allowedCharsDescription) {
+        mKey = name;
+        mDescription = description;
         mDataType = dataType;
         if (defaultValue == null) {
             mDefaultValueAsString = "";
@@ -36,6 +42,9 @@ public class Argument implements IValueWithKey, IStateNode {
         }
         if (allowedCharsRegEx != null) {
             mAllowedCharsPattern = Pattern.compile(allowedCharsRegEx);
+        }
+        if (allowedCharsDescription != null) {
+            mAllowedCharsDescription = allowedCharsDescription;
         }
     }
 
