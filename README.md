@@ -220,19 +220,19 @@ WebCookie cookie = WebCookie.builder()
 WebCookieHandler.addResponseCookie(cookie);
 ```
 
-###Cookie Attributes
-####Name - String
+### Cookie Attributes
+#### Name - String
 The name of the cookie
-####Value - String
+#### Value - String
 The value fo the cookie
-####Expires - Instant
+#### Expires - Instant
 When the cookie expires
-####HttpOnly - Boolean
+#### HttpOnly - Boolean
 A cookie with the HttpOnly attribute is inaccessible to the 
 JavaScript Document.cookie API; it's only sent to the server. For example, 
 cookies that persist in server-side sessions don't need to be available to 
 JavaScript and should have the HttpOnly attribute.
-####SameSite - SameSite Enum
+#### SameSite - SameSite Enum
 The SameSite attribute lets servers specify whether/when cookies are sent with 
 cross-site requests. This provides some protection against cross-site request 
 forgery attacks (CSRF). It takes three possible values: Strict, Lax, and None.
@@ -328,6 +328,14 @@ sqsProducer.send(jsonRpc);
 
 
 # Versions
+## 1.0.5
+_2022-12-03_
+- Error message: removed the error class name from error message
+- Argument builder: Added `allowedCharsDescription` which is included in 
+the error message when an argument does not match the reg ex pattern. It is 
+intended to be used for a more descriptive error message for non developer users.
+- Fixed the readme section on Cookie Attributes
+
 ## 1.0.4
 _2022-09-25_
 - Bug fix: At times scheduled tasks would fire twice
