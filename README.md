@@ -328,6 +328,10 @@ sqsProducer.send(jsonRpc);
 
 
 # Versions
+## 1.0.6
+_2023-03-08_
+- Updated dependencies
+
 ## 1.0.5
 _2022-12-03_
 - Error message: removed the error class name from error message

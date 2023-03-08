@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.atexpose</groupId>
     <artifactId>atexpose</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <packaging>jar</packaging>
 
     <name>@Expose</name>
@@ -18,8 +18,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <deploy-repo>maven-repo.atexpose.com</deploy-repo>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <!-- For sonarcloud integration -->
         <sonar.organization>schinzel-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -129,10 +129,10 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <testSource>1.8</testSource>
-                    <testTarget>1.8</testTarget>
+                    <source>11</source>
+                    <target>11</target>
+                    <testSource>11</testSource>
+                    <testTarget>11</testTarget>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                     <compilerArgs>
@@ -205,27 +205,27 @@
         <dependency>
             <groupId>io.schinzel</groupId>
             <artifactId>js-transpiler</artifactId>
-            <version>1.4.2</version>
+            <version>1.4.4</version>
         </dependency>
         <dependency>
             <groupId>io.schinzel</groupId>
             <artifactId>basic-utils</artifactId>
-            <version>1.5.4</version>
+            <version>1.6.3</version>
         </dependency>
         <dependency>
             <groupId>io.schinzel</groupId>
             <artifactId>aws-utils</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
         <dependency>
             <groupId>io.schinzel</groupId>
             <artifactId>crypto</artifactId>
-            <version>1.2.5</version>
+            <version>1.2.6</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.15.3</version>
+            <version>1.15.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -246,7 +246,7 @@
             <!-- Added for URIBuilder -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
+            <version>4.5.14</version>
         </dependency>
         <dependency>
             <groupId>commons-validator</groupId>
@@ -257,7 +257,7 @@
             <!-- Serializes json strings and deserializes objects -->
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-modules-java8</artifactId>
-            <version>2.13.3</version>
+            <version>2.14.2</version>
             <type>pom</type>
             <scope>runtime</scope>
         </dependency>
@@ -265,7 +265,7 @@
             <!-- Used to deserialize to Kotlin data classes -->
             <artifactId>jackson-module-kotlin</artifactId>
             <groupId>com.fasterxml.jackson.module</groupId>
-            <version>2.13.3</version>
+            <version>2.14.2</version>
         </dependency>
 
         <!-- DEV DEPENDENCIES -->
